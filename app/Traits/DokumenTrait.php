@@ -2,9 +2,6 @@
 
 namespace App\Traits;
 
-use App\Models\SbpHeader;
-use Illuminate\Http\Response;
-
 trait DokumenTrait
 {
 	private $agenda;
@@ -28,13 +25,7 @@ trait DokumenTrait
 			$number = $this->getLatestDocNumber($model, $doc_id);
 			$result = $this->updateDocNumberAndDate($model, $doc_id, $number, $jenis_surat);
 		} else {
-			// $result = 'Dokumen sudah diterbitkan.';
-			$result = Response::json(
-				array(
-					'code' => 422,
-					'message' => 'Dokumen sudah diterbitkan.'
-				)
-			);
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 		}
 
 		return $result;
