@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SbpHeaderCollection;
 use App\Http\Resources\SbpHeaderResource;
 use App\Models\SbpHeader;
+use App\Traits\DokumenTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SbpHeaderController extends Controller
 {
+	use DokumenTrait;
+
 	private $tipe_dok = 'SBP';
 	private $agenda_dok = '/KPU.03/';
 	
@@ -132,4 +135,15 @@ class SbpHeaderController extends Controller
         $delete_result = SbpHeader::where('id', $id)->delete();
 		return $delete_result;
     }
+
+	/**
+	 * Terbitkan penomoran SBP
+	 * 
+	 * @param  int  $id
+	 */
+	public function publish($id)
+	{
+		$doc = $this->publishDocument(SbpHeader::class, $id, 'SBP');
+		return $doc;
+	}
 }

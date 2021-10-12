@@ -32,6 +32,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('sbp', SbpHeaderController::class);
 Route::prefix('sbp/{sbp_id}')->group(function() {
 
+	Route::put('/publish', [SbpHeaderController::class, 'publish']);
+
 	// SBP penindakan sarkut
 	Route::prefix('sarkut')->group(function() {
 		Route::get('/', [SbpPenindakanSarkutController::class, 'show']);
@@ -43,7 +45,6 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 	Route::prefix('barang')->group(function() {
 		Route::get('/', [SbpPenindakanBarangController::class, 'show']);
 		Route::post('/', [SbpPenindakanBarangController::class, 'store']);
-		// Route::put('/{barang_id}', [SbpPenindakanBarangController::class, 'update']);
 		Route::delete('/', [SbpPenindakanBarangController::class, 'destroy']);
 
 		// Detail barang
