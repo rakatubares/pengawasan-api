@@ -60,6 +60,7 @@ class SbpHeaderController extends Controller
 			'nama_pemilik' => $request->nama_pemilik,
 			'pejabat1' => $request->pejabat1,
 			'pejabat2' => $request->pejabat2,
+			'kode_status' => 100
 		]);
 
 		return $insert_result;
@@ -114,6 +115,7 @@ class SbpHeaderController extends Controller
 				'nama_pemilik' => $request->nama_pemilik,
 				'pejabat1' => $request->pejabat1,
 				'pejabat2' => $request->pejabat2,
+				'kode_status' => 101
 			]);
 
 		return $update_result;
@@ -128,6 +130,7 @@ class SbpHeaderController extends Controller
      */
     public function destroy($id)
     {
+		SbpHeader::where('id', $id)->update(['kode_status', 300]);
         $delete_result = SbpHeader::where('id', $id)->delete();
 		return $delete_result;
     }

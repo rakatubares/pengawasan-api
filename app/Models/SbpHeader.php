@@ -33,7 +33,7 @@ class SbpHeader extends Model
 		'nama_pemilik',
 		'pejabat1',
 		'pejabat2',
-		'status'
+		'kode_status'
 	];
 
 	protected $casts = [
