@@ -27,13 +27,18 @@ class SbpHeaderSeeder extends Seeder
 				'tgl_sbp' => '2021-01-01',
 				'no_sprint' => 'SPRINT-01/KPU.03/2021',
 				'tgl_sprint' => '2021-01-01',
+				'penindakan_sarkut' => 1,
+				'penindakan_barang' => 1,
+				'penindakan_bangunan' => 1,
+				'penindakan_badan' => 1,
 				'lokasi_penindakan' => $faker->sentence(),
 				'uraian_penindakan' => $faker->sentence($nbWOrds = 20),
 				'jenis_pelanggaran' => 'kepabeanan',
 				'wkt_mulai_penindakan' => $faker->dateTime(),
 				'wkt_selesai_penindakan' => $faker->dateTime(),
 				'nama_pemilik' => $faker->name(),
-				'pejabat1' => Str::random(15)
+				'pejabat1' => Str::random(15),
+				'kode_status' => 200
 			]);
 		}
     }

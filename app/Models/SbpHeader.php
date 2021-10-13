@@ -32,7 +32,8 @@ class SbpHeader extends Model
 		'hal_terjadi',
 		'nama_pemilik',
 		'pejabat1',
-		'pejabat2'
+		'pejabat2',
+		'status'
 	];
 
 	protected $casts = [
@@ -70,5 +71,10 @@ class SbpHeader extends Model
 	public function penindakanBadan()
 	{
 		return $this->hasOne(SbpPenindakanBadan::class, 'sbp_id');
+	}
+
+	public function status()
+	{
+		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
 	}
 }

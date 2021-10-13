@@ -36,6 +36,7 @@ class CreateSbpHeadersTable extends Migration
 			$table->string('nama_pemilik')->index();
 			$table->string('pejabat1')->index();
 			$table->string('pejabat2')->nullable()->index();
+			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

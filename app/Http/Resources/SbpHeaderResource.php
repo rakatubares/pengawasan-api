@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\RefStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SbpHeaderResource extends JsonResource
@@ -36,7 +37,8 @@ class SbpHeaderResource extends JsonResource
 			'hal_terjadi' => $this->hal_terjadi,
 			'nama_pemilik' => $this->nama_pemilik,
 			'pejabat1' => $this->pejabat1,
-			'pejabat2' => $this->pejabat2
+			'pejabat2' => $this->pejabat2,
+			'status' => new RefStatusResource($this->status),
 		];
 
 		return $array;
