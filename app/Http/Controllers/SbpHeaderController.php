@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SbpHeaderDetailResource;
 use App\Http\Resources\SbpHeaderResource;
 use App\Models\SbpHeader;
+use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
 class SbpHeaderController extends Controller
 {
+	use DokumenTrait;
+	
 	private $tipe_dok = 'SBP';
 	private $agenda_dok = '/KPU.03/';
 	
@@ -78,6 +82,17 @@ class SbpHeaderController extends Controller
 		return $sbpHeader;
     }
 
+	/**
+	 * Display available details
+	 * 
+	 * @param int $id
+	 */
+	public function showDetails($id)
+	{
+		$sbpHeaderDetails = new SbpHeaderDetailResource(SbpHeader::find($id));
+		return $sbpHeaderDetails;
+	}
+
     /**
      * Update the specified resource in storage.
      *
@@ -130,8 +145,19 @@ class SbpHeaderController extends Controller
      */
     public function destroy($id)
     {
-		SbpHeader::where('id', $id)->update(['kode_status', 300]);
+		SbpHeader::where('id', $id)->update(['kode_status' => 300]);
         $delete_result = SbpHeader::where('id', $id)->delete();
 		return $delete_result;
     }
+
+	/**
+	 * Terbitkan penomoran SBP
+	 * 
+	 * @param  int  $id
+	 */
+	public function publish($id)
+	{
+		$doc = $this->publishDocument(SbpHeader::class, $id, 'SBP');
+		return $doc;
+	}
 }

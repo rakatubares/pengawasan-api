@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('sbp', SbpHeaderController::class);
 Route::prefix('sbp/{sbp_id}')->group(function() {
 
+	Route::get('/details', [SbpHeaderController::class, 'showDetails']);
 	Route::put('/publish', [SbpHeaderController::class, 'publish']);
 
 	// SBP penindakan sarkut
