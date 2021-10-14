@@ -81,7 +81,8 @@ trait DokumenTrait
 				'no_sbp' => $number,
 				'thn_sbp' => $this->tahun,
 				'no_sbp_lengkap' => $jenis_surat . '-' . $number . $this->agenda . $this->tahun,
-				'tgl_sbp' => $this->tanggal
+				'tgl_sbp' => $this->tanggal,
+				'kode_status' => 200
 			]);
 
 		return $update_result;
