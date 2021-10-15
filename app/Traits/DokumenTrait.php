@@ -41,8 +41,8 @@ trait DokumenTrait
 	private function checkStatus($model, $doc_id)
 	{
 		$doc = $model::findOrFail($doc_id);
-		if ($doc->no_sbp == null) {
-			$this->agenda = $doc->agenda_sbp;
+		if ($doc->no_dok == null) {
+			$this->agenda = $doc->agenda_dok;
 			return true;
 		} else {
 			return false;
@@ -62,14 +62,19 @@ trait DokumenTrait
 		$this->tanggal = date('Y-m-d') ;
 
 		// Ambil nomor terakhir berdasarkan skema, agenda, dan tahun
-		$latest_number = $model::select('no_sbp')
-			->where('agenda_sbp', $this->agenda)
-			->where('thn_sbp', $this->tahun)
-			->orderByDesc('no_sbp')
+		$latest_number = $model::select('no_dok')
+			->where('agenda_dok', $this->agenda)
+			->where('thn_dok', $this->tahun)
+			->orderByDesc('no_dok')
 			->first();
 
 		// Buat nomor baru
-		$number = ($latest_number->no_sbp) + 1;
+		try {
+			$number = ($latest_number->no_dok) + 1;
+		} catch (\Throwable $th) {
+			$number = 1;
+		}
+		
 
 		return $number;
 	}
@@ -78,10 +83,10 @@ trait DokumenTrait
 	{
 		$update_result = $model::where('id', $doc_id)
 			->update([
-				'no_sbp' => $number,
-				'thn_sbp' => $this->tahun,
-				'no_sbp_lengkap' => $jenis_surat . '-' . $number . $this->agenda . $this->tahun,
-				'tgl_sbp' => $this->tanggal,
+				'no_dok' => $number,
+				'thn_dok' => $this->tahun,
+				'no_dok_lengkap' => $jenis_surat . '-' . $number . $this->agenda . $this->tahun,
+				'tgl_dok' => $this->tanggal,
 				'kode_status' => 200
 			]);
 
