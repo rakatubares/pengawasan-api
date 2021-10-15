@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 			SbpBarangDetailSeeder::class,
 			SbpPenindakanBangunanSeeder::class,
 			SbpPenindakanBadanSeeder::class,
+			SegelSeeder::class,
 		]);
     }
 }

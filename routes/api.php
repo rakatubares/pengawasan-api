@@ -6,6 +6,7 @@ use App\Http\Controllers\SbpPenindakanBadanController;
 use App\Http\Controllers\SbpPenindakanBangunanController;
 use App\Http\Controllers\SbpPenindakanBarangController;
 use App\Http\Controllers\SbpPenindakanSarkutController;
+use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -73,3 +74,7 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 	});
  
 });
+
+// BA Segel
+Route::apiResource('segel', SegelController::class);
+Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
