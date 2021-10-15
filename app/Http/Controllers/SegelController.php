@@ -130,8 +130,16 @@ class SegelController extends Controller
      */
     public function destroy($id)
     {
-        Segel::where('id', $id)->update(['kode_status' => 300]);
-        $delete_result = Segel::where('id', $id)->delete();
+        $update_result = Segel::where('id', $id)
+			->whereIn('kode_status', [100,101])
+			->update(['kode_status' => 300]);
+
+		if ($update_result) {
+			$delete_result = Segel::where('id', $id)->delete();
+		} else {
+			$delete_result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
+		}
+		
 		return $delete_result;
     }
 

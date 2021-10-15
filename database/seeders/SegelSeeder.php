@@ -22,7 +22,7 @@ class SegelSeeder extends Seeder
 				'no_dok' => $i,
 				'agenda_dok' => '/KPU.03/',
 				'thn_dok' => 2021,
-				'no_dok_lengkap' => 'BA-' . $i . '/KPU.03/2021',
+				'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/2021',
 				'tgl_dok' => $faker->date(),
 				'no_sprint' => 'SPRINT-01/KPU.03/2021',
 				'tgl_sprint' => '2021-01-01',
