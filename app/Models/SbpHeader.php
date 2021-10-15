@@ -12,11 +12,11 @@ class SbpHeader extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'no_sbp',
-		'agenda_sbp',
-		'thn_sbp',
-		'no_sbp_lengkap',
-		'tgl_sbp',
+		'no_dok',
+		'agenda_dok',
+		'thn_dok',
+		'no_dok_lengkap',
+		'tgl_dok',
 		'no_sprint',
 		'tgl_sprint',
 		'penindakan_sarkut',
@@ -37,7 +37,7 @@ class SbpHeader extends Model
 	];
 
 	protected $casts = [
-		'tgl_sbp' => 'date',
+		'tgl_dok' => 'date',
 		'tgl_sprint' => 'date',
 		'wkt_mulai_penindakan' => 'datetime',
 		'wkt_selesai_penindakan' => 'datetime',

@@ -15,11 +15,11 @@ class CreateSbpHeadersTable extends Migration
     {
         Schema::create('sbp_headers', function (Blueprint $table) {
             $table->id();
-			$table->string('no_sbp')->nullable()->index();
-			$table->string('agenda_sbp')->index();
-			$table->integer('thn_sbp')->nullable()->index();
-			$table->string('no_sbp_lengkap')->index();
-			$table->date('tgl_sbp')->nullable()->index();
+			$table->string('no_dok')->nullable()->index();
+			$table->string('agenda_dok')->index();
+			$table->integer('thn_dok')->nullable()->index();
+			$table->string('no_dok_lengkap')->index();
+			$table->date('tgl_dok')->nullable()->index();
 			$table->string('no_sprint')->index();
 			$table->date('tgl_sprint')->index();
 			$table->boolean('penindakan_sarkut')->default(0)->index();

@@ -20,11 +20,11 @@ class SbpHeaderSeeder extends Seeder
 		
 		for ($i=1; $i <= 5; $i++) { 
 			SbpHeader::create([
-				'no_sbp' => $i,
-				'agenda_sbp' => '/KPU.03/',
-				'thn_sbp' => 2021,
-				'no_sbp_lengkap' => 'SBP-' . $i . '/KPU.03/2021',
-				'tgl_sbp' => '2021-01-01',
+				'no_dok' => $i,
+				'agenda_dok' => '/KPU.03/',
+				'thn_dok' => 2021,
+				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/2021',
+				'tgl_dok' => '2021-01-01',
 				'no_sprint' => 'SPRINT-01/KPU.03/2021',
 				'tgl_sprint' => '2021-01-01',
 				'penindakan_sarkut' => 1,

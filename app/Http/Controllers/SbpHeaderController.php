@@ -45,13 +45,13 @@ class SbpHeaderController extends Controller
 			'pejabat1' => 'required'
 		]);
 		
-		$no_sbp_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
 		$tgl_sprint = strtotime($request->tgl_sprint);
 		$wkt_mulai_penindakan = strtotime($request->wkt_mulai_penindakan);
 		$wkt_selesai_penindakan = strtotime($request->wkt_selesai_penindakan);
         $insert_result = SbpHeader::create([
-			'agenda_sbp' => $this->agenda_dok,
-			'no_sbp_lengkap' => $no_sbp_lengkap,
+			'agenda_dok' => $this->agenda_dok,
+			'no_dok_lengkap' => $no_dok_lengkap,
 			'no_sprint' => $request->no_sprint,
 			'tgl_sprint' => $tgl_sprint,
 			'lokasi_penindakan' => $request->lokasi_penindakan,
@@ -134,7 +134,6 @@ class SbpHeaderController extends Controller
 			]);
 
 		return $update_result;
-		// return $request;
     }
 
     /**
@@ -145,8 +144,16 @@ class SbpHeaderController extends Controller
      */
     public function destroy($id)
     {
-		SbpHeader::where('id', $id)->update(['kode_status' => 300]);
-        $delete_result = SbpHeader::where('id', $id)->delete();
+		$update_result = SbpHeader::where('id', $id)
+			->whereIn('kode_status', [100,101])
+			->update(['kode_status' => 300]);
+
+		if ($update_result) {
+			$delete_result = SbpHeader::where('id', $id)->delete();
+		} else {
+			$delete_result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
+		}
+		
 		return $delete_result;
     }
 

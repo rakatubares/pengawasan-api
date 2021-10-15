@@ -17,11 +17,11 @@ class SbpHeaderResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
-			'no_sbp' => $this->no_sbp,
-			'agenda_sbp' => $this->agenda_sbp,
-			'thn_sbp' => $this->thn_sbp,
-			'no_sbp_lengkap' => $this->no_sbp_lengkap,
-			'tgl_sbp' => $this->tgl_sbp ? $this->tgl_sbp->format('d-m-Y') : null,
+			'no_dok' => $this->no_dok,
+			'agenda_dok' => $this->agenda_dok,
+			'thn_dok' => $this->thn_dok,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
 			'no_sprint' => $this->no_sprint,
 			'tgl_sprint' => $this->tgl_sprint->format('d-m-Y'),
 			'penindakan_sarkut' => $this->penindakan_sarkut,
