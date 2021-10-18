@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DetailBarangResource;
+use App\Http\Resources\DetailBangunanResource;
 use App\Traits\DokumenTrait;
 use App\Traits\ModelTrait;
 use Illuminate\Http\Request;
 
-class DetailBarangController extends Controller
+class DetailBangunanController extends Controller
 {
 	use DokumenTrait;
 	use ModelTrait;
@@ -25,32 +25,30 @@ class DetailBarangController extends Controller
         // Get model
 		$model = $this->getModel($doc_type);
 
-        // Update kolom detail_barang di tabel parent menjadi TRUE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'barang', 1);
+        // Update kolom detail_bangunan di tabel parent menjadi TRUE
+		$update_result = $this->updateStatusDetail($model, $doc_id, 'bangunan', 1);
 
-		// Upsert data detail barang
-		$tgl_dok = $request->tgl_dok != null ? strtotime($request->tgl_dok) : $request->tgl_dok;
+		// Upsert data detail bangunan
 		if ($update_result) {
 			$insert_result = $model::find($doc_id)
-				->barang()
+				->bangunan()
 				->updateOrCreate(
 					[
-						'barangable_type' => $model,
-						'barangable_id' => $doc_id
+						'bangunanable_type' => $model,
+						'bangunanable_id' => $doc_id
 					],
 					[
-						'jumlah_kemasan' => $request->jumlah_kemasan,
-						'satuan_kemasan' => $request->satuan_kemasan,
-						'jns_dok' => $request->jns_dok,
-						'no_dok' => $request->no_dok,
-						'tgl_dok' => $tgl_dok,
-						'pemilik' => $request->pemilik
+						'alamat' => $request->alamat,
+						'no_reg' => $request->no_reg,
+						'pemilik' => $request->pemilik,
+						'jns_identitas' => $request->jns_identitas,
+						'no_identitas' => $request->no_identitas,
 					]
 				);
 			
-			$result = new DetailBarangResource($insert_result);
+			$result = new DetailBangunanResource($insert_result);
 		} else {
-			$result = response()->json(['error' => 'Insert detail barang gagal.'], 422);
+			$result = response()->json(['error' => 'Insert detail bangunan gagal.'], 422);
 		}
 
 		return $result;
@@ -59,21 +57,21 @@ class DetailBarangController extends Controller
     /**
      * Display the specified resource.
      *
-	 * @param  string  $doc_type
+     * @param  string  $doc_type
      * @param  int  $doc_id
      * @return \Illuminate\Http\Response
      */
     public function show($doc_type, $doc_id)
     {
-        $model = $this->getModel($doc_type);
+		$model = $this->getModel($doc_type);
 		$header = $model::find($doc_id);
 
 		if ($header) {
-			$barang = $header->barang()->first();
-			if ($barang != null) {
-				$result = new DetailBarangResource($barang);
+			$bangunan = $header->bangunan()->first();
+			if ($bangunan != null) {
+				$result = new DetailBangunanResource($bangunan);
 			} else {
-				$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
+				$result = response()->json(['error' => 'Detail bangunan tidak ditemukan.'], 422);
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
@@ -85,7 +83,7 @@ class DetailBarangController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-	 * @param  string  $doc_type
+     * @param  string  $doc_type
      * @param  int  $doc_id
      * @return \Illuminate\Http\Response
      */
@@ -95,16 +93,16 @@ class DetailBarangController extends Controller
 		$model = $this->getModel($doc_type);
 
         // Update kolom detail_sarkut di tabel parent menjadi FALSE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'barang', 0);
+		$update_result = $this->updateStatusDetail($model, $doc_id, 'bangunan', 0);
 
-		// Delete detail barang
+		// Delete detail sarkut
 		if ($update_result) {
 			$delete_result = $model::find($doc_id)
-				->barang()
+				->bangunan()
 				->delete();
 			return $delete_result;
 		} else {
-			return "Gagal menghapus data detail barang";
+			return "Gagal menghapus data detail bangunan";
 		}
     }
 }

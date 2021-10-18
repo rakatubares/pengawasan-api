@@ -33,7 +33,10 @@ class DetailSarkutController extends Controller
 			$insert_result = $model::find($doc_id)
 				->sarkut()
 				->updateOrCreate(
-					['sarkutable_id' => $doc_id],
+					[
+						'sarkutable_type' => $model,
+						'sarkutable_id' => $doc_id
+					],
 					[
 						'nama_sarkut' => $request->nama_sarkut,
 						'jenis_sarkut' => $request->jenis_sarkut,
@@ -46,12 +49,12 @@ class DetailSarkutController extends Controller
 					]
 				);
 			
-			$result_array = new DetailSarkutResource($insert_result);
-			return $result_array;
+			$result = new DetailSarkutResource($insert_result);
 		} else {
-			return "Insert detail sarana pengangkut gagal";
+			$result = response()->json(['error' => 'Insert detail sarana pengangkut gagal.'], 422);
 		}
 		
+		return $result;
     }
 
     /**
@@ -64,8 +67,20 @@ class DetailSarkutController extends Controller
     public function show($doc_type, $doc_id)
     {
         $model = $this->getModel($doc_type);
-		$sarkut = $model::find($doc_id)->sarkut()->get();
-		return $sarkut;
+		$header = $model::find($doc_id);
+
+		if ($header) {
+			$sarkut = $header->sarkut()->first();
+			if ($sarkut != null) {
+				$result = new DetailSarkutResource($sarkut);
+			} else {
+				$result = response()->json(['error' => 'Detail sarana pengangkut tidak ditemukan.'], 422);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
+		}
+		
+		return $result;
     }
 
     /**
