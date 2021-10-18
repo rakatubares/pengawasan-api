@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpBarangDetailController;
 use App\Http\Controllers\SbpHeaderController;
 use App\Http\Controllers\SbpPenindakanBadanController;
 use App\Http\Controllers\SbpPenindakanBangunanController;
 use App\Http\Controllers\SbpPenindakanBarangController;
 use App\Http\Controllers\SbpPenindakanSarkutController;
+use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +34,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('sbp', SbpHeaderController::class);
 Route::prefix('sbp/{sbp_id}')->group(function() {
 
+	Route::get('/details', [SbpHeaderController::class, 'showDetails']);
+	Route::put('/publish', [SbpHeaderController::class, 'publish']);
+
 	// SBP penindakan sarkut
 	Route::prefix('sarkut')->group(function() {
 		Route::get('/', [SbpPenindakanSarkutController::class, 'show']);
@@ -43,7 +48,6 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 	Route::prefix('barang')->group(function() {
 		Route::get('/', [SbpPenindakanBarangController::class, 'show']);
 		Route::post('/', [SbpPenindakanBarangController::class, 'store']);
-		// Route::put('/{barang_id}', [SbpPenindakanBarangController::class, 'update']);
 		Route::delete('/', [SbpPenindakanBarangController::class, 'destroy']);
 
 		// Detail barang
@@ -70,4 +74,17 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 		Route::delete('/', [SbpPenindakanBadanController::class, 'destroy']);
 	});
  
+});
+
+// BA Segel
+Route::apiResource('segel', SegelController::class);
+Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
+
+// Detail
+Route::prefix('{doc_type}/{doc_id}')->group(function() {
+	Route::prefix('/sarkut')->group(function() {
+		Route::get('/', [DetailSarkutController::class, 'show']);
+		Route::post('/', [DetailSarkutController::class, 'store']);
+		Route::delete('/', [DetailSarkutController::class, 'destroy']);
+	});
 });
