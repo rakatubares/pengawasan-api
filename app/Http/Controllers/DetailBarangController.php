@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DetailBarangResource;
 use App\Traits\DokumenTrait;
 use App\Traits\ModelTrait;
 use Illuminate\Http\Request;
 
-class DetailSarkutController extends Controller
+class DetailBarangController extends Controller
 {
 	use DokumenTrait;
 	use ModelTrait;
@@ -22,36 +22,34 @@ class DetailSarkutController extends Controller
      */
     public function store(Request $request, $doc_type, $doc_id)
     {
-		// Get model
+        // Get model
 		$model = $this->getModel($doc_type);
 
-        // Update kolom detail_sarkut di tabel parent menjadi TRUE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'sarkut', 1);
+        // Update kolom detail_barang di tabel parent menjadi TRUE
+		$update_result = $this->updateStatusDetail($model, $doc_id, 'barang', 1);
 
-		// Upsert data detail sarkut
+		// Upsert data detail barang
+		$tgl_dok = $request->tgl_dok != null ? strtotime($request->tgl_dok) : $request->tgl_dok;
 		if ($update_result) {
 			$insert_result = $model::find($doc_id)
-				->sarkut()
+				->barang()
 				->updateOrCreate(
-					['sarkutable_id' => $doc_id],
+					['barangable_id' => $doc_id],
 					[
-						'nama_sarkut' => $request->nama_sarkut,
-						'jenis_sarkut' => $request->jenis_sarkut,
-						'no_flight_trayek' => $request->no_flight_trayek,
-						'kapasitas' => $request->kapasitas,
-						'satuan_kapasitas' => $request->satuan_kapasitas,
-						'nama_pilot_pengemudi' => $request->nama_pilot_pengemudi,
-						'bendera' => $request->bendera,
-						'no_reg_polisi' => $request->no_reg_polisi,
+						'jumlah_kemasan' => $request->jumlah_kemasan,
+						'satuan_kemasan' => $request->satuan_kemasan,
+						'jns_dok' => $request->jns_dok,
+						'no_dok' => $request->no_dok,
+						'tgl_dok' => $tgl_dok,
+						'pemilik' => $request->pemilik
 					]
 				);
 			
-			$result_array = new DetailSarkutResource($insert_result);
+			$result_array = new DetailBarangResource($insert_result);
 			return $result_array;
 		} else {
-			return "Insert detail sarana pengangkut gagal";
+			return "Insert detail barang gagal";
 		}
-		
     }
 
     /**
@@ -64,8 +62,8 @@ class DetailSarkutController extends Controller
     public function show($doc_type, $doc_id)
     {
         $model = $this->getModel($doc_type);
-		$sarkut = $model::find($doc_id)->sarkut()->get();
-		return $sarkut;
+		$barang = $model::find($doc_id)->barang()->get();
+		return $barang;
     }
 
     /**
@@ -81,17 +79,16 @@ class DetailSarkutController extends Controller
 		$model = $this->getModel($doc_type);
 
         // Update kolom detail_sarkut di tabel parent menjadi FALSE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'sarkut', 0);
+		$update_result = $this->updateStatusDetail($model, $doc_id, 'barang', 0);
 
-		// Delete detail sarkut
+		// Delete detail barang
 		if ($update_result) {
 			$delete_result = $model::find($doc_id)
-				->sarkut()
+				->barang()
 				->delete();
 			return $delete_result;
 		} else {
-			return "Gagal menghapus data detail sarana pengangkut";
+			return "Gagal menghapus data detail barang";
 		}
-		
     }
 }
