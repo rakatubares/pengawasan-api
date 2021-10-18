@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\DetailBarangController;
->>>>>>> general
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpBarangDetailController;
 use App\Http\Controllers\SbpHeaderController;
@@ -91,13 +88,10 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::post('/', [DetailSarkutController::class, 'store']);
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
 	});
-<<<<<<< HEAD
-=======
 
 	Route::prefix('/barang')->group(function() {
 		Route::get('/', [DetailBarangController::class, 'show']);
 		Route::post('/', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 	});
->>>>>>> general
 });
