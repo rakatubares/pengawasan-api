@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpBarangDetailController;
@@ -83,15 +84,24 @@ Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 // Detail
 Route::prefix('{doc_type}/{doc_id}')->group(function() {
+	// Sarkut
 	Route::prefix('/sarkut')->group(function() {
 		Route::get('/', [DetailSarkutController::class, 'show']);
 		Route::post('/', [DetailSarkutController::class, 'store']);
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
 	});
 
+	// Barang
 	Route::prefix('/barang')->group(function() {
 		Route::get('/', [DetailBarangController::class, 'show']);
 		Route::post('/', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
+	});
+
+	// Bangunan
+	Route::prefix('/bangunan')->group(function() {
+		Route::get('/', [DetailBangunanController::class, 'show']);
+		Route::post('/', [DetailBangunanController::class, 'store']);
+		Route::delete('/', [DetailBangunanController::class, 'destroy']);
 	});
 });
