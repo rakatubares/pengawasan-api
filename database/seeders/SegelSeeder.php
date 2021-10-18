@@ -20,6 +20,7 @@ class SegelSeeder extends Seeder
 		for ($i=1; $i < 6; $i++) { 
 			$detail_sarkut = $faker->boolean();
 			$detail_barang = $faker->boolean();
+			$detail_bangunan = $faker->boolean();
 
 			Segel::create([
 				'no_dok' => $i,
@@ -31,7 +32,7 @@ class SegelSeeder extends Seeder
 				'tgl_sprint' => '2021-01-01',
 				'detail_sarkut' => $detail_sarkut,
 				'detail_barang' => $detail_barang,
-				'detail_bangunan' => 1,
+				'detail_bangunan' => $detail_bangunan,
 				'jenis_segel' => $faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 				'jumlah_segel' => $faker->randomDigit(),
 				'nomor_segel' => $faker->word(),
@@ -70,6 +71,18 @@ class SegelSeeder extends Seeder
 						'no_dok' => $faker->regexify('S-[0-9]{3}/[a-z]{10}/[0-9]{4}'),
 						'tgl_dok' => $faker->date(),
 						'pemilik' => $faker->name()
+					]);
+			}
+
+			if ($detail_bangunan) {
+				Segel::find($i)
+					->bangunan()
+					->create([
+						'alamat' => $faker->address(),
+						'no_reg' => $faker->regexify('[0-9]{15}'),
+						'pemilik' => $faker->name(),
+						'jns_identitas' => $faker->regexify('[A-Z]{3}'),
+						'no_identitas' => $faker->regexify('[0-9]{15}'),
 					]);
 			}
 			
