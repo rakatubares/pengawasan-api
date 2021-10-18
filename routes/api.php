@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpBarangDetailController;
 use App\Http\Controllers\SbpHeaderController;
 use App\Http\Controllers\SbpPenindakanBadanController;
@@ -78,3 +79,12 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 // BA Segel
 Route::apiResource('segel', SegelController::class);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
+
+// Detail
+Route::prefix('{doc_type}/{doc_id}')->group(function() {
+	Route::prefix('/sarkut')->group(function() {
+		Route::get('/', [DetailSarkutController::class, 'show']);
+		Route::post('/', [DetailSarkutController::class, 'store']);
+		Route::delete('/', [DetailSarkutController::class, 'destroy']);
+	});
+});

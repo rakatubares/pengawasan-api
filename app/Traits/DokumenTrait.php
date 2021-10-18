@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\Response;
+
 trait DokumenTrait
 {
 	private $agenda;
@@ -52,7 +55,7 @@ trait DokumenTrait
 	/**
 	 * Ambil nomor baru
 	 * 
-	 * @param model @model
+	 * @param Model @model
 	 * @return int
 	 */
 	private function getLatestDocNumber($model)
@@ -79,6 +82,15 @@ trait DokumenTrait
 		return $number;
 	}
 
+	/**
+	 * Update penomoran dokumen
+	 * 
+	 * @param Model $model
+	 * @param int $doc_id
+	 * @param int $number
+	 * @param string $jenis_surat
+	 * @return Response
+	 */
 	private function updateDocNumberAndDate($model, $doc_id, $number, $jenis_surat)
 	{
 		$update_result = $model::where('id', $doc_id)
@@ -92,5 +104,20 @@ trait DokumenTrait
 
 		return $update_result;
 	}
-	
+
+	/**
+	 * Update status detail dokumen
+	 */
+	public function updateStatusDetail($model, $doc_id, $detail_type, $detail_status)
+	{
+		// Construct detail column name
+		$detail_column = 'detail_' . $detail_type;
+
+		// Update parent based on doc_type
+		$update_result = $model::find($doc_id)
+			->update([$detail_column => $detail_status]);
+
+		// Return update result
+		return $update_result;
+	}
 }
