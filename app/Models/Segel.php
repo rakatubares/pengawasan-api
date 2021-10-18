@@ -19,9 +19,9 @@ class Segel extends Model
 		'tgl_dok',
 		'no_sprint',
 		'tgl_sprint',
-		'penindakan_sarkut',
-		'penindakan_barang',
-		'penindakan_bangunan',
+		'detail_sarkut',
+		'detail_barang',
+		'detail_bangunan',
 		'jenis_segel',
 		'jumlah_segel',
 		'nomor_segel',
@@ -40,6 +40,11 @@ class Segel extends Model
 		'tgl_dok' => 'date',
 		'tgl_sprint' => 'date',
 	];
+
+	public function sarkut()
+	{
+		return $this->morphOne(DetailSarkut::class, 'sarkutable');
+	}
 
 	public function status()
 	{
