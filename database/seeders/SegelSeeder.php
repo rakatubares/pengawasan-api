@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailSarkut;
 use App\Models\Segel;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -20,6 +19,7 @@ class SegelSeeder extends Seeder
 
 		for ($i=1; $i < 6; $i++) { 
 			$detail_sarkut = $faker->boolean();
+			$detail_barang = $faker->boolean();
 
 			Segel::create([
 				'no_dok' => $i,
@@ -30,7 +30,7 @@ class SegelSeeder extends Seeder
 				'no_sprint' => 'SPRINT-01/KPU.03/2021',
 				'tgl_sprint' => '2021-01-01',
 				'detail_sarkut' => $detail_sarkut,
-				'detail_barang' => 1,
+				'detail_barang' => $detail_barang,
 				'detail_bangunan' => 1,
 				'jenis_segel' => $faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 				'jumlah_segel' => $faker->randomDigit(),
@@ -57,6 +57,19 @@ class SegelSeeder extends Seeder
 						'nama_pilot_pengemudi' => $faker->name(),
 						'bendera' => $faker->countryCode(),
 						'no_reg_polisi' => $faker->regexify('[A-Z]{5}'),
+					]);
+			}
+
+			if ($detail_barang) {
+				Segel::find($i)
+					->barang()
+					->create([
+						'jumlah_kemasan' => $faker->numberBetween(1, 100),
+						'satuan_kemasan' => $faker->regexify('[a-z]{2}'),
+						'jns_dok' => $faker->regexify('[A-Z]{3}'),
+						'no_dok' => $faker->regexify('S-[0-9]{3}/[a-z]{10}/[0-9]{4}'),
+						'tgl_dok' => $faker->date(),
+						'pemilik' => $faker->name()
 					]);
 			}
 			

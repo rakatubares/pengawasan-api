@@ -46,6 +46,11 @@ class Segel extends Model
 		return $this->morphOne(DetailSarkut::class, 'sarkutable');
 	}
 
+	public function barang()
+	{
+		return $this->morphOne(DetailBarang::class, 'barangable');
+	}
+
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
