@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
+use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpBarangDetailController;
 use App\Http\Controllers\SbpHeaderController;
@@ -96,6 +97,15 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::get('/', [DetailBarangController::class, 'show']);
 		Route::post('/', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
+
+		// Item barang
+		Route::prefix('item')->group(function() {
+			Route::get('/', [DetailBarangItemController::class, 'index']);
+			Route::post('/', [DetailBarangItemController::class, 'store']);
+			Route::get('/{item_id}', [DetailBarangItemController::class, 'show']);
+			Route::put('/{item_id}', [DetailBarangItemController::class, 'update']);
+			Route::delete('/{item_id}', [DetailBarangItemController::class, 'destroy']);
+		});
 	});
 
 	// Bangunan
