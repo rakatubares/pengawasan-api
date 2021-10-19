@@ -51,6 +51,16 @@ class Segel extends Model
 		return $this->morphOne(DetailBarang::class, 'barangable');
 	}
 
+	public function itemBarang()
+	{
+		return $this->hasManyThrough(
+			DetailBarangItem::class,
+			DetailBarang::class,
+			'barangable_id',
+			'detail_barang_id'
+		)->where('barangable_type', Segel::class);
+	}
+
 	public function bangunan()
 	{
 		return $this->morphOne(DetailBangunan::class, 'bangunanable');

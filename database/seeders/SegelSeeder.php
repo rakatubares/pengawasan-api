@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DetailBarang;
 use App\Models\Segel;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -62,7 +63,7 @@ class SegelSeeder extends Seeder
 			}
 
 			if ($detail_barang) {
-				Segel::find($i)
+				$insert_result = Segel::find($i)
 					->barang()
 					->create([
 						'jumlah_kemasan' => $faker->numberBetween(1, 100),
@@ -72,6 +73,19 @@ class SegelSeeder extends Seeder
 						'tgl_dok' => $faker->date(),
 						'pemilik' => $faker->name()
 					]);
+
+				$detail_barang_id = $insert_result->id;
+				$item_count = $faker->numberBetween(1, 10);
+
+				for ($c=1; $c <= $item_count; $c++) { 
+					DetailBarang::find($detail_barang_id)
+						->itemBarang()
+						->create([
+							'jumlah_barang' => $faker->numberBetween(1, 100),
+							'satuan_barang' => $faker->regexify('[a-z]{2}'),
+							'uraian_barang' => $faker->text()
+						]);
+				}
 			}
 
 			if ($detail_bangunan) {
