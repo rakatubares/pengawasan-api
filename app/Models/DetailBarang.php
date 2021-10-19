@@ -33,4 +33,12 @@ class DetailBarang extends Model
 	{
 		return $this->morphTo(__FUNCTION__, 'barangable_type', 'barangable_id');
 	}
+
+	/**
+	 * OneToMany ke detail barang
+	 */
+	public function itemBarang()
+	{
+		return $this->hasMany(DetailBarangItem::class, 'detail_barang_id');
+	}
 }
