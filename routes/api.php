@@ -81,6 +81,7 @@ Route::prefix('sbp/{sbp_id}')->group(function() {
 
 // BA Segel
 Route::apiResource('segel', SegelController::class);
+Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 // Detail
