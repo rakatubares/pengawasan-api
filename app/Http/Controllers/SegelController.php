@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SbpHeaderDetailResource;
 use App\Http\Resources\SegelResource;
 use App\Models\Segel;
@@ -80,6 +81,17 @@ class SegelController extends Controller
         $segel = new SegelResource(Segel::findOrFail($id));
 		return $segel;
     }
+
+	/**
+	 * Display available details
+	 * 
+	 * @param int $id
+	 */
+	public function showDetails($id)
+	{
+		$sbpHeaderDetails = new DetailStatusResource(Segel::findOrFail($id));
+		return $sbpHeaderDetails;
+	}
 
     /**
      * Update the specified resource in storage.
