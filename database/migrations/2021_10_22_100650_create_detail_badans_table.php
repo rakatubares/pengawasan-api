@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSbpPenindakanBangunansTable extends Migration
+class CreateDetailBadansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,13 @@ class CreateSbpPenindakanBangunansTable extends Migration
      */
     public function up()
     {
-        Schema::create('sbp_penindakan_bangunans', function (Blueprint $table) {
+        Schema::create('detail_badans', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('sbp_id');
-			$table->foreign('sbp_id')
-				->references('id')
-				->on('sbp_headers')
-				->onDelete('cascade')
-				->onUpdate('cascade');
-			$table->text('alamat');
-			$table->string('no_reg')->nullable()->index();
-			$table->string('pemilik')->index();
+			$table->morphs('badanable');
+            $table->string('nama')->index();
+			$table->date('tgl_lahir')->nullable()->index();
+			$table->string('warga_negara')->nullable()->index();
+			$table->text('alamat')->nullable();
 			$table->string('jns_identitas')->nullable()->index();
 			$table->string('no_identitas')->nullable()->index();
             $table->timestamps();
@@ -41,6 +37,6 @@ class CreateSbpPenindakanBangunansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sbp_penindakan_bangunans');
+        Schema::dropIfExists('detail_badans');
     }
 }

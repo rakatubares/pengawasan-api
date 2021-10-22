@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SbpHeaderDetailResource;
-use App\Http\Resources\SbpHeaderResource;
-use App\Models\SbpHeader;
+use App\Http\Resources\SbpResource;
+use App\Models\Sbp;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
-class SbpHeaderController extends Controller
+class SbpController extends Controller
 {
 	use DokumenTrait;
 	
@@ -22,8 +22,8 @@ class SbpHeaderController extends Controller
      */
     public function index()
     {
-        $all_sbp = SbpHeader::all();
-		$sbp_header_list = SbpHeaderResource::collection($all_sbp);
+        $all_sbp = Sbp::all();
+		$sbp_header_list = SbpResource::collection($all_sbp);
 		return $sbp_header_list;
     }
 
@@ -49,7 +49,7 @@ class SbpHeaderController extends Controller
 		$tgl_sprint = strtotime($request->tgl_sprint);
 		$wkt_mulai_penindakan = strtotime($request->wkt_mulai_penindakan);
 		$wkt_selesai_penindakan = strtotime($request->wkt_selesai_penindakan);
-        $insert_result = SbpHeader::create([
+        $insert_result = Sbp::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'no_sprint' => $request->no_sprint,
@@ -78,7 +78,7 @@ class SbpHeaderController extends Controller
      */
     public function show($id)
     {
-        $sbpHeader = new SbpHeaderResource(SbpHeader::findOrFail($id));
+        $sbpHeader = new SbpResource(Sbp::findOrFail($id));
 		return $sbpHeader;
     }
 
@@ -89,7 +89,7 @@ class SbpHeaderController extends Controller
 	 */
 	public function showDetails($id)
 	{
-		$sbpHeaderDetails = new SbpHeaderDetailResource(SbpHeader::find($id));
+		$sbpHeaderDetails = new SbpHeaderDetailResource(Sbp::find($id));
 		return $sbpHeaderDetails;
 	}
 
@@ -116,7 +116,7 @@ class SbpHeaderController extends Controller
 		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
 		$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_selesai_penindakan));
 		
-        $update_result = SbpHeader::where('id', $id)
+        $update_result = Sbp::where('id', $id)
 			->update([
 				'no_sprint' => $request->no_sprint,
 				'tgl_sprint' => $tgl_sprint,
@@ -144,12 +144,12 @@ class SbpHeaderController extends Controller
      */
     public function destroy($id)
     {
-		$update_result = SbpHeader::where('id', $id)
+		$update_result = Sbp::where('id', $id)
 			->whereIn('kode_status', [100,101])
 			->update(['kode_status' => 300]);
 
 		if ($update_result) {
-			$delete_result = SbpHeader::where('id', $id)->delete();
+			$delete_result = Sbp::where('id', $id)->delete();
 		} else {
 			$delete_result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
 		}
@@ -164,7 +164,7 @@ class SbpHeaderController extends Controller
 	 */
 	public function publish($id)
 	{
-		$doc = $this->publishDocument(SbpHeader::class, $id, 'SBP');
+		$doc = $this->publishDocument(Sbp::class, $id, 'SBP');
 		return $doc;
 	}
 }

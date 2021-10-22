@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSbpHeadersTable extends Migration
+class CreateSbpsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSbpHeadersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sbp_headers', function (Blueprint $table) {
+        Schema::create('sbps', function (Blueprint $table) {
             $table->id();
 			$table->string('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -22,10 +22,10 @@ class CreateSbpHeadersTable extends Migration
 			$table->date('tgl_dok')->nullable()->index();
 			$table->string('no_sprint')->index();
 			$table->date('tgl_sprint')->index();
-			$table->boolean('penindakan_sarkut')->default(0)->index();
-			$table->boolean('penindakan_barang')->default(0)->index();
-			$table->boolean('penindakan_bangunan')->default(0)->index();
-			$table->boolean('penindakan_badan')->default(0)->index();
+			$table->boolean('detail_sarkut')->default(0)->index();
+			$table->boolean('detail_barang')->default(0)->index();
+			$table->boolean('detail_bangunan')->default(0)->index();
+			$table->boolean('detail_badan')->default(0)->index();
 			$table->string('lokasi_penindakan')->index();
 			$table->text('uraian_penindakan')->nullable();
 			$table->text('alasan_penindakan')->nullable();
@@ -52,6 +52,6 @@ class CreateSbpHeadersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sbp_headers');
+        Schema::dropIfExists('sbps');
     }
 }

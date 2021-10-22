@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\RefStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpHeaderResource extends JsonResource
+class SbpResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,10 +23,10 @@ class SbpHeaderResource extends JsonResource
 			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
 			'no_sprint' => $this->no_sprint,
 			'tgl_sprint' => $this->tgl_sprint->format('d-m-Y'),
-			'penindakan_sarkut' => $this->penindakan_sarkut,
-			'penindakan_barang' => $this->penindakan_barang,
-			'penindakan_bangunan' => $this->penindakan_bangunan,
-			'penindakan_badan' => $this->penindakan_badan,
+			'detail_sarkut' => $this->penindakan_sarkut,
+			'detail_barang' => $this->penindakan_barang,
+			'detail_bangunan' => $this->penindakan_bangunan,
+			'detail_badan' => $this->penindakan_badan,
 			'lokasi_penindakan' => $this->lokasi_penindakan,
 			'uraian_penindakan' => $this->uraian_penindakan,
 			'alasan_penindakan' => $this->alasan_penindakan,
