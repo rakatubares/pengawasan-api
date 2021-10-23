@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SbpHeaderDetailResource;
+use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SbpResource;
 use App\Models\Sbp;
 use App\Traits\DokumenTrait;
@@ -23,8 +23,8 @@ class SbpController extends Controller
     public function index()
     {
         $all_sbp = Sbp::all();
-		$sbp_header_list = SbpResource::collection($all_sbp);
-		return $sbp_header_list;
+		$sbp_list = SbpResource::collection($all_sbp);
+		return $sbp_list;
     }
 
     /**
@@ -78,8 +78,8 @@ class SbpController extends Controller
      */
     public function show($id)
     {
-        $sbpHeader = new SbpResource(Sbp::findOrFail($id));
-		return $sbpHeader;
+        $sbp = new SbpResource(Sbp::findOrFail($id));
+		return $sbp;
     }
 
 	/**
@@ -89,8 +89,8 @@ class SbpController extends Controller
 	 */
 	public function showDetails($id)
 	{
-		$sbpHeaderDetails = new SbpHeaderDetailResource(Sbp::find($id));
-		return $sbpHeaderDetails;
+		$detailStatus = new DetailStatusResource(Sbp::findOrFail($id));
+		return $detailStatus;
 	}
 
     /**
