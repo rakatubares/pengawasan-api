@@ -1,15 +1,11 @@
 <?php
 
+use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\SbpBarangDetailController;
 use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SbpPenindakanBadanController;
-use App\Http\Controllers\SbpPenindakanBangunanController;
-use App\Http\Controllers\SbpPenindakanBarangController;
-use App\Http\Controllers\SbpPenindakanSarkutController;
 use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -75,5 +71,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::get('/', [DetailBangunanController::class, 'show']);
 		Route::post('/', [DetailBangunanController::class, 'store']);
 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
+	});
+
+	// Badan
+	Route::prefix('/badan')->group(function() {
+		Route::get('/', [DetailBadanController::class, 'show']);
+		Route::post('/', [DetailBadanController::class, 'store']);
+		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
 });

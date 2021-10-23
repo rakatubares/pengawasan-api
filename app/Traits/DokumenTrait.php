@@ -114,7 +114,8 @@ trait DokumenTrait
 		$detail_column = 'detail_' . $detail_type;
 
 		// Update parent based on doc_type
-		$update_result = $model::find($doc_id)
+		$update_result = $model::where('id', $doc_id)
+			->whereIn('kode_status', [100, 101])
 			->update([$detail_column => $detail_status]);
 
 		// Return update result
