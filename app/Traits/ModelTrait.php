@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use App\Models\Sbp;
 use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 
 trait ModelTrait
 {
 	private $models = [
+		'sbp' => Sbp::class,
 		'segel' => Segel::class,
 	];
 
