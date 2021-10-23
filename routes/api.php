@@ -1,15 +1,11 @@
 <?php
 
+use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\SbpBarangDetailController;
-use App\Http\Controllers\SbpHeaderController;
-use App\Http\Controllers\SbpPenindakanBadanController;
-use App\Http\Controllers\SbpPenindakanBangunanController;
-use App\Http\Controllers\SbpPenindakanBarangController;
-use App\Http\Controllers\SbpPenindakanSarkutController;
+use App\Http\Controllers\SbpController;
 use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,59 +28,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /**
  * API for SBP
  */
+Route::apiResource('sbp', SbpController::class);
+Route::get('/sbp/{sbp_id}/details', [SbpController::class, 'showDetails']);
+Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 
-// SBP header
-Route::apiResource('sbp', SbpHeaderController::class);
-Route::prefix('sbp/{sbp_id}')->group(function() {
-
-	Route::get('/details', [SbpHeaderController::class, 'showDetails']);
-	Route::put('/publish', [SbpHeaderController::class, 'publish']);
-
-	// SBP penindakan sarkut
-	Route::prefix('sarkut')->group(function() {
-		Route::get('/', [SbpPenindakanSarkutController::class, 'show']);
-		Route::post('/', [SbpPenindakanSarkutController::class, 'store']);
-		Route::delete('/', [SbpPenindakanSarkutController::class, 'destroy']);
-	});
-
-	// SBP penindakan barang
-	Route::prefix('barang')->group(function() {
-		Route::get('/', [SbpPenindakanBarangController::class, 'show']);
-		Route::post('/', [SbpPenindakanBarangController::class, 'store']);
-		Route::delete('/', [SbpPenindakanBarangController::class, 'destroy']);
-
-		// Detail barang
-		Route::prefix('detail')->group(function() {
-			Route::get('/', [SbpBarangDetailController::class, 'index']);
-			Route::post('/', [SbpBarangDetailController::class, 'store']);
-			Route::get('/{detail_id}', [SbpBarangDetailController::class, 'show']);
-			Route::put('/{detail_id}', [SbpBarangDetailController::class, 'update']);
-			Route::delete('/{detail_id}', [SbpBarangDetailController::class, 'destroy']);
-		});
-	});
-
-	// SBP penindakan bangunan
-	Route::prefix('bangunan')->group(function() {
-		Route::get('/', [SbpPenindakanBangunanController::class, 'show']);
-		Route::post('/', [SbpPenindakanBangunanController::class, 'store']);
-		Route::delete('/', [SbpPenindakanBangunanController::class, 'destroy']);
-	});
-
-	// SBP penindakan badan
-	Route::prefix('badan')->group(function() {
-		Route::get('/', [SbpPenindakanBadanController::class, 'show']);
-		Route::post('/', [SbpPenindakanBadanController::class, 'store']);
-		Route::delete('/', [SbpPenindakanBadanController::class, 'destroy']);
-	});
- 
-});
-
-// BA Segel
+/**
+ * API for BA Segel
+ */
 Route::apiResource('segel', SegelController::class);
 Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
-// Detail
+/**
+ * API for Details
+ */
 Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	// Sarkut
 	Route::prefix('/sarkut')->group(function() {
@@ -114,5 +71,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::get('/', [DetailBangunanController::class, 'show']);
 		Route::post('/', [DetailBangunanController::class, 'store']);
 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
+	});
+
+	// Badan
+	Route::prefix('/badan')->group(function() {
+		Route::get('/', [DetailBadanController::class, 'show']);
+		Route::post('/', [DetailBadanController::class, 'store']);
+		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
 });
