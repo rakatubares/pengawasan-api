@@ -80,3 +80,8 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
 });
+
+
+Route::get('test', function() {
+	# code...
+})->middleware('permission');
