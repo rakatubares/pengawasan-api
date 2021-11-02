@@ -74,7 +74,7 @@ trait DokumenTrait
 		if ($is_unpublished) {
 			$this->getCurrentDate();
 			$number = $this->getNewDocNumber($model, $doc_id);
-			$result = $this->updateDocNumberAndDate($model, $doc_id, $number, $jenis_surat);
+			$result = $this->updateDocNumberAndDate($number, $jenis_surat);
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 		}
