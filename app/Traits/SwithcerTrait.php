@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
-	private $models = [];
+	private $models = [
+		'bukasegel' => BukaSegel::class,
+	];
 
 	private $resources = [
 		'sarkut' => DetailSarkutResource::class,
