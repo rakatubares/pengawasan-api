@@ -5,6 +5,7 @@ use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\SbpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
