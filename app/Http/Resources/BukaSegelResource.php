@@ -38,7 +38,6 @@ class BukaSegelResource extends JsonResource
 			'pejabat1' => $this->pejabat1,
 			'pejabat2' => $this->pejabat2,
 			'status' => new RefStatusResource($this->status),
-			'kode_status' => $this->kode_status,
 		];
 
 		return $array;
