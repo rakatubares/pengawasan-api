@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangItemResource;
-use App\Models\Segel;
-use App\Traits\ModelTrait;
+use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 
 class DetailBarangItemController extends Controller
 {
-	use ModelTrait;
+	use DokumenTrait;
+	use SwitcherTrait;
 
     /**
      * Get valid penindakan barang id.
@@ -72,28 +73,37 @@ class DetailBarangItemController extends Controller
 	{
 		// Get header model
 		$model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
 
-		// Insert data detail barang
-		if ($header) {
-			try {
-				// Get valid detail_barang id
-				$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished($model, $doc_id);
 
-				// Insert detail barang
-				$insert_result = $header->itemBarang()
-					->create([
-						'detail_barang_id' => $detail_barang_id,
-						'uraian_barang' => $request->uraian_barang,
-						'jumlah_barang' => $request->jumlah_barang,
-						'satuan_barang' => $request->satuan_barang,
-					]);
-				$result = new DetailBarangItemResource($insert_result);
-			} catch (\Throwable $th) {
-				$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
+		if ($is_unpublished) {
+			// Get header document
+			$header = $model::find($doc_id);
+
+			// Insert data detail barang
+			if ($header) {
+				try {
+					// Get valid detail_barang id
+					$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
+
+					// Insert detail barang
+					$insert_result = $header->itemBarang()
+						->create([
+							'detail_barang_id' => $detail_barang_id,
+							'uraian_barang' => $request->uraian_barang,
+							'jumlah_barang' => $request->jumlah_barang,
+							'satuan_barang' => $request->satuan_barang,
+						]);
+					$result = new DetailBarangItemResource($insert_result);
+				} catch (\Throwable $th) {
+					$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
+				}
+			} else {
+				$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat menambah item barang.'], 422);
 		}
 
 		return $result;
@@ -144,25 +154,34 @@ class DetailBarangItemController extends Controller
 	{
 		// Get header model
 		$model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
 
-		if ($header) {
-			// Update data item barang
-			$update_result = $header->itemBarang()
-				->where('detail_barang_items.id', $item_id)
-				->update([
-					'uraian_barang' => $request->uraian_barang,
-					'jumlah_barang' => $request->jumlah_barang,
-					'satuan_barang' => $request->satuan_barang,
-				]);
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished($model, $doc_id);
+		
+		if ($is_unpublished) {
+			// Get header document
+			$header = $model::find($doc_id);
 
-			if ($update_result) {
-				$result = "Update item barang berhasil";
+			if ($header) {
+				// Update data item barang
+				$update_result = $header->itemBarang()
+					->where('detail_barang_items.id', $item_id)
+					->update([
+						'uraian_barang' => $request->uraian_barang,
+						'jumlah_barang' => $request->jumlah_barang,
+						'satuan_barang' => $request->satuan_barang,
+					]);
+
+				if ($update_result) {
+					$result = "Update item barang berhasil";
+				} else {
+					$result = response()->json(['error' => 'Update item barang gagal.'], 422);
+				}
 			} else {
-				$result = response()->json(['error' => 'Update item barang gagal.'], 422);
+				$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengubah item barang.'], 422);
 		}
 		
 		return $result;
@@ -180,11 +199,21 @@ class DetailBarangItemController extends Controller
     {
 		// Get header model
 		$model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
 
-        $delete_result = $header->itemBarang()
-			->where('detail_barang_items.id', $item_id)
-			->delete();
-		return $delete_result;
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished($model, $doc_id);
+
+		if ($is_unpublished) {
+			// Get header document
+			$header = $model::find($doc_id);
+
+			$result = $header->itemBarang()
+				->where('detail_barang_items.id', $item_id)
+				->delete();
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat menghapus item barang.'], 422);
+		}
+		
+		return $result;
     }
 }

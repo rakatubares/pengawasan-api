@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class DetailBangunanController extends DetailController
+class DetailBadanController extends DetailController
 {
     /**
      * Store a newly created resource in storage.
@@ -16,15 +16,17 @@ class DetailBangunanController extends DetailController
      */
     public function store(Request $request, $doc_type, $doc_id)
     {
+		$tgl_lahir = strtotime($request->tgl_lahir);
 		$detail_data = [
+			'nama' => $request->nama,
+			'tgl_lahir' => $tgl_lahir,
+			'warga_negara' => $request->warga_negara,
 			'alamat' => $request->alamat,
-			'no_reg' => $request->no_reg,
-			'pemilik' => $request->pemilik,
 			'jns_identitas' => $request->jns_identitas,
 			'no_identitas' => $request->no_identitas,
 		];
 
-		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
+		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'badan');
 		return $result;
     }
 
@@ -37,7 +39,7 @@ class DetailBangunanController extends DetailController
      */
     public function show($doc_type, $doc_id)
     {
-		$result = $this->showDetail($doc_type, $doc_id, 'bangunan');
+		$result = $this->showDetail($doc_type, $doc_id, 'badan');
 		return $result;
     }
 
@@ -50,7 +52,7 @@ class DetailBangunanController extends DetailController
      */
     public function destroy($doc_type, $doc_id)
     {
-		$result = $this->deleteDetail($doc_type, $doc_id, 'bangunan');
+		$result = $this->deleteDetail($doc_type, $doc_id, 'badan');
 		return $result;
     }
 }
