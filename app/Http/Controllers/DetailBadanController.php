@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DetailBadanResource;
-use App\Traits\DokumenTrait;
-use App\Traits\ModelTrait;
 use Illuminate\Http\Request;
 
-class DetailBadanController extends Controller
+class DetailBadanController extends DetailController
 {
-	use DokumenTrait;
-	use ModelTrait;
-
     /**
      * Store a newly created resource in storage.
      *
@@ -22,37 +16,17 @@ class DetailBadanController extends Controller
      */
     public function store(Request $request, $doc_type, $doc_id)
     {
-        // Get model
-		$model = $this->getModel($doc_type);
-
-        // Update kolom detail_badan di tabel parent menjadi TRUE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'badan', 1);
-
-		// Upsert data detail badan
 		$tgl_lahir = strtotime($request->tgl_lahir);
-		if ($update_result) {
-			$insert_result = $model::find($doc_id)
-				->badan()
-				->updateOrCreate(
-					[
-						'badanable_type' => $model,
-						'badanable_id' => $doc_id
-					],
-					[
-						'nama' => $request->nama,
-						'tgl_lahir' => $tgl_lahir,
-						'warga_negara' => $request->warga_negara,
-						'alamat' => $request->alamat,
-						'jns_identitas' => $request->jns_identitas,
-						'no_identitas' => $request->no_identitas,
-					]
-				);
-			
-			$result = new DetailBadanResource($insert_result);
-		} else {
-			$result = response()->json(['error' => 'Insert detail badan gagal.'], 422);
-		}
+		$detail_data = [
+			'nama' => $request->nama,
+			'tgl_lahir' => $tgl_lahir,
+			'warga_negara' => $request->warga_negara,
+			'alamat' => $request->alamat,
+			'jns_identitas' => $request->jns_identitas,
+			'no_identitas' => $request->no_identitas,
+		];
 
+		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'badan');
 		return $result;
     }
 
@@ -65,20 +39,7 @@ class DetailBadanController extends Controller
      */
     public function show($doc_type, $doc_id)
     {
-        $model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
-
-		if ($header) {
-			$badan = $header->badan()->first();
-			if ($badan != null) {
-				$result = new DetailBadanResource($badan);
-			} else {
-				$result = response()->json(['error' => 'Detail badan tidak ditemukan.'], 422);
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
-		}
-		
+		$result = $this->showDetail($doc_type, $doc_id, 'badan');
 		return $result;
     }
 
@@ -91,20 +52,7 @@ class DetailBadanController extends Controller
      */
     public function destroy($doc_type, $doc_id)
     {
-        // Get model
-		$model = $this->getModel($doc_type);
-
-        // Update kolom detail_badan di tabel parent menjadi FALSE
-		$update_result = $this->updateStatusDetail($model, $doc_id, 'badan', 0);
-
-		// Delete detail badan
-		if ($update_result) {
-			$delete_result = $model::find($doc_id)
-				->badan()
-				->delete();
-			return $delete_result;
-		} else {
-			return "Gagal menghapus data detail badan";
-		}
+		$result = $this->deleteDetail($doc_type, $doc_id, 'badan');
+		return $result;
     }
 }
