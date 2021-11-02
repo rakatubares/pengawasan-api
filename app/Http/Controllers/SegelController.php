@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
-use App\Http\Resources\SbpHeaderDetailResource;
 use App\Http\Resources\SegelResource;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
@@ -16,26 +15,26 @@ class SegelController extends Controller
 	private $tipe_dok = 'BA';
 	private $agenda_dok = '/SEGEL/KPU.03/';
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $all_segel = Segel::all();
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$all_segel = Segel::all();
 		$segel_list = SegelResource::collection($all_segel);
 		return $segel_list;
-    }
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
 		$request->validate([
 			'no_sprint' => 'required',
 			'tgl_sprint' => 'required|date',
@@ -45,7 +44,7 @@ class SegelController extends Controller
 			'pejabat1' => 'required'
 		]);
 
-        $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
 		$tgl_sprint = strtotime($request->tgl_sprint);
 
 		$insert_result = Segel::create([
@@ -68,19 +67,19 @@ class SegelController extends Controller
 		]);
 
 		return $insert_result;
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $segel = new SegelResource(Segel::findOrFail($id));
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$segel = new SegelResource(Segel::findOrFail($id));
 		return $segel;
-    }
+	}
 
 	/**
 	 * Display available details
@@ -93,67 +92,68 @@ class SegelController extends Controller
 		return $sbpHeaderDetails;
 	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-			'no_sprint' => 'required',
-			'tgl_sprint' => 'required|date',
-			'jenis_segel' => 'required',
-			'jumlah_segel' => 'required|integer',
-			'nama_pemilik' => 'required',
-			'pejabat1' => 'required'
-		]);
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished(Segel::class, $id);
 
-		$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
-
-		$update_result = Segel::where('id', $id)
-			->update([
-				'no_sprint' => $request->no_sprint,
-				'tgl_sprint' => $tgl_sprint,
-				'jenis_segel' => $request->jenis_segel,
-				'jumlah_segel' => $request->jumlah_segel,
-				'nomor_segel' => $request->nomor_segel,
-				'lokasi_segel' => $request->lokasi_segel,
-				'nama_pemilik' => $request->nama_pemilik,
-				'alamat_pemilik' => $request->alamat_pemilik,
-				'pekerjaan_pemilik' => $request->pekerjaan_pemilik,
-				'jns_identitas' => $request->jns_identitas,
-				'no_identitas' => $request->no_identitas,
-				'pejabat1' => $request->pejabat1,
-				'pejabat2' => $request->pejabat2,
-				'kode_status' => 101,
+		// Update if not published
+		if ($is_unpublished) {
+			$request->validate([
+				'no_sprint' => 'required',
+				'tgl_sprint' => 'required|date',
+				'jenis_segel' => 'required',
+				'jumlah_segel' => 'required|integer',
+				'nama_pemilik' => 'required',
+				'pejabat1' => 'required'
 			]);
-
-		return $update_result;
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $update_result = Segel::where('id', $id)
-			->whereIn('kode_status', [100,101])
-			->update(['kode_status' => 300]);
-
-		if ($update_result) {
-			$delete_result = Segel::where('id', $id)->delete();
+	
+			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
+	
+			$update_result = Segel::where('id', $id)
+				->update([
+					'no_sprint' => $request->no_sprint,
+					'tgl_sprint' => $tgl_sprint,
+					'jenis_segel' => $request->jenis_segel,
+					'jumlah_segel' => $request->jumlah_segel,
+					'nomor_segel' => $request->nomor_segel,
+					'lokasi_segel' => $request->lokasi_segel,
+					'nama_pemilik' => $request->nama_pemilik,
+					'alamat_pemilik' => $request->alamat_pemilik,
+					'pekerjaan_pemilik' => $request->pekerjaan_pemilik,
+					'jns_identitas' => $request->jns_identitas,
+					'no_identitas' => $request->no_identitas,
+					'pejabat1' => $request->pejabat1,
+					'pejabat2' => $request->pejabat2,
+					'kode_status' => 101,
+				]);
+	
+			$result = $update_result;
 		} else {
-			$delete_result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
 		}
 		
-		return $delete_result;
-    }
+		return $result;
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		$result = $this->deleteDocument(Segel::class, $id);
+		return $result;
+	}
 
 	/**
 	 * Terbitkan penomoran dokumen
@@ -162,7 +162,7 @@ class SegelController extends Controller
 	 */
 	public function publish($id)
 	{
-		$doc = $this->publishDocument(Segel::class, $id, 'BA');
+		$doc = $this->publishDocument(Segel::class, $id, $this->tipe_dok);
 		return $doc;
 	}
 }
