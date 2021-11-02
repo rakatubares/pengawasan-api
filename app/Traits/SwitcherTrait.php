@@ -2,15 +2,17 @@
 
 namespace App\Traits;
 
-use App\Models\Sbp;
-use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 
-trait ModelTrait
+trait SwitcherTrait
 {
-	private $models = [
-		'sbp' => Sbp::class,
-		'segel' => Segel::class,
+	private $models = [];
+
+	private $resources = [
+		'sarkut' => DetailSarkutResource::class,
+		'barang' => DetailBarangResource::class,
+		'bangunan' => DetailBangunanResource::class,
+		'badan' => DetailBadanResource::class,
 	];
 
 	/**
@@ -28,5 +30,22 @@ trait ModelTrait
 		}
 		
 		return $model;
+	}
+
+	/**
+	 * Get resource by type
+	 * 
+	 * @param string $resource_type
+	 * @return Resource
+	 */
+	public function getResource($resource_type)
+	{
+		if (array_key_exists($resource_type, $this->resources)) {
+			$resource = $this->resources[$resource_type];
+		} else {
+			$resource = null;
+		}
+		
+		return $resource;
 	}
 }
