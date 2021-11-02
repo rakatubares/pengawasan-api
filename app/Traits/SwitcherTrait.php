@@ -7,12 +7,14 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Models\Sbp;
+use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
 	private $models = [
 		'sbp' => Sbp::class,
+		'segel' => Segel::class,
 	];
 
 	private $resources = [
