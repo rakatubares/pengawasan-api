@@ -8,6 +8,7 @@ use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Models\Sbp;
 use App\Models\Segel;
+use App\Models\BukaSegel;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -15,6 +16,7 @@ trait SwitcherTrait
 	private $models = [
 		'sbp' => Sbp::class,
 		'segel' => Segel::class,
+		'bukasegel' => BukaSegel::class
 	];
 
 	private $resources = [

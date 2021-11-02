@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BukaSegelController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
@@ -38,6 +39,13 @@ Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 Route::apiResource('segel', SegelController::class);
 Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
+
+/**
+ * API for BA Buka Segel
+ */
+Route::apiResource('bukasegel', BukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/details', [BukaSegelController::class, 'showDetails']);
+Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
 
 /**
  * API for Details

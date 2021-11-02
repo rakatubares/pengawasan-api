@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 			RefStatusSeeder::class,
 			SbpSeeder::class,
 			SegelSeeder::class,
+			BukaSegelSeeder::class,
 		]);
     }
 }
