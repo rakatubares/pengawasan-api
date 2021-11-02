@@ -25,7 +25,7 @@ class SegelSeeder extends Seeder
 
 			Segel::create([
 				'no_dok' => $i,
-				'agenda_dok' => '/KPU.03/',
+				'agenda_dok' => '/SEGEL/KPU.03/',
 				'thn_dok' => 2021,
 				'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/2021',
 				'tgl_dok' => $faker->date(),
