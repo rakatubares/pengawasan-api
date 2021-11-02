@@ -5,8 +5,6 @@ use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,13 +29,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/details', [SbpController::class, 'showDetails']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
-
-/**
- * API for BA Segel
- */
-Route::apiResource('segel', SegelController::class);
-Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
-Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**
  * API for Details
@@ -80,3 +71,7 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
 });
+
+Route::get('test', function() {
+	# code...
+})->middleware('permission');

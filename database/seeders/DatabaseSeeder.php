@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
 		$this->call([
 			RefStatusSeeder::class,
 			SbpSeeder::class,
-			SegelSeeder::class,
 		]);
     }
 }
