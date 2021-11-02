@@ -2,6 +2,10 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\DetailBadanResource;
+use App\Http\Resources\DetailBangunanResource;
+use App\Http\Resources\DetailBarangResource;
+use App\Http\Resources\DetailSarkutResource;
 use App\Models\Sbp;
 use Illuminate\Database\Eloquent\Model;
 
