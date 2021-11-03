@@ -21,7 +21,7 @@ class DetailController extends Controller
      */
     public function upsertDetail($detail_data, $doc_type, $doc_id, $detail_type)
     {
-		// DB::beginTransaction();
+		DB::beginTransaction();
 
 		try {
 			// Get model
