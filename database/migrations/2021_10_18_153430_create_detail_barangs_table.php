@@ -16,12 +16,12 @@ class CreateDetailBarangsTable extends Migration
         Schema::create('detail_barangs', function (Blueprint $table) {
             $table->id();
 			$table->morphs('barangable');
-			$table->integer('jumlah_kemasan');
-			$table->string('satuan_kemasan')->index();
+			$table->integer('jumlah_kemasan')->nullable();
+			$table->string('satuan_kemasan')->nullable()->index();
 			$table->string('jns_dok')->nullable()->index();
 			$table->string('no_dok')->nullable()->index();
 			$table->date('tgl_dok')->nullable()->index();
-			$table->string('pemilik')->index();
+			$table->string('pemilik')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('barangable_type');

@@ -16,7 +16,7 @@ class CreateDetailSarkutsTable extends Migration
         Schema::create('detail_sarkuts', function (Blueprint $table) {
             $table->id();
 			$table->morphs('sarkutable');
-			$table->string('nama_sarkut')->index();
+			$table->string('nama_sarkut')->nullable()->index();
 			$table->string('jenis_sarkut')->index();
 			$table->string('no_flight_trayek')->nullable()->index();
 			$table->string('kapasitas')->nullable();
