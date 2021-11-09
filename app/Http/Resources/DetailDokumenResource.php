@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailStatusResource extends JsonResource
+class DetailDokumenResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,15 +14,12 @@ class DetailStatusResource extends JsonResource
      */
     public function toArray($request)
     {
-		$detail_list = ['sarkut', 'barang', 'bangunan', 'dokumen', 'badan'];
-		$array = [];
-
-        foreach ($detail_list as $value) {
-			$column_name = 'detail_' . $value;
-			if (isset($this[$column_name])) {
-				$array[$value] = $this[$column_name];
-			}
-		}
+        $array = [
+			'id' => $this->id,
+			'jns_dok' => $this->jns_dok,
+			'no_dok' => $this->no_dok,
+			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
+		];
 
 		return $array;
     }
