@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailBarangWithSingleItemResource;
 use Illuminate\Http\Request;
 
 class DetailBarangController extends DetailController
@@ -14,7 +15,7 @@ class DetailBarangController extends DetailController
 	 * @param  string $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $doc_type, $doc_id)
+    public function store(Request $request, $doc_type, $doc_id, $how='upsert')
     {
 		$tgl_dok = $request->tgl_dok != null ? strtotime($request->tgl_dok) : $request->tgl_dok;
 		$detail_data = [
@@ -26,7 +27,16 @@ class DetailBarangController extends DetailController
 			'pemilik' => $request->pemilik
 		];
 
-		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'barang');
+		switch ($how) {
+			case 'new':
+				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'barang');
+				break;
+			
+			default:
+				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'barang');
+				break;
+		}
+
 		return $result;
     }
 
@@ -37,9 +47,48 @@ class DetailBarangController extends DetailController
      * @param  int  $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function show($doc_type, $doc_id)
+    public function show($doc_type, $doc_id, $how='one')
     {
-		$result = $this->showDetail($doc_type, $doc_id, 'barang');
+		switch ($how) {
+			case 'all':
+				$result = $this->showDetails($doc_type, $doc_id, 'barang');
+				break;
+
+			case 'allitems':
+				$result = $this->showAllItems($doc_type, $doc_id);
+				break;
+			
+			default:
+				$result = $this->showDetail($doc_type, $doc_id, 'barang');
+				break;
+		}
+		
+		return $result;
+    }
+
+	/**
+     * Display all resources with items.
+     *
+     * @param  string  $doc_type
+     * @param  int  $doc_id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAllItems($doc_type, $doc_id)
+    {
+		// Get model
+		$model = $this->getModel($doc_type);
+
+		// Get header
+		$header = $model::find($doc_id);
+
+		// Get detail data if header is found
+		if ($header) {
+			$barang = $header->barang()->get();
+			$result = DetailBarangWithSingleItemResource::collection($barang);
+		} else {
+			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
+		}
+
 		return $result;
     }
 

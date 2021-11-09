@@ -14,7 +14,7 @@ class DetailSarkutController extends DetailController
 	 * @param  string $doc_id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $doc_type, $doc_id)
+	public function store(Request $request, $doc_type, $doc_id, $how='upsert')
 	{
 		$detail_data = [
 			'nama_sarkut' => $request->nama_sarkut,
@@ -26,8 +26,17 @@ class DetailSarkutController extends DetailController
 			'bendera' => $request->bendera,
 			'no_reg_polisi' => $request->no_reg_polisi,
 		];
-
-		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'sarkut');
+		
+		switch ($how) {
+			case 'new':
+				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'sarkut');
+				break;
+			
+			default:
+				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'sarkut');
+				break;
+		}
+		
 		return $result;
 	}
 
@@ -38,9 +47,18 @@ class DetailSarkutController extends DetailController
 	 * @param  int  $doc_id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($doc_type, $doc_id)
+	public function show($doc_type, $doc_id, $how='one')
 	{
-		$result = $this->showDetail($doc_type, $doc_id, 'sarkut');
+		switch ($how) {
+			case 'all':
+				$result = $this->showDetails($doc_type, $doc_id, 'sarkut');
+				break;
+			
+			default:
+				$result = $this->showDetail($doc_type, $doc_id, 'sarkut');
+				break;
+		}
+		
 		return $result;
 	}
 
