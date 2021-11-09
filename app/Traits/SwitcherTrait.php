@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
-	private $models = [];
+	private $models = [
+		'bast' => SerahTerima::class,
+	];
 
 	private $resources = [
 		'badan' => DetailBadanResource::class,

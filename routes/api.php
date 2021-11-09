@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\SerahTerimaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/**
+ * API for BAST
+ */
+Route::apiResource('bast', SerahTerimaController::class);
+Route::get('/bast/{bast_id}/details', [SerahTerimaController::class, 'showDetails']);
+Route::put('/bast/{bast_id}/publish', [SerahTerimaController::class, 'publish']);
 
 /**
  * API for Details
