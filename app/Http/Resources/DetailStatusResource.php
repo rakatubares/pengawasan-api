@@ -14,7 +14,7 @@ class DetailStatusResource extends JsonResource
      */
     public function toArray($request)
     {
-		$detail_list = ['sarkut', 'barang', 'bangunan', 'badan'];
+		$detail_list = ['sarkut', 'barang', 'bangunan', 'dokumen', 'badan'];
 		$array = [];
 
         foreach ($detail_list as $value) {

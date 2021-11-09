@@ -5,7 +5,9 @@ namespace App\Traits;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
+use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Models\SerahTerima;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -13,10 +15,11 @@ trait SwitcherTrait
 	private $models = [];
 
 	private $resources = [
-		'sarkut' => DetailSarkutResource::class,
-		'barang' => DetailBarangResource::class,
-		'bangunan' => DetailBangunanResource::class,
 		'badan' => DetailBadanResource::class,
+		'bangunan' => DetailBangunanResource::class,
+		'barang' => DetailBarangResource::class,
+		'dokumen' => DetailDokumenResource::class,
+		'sarkut' => DetailSarkutResource::class,
 	];
 
 	/**
