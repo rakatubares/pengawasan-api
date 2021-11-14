@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefStatusesTable extends Migration
+class CreateDetailBangunanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateRefStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ref_statuses', function (Blueprint $table) {
+        Schema::create('detail_bangunan', function (Blueprint $table) {
             $table->id();
-			$table->integer('kode_status')->unique();
-			$table->string('short_status')->index();
-			$table->string('uraian_status')->index();
+			$table->morphs('buildingable');
+			$table->text('alamat');
+			$table->string('no_reg')->nullable()->index();
+			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->index('buildingable_type');
+			$table->index('buildingable_id');
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
@@ -33,6 +36,6 @@ class CreateRefStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ref_statuses');
+        Schema::dropIfExists('detail_bangunan');
     }
 }

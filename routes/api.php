@@ -4,6 +4,7 @@ use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
+use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\SbpController;
 use Illuminate\Http\Request;
@@ -37,15 +38,15 @@ Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	// Sarkut
 	Route::prefix('/sarkut')->group(function() {
-		Route::get('/', [DetailSarkutController::class, 'show']);
-		Route::post('/', [DetailSarkutController::class, 'store']);
+		Route::get('/{how?}', [DetailSarkutController::class, 'show']);
+		Route::post('/{how?}', [DetailSarkutController::class, 'store']);
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
 	});
 
 	// Barang
 	Route::prefix('/barang')->group(function() {
-		Route::get('/', [DetailBarangController::class, 'show']);
-		Route::post('/', [DetailBarangController::class, 'store']);
+		Route::get('/{how?}', [DetailBarangController::class, 'show']);
+		Route::post('/{how?}', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
 		// Item barang
@@ -60,16 +61,23 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Bangunan
 	Route::prefix('/bangunan')->group(function() {
-		Route::get('/', [DetailBangunanController::class, 'show']);
-		Route::post('/', [DetailBangunanController::class, 'store']);
+		Route::get('/{how?}', [DetailBangunanController::class, 'show']);
+		Route::post('/{how?}', [DetailBangunanController::class, 'store']);
 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
 	});
 
 	// Badan
 	Route::prefix('/badan')->group(function() {
-		Route::get('/', [DetailBadanController::class, 'show']);
-		Route::post('/', [DetailBadanController::class, 'store']);
+		Route::get('/{how?}', [DetailBadanController::class, 'show']);
+		Route::post('/{how?}', [DetailBadanController::class, 'store']);
 		Route::delete('/', [DetailBadanController::class, 'destroy']);
+	});
+
+	// Dokumen
+	Route::prefix('/dokumen')->group(function() {
+		Route::get('/{how?}', [DetailDokumenController::class, 'show']);
+		Route::post('/{how?}', [DetailDokumenController::class, 'store']);
+		Route::delete('/', [DetailDokumenController::class, 'destroy']);
 	});
 });
 

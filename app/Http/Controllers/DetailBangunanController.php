@@ -14,7 +14,7 @@ class DetailBangunanController extends DetailController
 	 * @param  string $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $doc_type, $doc_id)
+    public function store(Request $request, $doc_type, $doc_id, $how='upsert')
     {
 		$detail_data = [
 			'alamat' => $request->alamat,
@@ -24,7 +24,16 @@ class DetailBangunanController extends DetailController
 			'no_identitas' => $request->no_identitas,
 		];
 
-		$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
+		switch ($how) {
+			case 'new':
+				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
+				break;
+			
+			default:
+				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
+				break;
+		}
+
 		return $result;
     }
 
@@ -35,9 +44,18 @@ class DetailBangunanController extends DetailController
      * @param  int  $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function show($doc_type, $doc_id)
+    public function show($doc_type, $doc_id, $how='one')
     {
-		$result = $this->showDetail($doc_type, $doc_id, 'bangunan');
+		switch ($how) {
+			case 'all':
+				$result = $this->showDetails($doc_type, $doc_id, 'bangunan');
+				break;
+			
+			default:
+				$result = $this->showDetail($doc_type, $doc_id, 'bangunan');
+				break;
+		}
+		
 		return $result;
     }
 

@@ -11,27 +11,38 @@ class DetailBarang extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $fillable = [
-		'barangable_type',
-		'barangable_id',
-		'jumlah_kemasan',
-		'satuan_kemasan',
-		'jns_dok',
-		'no_dok',
-		'tgl_dok',
-		'pemilik'
-	];
+	protected $table = 'detail_barang';
 
-	protected $casts = [
-		'tgl_dok' => 'date'
+	protected $fillable = [
+		'goodsable_type',
+		'goodsable_id',
+		'jumlah_kemasan',
+		'satuan_kemasan_id',
+		'pemilik_id'
 	];
 
 	/**
 	 * Define polymorphic properties
 	 */
-	public function barangable()
+	public function goodsable()
 	{
-		return $this->morphTo(__FUNCTION__, 'barangable_type', 'barangable_id');
+		return $this->morphTo(__FUNCTION__, 'goodsable_type', 'goodsable_id');
+	}
+
+	/**
+	 * Detail entitas pemilik
+	 */
+	public function pemilik()
+	{
+		return $this->belongsTo(RefEntitas::class, 'pemilik_id');
+	}
+
+	/**
+	 * MorphOne ke dokumen
+	 */
+	public function dokumen()
+	{
+		return $this->morphOne(DetailDokumen::class, 'documentable');
 	}
 
 	/**
