@@ -19,7 +19,8 @@ class CreateDetailSarkutTable extends Migration
 			$table->string('nama_sarkut')->nullable()->index();
 			$table->string('jenis_sarkut')->index();
 			$table->string('no_flight_trayek')->nullable()->index();
-			$table->string('kapasitas')->nullable();
+			$table->string('jumlah_kapasitas')->nullable();
+			$table->string('satuan_kapasitas')->nullable();
 			$table->integer('pilot_id')->nullable()->index();
 			$table->string('bendera')->nullable()->index();
 			$table->string('no_reg_polisi')->nullable()->index();
