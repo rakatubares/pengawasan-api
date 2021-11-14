@@ -18,7 +18,7 @@ class CreateDetailBarangItemsTable extends Migration
 			$table->unsignedBigInteger('detail_barang_id');
 			$table->foreign('detail_barang_id')
 				->references('id')
-				->on('detail_barangs')
+				->on('detail_barang')
 				->onDelete('cascade')
 				->onUpdate('cascade');
 			$table->double('jumlah_barang');

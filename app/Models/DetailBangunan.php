@@ -11,6 +11,8 @@ class DetailBangunan extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'detail_bangunan';
+
 	protected $fillable = [
 		'buildingable_type',
 		'buildingable_id',

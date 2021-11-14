@@ -17,7 +17,7 @@ class CreateDetailBarangTable extends Migration
             $table->id();
 			$table->morphs('goodsable');
 			$table->integer('jumlah_kemasan')->nullable();
-			$table->string('satuan_kemasan_id')->nullable()->index();
+			$table->string('satuan_kemasan')->nullable()->index();
 			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
