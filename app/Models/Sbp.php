@@ -11,14 +11,15 @@ class Sbp extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'sbp';
+
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
 		'tgl_dok',
-		'no_sprint',
-		'tgl_sprint',
+		'sprint_id',
 		'detail_sarkut',
 		'detail_barang',
 		'detail_bangunan',
@@ -30,7 +31,7 @@ class Sbp extends Model
 		'wkt_mulai_penindakan',
 		'wkt_selesai_penindakan',
 		'hal_terjadi',
-		'nama_pemilik',
+		'saksi_id',
 		'pejabat1',
 		'pejabat2',
 		'kode_status'
@@ -38,19 +39,18 @@ class Sbp extends Model
 
 	protected $casts = [
 		'tgl_dok' => 'date',
-		'tgl_sprint' => 'date',
 		'wkt_mulai_penindakan' => 'datetime',
 		'wkt_selesai_penindakan' => 'datetime',
 	];
 
 	public function sarkut()
 	{
-		return $this->morphOne(DetailSarkut::class, 'sarkutable');
+		return $this->morphOne(DetailSarkut::class, 'vehicleable');
 	}
 
 	public function barang()
 	{
-		return $this->morphOne(DetailBarang::class, 'barangable');
+		return $this->morphOne(DetailBarang::class, 'goodsable');
 	}
 
 	public function itemBarang()
@@ -58,19 +58,19 @@ class Sbp extends Model
 		return $this->hasManyThrough(
 			DetailBarangItem::class,
 			DetailBarang::class,
-			'barangable_id',
+			'goodsable_id',
 			'detail_barang_id'
-		)->where('barangable_type', Sbp::class);
+		)->where('goodsable_type', Sbp::class);
 	}
 
 	public function bangunan()
 	{
-		return $this->morphOne(DetailBangunan::class, 'bangunanable');
+		return $this->morphOne(DetailBangunan::class, 'buildingable');
 	}
 
 	public function badan()
 	{
-		return $this->morphOne(DetailBadan::class, 'badanable');
+		return $this->morphOne(DetailBadan::class, 'bodyable');
 	}
 
 	public function status()

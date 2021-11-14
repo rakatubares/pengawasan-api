@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSbpsTable extends Migration
+class CreateSbpTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateSbpsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sbps', function (Blueprint $table) {
+        Schema::create('sbp', function (Blueprint $table) {
             $table->id();
 			$table->string('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tgl_dok')->nullable()->index();
-			$table->string('no_sprint')->index();
-			$table->date('tgl_sprint')->index();
+			$table->integer('sprint_id')->index();
 			$table->boolean('detail_sarkut')->default(0)->index();
 			$table->boolean('detail_barang')->default(0)->index();
 			$table->boolean('detail_bangunan')->default(0)->index();
@@ -33,7 +32,7 @@ class CreateSbpsTable extends Migration
 			$table->dateTime('wkt_mulai_penindakan')->index();
 			$table->dateTime('wkt_selesai_penindakan')->index();
 			$table->text('hal_terjadi')->nullable();
-			$table->string('nama_pemilik')->index();
+			$table->integer('saksi_id')->index();
 			$table->string('pejabat1')->index();
 			$table->string('pejabat2')->nullable()->index();
 			$table->integer('kode_status')->index();
@@ -52,6 +51,6 @@ class CreateSbpsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sbps');
+        Schema::dropIfExists('sbp');
     }
 }
