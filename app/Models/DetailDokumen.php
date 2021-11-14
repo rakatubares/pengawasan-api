@@ -11,9 +11,11 @@ class DetailDokumen extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'detail_dokumen';
+
 	protected $fillable = [
-		'dokumenable_type',
-		'dokumenable_id',
+		'documentable_type',
+		'documentable_id',
 		'jns_dok',
 		'no_dok',
 		'tgl_dok',
@@ -26,8 +28,8 @@ class DetailDokumen extends Model
 	/**
 	 * Define polymorphic properties
 	 */
-	public function dokumenable()
+	public function documentable()
 	{
-		return $this->morphTo(__FUNCTION__, 'dokumenable_type', 'dokumenable_id');
+		return $this->morphTo(__FUNCTION__, 'documentable_type', 'documentable_id');
 	}
 }

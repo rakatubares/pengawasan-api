@@ -11,15 +11,17 @@ class DetailSarkut extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'detail_sarkut';
+
 	protected $fillable = [
-		'sarkutable_type',
-		'sarkutable_id',
+		'vehicleable_type',
+		'vehicleable_id',
 		'nama_sarkut',
 		'jenis_sarkut',
 		'no_flight_trayek',
 		'kapasitas',
 		'satuan_kapasitas',
-		'nama_pilot_pengemudi',
+		'pilot_id',
 		'bendera',
 		'no_reg_polisi'
 	];
@@ -27,8 +29,16 @@ class DetailSarkut extends Model
 	/**
 	 * Define polymorphic properties
 	 */
-	public function sarkutable()
+	public function vehicleable()
 	{
-		return $this->morphTo(__FUNCTION__, 'sarkutable_type', 'sarkutable_id');
+		return $this->morphTo(__FUNCTION__, 'vehicleable_type', 'vehicleable_id');
+	}
+
+	/**
+	 * Detail entitas pilot
+	 */
+	public function pilot()
+	{
+		return $this->belongsTo(RefEntitas::class, 'pilot_id');
 	}
 }

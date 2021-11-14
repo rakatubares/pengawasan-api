@@ -12,20 +12,26 @@ class DetailBangunan extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'bangunanable_type',
-		'bangunanable_id',
+		'buildingable_type',
+		'buildingable_id',
 		'alamat',
 		'no_reg',
-		'pemilik',
-		'jns_identitas',
-		'no_identitas',
+		'pemilik_id',
 	];
 
 	/**
 	 * Define polymorphic properties
 	 */
-	public function bangunanable()
+	public function buildingable()
 	{
-		return $this->morphTo(__FUNCTION__, 'bangunanable_type', 'bangunanable_id');
+		return $this->morphTo(__FUNCTION__, 'buildingable_type', 'buildingable_id');
+	}
+
+	/**
+	 * Detail entitas pemilik
+	 */
+	public function pemilik()
+	{
+		return $this->belongsTo(RefEntitas::class, 'pemilik_id');
 	}
 }
