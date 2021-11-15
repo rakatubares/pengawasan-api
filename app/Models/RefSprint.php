@@ -12,4 +12,14 @@ class RefSprint extends Model
 	use SoftDeletes;
 
 	protected $table = 'ref_sprint';
+
+	protected $fillable = [
+		'nomor_sprint',
+		'tanggal_sprint',
+		'pejabat_id',
+	];
+
+	protected $casts = [
+		'tanggal_sprint' => 'date',
+	];
 }

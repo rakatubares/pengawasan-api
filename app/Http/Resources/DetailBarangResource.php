@@ -18,10 +18,9 @@ class DetailBarangResource extends JsonResource
 			'id' => $this->id,
 			'jumlah_kemasan' => $this->jumlah_kemasan,
 			'satuan_kemasan' => $this->satuan_kemasan,
-			'jns_dok' => $this->jns_dok,
-			'no_dok' => $this->no_dok,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'pemilik' => $this->pemilik,
+			'dokumen' => new DetailDokumenResource($this->dokumen),
+			'pemilik' => new PersonEntityResource($this->pemilik),
+			'item' => DetailBarangItemResource::collection($this->itemBarang)
 		];
 
 		return $array;

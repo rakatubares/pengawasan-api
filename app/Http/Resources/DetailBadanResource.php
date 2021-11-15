@@ -16,13 +16,7 @@ class DetailBadanResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
-			'sbp_id' => $this->sbp_id,
-			'nama' => $this->nama,
-			'tgl_lahir' => $this->tgl_lahir ? $this->tgl_lahir->format('d-m-Y') : null,
-			'warga_negara' => $this->warga_negara,
-			'alamat' => $this->alamat,
-			'jns_identitas' => $this->jns_identitas,
-			'no_identitas' => $this->no_identitas,
+			'entitas' => new PersonEntityResource($this->entitas)
 		];
 
 		return $array;
