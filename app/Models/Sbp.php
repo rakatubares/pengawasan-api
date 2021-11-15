@@ -73,6 +73,16 @@ class Sbp extends Model
 		return $this->morphOne(DetailBadan::class, 'bodyable');
 	}
 
+	public function sprint()
+	{
+		return $this->belongsTo(RefSprint::class, 'sprint_id');
+	}
+
+	public function saksi()
+	{
+		return $this->belongsTo(RefEntitas::class, 'saksi_id');
+	}
+
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');

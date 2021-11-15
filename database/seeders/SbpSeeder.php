@@ -40,6 +40,7 @@ class SbpSeeder extends Seeder
 				'jenis_pelanggaran' => $faker->randomElement(['Kepabeanan', 'Cukai']),
 				'wkt_mulai_penindakan' => $faker->dateTime(),
 				'wkt_selesai_penindakan' => $faker->dateTime(),
+				'hal_terjadi' => $faker->text(),
 				'saksi_id' => $faker->numberBetween(1, 100),
 				'pejabat1' => $faker->name(),
 				'kode_status' => 200,
