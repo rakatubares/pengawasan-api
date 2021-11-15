@@ -19,11 +19,11 @@ class DetailSarkutResource extends JsonResource
 			'nama_sarkut' => $this->nama_sarkut,
 			'jenis_sarkut' => $this->jenis_sarkut,
 			'no_flight_trayek' => $this->no_flight_trayek,
-			'kapasitas' => $this->kapasitas,
+			'jumlah_kapasitas' => $this->kapasitas,
 			'satuan_kapasitas' => $this->satuan_kapasitas,
-			'nama_pilot_pengemudi' => $this->nama_pilot_pengemudi,
 			'bendera' => $this->bendera,
 			'no_reg_polisi' => $this->no_reg_polisi,
+			'pilot' => new PersonEntityResource($this->pilot)
 		];
 
 		return $array;

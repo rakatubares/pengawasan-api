@@ -18,9 +18,7 @@ class DetailBangunanResource extends JsonResource
 			'id' => $this->id,
 			'alamat' => $this->alamat,
 			'no_reg' => $this->no_reg,
-			'pemilik' => $this->pemilik,
-			'jns_identitas' => $this->jns_identitas,
-			'no_identitas' => $this->no_identitas,
+			'pemilik' => new PersonEntityResource($this->pemilik)
 		];
 
 		return $array;
