@@ -1,12 +1,7 @@
 <?php
 
-use App\Http\Controllers\DetailBadanController;
-use App\Http\Controllers\DetailBangunanController;
-use App\Http\Controllers\DetailBarangController;
-use App\Http\Controllers\DetailBarangItemController;
-use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
+use App\Http\Controllers\RefEntitasController;
+use App\Http\Controllers\RefSprintController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +19,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/**
+ * API for SPRINT
+ */
+Route::apiResource('sprint', RefSprintController::class);
+Route::post('/sprint/search', [RefSprintController::class, 'search']);
+
+/**
+ * API for Entity
+ */
+Route::apiResource('entitas', RefEntitasController::class);
+Route::post('/entitas/search', [RefEntitasController::class, 'search']);
 
 Route::get('test', function() {
 	# code...
