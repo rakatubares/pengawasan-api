@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\RefEntitasController;
+use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -87,6 +88,11 @@ Route::post('/sprint/search', [RefSprintController::class, 'search']);
  */
 Route::apiResource('entitas', RefEntitasController::class);
 Route::post('/entitas/search', [RefEntitasController::class, 'search']);
+
+/**
+ * API for Jabatan
+ */
+Route::apiResource('jabatan', RefJabatanController::class);
 
 Route::get('test', function() {
 	# code...
