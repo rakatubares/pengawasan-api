@@ -18,7 +18,7 @@ class SbpSeeder extends Seeder
     {
 		$faker = Faker::create();
 		
-		for ($i=1; $i < 6; $i++) {
+		for ($i=1; $i < 11; $i++) {
 			$detail_sarkut = $faker->boolean();
 			$detail_barang = $faker->boolean();
 			$detail_bangunan = $faker->boolean();
