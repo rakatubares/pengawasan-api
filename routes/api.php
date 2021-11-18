@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
+Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
 Route::get('/sbp/{sbp_id}/details', [SbpController::class, 'showDetails']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 
