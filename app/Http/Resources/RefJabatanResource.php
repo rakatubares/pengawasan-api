@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RefSprintResource extends JsonResource
+class RefJabatanResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,9 @@ class RefSprintResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
-			'nomor_sprint' => $this->nomor_sprint,
-			'tanggal_sprint' => $this->tanggal_sprint->format('d-m-Y'),
-			'pejabat' => new RefJabatanResource($this->pejabat)
+			'parent_id' => $this->parent_id,
+			'jabatan' => $this->jabatan,
+			'active' => $this->active
 		];
 
 		return $array;

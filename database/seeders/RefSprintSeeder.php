@@ -20,7 +20,8 @@ class RefSprintSeeder extends Seeder
 		for ($i=1; $i <= 10; $i++) { 
 			RefSprint::create([
 				'nomor_sprint' => 'SPRINT-' . $i . '/KPU.03/BD.05/2021',
-				'tanggal_sprint' => $faker->date()
+				'tanggal_sprint' => $faker->date(),
+				'pejabat_id' => 2
 			]);
 		}
     }

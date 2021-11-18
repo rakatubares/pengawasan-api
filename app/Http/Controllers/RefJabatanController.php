@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RefEntitasResource;
-use App\Models\RefEntitas;
+use App\Http\Resources\RefJabatanResource;
+use App\Models\RefJabatan;
 use Illuminate\Http\Request;
 
-class RefEntitasController extends Controller
+class RefJabatanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,26 +15,20 @@ class RefEntitasController extends Controller
      */
     public function index()
     {
-        //
+        $all_jabatan = RefJabatan::all();
+		$jabatan_list = RefJabatanResource::collection($all_jabatan);
+		return $jabatan_list;
     }
 
-	/**
-	 * Display resource based on search query
-	 * 
-	 * @param  \Illuminate\Http\Request  $request
+    /**
+     * Show the form for creating a new resource.
+     *
      * @return \Illuminate\Http\Response
-	 */
-	public function search(Request $request)
-	{
-		$s = $request->s;
-		$search = '%' . $s . '%';
-		$search_result = RefEntitas::where('nama', 'like', $search)
-			->orderBy('nama')
-			->take(10)
-			->get();
-		$search_list = RefEntitasResource::collection($search_result);
-		return $search_list;
-	}
+     */
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -44,25 +38,7 @@ class RefEntitasController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-			'nama' => 'required',
-			'jenis_identitas' => 'required',
-			'nomor_identitas' => 'required'
-		]);
-
-		$insert_result = RefEntitas::create([
-			'jenis_entitas' => 'perorangan',
-			'nama' => $request->nama,
-			'jenis_kelamin' => $request->jenis_kelamin,
-			'tanggal_lahir' => $request->tanggal_lahir,
-			'warga_negara' => $request->warga_negara,
-			'jenis_identitas' => $request->jenis_identitas,
-			'nomor_identitas' => $request->nomor_identitas,
-			'pekerjaan' => $request->pekerjaan,
-			'alamat' => $request->alamat,
-		]);
-
-		return $insert_result;
+        //
     }
 
     /**
@@ -73,8 +49,7 @@ class RefEntitasController extends Controller
      */
     public function show($id)
     {
-        $entitas = new RefEntitasResource(RefEntitas::find($id));
-		return $entitas;
+        //
     }
 
     /**
