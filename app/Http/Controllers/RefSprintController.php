@@ -39,16 +39,6 @@ class RefSprintController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -56,7 +46,19 @@ class RefSprintController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//
+		$request->validate([
+			'nomor_sprint' => 'required|unique:ref_sprint,nomor_sprint,NULL,id,deleted_at,NULL',
+			'tanggal_sprint' => 'required|date',
+			'pejabat.id' => 'required|integer'
+		]);
+
+		$insert_result = RefSprint::create([
+			'nomor_sprint' => $request->nomor_sprint,
+			'tanggal_sprint' => $request->tanggal_sprint,
+			'pejabat_id' => $request->pejabat['id'],
+		]);
+
+		return $insert_result;
 	}
 
 	/**

@@ -16,7 +16,7 @@ class CreateRefSprintTable extends Migration
 		Schema::create('ref_sprint', function (Blueprint $table) {
 			$table->id();
 			$table->string('nomor_sprint')->index();
-			$table->string('tanggal_sprint')->index();
+			$table->date('tanggal_sprint')->index();
 			$table->integer('pejabat_id')->nullable()->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

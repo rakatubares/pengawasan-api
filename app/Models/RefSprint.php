@@ -22,4 +22,12 @@ class RefSprint extends Model
 	protected $casts = [
 		'tanggal_sprint' => 'date',
 	];
+
+	/**
+	 * Pejabat SPRINT
+	 */
+	public function pejabat()
+	{
+		return $this->belongsTo(RefJabatan::class, 'pejabat_id');
+	}
 }
