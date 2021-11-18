@@ -45,12 +45,12 @@ class Sbp extends Model
 
 	public function sarkut()
 	{
-		return $this->morphOne(DetailSarkut::class, 'vehicleable');
+		return $this->morphOne(DetailSarkut::class, 'parent');
 	}
 
 	public function barang()
 	{
-		return $this->morphOne(DetailBarang::class, 'goodsable');
+		return $this->morphOne(DetailBarang::class, 'parent');
 	}
 
 	public function itemBarang()
@@ -58,19 +58,19 @@ class Sbp extends Model
 		return $this->hasManyThrough(
 			DetailBarangItem::class,
 			DetailBarang::class,
-			'goodsable_id',
+			'parent_id',
 			'detail_barang_id'
-		)->where('goodsable_type', Sbp::class);
+		)->where('parent_type', Sbp::class);
 	}
 
 	public function bangunan()
 	{
-		return $this->morphOne(DetailBangunan::class, 'buildingable');
+		return $this->morphOne(DetailBangunan::class, 'parent');
 	}
 
 	public function badan()
 	{
-		return $this->morphOne(DetailBadan::class, 'bodyable');
+		return $this->morphOne(DetailBadan::class, 'parent');
 	}
 
 	public function sprint()

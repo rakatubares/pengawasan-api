@@ -37,6 +37,7 @@ class SbpSeeder extends Seeder
 				'detail_badan' => $detail_badan,
 				'lokasi_penindakan' => $faker->sentence(),
 				'uraian_penindakan' => $faker->sentence($nbWOrds = 20),
+				'alasan_penindakan' => $faker->sentence($nbWOrds = 20),
 				'jenis_pelanggaran' => $faker->randomElement(['Kepabeanan', 'Cukai']),
 				'wkt_mulai_penindakan' => $faker->dateTime(),
 				'wkt_selesai_penindakan' => $faker->dateTime(),

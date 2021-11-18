@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SbpResource;
+use App\Http\Resources\SbpTableResource;
 use App\Models\Sbp;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class SbpController extends Controller
 	public function index()
 	{
 		$all_sbp = Sbp::all();
-		$sbp_list = SbpResource::collection($all_sbp);
+		$sbp_list = SbpTableResource::collection($all_sbp);
 		return $sbp_list;
 	}
 
@@ -36,24 +37,21 @@ class SbpController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'no_sprint' => 'required',
-			'tgl_sprint' => 'required|date',
+			'sprint.id' => 'required|integer',
 			'lokasi_penindakan' => 'required',
 			'wkt_mulai_penindakan' => 'required|date',
 			'wkt_selesai_penindakan' => 'required|date',
-			'nama_pemilik' => 'required',
+			'saksi.id' => 'required|integer',
 			'pejabat1' => 'required'
 		]);
 		
 		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
-		$tgl_sprint = strtotime($request->tgl_sprint);
 		$wkt_mulai_penindakan = strtotime($request->wkt_mulai_penindakan);
 		$wkt_selesai_penindakan = strtotime($request->wkt_selesai_penindakan);
 		$insert_result = Sbp::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
-			'no_sprint' => $request->no_sprint,
-			'tgl_sprint' => $tgl_sprint,
+			'sprint_id' => $request->sprint['id'],
 			'lokasi_penindakan' => $request->lokasi_penindakan,
 			'uraian_penindakan' => $request->uraian_penindakan,
 			'alasan_penindakan' => $request->alasan_penindakan,
@@ -61,7 +59,7 @@ class SbpController extends Controller
 			'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
 			'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
 			'hal_terjadi' => $request->hal_terjadi,
-			'nama_pemilik' => $request->nama_pemilik,
+			'saksi_id' => $request->saksi['id'],
 			'pejabat1' => $request->pejabat1,
 			'pejabat2' => $request->pejabat2,
 			'kode_status' => 100
@@ -79,6 +77,18 @@ class SbpController extends Controller
 	public function show($id)
 	{
 		$sbp = new SbpResource(Sbp::findOrFail($id));
+		return $sbp;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showComplete($id)
+	{
+		$sbp = new SbpResource(Sbp::findOrFail($id), 'complete');
 		return $sbp;
 	}
 
@@ -108,23 +118,20 @@ class SbpController extends Controller
 		// Update if not published
 		if ($is_unpublished) {
 			$request->validate([
-				'no_sprint' => 'required',
-				'tgl_sprint' => 'required|date',
+				'sprint.id' => 'required|integer',
 				'lokasi_penindakan' => 'required',
 				'wkt_mulai_penindakan' => 'required|date',
 				'wkt_selesai_penindakan' => 'required|date',
-				'nama_pemilik' => 'required',
+				'saksi.id' => 'required|integer',
 				'pejabat1' => 'required'
 			]);
 	
-			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
 			$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
 			$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_selesai_penindakan));
 			
 			$update_result = Sbp::where('id', $id)
 				->update([
-					'no_sprint' => $request->no_sprint,
-					'tgl_sprint' => $tgl_sprint,
+					'sprint_id' => $request->sprint['id'],
 					'lokasi_penindakan' => $request->lokasi_penindakan,
 					'uraian_penindakan' => $request->uraian_penindakan,
 					'alasan_penindakan' => $request->alasan_penindakan,
@@ -132,10 +139,9 @@ class SbpController extends Controller
 					'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
 					'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
 					'hal_terjadi' => $request->hal_terjadi,
-					'nama_pemilik' => $request->nama_pemilik,
+					'saksi_id' => $request->saksi['id'],
 					'pejabat1' => $request->pejabat1,
 					'pejabat2' => $request->pejabat2,
-					'kode_status' => 101
 				]);
 	
 			$result = $update_result;
@@ -144,6 +150,7 @@ class SbpController extends Controller
 		}
 		
 		return $result;
+		// return $request;
 	}
 
 	/**
