@@ -45,7 +45,7 @@ class DetailBarangController extends DetailController
 					break;
 			}
 	
-			$result = $this->upsertDokumen($data_dokumen, 2);
+			$result = $this->upsertDokumen($data_dokumen, $result->id);
 
 			DB::commit();
 		} catch (\Throwable $th) {
