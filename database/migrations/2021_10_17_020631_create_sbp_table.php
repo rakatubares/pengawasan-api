@@ -15,7 +15,7 @@ class CreateSbpTable extends Migration
     {
         Schema::create('sbp', function (Blueprint $table) {
             $table->id();
-			$table->string('no_dok')->nullable()->index();
+			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
