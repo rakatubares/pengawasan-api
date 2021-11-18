@@ -14,8 +14,8 @@ class DetailBadan extends Model
 	protected $table = 'detail_badan';
 
 	protected $fillable = [
-		'bodyable_type',
-		'bodyable_id',
+		'parent_type',
+		'parent_id',
 		'entitas_id',
 	];
 
@@ -24,7 +24,7 @@ class DetailBadan extends Model
 	 */
 	public function bodyable()
 	{
-		return $this->morphTo(__FUNCTION__, 'bodyable_type', 'bodyable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
 	/**

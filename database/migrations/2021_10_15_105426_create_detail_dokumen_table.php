@@ -15,14 +15,14 @@ class CreateDetailDokumenTable extends Migration
     {
         Schema::create('detail_dokumen', function (Blueprint $table) {
             $table->id();
-			$table->morphs('documentable');
+			$table->morphs('parent');
 			$table->string('jns_dok')->nullable()->index();
 			$table->string('no_dok')->index();
 			$table->date('tgl_dok')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-            $table->index('documentable_type');
-			$table->index('documentable_id');
+            $table->index('parent_type');
+			$table->index('parent_id');
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
