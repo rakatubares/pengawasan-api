@@ -14,8 +14,8 @@ class DetailDokumen extends Model
 	protected $table = 'detail_dokumen';
 
 	protected $fillable = [
-		'documentable_type',
-		'documentable_id',
+		'parent_type',
+		'parent_id',
 		'jns_dok',
 		'no_dok',
 		'tgl_dok',
@@ -28,8 +28,8 @@ class DetailDokumen extends Model
 	/**
 	 * Define polymorphic properties
 	 */
-	public function documentable()
+	public function parent()
 	{
-		return $this->morphTo(__FUNCTION__, 'documentable_type', 'documentable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 }

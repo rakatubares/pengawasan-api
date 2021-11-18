@@ -15,12 +15,12 @@ class CreateDetailBadanTable extends Migration
     {
         Schema::create('detail_badan', function (Blueprint $table) {
             $table->id();
-			$table->morphs('bodyable');
+			$table->morphs('parent');
 			$table->integer('entitas_id')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('bodyable_type');
-			$table->index('bodyable_id');
+			$table->index('parent_type');
+			$table->index('parent_id');
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');

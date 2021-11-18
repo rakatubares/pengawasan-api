@@ -14,10 +14,10 @@ class DetailBarang extends Model
 	protected $table = 'detail_barang';
 
 	protected $fillable = [
-		'goodsable_type',
-		'goodsable_id',
+		'parent_type',
+		'parent_id',
 		'jumlah_kemasan',
-		'satuan_kemasan_id',
+		'satuan_kemasan',
 		'pemilik_id'
 	];
 
@@ -26,7 +26,7 @@ class DetailBarang extends Model
 	 */
 	public function goodsable()
 	{
-		return $this->morphTo(__FUNCTION__, 'goodsable_type', 'goodsable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
 	/**
@@ -42,7 +42,7 @@ class DetailBarang extends Model
 	 */
 	public function dokumen()
 	{
-		return $this->morphOne(DetailDokumen::class, 'documentable');
+		return $this->morphOne(DetailDokumen::class, 'parent');
 	}
 
 	/**

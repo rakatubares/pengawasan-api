@@ -56,16 +56,16 @@ class DetailController extends Controller
 
 			// Upsert data detail
 			if ($update_result == 1) {
-				$col_type = $detail_type . 'able_type';
-				$col_id = $detail_type . 'able_id';
+				// $col_type = $detail_type . 'able_type';
+				// $col_id = $detail_type . 'able_id';
 				$resource = $this->getResource($detail_type);
 
 				$insert_result = $model::find($doc_id)
 					->$detail_type()
 					->updateOrCreate(
 						[
-							$col_type => $model,
-							$col_id => $doc_id
+							'parent_type' => $model,
+							'parent_id' => $doc_id
 						],
 						$detail_data
 					);
@@ -78,7 +78,8 @@ class DetailController extends Controller
 			DB::commit();
 		} catch (\Throwable $th) {
 			DB::rollBack();
-			$result = response()->json(['error' => 'Gagal input detail ' . $detail_type], 422);
+			// $result = response()->json(['error' => 'Gagal input detail ' . $detail_type], 422);
+			$result = $th;
 		}
         
 		return $result;

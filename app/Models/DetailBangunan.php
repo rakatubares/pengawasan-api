@@ -14,8 +14,8 @@ class DetailBangunan extends Model
 	protected $table = 'detail_bangunan';
 
 	protected $fillable = [
-		'buildingable_type',
-		'buildingable_id',
+		'parent_type',
+		'parent_id',
 		'alamat',
 		'no_reg',
 		'pemilik_id',
@@ -26,7 +26,7 @@ class DetailBangunan extends Model
 	 */
 	public function buildingable()
 	{
-		return $this->morphTo(__FUNCTION__, 'buildingable_type', 'buildingable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
 	/**

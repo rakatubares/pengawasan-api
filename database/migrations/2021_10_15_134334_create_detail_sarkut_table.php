@@ -15,7 +15,7 @@ class CreateDetailSarkutTable extends Migration
     {
         Schema::create('detail_sarkut', function (Blueprint $table) {
             $table->id();
-			$table->morphs('vehicleable');
+			$table->morphs('parent');
 			$table->string('nama_sarkut')->nullable()->index();
 			$table->string('jenis_sarkut')->index();
 			$table->string('no_flight_trayek')->nullable()->index();
@@ -26,8 +26,8 @@ class CreateDetailSarkutTable extends Migration
 			$table->string('no_reg_polisi')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-            $table->index('vehicleable_type');
-			$table->index('vehicleable_id');
+            $table->index('parent_type');
+			$table->index('parent_id');
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');

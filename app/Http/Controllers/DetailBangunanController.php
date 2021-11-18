@@ -19,9 +19,9 @@ class DetailBangunanController extends DetailController
 		$detail_data = [
 			'alamat' => $request->alamat,
 			'no_reg' => $request->no_reg,
-			'pemilik' => $request->pemilik,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
+			'pemilik_id' => $request->pemilik['id'],
+			// 'jns_identitas' => $request->jns_identitas,
+			// 'no_identitas' => $request->no_identitas,
 		];
 
 		switch ($how) {

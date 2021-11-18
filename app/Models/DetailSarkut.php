@@ -14,12 +14,12 @@ class DetailSarkut extends Model
 	protected $table = 'detail_sarkut';
 
 	protected $fillable = [
-		'vehicleable_type',
-		'vehicleable_id',
+		'parent_type',
+		'parent_id',
 		'nama_sarkut',
 		'jenis_sarkut',
 		'no_flight_trayek',
-		'kapasitas',
+		'jumlah_kapasitas',
 		'satuan_kapasitas',
 		'pilot_id',
 		'bendera',
@@ -31,7 +31,7 @@ class DetailSarkut extends Model
 	 */
 	public function vehicleable()
 	{
-		return $this->morphTo(__FUNCTION__, 'vehicleable_type', 'vehicleable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
 	/**

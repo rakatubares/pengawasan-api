@@ -18,12 +18,7 @@ class DetailBadanController extends DetailController
 	{
 		$tgl_lahir = strtotime($request->tgl_lahir);
 		$detail_data = [
-			'nama' => $request->nama,
-			'tgl_lahir' => $tgl_lahir,
-			'warga_negara' => $request->warga_negara,
-			'alamat' => $request->alamat,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
+			'entitas_id' => $request->entitas['id']
 		];
 
 		switch ($how) {

@@ -16,13 +16,19 @@ class DetailSarkutController extends DetailController
 	 */
 	public function store(Request $request, $doc_type, $doc_id, $how='upsert')
 	{
+		$request->validate([
+			'nama_sarkut' => 'required',
+			'jenis_sarkut' => 'required',
+			'pilot.id' => 'required|integer'
+		]);
+
 		$detail_data = [
 			'nama_sarkut' => $request->nama_sarkut,
 			'jenis_sarkut' => $request->jenis_sarkut,
 			'no_flight_trayek' => $request->no_flight_trayek,
-			'kapasitas' => $request->kapasitas,
+			'jumlah_kapasitas' => $request->jumlah_kapasitas,
 			'satuan_kapasitas' => $request->satuan_kapasitas,
-			'nama_pilot_pengemudi' => $request->nama_pilot_pengemudi,
+			'pilot_id' => $request->pilot['id'],
 			'bendera' => $request->bendera,
 			'no_reg_polisi' => $request->no_reg_polisi,
 		];
@@ -38,6 +44,7 @@ class DetailSarkutController extends DetailController
 		}
 		
 		return $result;
+		// return $request;
 	}
 
 	/**
@@ -53,7 +60,7 @@ class DetailSarkutController extends DetailController
 			case 'all':
 				$result = $this->showDetails($doc_type, $doc_id, 'sarkut');
 				break;
-			
+
 			default:
 				$result = $this->showDetail($doc_type, $doc_id, 'sarkut');
 				break;

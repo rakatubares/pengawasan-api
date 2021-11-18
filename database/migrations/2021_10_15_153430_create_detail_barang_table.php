@@ -15,14 +15,14 @@ class CreateDetailBarangTable extends Migration
     {
         Schema::create('detail_barang', function (Blueprint $table) {
             $table->id();
-			$table->morphs('goodsable');
+			$table->morphs('parent');
 			$table->integer('jumlah_kemasan')->nullable();
 			$table->string('satuan_kemasan')->nullable()->index();
 			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('goodsable_type');
-			$table->index('goodsable_id');
+			$table->index('parent_type');
+			$table->index('parent_id');
             $table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
