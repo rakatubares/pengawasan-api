@@ -6,6 +6,8 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\RefEntitasController;
+use App\Http\Controllers\RefSprintController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +40,8 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	// Barang
 	Route::prefix('/barang')->group(function() {
 		Route::get('/{how?}', [DetailBarangController::class, 'show']);
-		Route::post('/{how?}', [DetailBarangController::class, 'store']);
+		Route::post('/new', [DetailBarangController::class, 'store']);
+		Route::post('/upsert', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
 		// Item barang
@@ -72,6 +75,18 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailDokumenController::class, 'destroy']);
 	});
 });
+
+/**
+ * API for SPRINT
+ */
+Route::apiResource('sprint', RefSprintController::class);
+Route::post('/sprint/search', [RefSprintController::class, 'search']);
+
+/**
+ * API for Entity
+ */
+Route::apiResource('entitas', RefEntitasController::class);
+Route::post('/entitas/search', [RefEntitasController::class, 'search']);
 
 Route::get('test', function() {
 	# code...
