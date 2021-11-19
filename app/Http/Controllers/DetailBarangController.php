@@ -22,17 +22,11 @@ class DetailBarangController extends DetailController
 		DB::beginTransaction();
 
 		try {
+			// Insert detail barang
 			$data_barang = [
 				'jumlah_kemasan' => $request->jumlah_kemasan,
 				'satuan_kemasan' => $request->satuan_kemasan,
 				'pemilik_id' => $request->pemilik['id']
-			];
-	
-			$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
-			$data_dokumen = [
-				'jns_dok' => $request->dokumen['jns_dok'],
-				'no_dok' => $request->dokumen['no_dok'],
-				'tgl_dok' => $tgl_dok,
 			];
 	
 			switch ($how) {
@@ -45,7 +39,16 @@ class DetailBarangController extends DetailController
 					break;
 			}
 	
-			$result = $this->upsertDokumen($data_dokumen, $result->id);
+			// Insert dokumen barang
+			if ($request->dokumen['no_dok'] != null) {
+				$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
+				$data_dokumen = [
+					'jns_dok' => $request->dokumen['jns_dok'],
+					'no_dok' => $request->dokumen['no_dok'],
+					'tgl_dok' => $tgl_dok,
+				];
+				$result = $this->upsertDokumen($data_dokumen, $result->id);
+			}
 
 			DB::commit();
 		} catch (\Throwable $th) {
