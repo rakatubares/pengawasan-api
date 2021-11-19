@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SegelResource;
+use App\Http\Resources\SegelTableResource;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class SegelController extends Controller
 	public function index()
 	{
 		$all_segel = Segel::all();
-		$segel_list = SegelResource::collection($all_segel);
+		$segel_list = SegelTableResource::collection($all_segel);
 		return $segel_list;
 	}
 
@@ -36,31 +37,24 @@ class SegelController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'no_sprint' => 'required',
-			'tgl_sprint' => 'required|date',
+			'sprint.id' => 'required|integer',
 			'jenis_segel' => 'required',
 			'jumlah_segel' => 'required|integer',
-			'nama_pemilik' => 'required',
+			'saksi.id' => 'required|integer',
 			'pejabat1' => 'required'
 		]);
 
 		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
-		$tgl_sprint = strtotime($request->tgl_sprint);
 
 		$insert_result = Segel::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
-			'no_sprint' => $request->no_sprint,
-			'tgl_sprint' => $tgl_sprint,
+			'sprint_id' => $request->sprint['id'],
 			'jenis_segel' => $request->jenis_segel,
 			'jumlah_segel' => $request->jumlah_segel,
 			'nomor_segel' => $request->nomor_segel,
 			'lokasi_segel' => $request->lokasi_segel,
-			'nama_pemilik' => $request->nama_pemilik,
-			'alamat_pemilik' => $request->alamat_pemilik,
-			'pekerjaan_pemilik' => $request->pekerjaan_pemilik,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
+			'saksi_id' => $request->saksi['id'],
 			'pejabat1' => $request->pejabat1,
 			'pejabat2' => $request->pejabat2,
 			'kode_status' => 100,
@@ -79,6 +73,18 @@ class SegelController extends Controller
 	{
 		$segel = new SegelResource(Segel::findOrFail($id));
 		return $segel;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showComplete($id)
+	{
+		$sbp = new SegelResource(Segel::findOrFail($id), 'complete');
+		return $sbp;
 	}
 
 	/**
@@ -107,11 +113,10 @@ class SegelController extends Controller
 		// Update if not published
 		if ($is_unpublished) {
 			$request->validate([
-				'no_sprint' => 'required',
-				'tgl_sprint' => 'required|date',
+				'sprint.id' => 'required|integer',
 				'jenis_segel' => 'required',
 				'jumlah_segel' => 'required|integer',
-				'nama_pemilik' => 'required',
+				'saksi.id' => 'required|integer',
 				'pejabat1' => 'required'
 			]);
 	
@@ -119,17 +124,12 @@ class SegelController extends Controller
 	
 			$update_result = Segel::where('id', $id)
 				->update([
-					'no_sprint' => $request->no_sprint,
-					'tgl_sprint' => $tgl_sprint,
+					'sprint_id' => $request->sprint['id'],
 					'jenis_segel' => $request->jenis_segel,
 					'jumlah_segel' => $request->jumlah_segel,
 					'nomor_segel' => $request->nomor_segel,
 					'lokasi_segel' => $request->lokasi_segel,
-					'nama_pemilik' => $request->nama_pemilik,
-					'alamat_pemilik' => $request->alamat_pemilik,
-					'pekerjaan_pemilik' => $request->pekerjaan_pemilik,
-					'jns_identitas' => $request->jns_identitas,
-					'no_identitas' => $request->no_identitas,
+					'saksi_id' => $request->saksi['id'],
 					'pejabat1' => $request->pejabat1,
 					'pejabat2' => $request->pejabat2,
 					'kode_status' => 101,
