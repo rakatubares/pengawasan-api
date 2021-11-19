@@ -11,8 +11,32 @@ class DetailController extends Controller
 	use DokumenTrait;
     use SwitcherTrait;
 
+	public function insertDetail($detail_data, $doc_type, $doc_id, $detail_type)
+	{
+		// Get model
+		$model = $this->getModel($doc_type);
+
+		// Update kolom status detail di tabel parent menjadi TRUE
+		$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
+
+		// Upsert data detail
+		if ($update_result == 1) {
+			$resource = $this->getResource($detail_type);
+
+			$insert_result = $model::find($doc_id)
+				->$detail_type()
+				->create($detail_data);
+			
+			$result = new $resource($insert_result);
+		} else {
+			$result = $update_result;
+		}
+
+		return $result;
+	}
+
 	/**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storage or update if exists.
      *
      * @param  \Illuminate\Http\Request  $request
 	 * @param  string $doc_type
@@ -21,7 +45,7 @@ class DetailController extends Controller
      */
     public function upsertDetail($detail_data, $doc_type, $doc_id, $detail_type)
     {
-		// DB::beginTransaction();
+		DB::beginTransaction();
 
 		try {
 			// Get model
@@ -32,16 +56,16 @@ class DetailController extends Controller
 
 			// Upsert data detail
 			if ($update_result == 1) {
-				$col_type = $detail_type . 'able_type';
-				$col_id = $detail_type . 'able_id';
+				// $col_type = $detail_type . 'able_type';
+				// $col_id = $detail_type . 'able_id';
 				$resource = $this->getResource($detail_type);
 
 				$insert_result = $model::find($doc_id)
 					->$detail_type()
 					->updateOrCreate(
 						[
-							$col_type => $model,
-							$col_id => $doc_id
+							'parent_type' => $model,
+							'parent_id' => $doc_id
 						],
 						$detail_data
 					);
@@ -54,7 +78,8 @@ class DetailController extends Controller
 			DB::commit();
 		} catch (\Throwable $th) {
 			DB::rollBack();
-			$result = response()->json(['error' => 'Gagal input detail ' . $detail_type], 422);
+			// $result = response()->json(['error' => 'Gagal input detail ' . $detail_type], 422);
+			$result = $th;
 		}
         
 		return $result;
@@ -82,6 +107,38 @@ class DetailController extends Controller
 			if ($detail != null) {
 				$resource = $this->getResource($detail_type);
 				$result = new $resource($detail);
+			} else {
+				$result = response()->json(['error' => 'Detail '. $detail_type . ' tidak ditemukan.'], 422);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
+		}
+		
+		return $result;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  string  $doc_type
+	 * @param  int  $doc_id
+	 * @param  string  $detail_type
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showDetails($doc_type, $doc_id, $detail_type)
+	{
+		// Get model
+		$model = $this->getModel($doc_type);
+
+		// Get header
+		$header = $model::find($doc_id);
+
+		// Get detail data if header is found
+		if ($header) {
+			$detail = $header->$detail_type()->get();
+			if ($detail != null) {
+				$resource = $this->getResource($detail_type);
+				$result = $resource::collection($detail);
 			} else {
 				$result = response()->json(['error' => 'Detail '. $detail_type . ' tidak ditemukan.'], 422);
 			}

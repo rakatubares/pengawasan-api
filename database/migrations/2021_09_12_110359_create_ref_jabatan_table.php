@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefStatusesTable extends Migration
+class CreateRefJabatanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateRefStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ref_statuses', function (Blueprint $table) {
+        Schema::create('ref_jabatan', function (Blueprint $table) {
             $table->id();
-			$table->integer('kode_status')->unique();
-			$table->string('short_status')->index();
-			$table->string('uraian_status')->index();
+			$table->integer('parent_id')->nullable()->index();
+			$table->string('jabatan')->unique();
+			$table->boolean('active')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
@@ -33,6 +33,6 @@ class CreateRefStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ref_statuses');
+        Schema::dropIfExists('ref_jabatan');
     }
 }

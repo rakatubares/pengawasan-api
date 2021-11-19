@@ -8,15 +8,15 @@ use Illuminate\Database\Seeder;
 
 class RefStatusSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
 		$now = Carbon::now('utc')->toDateTimeString();
-        $data = [
+		$data = [
 			[ 
 				'kode_status' => 100, 
 				'short_status' => 'draft',
@@ -48,5 +48,5 @@ class RefStatusSeeder extends Seeder
 		];
 
 		RefStatus::insert($data);
-    }
+	}
 }
