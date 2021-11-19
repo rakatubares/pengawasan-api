@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailBarangItemsTable extends Migration
+class CreateDetailBarangTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,17 @@ class CreateDetailBarangItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_barang_items', function (Blueprint $table) {
+        Schema::create('detail_barang', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('detail_barang_id');
-			$table->foreign('detail_barang_id')
-				->references('id')
-				->on('detail_barangs')
-				->onDelete('cascade')
-				->onUpdate('cascade');
-			$table->double('jumlah_barang');
-			$table->string('satuan_barang');
-			$table->text('uraian_barang');
+			$table->morphs('parent');
+			$table->integer('jumlah_kemasan')->nullable();
+			$table->string('satuan_kemasan')->nullable()->index();
+			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('created_at');
+			$table->index('parent_type');
+			$table->index('parent_id');
+            $table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
         });
@@ -39,6 +36,6 @@ class CreateDetailBarangItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_barang_items');
+        Schema::dropIfExists('detail_barang');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailBadansTable extends Migration
+class CreateRefEntitasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,17 @@ class CreateDetailBadansTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_badans', function (Blueprint $table) {
+        Schema::create('ref_entitas', function (Blueprint $table) {
             $table->id();
-			$table->morphs('badanable');
-            $table->string('nama')->index();
-			$table->date('tgl_lahir')->nullable()->index();
+			$table->string('jenis_entitas')->index();
+			$table->string('nama')->index();
+			$table->string('jenis_kelamin')->nullable()->index();
+			$table->date('tanggal_lahir')->nullable()->index();
 			$table->string('warga_negara')->nullable()->index();
-			$table->text('alamat')->nullable();
-			$table->string('jns_identitas')->nullable()->index();
-			$table->string('no_identitas')->nullable()->index();
+			$table->string('jenis_identitas')->nullable()->index();
+			$table->string('nomor_identitas')->nullable()->index();
+			$table->string('pekerjaan')->nullable()->index();
+			$table->string('alamat')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
@@ -37,6 +39,6 @@ class CreateDetailBadansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_badans');
+        Schema::dropIfExists('ref_entitas');
     }
 }

@@ -6,39 +6,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DetailSarkut extends Model
+class DetailDokumen extends Model
 {
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'detail_sarkut';
+	protected $table = 'detail_dokumen';
 
 	protected $fillable = [
 		'parent_type',
 		'parent_id',
-		'nama_sarkut',
-		'jenis_sarkut',
-		'no_flight_trayek',
-		'jumlah_kapasitas',
-		'satuan_kapasitas',
-		'pilot_id',
-		'bendera',
-		'no_reg_polisi'
+		'jns_dok',
+		'no_dok',
+		'tgl_dok',
+	];
+
+	protected $casts = [
+		'tgl_dok' => 'date',
 	];
 
 	/**
 	 * Define polymorphic properties
 	 */
-	public function vehicleable()
+	public function parent()
 	{
 		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
-	}
-
-	/**
-	 * Detail entitas pilot
-	 */
-	public function pilot()
-	{
-		return $this->belongsTo(RefEntitas::class, 'pilot_id');
 	}
 }

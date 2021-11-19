@@ -18,7 +18,7 @@ class SbpSeeder extends Seeder
     {
 		$faker = Faker::create();
 		
-		for ($i=1; $i < 6; $i++) {
+		for ($i=1; $i < 11; $i++) {
 			$detail_sarkut = $faker->boolean();
 			$detail_barang = $faker->boolean();
 			$detail_bangunan = $faker->boolean();
@@ -30,18 +30,19 @@ class SbpSeeder extends Seeder
 				'thn_dok' => 2021,
 				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/2021',
 				'tgl_dok' => '2021-01-01',
-				'no_sprint' => 'SPRINT-01/KPU.03/2021',
-				'tgl_sprint' => '2021-01-01',
+				'sprint_id' => $faker->numberBetween(1,10),
 				'detail_sarkut' => $detail_sarkut,
 				'detail_barang' => $detail_barang,
 				'detail_bangunan' => $detail_bangunan,
 				'detail_badan' => $detail_badan,
 				'lokasi_penindakan' => $faker->sentence(),
 				'uraian_penindakan' => $faker->sentence($nbWOrds = 20),
+				'alasan_penindakan' => $faker->sentence($nbWOrds = 20),
 				'jenis_pelanggaran' => $faker->randomElement(['Kepabeanan', 'Cukai']),
 				'wkt_mulai_penindakan' => $faker->dateTime(),
 				'wkt_selesai_penindakan' => $faker->dateTime(),
-				'nama_pemilik' => $faker->name(),
+				'hal_terjadi' => $faker->text(),
+				'saksi_id' => $faker->numberBetween(1, 100),
 				'pejabat1' => $faker->name(),
 				'kode_status' => 200,
 			]);
@@ -53,9 +54,9 @@ class SbpSeeder extends Seeder
 						'nama_sarkut' => $faker->company(),
 						'jenis_sarkut' => 'Pesawat',
 						'no_flight_trayek' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-						'kapasitas' => $faker->numberBetween(1, 100),
+						'jumlah_kapasitas' => $faker->numberBetween(1, 100),
 						'satuan_kapasitas' => $faker->regexify('[A-Z]{3}'),
-						'nama_pilot_pengemudi' => $faker->name(),
+						'pilot_id' => $faker->numberBetween(1, 100),
 						'bendera' => $faker->countryCode(),
 						'no_reg_polisi' => $faker->regexify('[A-Z]{5}'),
 					]);
@@ -67,10 +68,7 @@ class SbpSeeder extends Seeder
 					->create([
 						'jumlah_kemasan' => $faker->numberBetween(1, 100),
 						'satuan_kemasan' => $faker->regexify('[a-z]{2}'),
-						'jns_dok' => $faker->regexify('[A-Z]{3}'),
-						'no_dok' => $faker->regexify('S-[0-9]{3}/[a-z]{10}/[0-9]{4}'),
-						'tgl_dok' => $faker->date(),
-						'pemilik' => $faker->name()
+						'pemilik_id' => $faker->numberBetween(1, 100)
 					]);
 
 				$detail_barang_id = $insert_result->id;
@@ -84,6 +82,14 @@ class SbpSeeder extends Seeder
 							'satuan_barang' => $faker->regexify('[a-z]{2}'),
 							'uraian_barang' => $faker->text()
 						]);
+
+					DetailBarang::find($detail_barang_id)
+						->dokumen()
+						->create([
+							'jns_dok' => $faker->regexify('[A-Z]{3}'),
+							'no_dok' => $faker->numberBetween(1, 999999),
+							'tgl_dok' => $faker->date()
+						]);
 				}
 			}
 
@@ -93,9 +99,7 @@ class SbpSeeder extends Seeder
 					->create([
 						'alamat' => $faker->address(),
 						'no_reg' => $faker->regexify('[0-9]{15}'),
-						'pemilik' => $faker->name(),
-						'jns_identitas' => $faker->regexify('[A-Z]{3}'),
-						'no_identitas' => $faker->regexify('[0-9]{15}'),
+						'pemilik_id' => $faker->numberBetween(1, 100),
 					]);
 			}
 
@@ -103,12 +107,7 @@ class SbpSeeder extends Seeder
 				Sbp::find($i)
 					->badan()
 					->create([
-						'nama' => $faker->name(),
-						'tgl_lahir' => $faker->date(),
-						'warga_negara' => $faker->country(),
-						'alamat' => $faker->address(),
-						'jns_identitas' => $faker->regexify('[A-Z]{3}'),
-						'no_identitas' => $faker->regexify('[0-9]{15}'),
+						'entitas_id' => $faker->numberBetween(1, 100)
 					]);
 			}
 		}
