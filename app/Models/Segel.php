@@ -11,14 +11,15 @@ class Segel extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'segel';
+
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
 		'tgl_dok',
-		'no_sprint',
-		'tgl_sprint',
+		'sprint_id',
 		'detail_sarkut',
 		'detail_barang',
 		'detail_bangunan',
@@ -26,11 +27,7 @@ class Segel extends Model
 		'jumlah_segel',
 		'nomor_segel',
 		'lokasi_segel',
-		'nama_pemilik',
-		'alamat_pemilik',
-		'pekerjaan_pemilik',
-		'jns_identitas',
-		'no_identitas',
+		'saksi_id',
 		'pejabat1',
 		'pejabat2',
 		'kode_status'
@@ -38,17 +35,16 @@ class Segel extends Model
 
 	protected $casts = [
 		'tgl_dok' => 'date',
-		'tgl_sprint' => 'date',
 	];
 
 	public function sarkut()
 	{
-		return $this->morphOne(DetailSarkut::class, 'sarkutable');
+		return $this->morphOne(DetailSarkut::class, 'parent');
 	}
 
 	public function barang()
 	{
-		return $this->morphOne(DetailBarang::class, 'barangable');
+		return $this->morphOne(DetailBarang::class, 'parent');
 	}
 
 	public function itemBarang()
@@ -56,14 +52,24 @@ class Segel extends Model
 		return $this->hasManyThrough(
 			DetailBarangItem::class,
 			DetailBarang::class,
-			'barangable_id',
+			'parent_id',
 			'detail_barang_id'
-		)->where('barangable_type', Segel::class);
+		)->where('parent_type', Segel::class);
 	}
 
 	public function bangunan()
 	{
-		return $this->morphOne(DetailBangunan::class, 'bangunanable');
+		return $this->morphOne(DetailBangunan::class, 'parent');
+	}
+
+	public function sprint()
+	{
+		return $this->belongsTo(RefSprint::class, 'sprint_id');
+	}
+
+	public function saksi()
+	{
+		return $this->belongsTo(RefEntitas::class, 'saksi_id');
 	}
 
 	public function status()
