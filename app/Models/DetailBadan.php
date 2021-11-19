@@ -11,26 +11,27 @@ class DetailBadan extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $fillable = [
-		'badanable_type',
-		'badanable_id',
-		'nama',
-		'tgl_lahir',
-		'warga_negara',
-		'alamat',
-		'jns_identitas',
-		'no_identitas',
-	];
+	protected $table = 'detail_badan';
 
-	protected $casts = [
-		'tgl_lahir' => 'date',
+	protected $fillable = [
+		'parent_type',
+		'parent_id',
+		'entitas_id',
 	];
 
 	/**
 	 * Define polymorphic properties
 	 */
-	public function badanable()
+	public function bodyable()
 	{
-		return $this->morphTo(__FUNCTION__, 'badanable_type', 'badanable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
+	}
+
+	/**
+	 * Detail entitas
+	 */
+	public function entitas()
+	{
+		return $this->belongsTo(RefEntitas::class, 'entitas_id');
 	}
 }

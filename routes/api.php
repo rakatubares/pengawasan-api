@@ -5,7 +5,11 @@ use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
+use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\RefEntitasController;
+use App\Http\Controllers\RefJabatanController;
+use App\Http\Controllers\RefSprintController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,15 +41,16 @@ Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'p
 Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	// Sarkut
 	Route::prefix('/sarkut')->group(function() {
-		Route::get('/', [DetailSarkutController::class, 'show']);
-		Route::post('/', [DetailSarkutController::class, 'store']);
+		Route::get('/{how?}', [DetailSarkutController::class, 'show']);
+		Route::post('/{how?}', [DetailSarkutController::class, 'store']);
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
 	});
 
 	// Barang
 	Route::prefix('/barang')->group(function() {
-		Route::get('/', [DetailBarangController::class, 'show']);
-		Route::post('/', [DetailBarangController::class, 'store']);
+		Route::get('/{how?}', [DetailBarangController::class, 'show']);
+		Route::post('/new', [DetailBarangController::class, 'store']);
+		Route::post('/upsert', [DetailBarangController::class, 'store']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
 		// Item barang
@@ -60,18 +65,42 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Bangunan
 	Route::prefix('/bangunan')->group(function() {
-		Route::get('/', [DetailBangunanController::class, 'show']);
-		Route::post('/', [DetailBangunanController::class, 'store']);
+		Route::get('/{how?}', [DetailBangunanController::class, 'show']);
+		Route::post('/{how?}', [DetailBangunanController::class, 'store']);
 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
 	});
 
 	// Badan
 	Route::prefix('/badan')->group(function() {
-		Route::get('/', [DetailBadanController::class, 'show']);
-		Route::post('/', [DetailBadanController::class, 'store']);
+		Route::get('/{how?}', [DetailBadanController::class, 'show']);
+		Route::post('/{how?}', [DetailBadanController::class, 'store']);
 		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
+
+	// Dokumen
+	Route::prefix('/dokumen')->group(function() {
+		Route::get('/{how?}', [DetailDokumenController::class, 'show']);
+		Route::post('/{how?}', [DetailDokumenController::class, 'store']);
+		Route::delete('/', [DetailDokumenController::class, 'destroy']);
+	});
 });
+
+/**
+ * API for SPRINT
+ */
+Route::apiResource('sprint', RefSprintController::class);
+Route::post('/sprint/search', [RefSprintController::class, 'search']);
+
+/**
+ * API for Entity
+ */
+Route::apiResource('entitas', RefEntitasController::class);
+Route::post('/entitas/search', [RefEntitasController::class, 'search']);
+
+/**
+ * API for Jabatan
+ */
+Route::apiResource('jabatan', RefJabatanController::class);
 
 Route::get('test', function() {
 	# code...
