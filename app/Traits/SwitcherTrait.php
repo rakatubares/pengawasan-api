@@ -7,12 +7,14 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
-use App\Models\SerahTerima;
+use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
-	private $models = [];
+	private $models = [
+		'titip' => Titip::class,
+	];
 
 	private $resources = [
 		'badan' => DetailBadanResource::class,

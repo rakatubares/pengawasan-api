@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
+use App\Http\Controllers\TitipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/**
+ * API for BA Titip
+ */
+Route::apiResource('titip', TitipController::class);
+Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
+Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
+Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
 
 /**
  * API for Details

@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
 			RefSatuanSeeder::class,
 			RefJabatanSeeder::class,
 			RefEntitasSeeder::class,
-			RefSprintSeeder::class
+			RefSprintSeeder::class,
+			TitipSeeder::class,
 		]);
 	}
 }
