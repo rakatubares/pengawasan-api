@@ -6,6 +6,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BukaSegelResource extends JsonResource
 {
+	/**
+	 * Create a new resource instance.
+	 *
+	 * @param  mixed  $resource
+	 * @return void
+	 */
+	public function __construct($resource, $type='basic')
+	{
+		$this->resource = $resource;
+		$this->type = $type;
+	}
+
     /**
      * Transform the resource into an array.
      *
@@ -14,32 +26,35 @@ class BukaSegelResource extends JsonResource
      */
     public function toArray($request)
     {
-        $array = [
+        $buka_segel = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'no_sprint' => $this->no_sprint,
-			'tgl_sprint' => $this->tgl_sprint->format('d-m-Y'),
-			'penindakan_sarkut' => $this->penindakan_sarkut,
-			'penindakan_barang' => $this->penindakan_barang,
-			'penindakan_bangunan' => $this->penindakan_bangunan,
+			'detail_sarkut' => $this->detail_sarkut,
+			'detail_barang' => $this->detail_barang,
+			'detail_bangunan' => $this->detail_bangunan,
 			'jenis_segel' => $this->jenis_segel,
 			'jumlah_segel' => $this->jumlah_segel,
 			'nomor_segel' => $this->nomor_segel,
 			'tempat_segel' => $this->tempat_segel,
-			'nama_saksi' => $this->nama_saksi,
-			'alamat_saksi' => $this->alamat_saksi,
-			'pekerjaan_saksi' => $this->pekerjaan_saksi,
-			'jns_identitas' => $this->jns_identitas,
-			'no_identitas' => $this->no_identitas,
 			'pejabat1' => $this->pejabat1,
 			'pejabat2' => $this->pejabat2,
+			'sprint' => new RefSprintResource($this->sprint),
+			'saksi' => new PersonEntityResource($this->saksi),
 			'status' => new RefStatusResource($this->status),
 		];
 
-		return $array;
+		if ($this->type == 'complete') {
+			$buka_segel['detail'] = [
+				'sarkut' => new DetailSarkutResource($this->sarkut),
+				'bangunan' => new DetailBangunanResource($this->bangunan),
+				'barang' => new DetailBarangResource($this->barang),
+			];
+		}
+
+		return $buka_segel;
     }
 }

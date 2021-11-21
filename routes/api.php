@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for BA Buka Segel
  */
 Route::apiResource('bukasegel', BukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/complete', [BukaSegelController::class, 'showComplete']);
 Route::get('/bukasegel/{buka_segel_id}/details', [BukaSegelController::class, 'showDetails']);
 Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
 
