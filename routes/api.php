@@ -12,6 +12,7 @@ use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\SbpController;
 use App\Http\Controllers\SegelController;
+use App\Http\Controllers\TitipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,13 @@ Route::apiResource('bukasegel', BukaSegelController::class);
 Route::get('/bukasegel/{buka_segel_id}/complete', [BukaSegelController::class, 'showComplete']);
 Route::get('/bukasegel/{buka_segel_id}/details', [BukaSegelController::class, 'showDetails']);
 Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
+/** 
+ * API for BA Titip
+ */
+Route::apiResource('titip', TitipController::class);
+Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
+Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
+Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
 
 /**
  * API for Details

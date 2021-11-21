@@ -10,6 +10,7 @@ use App\Http\Resources\DetailSarkutResource;
 use App\Models\BukaSegel;
 use App\Models\Sbp;
 use App\Models\Segel;
+use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -18,6 +19,7 @@ trait SwitcherTrait
 		'bukasegel' => BukaSegel::class,
 		'sbp' => Sbp::class,
 		'segel' => Segel::class,
+		'titip' => Titip::class,
 	];
 
 	private $resources = [

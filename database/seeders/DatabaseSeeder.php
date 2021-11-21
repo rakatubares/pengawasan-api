@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 			SbpSeeder::class,
 			SegelSeeder::class,
 			BukaSegelSeeder::class,
+			TitipSeeder::class,
 		]);
 	}
 }
