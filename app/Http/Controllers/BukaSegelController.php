@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\BukaSegelResource;
+use App\Http\Resources\BukaSegelTableResource;
 use App\Http\Resources\DetailStatusResource;
 use App\Models\BukaSegel;
 use App\Traits\DokumenTrait;
@@ -23,7 +24,7 @@ class BukaSegelController extends Controller
 	public function index()
 	{
 		$all_buka_segel = BukaSegel::all();
-		$buka_segel_list = BukaSegelResource::collection($all_buka_segel);
+		$buka_segel_list = BukaSegelTableResource::collection($all_buka_segel);
 		return $buka_segel_list;
 	}
 
@@ -36,31 +37,24 @@ class BukaSegelController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'no_sprint' => 'required',
-			'tgl_sprint' => 'required|date',
+			'sprint.id' => 'required|integer',
 			'jenis_segel' => 'required',
 			'jumlah_segel' => 'required|integer',
-			'nama_saksi' => 'required',
+			'saksi.id' => 'required|integer',
 			'pejabat1' => 'required'
 		]);
 
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
-		$tgl_sprint = strtotime($request->tgl_sprint);
 
 		$insert_result = BukaSegel::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
-			'no_sprint' => $request->no_sprint,
-			'tgl_sprint' => $tgl_sprint,
+			'sprint_id' => $request->sprint['id'],
 			'jenis_segel' => $request->jenis_segel,
 			'jumlah_segel' => $request->jumlah_segel,
 			'nomor_segel' => $request->nomor_segel,
-			'tempat_segel' => $request->lokasi_segel,
-			'nama_saksi' => $request->nama_saksi,
-			'alamat_saksi' => $request->alamat_saksi,
-			'pekerjaan_saksi' => $request->pekerjaan_saksi,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
+			'tempat_segel' => $request->tempat_segel,
+			'saksi_id' => $request->saksi['id'],
 			'pejabat1' => $request->pejabat1,
 			'pejabat2' => $request->pejabat2,
 			'kode_status' => 100,
@@ -78,6 +72,17 @@ class BukaSegelController extends Controller
 	public function show($id)
 	{
 		$buka_segel = new BukaSegelResource(BukaSegel::findOrFail($id));
+		return $buka_segel;
+	}
+
+	/**
+	 * Display available details
+	 * 
+	 * @param int $id
+	 */
+	public function showComplete($id)
+	{
+		$buka_segel = new BukaSegelResource(BukaSegel::findOrFail($id), 'complete');
 		return $buka_segel;
 	}
 
@@ -105,29 +110,21 @@ class BukaSegelController extends Controller
 
 		if ($is_unpublished) {
 			$request->validate([
-				'no_sprint' => 'required',
-				'tgl_sprint' => 'required|date',
+				'sprint.id' => 'required|integer',
 				'jenis_segel' => 'required',
 				'jumlah_segel' => 'required|integer',
-				'nama_saksi' => 'required',
+				'saksi.id' => 'required|integer',
 				'pejabat1' => 'required'
 			]);
 	
-			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
-	
 			$update_result = BukaSegel::where('id', $id)
 				->update([
-					'no_sprint' => $request->no_sprint,
-					'tgl_sprint' => $tgl_sprint,
+					'sprint_id' => $request->sprint['id'],
 					'jenis_segel' => $request->jenis_segel,
 					'jumlah_segel' => $request->jumlah_segel,
 					'nomor_segel' => $request->nomor_segel,
 					'tempat_segel' => $request->tempat_segel,
-					'nama_saksi' => $request->nama_saksi,
-					'alamat_saksi' => $request->alamat_saksi,
-					'pekerjaan_saksi' => $request->pekerjaan_saksi,
-					'jns_identitas' => $request->jns_identitas,
-					'no_identitas' => $request->no_identitas,
+					'saksi_id' => $request->saksi['id'],
 					'pejabat1' => $request->pejabat1,
 					'pejabat2' => $request->pejabat2,
 					'kode_status' => 101,

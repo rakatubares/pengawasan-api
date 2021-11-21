@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBukaSegelsTable extends Migration
+class CreateBukaSegelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateBukaSegelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('buka_segels', function (Blueprint $table) {
+        Schema::create('buka_segel', function (Blueprint $table) {
             $table->id();
 			$table->string('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tgl_dok')->nullable()->index();
-			$table->string('no_sprint')->index();
-			$table->date('tgl_sprint')->index();
+			$table->integer('sprint_id')->index();
 			$table->boolean('detail_sarkut')->default(0)->index();
 			$table->boolean('detail_barang')->default(0)->index();
 			$table->boolean('detail_bangunan')->default(0)->index();
@@ -29,11 +28,7 @@ class CreateBukaSegelsTable extends Migration
 			$table->integer('jumlah_segel');
 			$table->string('nomor_segel')->nullable()->index();
 			$table->string('tempat_segel')->nullable()->index();
-			$table->string('nama_saksi')->index();
-			$table->string('alamat_saksi')->nullable()->index();
-			$table->string('pekerjaan_saksi')->nullable()->index();
-			$table->string('jns_identitas')->nullable()->index();
-			$table->string('no_identitas')->nullable()->index();
+			$table->integer('saksi_id')->index();
 			$table->string('pejabat1')->index();
 			$table->string('pejabat2')->nullable()->index();
 			$table->integer('kode_status')->index();
@@ -52,6 +47,6 @@ class CreateBukaSegelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buka_segels');
+        Schema::dropIfExists('buka_segel');
     }
 }

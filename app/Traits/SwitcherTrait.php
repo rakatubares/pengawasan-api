@@ -7,17 +7,17 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Models\BukaSegel;
 use App\Models\Sbp;
 use App\Models\Segel;
-use App\Models\BukaSegel;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
 	private $models = [
+		'bukasegel' => BukaSegel::class,
 		'sbp' => Sbp::class,
 		'segel' => Segel::class,
-		'bukasegel' => BukaSegel::class
 	];
 
 	private $resources = [
