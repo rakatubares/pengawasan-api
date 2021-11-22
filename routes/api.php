@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
+use App\Http\Controllers\TegahController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/** 
+ * API for BA Tegah
+ */
+Route::apiResource('tegah', TegahController::class);
+Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
+Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
+Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
 
 /**
  * API for Details
