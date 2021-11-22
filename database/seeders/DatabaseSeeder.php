@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 			SegelSeeder::class,
 			BukaSegelSeeder::class,
 			TitipSeeder::class,
+			TegahSeeder::class,
 		]);
 	}
 }

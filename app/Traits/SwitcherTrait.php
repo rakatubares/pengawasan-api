@@ -11,6 +11,7 @@ use App\Models\BukaSegel;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Titip;
+use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -20,6 +21,7 @@ trait SwitcherTrait
 		'sbp' => Sbp::class,
 		'segel' => Segel::class,
 		'titip' => Titip::class,
+		'tegah' => Tegah::class,
 	];
 
 	private $resources = [
