@@ -19,7 +19,7 @@ class SegelTableResource extends JsonResource
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
 			'nama_saksi' => $this->saksi->nama,
-			'pejabat1' => $this->pejabat1,
+			'petugas1' => $this->petugas1->name,
 			'status' => new RefStatusResource($this->status)
 		];
 

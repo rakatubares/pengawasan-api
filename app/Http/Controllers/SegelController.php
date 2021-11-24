@@ -23,7 +23,9 @@ class SegelController extends Controller
 	 */
 	public function index()
 	{
-		$all_segel = Segel::all();
+		$all_segel = Segel::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
 		$segel_list = SegelTableResource::collection($all_segel);
 		return $segel_list;
 	}
@@ -41,7 +43,7 @@ class SegelController extends Controller
 			'jenis_segel' => 'required',
 			'jumlah_segel' => 'required|integer',
 			'saksi.id' => 'required|integer',
-			'pejabat1' => 'required'
+			'petugas1.user_id' => 'required'
 		]);
 
 		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
@@ -55,8 +57,8 @@ class SegelController extends Controller
 			'nomor_segel' => $request->nomor_segel,
 			'lokasi_segel' => $request->lokasi_segel,
 			'saksi_id' => $request->saksi['id'],
-			'pejabat1' => $request->pejabat1,
-			'pejabat2' => $request->pejabat2,
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100,
 		]);
 
@@ -117,7 +119,7 @@ class SegelController extends Controller
 				'jenis_segel' => 'required',
 				'jumlah_segel' => 'required|integer',
 				'saksi.id' => 'required|integer',
-				'pejabat1' => 'required'
+				'petugas1.user_id' => 'required'
 			]);
 	
 			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
@@ -130,8 +132,8 @@ class SegelController extends Controller
 					'nomor_segel' => $request->nomor_segel,
 					'lokasi_segel' => $request->lokasi_segel,
 					'saksi_id' => $request->saksi['id'],
-					'pejabat1' => $request->pejabat1,
-					'pejabat2' => $request->pejabat2,
+					'petugas1_id' => $request->petugas1['user_id'],
+					'petugas2_id' => $request->petugas2['user_id'],
 					'kode_status' => 101,
 				]);
 	
