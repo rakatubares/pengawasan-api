@@ -56,8 +56,6 @@ class DetailController extends Controller
 
 			// Upsert data detail
 			if ($update_result == 1) {
-				// $col_type = $detail_type . 'able_type';
-				// $col_id = $detail_type . 'able_id';
 				$resource = $this->getResource($detail_type);
 
 				$insert_result = $model::find($doc_id)
