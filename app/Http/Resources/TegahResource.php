@@ -35,10 +35,10 @@ class TegahResource extends JsonResource
 			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
 			'detail_sarkut' => $this->detail_sarkut,
 			'detail_barang' => $this->detail_barang,
-			'pejabat1' => $this->pejabat1,
-			'pejabat2' => $this->pejabat2,
 			'sprint' => new RefSprintResource($this->sprint),
 			'saksi' => new PersonEntityResource($this->saksi),
+			'petugas1' => new RefUserResource($this->petugas1),
+			'petugas2' => new RefUserResource($this->petugas2),
 			'status' => new RefStatusResource($this->status),
 		];
 

@@ -41,7 +41,7 @@ class TegahController extends Controller
 		$request->validate([
 			'sprint.id' => 'required|integer',
 			'saksi.id' => 'integer',
-			'pejabat1' => 'required'
+			'petugas1.user_id' => 'required'
 		]);
 
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
@@ -51,8 +51,8 @@ class TegahController extends Controller
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'sprint_id' => $request->sprint['id'],
 			'saksi_id' => $request->saksi['id'],
-			'pejabat1' => $request->pejabat1,
-			'pejabat2' => $request->pejabat2,
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100,
 		]);
 
@@ -108,15 +108,15 @@ class TegahController extends Controller
 			$request->validate([
 				'sprint.id' => 'required|integer',
 				'saksi.id' => 'integer',
-				'pejabat1' => 'required'
+				'petugas1.user_id' => 'required'
 			]);
 
 			$update_result = Tegah::where('id', $id)
 				->update([
 					'sprint_id' => $request->sprint['id'],
 					'saksi_id' => $request->saksi['id'],
-					'pejabat1' => $request->pejabat1,
-					'pejabat2' => $request->pejabat2,
+					'petugas1_id' => $request->petugas1['user_id'],
+					'petugas2_id' => $request->petugas2['user_id'],
 					'kode_status' => 101,
 				]);
 

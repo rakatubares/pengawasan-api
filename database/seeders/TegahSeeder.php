@@ -32,7 +32,8 @@ class TegahSeeder extends Seeder
 				'detail_sarkut' => $detail_sarkut,
 				'detail_barang' => $detail_barang,
 				'saksi_id' => $faker->numberBetween(1, 100),
-				'pejabat1' => $faker->name(),
+				'petugas1_id' => 1,
+				'petugas2_id' => 2,
 				'kode_status' => 200,
 			]);
 

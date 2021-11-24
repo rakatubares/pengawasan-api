@@ -23,8 +23,8 @@ class Tegah extends Model
 		'detail_sarkut',
 		'detail_barang',
 		'saksi_id',
-		'pejabat1',
-		'pejabat2',
+		'petugas1_id',
+		'petugas2_id',
 		'kode_status'
 	];
 
@@ -60,6 +60,16 @@ class Tegah extends Model
 	public function saksi()
 	{
 		return $this->belongsTo(RefEntitas::class, 'saksi_id');
+	}
+
+	public function petugas1()
+	{
+		return $this->belongsTo(RefUserCache::class, 'petugas1_id', 'user_id');
+	}
+
+	public function petugas2()
+	{
+		return $this->belongsTo(RefUserCache::class, 'petugas2_id', 'user_id');
 	}
 
 	public function status()
