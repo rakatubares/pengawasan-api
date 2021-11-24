@@ -29,8 +29,8 @@ class CreateSegelTable extends Migration
 			$table->string('nomor_segel')->nullable()->index();
 			$table->string('lokasi_segel')->nullable()->index();
 			$table->integer('saksi_id')->index();
-			$table->string('pejabat1')->index();
-			$table->string('pejabat2')->nullable()->index();
+			$table->string('petugas1_id')->index();
+			$table->string('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
