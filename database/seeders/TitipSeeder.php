@@ -38,7 +38,8 @@ class TitipSeeder extends Seeder
 				'tanggal_segel' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'penerima_id' => $faker->numberBetween(1, 100),
 				'saksi_id' => $faker->numberBetween(1, 100),
-				'pejabat1' => $faker->name(),
+				'petugas1_id' => 1,
+				'petugas2_id' => 2,
 				'kode_status' => 200,
 			]);
 
