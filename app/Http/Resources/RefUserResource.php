@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpTableResource extends JsonResource
+class RefUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,13 @@ class SbpTableResource extends JsonResource
     public function toArray($request)
     {
         $array = [
-			'id' => $this->id,
-			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'nama_saksi' => $this->saksi->nama,
-			'petugas1' => $this->petugas1->name,
-			'status' => new RefStatusResource($this->status)
+			'user_id' => $this->user_id,
+			'username' => $this->username,
+			'name' => $this->name,
+			'nip' => $this->nip,
+			'pangkat' => $this->pangkat,
+			'penempatan' => $this->penempatan,
+			'status' => $this->status,
 		];
 
 		return $array;

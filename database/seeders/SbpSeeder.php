@@ -43,7 +43,8 @@ class SbpSeeder extends Seeder
 				'wkt_selesai_penindakan' => $faker->dateTime(),
 				'hal_terjadi' => $faker->text(),
 				'saksi_id' => $faker->numberBetween(1, 100),
-				'pejabat1' => $faker->name(),
+				'petugas1_id' => 1,
+				'petugas2_id' => 2,
 				'kode_status' => 200,
 			]);
 

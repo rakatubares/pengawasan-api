@@ -23,7 +23,9 @@ class SbpController extends Controller
 	 */
 	public function index()
 	{
-		$all_sbp = Sbp::all();
+		$all_sbp = Sbp::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
 		$sbp_list = SbpTableResource::collection($all_sbp);
 		return $sbp_list;
 	}
@@ -42,7 +44,7 @@ class SbpController extends Controller
 			'wkt_mulai_penindakan' => 'required|date',
 			'wkt_selesai_penindakan' => 'required|date',
 			'saksi.id' => 'required|integer',
-			'pejabat1' => 'required'
+			'petugas1.user_id' => 'required'
 		]);
 		
 		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
@@ -60,8 +62,8 @@ class SbpController extends Controller
 			'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
 			'hal_terjadi' => $request->hal_terjadi,
 			'saksi_id' => $request->saksi['id'],
-			'pejabat1' => $request->pejabat1,
-			'pejabat2' => $request->pejabat2,
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100
 		]);
 
@@ -123,7 +125,7 @@ class SbpController extends Controller
 				'wkt_mulai_penindakan' => 'required|date',
 				'wkt_selesai_penindakan' => 'required|date',
 				'saksi.id' => 'required|integer',
-				'pejabat1' => 'required'
+				'petugas1.user_id' => 'required'
 			]);
 	
 			$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
@@ -140,8 +142,8 @@ class SbpController extends Controller
 					'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
 					'hal_terjadi' => $request->hal_terjadi,
 					'saksi_id' => $request->saksi['id'],
-					'pejabat1' => $request->pejabat1,
-					'pejabat2' => $request->pejabat2,
+					'petugas1_id' => $request->petugas1['user_id'],
+					'petugas2_id' => $request->petugas2['user_id'],
 				]);
 	
 			$result = $update_result;

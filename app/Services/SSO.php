@@ -1,7 +1,6 @@
 <?php
 namespace App\Services;
 
-use Config;
 use Illuminate\Http\Request;
 use Jasny\SSO\Broker;
 
@@ -22,13 +21,13 @@ class SSO {
 	{
 		$userInfo = $this->sso->getUserInfo();
 
-		var_dump($userInfo);
+		// var_dump($userInfo);
 
 		if ($userInfo == NULL) {
-			echo 'User info is null';
+			// echo 'User info is null';
 			return redirect('http://ssologin.local/login?appid=3');
 		} else {
-			echo 'User info is NOT null';
+			// echo 'User info is NOT null';
 		}
 	}
 }
