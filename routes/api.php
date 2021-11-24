@@ -10,6 +10,7 @@ use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\TitipController;
+use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,11 @@ Route::post('/entitas/search', [RefEntitasController::class, 'search']);
  * API for Jabatan
  */
 Route::apiResource('jabatan', RefJabatanController::class);
+
+/**
+ * API for User
+ */
+Route::apiResource('user', RefUserCacheController::class);
 
 Route::get('test', function() {
 	# code...

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
 			RefStatusSeeder::class,
 			RefSatuanSeeder::class,
 			RefJabatanSeeder::class,
+			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			TitipSeeder::class,
