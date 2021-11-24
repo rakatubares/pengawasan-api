@@ -39,11 +39,11 @@ class TitipResource extends JsonResource
 			'detail_bangunan' => $this->detail_bangunan,
 			'nomor_ba_segel' => $this->nomor_ba_segel,
 			'tanggal_segel' => $this->tanggal_segel->format('d-m-Y'),
-			'pejabat1' => $this->pejabat1,
-			'pejabat2' => $this->pejabat2,
 			'sprint' => new RefSprintResource($this->sprint),
 			'penerima' => new PersonEntityResource($this->penerima),
 			'saksi' => new PersonEntityResource($this->saksi),
+			'petugas1' => new RefUserResource($this->petugas1),
+			'petugas2' => new RefUserResource($this->petugas2),
 			'status' => new RefStatusResource($this->status),
 		];
 

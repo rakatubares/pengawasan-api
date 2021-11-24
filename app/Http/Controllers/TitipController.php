@@ -23,7 +23,9 @@ class TitipController extends Controller
 	 */
 	public function index()
 	{
-		$all_titip = Titip::all();
+		$all_titip = Titip::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
 		$titip_list = TitipTableResource::collection($all_titip);
 		return $titip_list;
 	}
@@ -42,7 +44,7 @@ class TitipController extends Controller
 			'tanggal_segel' => 'date',
 			'penerima.id' => 'required|integer',
 			'saksi.id' => 'integer',
-			'pejabat1' => 'required'
+			'petugas1.user_id' => 'required'
 		]);
 
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
@@ -56,8 +58,8 @@ class TitipController extends Controller
 			'tanggal_segel' => $request->tanggal_segel,
 			'penerima_id' => $request->penerima['id'],
 			'saksi_id' => $request->saksi['id'],
-			'pejabat1' => $request->pejabat1,
-			'pejabat2' => $request->pejabat2,
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100,
 		]);
 
@@ -116,7 +118,7 @@ class TitipController extends Controller
 				'tanggal_segel' => 'date',
 				'penerima.id' => 'required|integer',
 				'saksi.id' => 'integer',
-				'pejabat1' => 'required'
+				'petugas1.user_id' => 'required'
 			]);
 
 			$tanggal_segel = date('Y-m-d', strtotime($request->tanggal_segel));
@@ -129,8 +131,8 @@ class TitipController extends Controller
 					'tanggal_segel' => $tanggal_segel,
 					'penerima_id' => $request->penerima['id'],
 					'saksi_id' => $request->saksi['id'],
-					'pejabat1' => $request->pejabat1,
-					'pejabat2' => $request->pejabat2,
+					'petugas1_id' => $request->petugas1['user_id'],
+					'petugas2_id' => $request->petugas2['user_id'],
 					'kode_status' => 101,
 				]);
 

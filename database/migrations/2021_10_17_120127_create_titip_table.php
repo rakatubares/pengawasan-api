@@ -29,8 +29,8 @@ class CreateTitipTable extends Migration
 			$table->date('tanggal_segel')->nullable()->index();
 			$table->integer('penerima_id')->index();
 			$table->integer('saksi_id')->nullable()->index();
-			$table->string('pejabat1')->index();
-			$table->string('pejabat2')->nullable()->index();
+			$table->string('petugas1_id')->index();
+			$table->string('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
