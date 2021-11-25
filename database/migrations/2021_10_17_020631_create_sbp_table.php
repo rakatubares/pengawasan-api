@@ -33,8 +33,8 @@ class CreateSbpTable extends Migration
 			$table->dateTime('wkt_selesai_penindakan')->index();
 			$table->text('hal_terjadi')->nullable();
 			$table->integer('saksi_id')->index();
-			$table->string('petugas1_id')->index();
-			$table->string('petugas2_id')->nullable()->index();
+			$table->integer('petugas1_id')->index();
+			$table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

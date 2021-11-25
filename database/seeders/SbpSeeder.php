@@ -26,10 +26,10 @@ class SbpSeeder extends Seeder
 
 			Sbp::create([
 				'no_dok' => $i,
-				'agenda_dok' => '/KPU.03/',
-				'thn_dok' => 2021,
-				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/2021',
-				'tgl_dok' => '2021-01-01',
+				'agenda_dok' => '/KPU.03/BD.05/',
+				'thn_dok' => date("Y"),
+				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/BD.05/' . date("Y"),
+				'tgl_dok' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'sprint_id' => $faker->numberBetween(1,10),
 				'detail_sarkut' => $detail_sarkut,
 				'detail_barang' => $detail_barang,
