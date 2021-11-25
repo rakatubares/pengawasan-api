@@ -25,10 +25,10 @@ class SegelSeeder extends Seeder
 
 			Segel::create([
 				'no_dok' => $i,
-				'agenda_dok' => '/SEGEL/KPU.03/',
-				'thn_dok' => 2021,
-				'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/2021',
-				'tgl_dok' => $faker->date(),
+				'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
+				'thn_dok' => date("Y"),
+				'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+				'tgl_dok' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'sprint_id' => $faker->numberBetween(1,10),
 				'detail_sarkut' => $detail_sarkut,
 				'detail_barang' => $detail_barang,
