@@ -14,7 +14,7 @@ class SbpController extends Controller
 	use DokumenTrait;
 	
 	private $tipe_dok = 'SBP';
-	private $agenda_dok = '/KPU.03/';
+	private $agenda_dok = '/KPU.03/BD.05/';
 	
 	/**
 	 * Display a listing of the resource.
