@@ -15,7 +15,7 @@ class CreateBukaSegelTable extends Migration
     {
         Schema::create('buka_segel', function (Blueprint $table) {
             $table->id();
-			$table->string('no_dok')->nullable()->index();
+			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
@@ -29,8 +29,8 @@ class CreateBukaSegelTable extends Migration
 			$table->string('nomor_segel')->nullable()->index();
 			$table->string('tempat_segel')->nullable()->index();
 			$table->integer('saksi_id')->index();
-			$table->string('pejabat1')->index();
-			$table->string('pejabat2')->nullable()->index();
+			$table->integer('petugas1_id')->index();
+			$table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

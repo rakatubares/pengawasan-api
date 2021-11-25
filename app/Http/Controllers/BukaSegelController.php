@@ -14,7 +14,7 @@ class BukaSegelController extends Controller
 	use DokumenTrait;
 	
 	private $tipe_dok = 'BA';
-	private $agenda_dok = '/BUKA SEGEL/KPU.03/';
+	private $agenda_dok = '/BUKA SEGEL/KPU.03/BD.05/';
 
 	/**
 	 * Display a listing of the resource.
@@ -23,7 +23,9 @@ class BukaSegelController extends Controller
 	 */
 	public function index()
 	{
-		$all_buka_segel = BukaSegel::all();
+		$all_buka_segel = BukaSegel::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
 		$buka_segel_list = BukaSegelTableResource::collection($all_buka_segel);
 		return $buka_segel_list;
 	}
@@ -41,7 +43,7 @@ class BukaSegelController extends Controller
 			'jenis_segel' => 'required',
 			'jumlah_segel' => 'required|integer',
 			'saksi.id' => 'required|integer',
-			'pejabat1' => 'required'
+			'petugas1.user_id' => 'required'
 		]);
 
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
@@ -55,8 +57,8 @@ class BukaSegelController extends Controller
 			'nomor_segel' => $request->nomor_segel,
 			'tempat_segel' => $request->tempat_segel,
 			'saksi_id' => $request->saksi['id'],
-			'pejabat1' => $request->pejabat1,
-			'pejabat2' => $request->pejabat2,
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100,
 		]);
 
@@ -114,7 +116,7 @@ class BukaSegelController extends Controller
 				'jenis_segel' => 'required',
 				'jumlah_segel' => 'required|integer',
 				'saksi.id' => 'required|integer',
-				'pejabat1' => 'required'
+				'petugas1.user_id' => 'required'
 			]);
 	
 			$update_result = BukaSegel::where('id', $id)
@@ -125,8 +127,8 @@ class BukaSegelController extends Controller
 					'nomor_segel' => $request->nomor_segel,
 					'tempat_segel' => $request->tempat_segel,
 					'saksi_id' => $request->saksi['id'],
-					'pejabat1' => $request->pejabat1,
-					'pejabat2' => $request->pejabat2,
+					'petugas1_id' => $request->petugas1['user_id'],
+					'petugas2_id' => $request->petugas2['user_id'],
 					'kode_status' => 101,
 				]);
 	
