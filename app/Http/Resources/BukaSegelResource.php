@@ -40,10 +40,10 @@ class BukaSegelResource extends JsonResource
 			'jumlah_segel' => $this->jumlah_segel,
 			'nomor_segel' => $this->nomor_segel,
 			'tempat_segel' => $this->tempat_segel,
-			'pejabat1' => $this->pejabat1,
-			'pejabat2' => $this->pejabat2,
 			'sprint' => new RefSprintResource($this->sprint),
 			'saksi' => new PersonEntityResource($this->saksi),
+			'petugas1' => new RefUserResource($this->petugas1),
+			'petugas2' => new RefUserResource($this->petugas2),
 			'status' => new RefStatusResource($this->status),
 		];
 
