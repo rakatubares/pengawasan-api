@@ -24,8 +24,8 @@ class CreateTegahTable extends Migration
 			$table->boolean('detail_sarkut')->default(0)->index();
 			$table->boolean('detail_barang')->default(0)->index();
 			$table->integer('saksi_id')->nullable()->index();
-			$table->string('petugas1_id')->index();
-			$table->string('petugas2_id')->nullable()->index();
+			$table->integer('petugas1_id')->index();
+			$table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
