@@ -25,9 +25,9 @@ class BukaSegelSeeder extends Seeder
 
 			BukaSegel::create([
 				'no_dok' => $i,
-				'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.O5/',
+				'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.05/',
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'BA-' . $i . '/BUKA SEGEL/KPU.03/BD.O5/' . date("Y"),
+				'no_dok_lengkap' => 'BA-' . $i . '/BUKA SEGEL/KPU.03/BD.05/' . date("Y"),
 				'tgl_dok' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'sprint_id' => $faker->numberBetween(1,10),
 				'detail_sarkut' => $detail_sarkut,
