@@ -14,7 +14,16 @@ class SSO {
 		$app_secret = config('sso.app_secret');
 
 		$this->sso = new Broker($sso_url, $app_id, $app_secret);
-		$this->sso->attach('http://pengawasan.local/api/test');
+	}
+
+	private function attach()
+	{
+		$this->sso->attach('http://pengawasan.local/api');
+	}
+
+	public function setToken($token)
+	{
+		$this->sso->token = $token;
 	}
 
 	public function getUserInfo()
@@ -30,4 +39,9 @@ class SSO {
 			// echo 'User info is NOT null';
 		}
 	}
+
+	public function __call($fn, $args) {
+		// $this->attach();
+        return $this->sso->__call($fn, $args);
+    }
 }
