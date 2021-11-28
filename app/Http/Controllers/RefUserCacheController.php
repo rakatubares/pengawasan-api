@@ -3,18 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\RefUserCache;
+use App\Services\SSO;
 use Illuminate\Http\Request;
 
 class RefUserCacheController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Initiate SSO
+	 * 
+	 * @param SSO $sso
+	 */
+	public function __construct(SSO $sso)
+	{
+		$this->sso = $sso;
+	}
+
+	/**
+	 * Display a listing of penindakan.
 	 *
+	 * @param  \Illuminate\Http\Request $r
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function role(Request $request, $role)
 	{
-		//
+		$roles = [
+			'penindakan' => 'p2vue.penindakan'
+		];
+
+		$token = $request->bearerToken();
+        $this->sso->setToken($token);
+
+		$data = $this->sso->getUserByRole([$roles[$role]], false);
+		return $data;
 	}
 
 	/**
@@ -54,9 +74,13 @@ class RefUserCacheController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id)
+	public function show(Request $request, $id)
 	{
-		//
+		$token = $request->bearerToken();
+        $this->sso->setToken($token);
+
+		$data = $this->sso->getUserById($id);
+		return $data;
 	}
 
 	/**
