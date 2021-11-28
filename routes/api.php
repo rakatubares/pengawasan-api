@@ -99,6 +99,8 @@ Route::apiResource('jabatan', RefJabatanController::class);
  * API for User
  */
 Route::apiResource('user', RefUserCacheController::class);
+Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
+Route::get('/user/role/{role}', [RefUserCacheController::class, 'role']);
 
 Route::get('test', function() {
 	# code...
