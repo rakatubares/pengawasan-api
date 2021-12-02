@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SegelResource;
+use App\Http\Resources\SegelResource2;
 use App\Http\Resources\SegelTableResource;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
@@ -52,9 +53,10 @@ class SegelController extends Controller
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'sprint_id' => $request->sprint['id'],
+			'objek_penindakan' => $request->objek_penindakan,
 			'jenis_segel' => $request->jenis_segel,
 			'jumlah_segel' => $request->jumlah_segel,
-			'nomor_segel' => $request->nomor_segel,
+			'nomor_segel' => $no_dok_lengkap,
 			'lokasi_segel' => $request->lokasi_segel,
 			'saksi_id' => $request->saksi['id'],
 			'petugas1_id' => $request->petugas1['user_id'],
@@ -63,6 +65,7 @@ class SegelController extends Controller
 		]);
 
 		return $insert_result;
+		// return $request;
 	}
 
 	/**
@@ -73,7 +76,7 @@ class SegelController extends Controller
 	 */
 	public function show($id)
 	{
-		$segel = new SegelResource(Segel::findOrFail($id));
+		$segel = new SegelResource2(Segel::findOrFail($id));
 		return $segel;
 	}
 

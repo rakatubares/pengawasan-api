@@ -13,24 +13,27 @@ class CreateSegelTable extends Migration
      */
     public function up()
     {
-        Schema::create('segel', function (Blueprint $table) {
+        Schema::create('dok_segel', function (Blueprint $table) {
             $table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->date('tgl_dok')->nullable()->index();
-			$table->integer('sprint_id')->index();
-			$table->boolean('detail_sarkut')->default(0)->index();
-			$table->boolean('detail_barang')->default(0)->index();
-			$table->boolean('detail_bangunan')->default(0)->index();
+			// $table->integer('penindakan_id')->index();
+			// $table->date('tgl_dok')->nullable()->index();
+			// $table->integer('sprint_id')->index();
+			// $table->string('objek_penindakan')->nullable()->index();
+			// $table->boolean('detail_sarkut')->default(0)->index();
+			// $table->boolean('detail_barang')->default(0)->index();
+			// $table->boolean('detail_bangunan')->default(0)->index();
 			$table->string('jenis_segel')->index();
 			$table->integer('jumlah_segel');
+			$table->string('satuan_segel')->nullable()->index();
 			$table->string('nomor_segel')->nullable()->index();
-			$table->string('lokasi_segel')->nullable()->index();
-			$table->integer('saksi_id')->index();
-			$table->integer('petugas1_id')->index();
-			$table->integer('petugas2_id')->nullable()->index();
+			$table->string('tempat_segel')->nullable()->index();
+			// $table->integer('saksi_id')->index();
+			// $table->integer('petugas1_id')->index();
+			// $table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
@@ -47,6 +50,6 @@ class CreateSegelTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('segel');
+        Schema::dropIfExists('dok_segel');
     }
 }
