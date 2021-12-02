@@ -13,19 +13,19 @@ class CreateTegahTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('tegah', function (Blueprint $table) {
+		Schema::create('dok_tegah', function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->date('tgl_dok')->nullable()->index();
-			$table->integer('sprint_id')->index();
-			$table->boolean('detail_sarkut')->default(0)->index();
-			$table->boolean('detail_barang')->default(0)->index();
-			$table->integer('saksi_id')->nullable()->index();
-			$table->integer('petugas1_id')->index();
-			$table->integer('petugas2_id')->nullable()->index();
+			// $table->date('tgl_dok')->nullable()->index();
+			// $table->integer('sprint_id')->index();
+			// $table->boolean('detail_sarkut')->default(0)->index();
+			// $table->boolean('detail_barang')->default(0)->index();
+			// $table->integer('saksi_id')->nullable()->index();
+			// $table->integer('petugas1_id')->index();
+			// $table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
@@ -42,6 +42,6 @@ class CreateTegahTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('tegah');
+		Schema::dropIfExists('dok_tegah');
 	}
 }

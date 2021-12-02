@@ -12,10 +12,10 @@ class TegahResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type='basic')
+	public function __construct($resource, $element=null)
 	{
 		$this->resource = $resource;
-		$this->type = $type;
+		$this->element = $element;
 	}
 	
 	/**
@@ -32,23 +32,29 @@ class TegahResource extends JsonResource
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'detail_sarkut' => $this->detail_sarkut,
-			'detail_barang' => $this->detail_barang,
-			'sprint' => new RefSprintResource($this->sprint),
-			'saksi' => new PersonEntityResource($this->saksi),
-			'petugas1' => new RefUserResource($this->petugas1),
-			'petugas2' => new RefUserResource($this->petugas2),
-			'status' => new RefStatusResource($this->status),
 		];
 
-		if ($this->type == 'complete') {
-			$tegah['detail'] = [
-				'sarkut' => new DetailSarkutResource($this->sarkut),
-				'barang' => new DetailBarangResource($this->barang),
+		$penindakan = new PenindakanResource($this->penindakan, 'basic');
+		$status = new RefStatusResource($this->status);
+		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
+
+		if ($this->element == 'basic') {
+			$array = $tegah;
+			$array['kode_status'] = $this->kode_status;
+		} else {
+			$array = [
+				'main' => [
+					'type' => 'tegah',
+					'data' => $tegah
+				],
+				'penindakan' => $penindakan,
+				'status' => $status,
+				'objek' => $objek,
+				'dokumen' => $dokumen,
 			];
 		}
 
-		return $tegah;
+		return $array;
 	}
 }
