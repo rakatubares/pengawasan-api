@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailBarangTable extends Migration
+class CreateObjectRelationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateDetailBarangTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_barang', function (Blueprint $table) {
+        Schema::create('object_relations', function (Blueprint $table) {
             $table->id();
-			$table->integer('jumlah_kemasan')->nullable();
-			$table->string('satuan_kemasan')->nullable()->index();
-			$table->string('pemilik_id')->nullable()->index();
+			$table->morphs('object1');
+			$table->morphs('object2');
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->index('object1_type');
+			$table->index('object1_id');
+			$table->index('object2_type');
+			$table->index('object2_id');
             $table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
@@ -33,6 +36,6 @@ class CreateDetailBarangTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_barang');
+        Schema::dropIfExists('object_relations');
     }
 }
