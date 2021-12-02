@@ -2,11 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Http\Controllers\SbpController;
+use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
-use App\Models\DocRelation;
+use App\Models\DetailSarkut;
+use App\Models\ObjectRelation;
+use App\Models\Penindakan;
 use App\Models\Sbp;
 use App\Models\Segel;
+use App\Models\Tegah;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +18,6 @@ class SbpSeeder extends Seeder
 	public function __construct()
 	{
 		$this->faker = Faker::create();
-		$this->data = [];
 	}
 
     /**
@@ -25,132 +27,78 @@ class SbpSeeder extends Seeder
      */
     public function run()
     {	
-		$segel_id = 1;
-		for ($i=1; $i < 11; $i++) {
+        for ($i=1; $i < 21; $i++) { 
 			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan', 'orang']);
 
-			$this->data = [
-				'tgl_dok' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+			$penindakan = Penindakan::create([
 				'sprint_id' => $this->faker->numberBetween(1,10),
-				'objek_penindakan' => $objek_penindakan,
+				'tanggal_penindakan' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'lokasi_penindakan' => $this->faker->address(),
-				'lokasi_penindakan' => $this->faker->sentence(),
+				'saksi_id' => $this->faker->numberBetween(1,100),
+				'petugas1_id' => 1,
+				'petugas2_id' => 2,
+			]);
+
+			$sbp = Sbp::create([
+				'no_dok' => $i,
+				'agenda_dok' => '/KPU.03/BD.05/',
+				'thn_dok' => date("Y"),
+				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/BD.05/' . date("Y"),
 				'uraian_penindakan' => $this->faker->sentence($nbWOrds = 20),
 				'alasan_penindakan' => $this->faker->sentence($nbWOrds = 20),
 				'jenis_pelanggaran' => $this->faker->randomElement(['Kepabeanan', 'Cukai']),
 				'wkt_mulai_penindakan' => $this->faker->dateTime(),
 				'wkt_selesai_penindakan' => $this->faker->dateTime(),
 				'hal_terjadi' => $this->faker->text(),
-				'saksi_id' => $this->faker->numberBetween(1, 100),
-			];
-
-			Sbp::create([
-				'no_dok' => $i,
-				'agenda_dok' => '/KPU.03/BD.05/',
-				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/BD.05/' . date("Y"),
-				'tgl_dok' => $this->data['tgl_dok'],
-				'sprint_id' => $this->data['sprint_id'],
-				'objek_penindakan' => $this->data['objek_penindakan'],
-				'lokasi_penindakan' => $this->data['lokasi_penindakan'],
-				'uraian_penindakan' => $this->data['uraian_penindakan'],
-				'alasan_penindakan' => $this->data['alasan_penindakan'],
-				'jenis_pelanggaran' => $this->data['jenis_pelanggaran'],
-				'wkt_mulai_penindakan' => $this->data['wkt_mulai_penindakan'],
-				'wkt_selesai_penindakan' => $this->data['wkt_selesai_penindakan'],
-				'hal_terjadi' => $this->data['hal_terjadi'],
-				'saksi_id' => $this->data['saksi_id'],
-				'petugas1_id' => 1,
-				'petugas2_id' => 2,
 				'kode_status' => 200,
-				
-				// 'no_dok' => $i,
-				// 'agenda_dok' => '/KPU.03/BD.05/',
-				// 'thn_dok' => date("Y"),
-				// 'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/BD.05/' . date("Y"),
-				// 'tgl_dok' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-				// 'sprint_id' => $this->faker->numberBetween(1,10),
-				// 'objek_penindakan' => $objek_penindakan,
-				// 'lokasi_penindakan' => $this->faker->sentence(),
-				// 'uraian_penindakan' => $this->faker->sentence($nbWOrds = 20),
-				// 'alasan_penindakan' => $this->faker->sentence($nbWOrds = 20),
-				// 'jenis_pelanggaran' => $this->faker->randomElement(['Kepabeanan', 'Cukai']),
-				// 'wkt_mulai_penindakan' => $this->faker->dateTime(),
-				// 'wkt_selesai_penindakan' => $this->faker->dateTime(),
-				// 'hal_terjadi' => $this->faker->text(),
-				// 'saksi_id' => $this->faker->numberBetween(1, 100),
-				// 'petugas1_id' => 1,
-				// 'petugas2_id' => 2,
-				// 'kode_status' => 200,
+			]);
+
+			ObjectRelation::create([
+				'object1_type' => 'penindakan',
+				'object1_id' => $penindakan->id,
+				'object2_type' => 'sbp',
+				'object2_id' => $sbp->id,
 			]);
 
 			switch ($objek_penindakan) {
 				case 'sarkut':
-					$this->createSegel($segel_id);
-					$this->createSarkut($i, $segel_id);
-					$this->docRelation($i, $segel_id);
-					$segel_id++;
-					break;
-				
-				case 'barang':
-					$this->createSegel($segel_id);
-					$this->createBarang($i, $segel_id);
-					$this->docRelation($i, $segel_id);
-					$segel_id++;
-					break;
-				
-				case 'bangunan':
-					$this->createSegel($segel_id);
-					$this->createBangunan($i, $segel_id);
-					$this->docRelation($i, $segel_id);
-					$segel_id++;
+					$object = $this->createSarkut();
+					$object_id = $object->id;
+					$this->createSegel($penindakan->id);
+					$this->createTegah($penindakan->id);
 					break;
 
-				case 'badan':
-					$this->createBadan($i);
+				case 'barang':
+					$object = $this->createBarang();
+					$object_id = $object->id;
+					$this->createSegel($penindakan->id);
+					$this->createTegah($penindakan->id);
 					break;
-						
+
+				case 'bangunan':
+					$object = $this->createBangunan();
+					$object_id = $object->id;
+					$this->createSegel($penindakan->id);
+					break;
+
+				case 'orang':
+					$object_id = $this->faker->numberBetween(1,10);
+				
 				default:
 					# code...
 					break;
 			}
+
+			$penindakan->update([
+				'object_type' => $objek_penindakan,
+				'object_id' => $object_id
+			]);
 		}
     }
 
-	private function createSegel($i)
+	private function createSarkut()
 	{
-		Segel::create([
-			'no_dok' => $i,
-			'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
-			'thn_dok' => date("Y"),
-			'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-			'tgl_dok' => $this->data['tgl_dok'],
-			'sprint_id' => $this->data['sprint_id'],
-			'objek_penindakan' => $this->data['objek_penindakan'],
-			'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
-			'jumlah_segel' => $this->faker->randomDigit(),
-			'nomor_segel' => 'BA-' . $i . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-			'lokasi_segel' => $this->faker->word(),
-			'saksi_id' => $this->data['saksi_id'],
-			'petugas1_id' => 1,
-			'petugas2_id' => 2,
-			'kode_status' => 200,
-		]);
-	}
-
-	private function docRelation($sbp_id, $segel_id)
-	{
-		DocRelation::create([
-			'doc1_type' => Segel::class,
-			'doc1_id' => $segel_id,
-			'doc2_type' => Sbp::class,
-			'doc2_id' => $sbp_id
-		]);
-	}
-
-	private function createSarkut($i, $segel_id)
-	{
-		$dataSarkut = [
+		$sarkut = DetailSarkut::create([
 			'nama_sarkut' => $this->faker->company(),
 			'jenis_sarkut' => 'Pesawat',
 			'no_flight_trayek' => $this->faker->regexify('[A-Z]{2}[0-9]{3}'),
@@ -159,67 +107,98 @@ class SbpSeeder extends Seeder
 			'pilot_id' => $this->faker->numberBetween(1, 100),
 			'bendera' => $this->faker->countryCode(),
 			'no_reg_polisi' => $this->faker->regexify('[A-Z]{5}'),
-		];
+		]);
 
-		Sbp::find($i)->sarkut()->create($dataSarkut);
-		Segel::find($segel_id)->sarkut()->create($dataSarkut);
+		return $sarkut;
 	}
 
-	private function createBarang($i, $segel_id)
+	public function createBarang()
 	{
-		$data_barang = [
+		$barang = DetailBarang::create([
 			'jumlah_kemasan' => $this->faker->numberBetween(1, 100),
 			'satuan_kemasan' => $this->faker->regexify('[a-z]{2}'),
 			'pemilik_id' => $this->faker->numberBetween(1, 100)
-		];
+		]);
 
-		$sbp_result = Sbp::find($i)->barang()->create($data_barang);
-		$sbp_barang_id = $sbp_result->id;
+		DetailBarang::find($barang->id)
+			->dokumen()
+			->create([
+				'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
+				'no_dok' => $this->faker->numberBetween(1, 999999),
+				'tgl_dok' => $this->faker->date()
+			]);
 
-		$segel_result = Segel::find($segel_id)->barang()->create($data_barang);
-		$segel_barang_id = $segel_result->id;
+		$item_count = $this->faker->numberBetween(1, 10);
+		for ($i=0; $i < $item_count; $i++) { 
+			DetailBarang::find($barang->id)
+				->itemBarang()
+				->create([
+					'jumlah_barang' => $this->faker->numberBetween(1, 100),
+					'satuan_barang' => $this->faker->regexify('[a-z]{2}'),
+					'uraian_barang' => $this->faker->text()
+				]);
+		}
 
-		// $item_count = $this->faker->numberBetween(1, 10);
-
-		// for ($c=1; $c <= $item_count; $c++) {
-		// 	$data_item_barang = [
-		// 		'jumlah_barang' => $this->faker->numberBetween(1, 100),
-		// 		'satuan_barang' => $this->faker->regexify('[a-z]{2}'),
-		// 		'uraian_barang' => $this->faker->text()
-		// 	];
-
-		// 	$data_dok_barang = [
-		// 		'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
-		// 		'no_dok' => $this->faker->numberBetween(1, 999999),
-		// 		'tgl_dok' => $this->faker->date()
-		// 	];
-
-		// 	DetailBarang::find($sbp_barang_id)->itemBarang()->create($data_item_barang);
-		// 	DetailBarang::find($segel_barang_id)->itemBarang()->create($data_item_barang);
-
-		// 	DetailBarang::find($sbp_barang_id)->dokumen()->create($data_dok_barang);
-		// 	DetailBarang::find($segel_barang_id)->dokumen()->create($data_dok_barang);
-		// }
+		return $barang;
 	}
 
-	private function createBangunan($i, $segel_id)
+	private function createBangunan()
 	{
-		$data_bangunan = [
+		$bangunan = DetailBangunan::create([
 			'alamat' => $this->faker->address(),
 			'no_reg' => $this->faker->regexify('[0-9]{15}'),
 			'pemilik_id' => $this->faker->numberBetween(1, 100),
-		];
+		]);
 
-		Sbp::find($i)->bangunan()->create($data_bangunan);
-		Segel::find($segel_id)->bangunan()->create($data_bangunan);
+		return $bangunan;
 	}
 
-	private function createBadan($i)
+	private function createSegel($penindakan_id)
 	{
-		Sbp::find($i)
-			->badan()
-			->create([
-				'entitas_id' => $this->faker->numberBetween(1, 100)
-			]);
+		$segel = Segel::create([
+			'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => 'BA-     /SEGEL/KPU.03/BD.05/',
+			'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
+			'jumlah_segel' => $this->faker->randomDigit(),
+			'satuan_segel' => $this->faker->regexify('[a-z]{2}'),
+			'tempat_segel' => $this->faker->word(),
+			'kode_status' => 200,
+		]);
+
+		$segel->update([
+			'no_dok' => $segel->id,
+			'no_dok_lengkap' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+			'nomor_segel' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'penindakan',
+			'object1_id' => $penindakan_id,
+			'object2_type' => 'segel',
+			'object2_id' => $segel->id,
+		]);
+	}
+
+	private function createTegah($penindakan_id)
+	{
+		$tegah = Tegah::create([
+			'agenda_dok' => '/TEGAH/KPU.03/BD.05/',
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => 'BA-     /TEGAH/KPU.03/BD.05/',
+			'kode_status' => 200,
+		]);
+
+		$tegah->update([
+			'no_dok' => $tegah->id,
+			'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'penindakan',
+			'object1_id' => $penindakan_id,
+			'object2_type' => 'tegah',
+			'object2_id' => $tegah->id,
+		]);
 	}
 }
