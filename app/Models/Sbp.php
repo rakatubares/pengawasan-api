@@ -11,37 +11,61 @@ class Sbp extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'sbp';
+	protected $table = 'dok_sbp';
 
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
-		'tgl_dok',
-		'sprint_id',
-		'detail_sarkut',
-		'detail_barang',
-		'detail_bangunan',
-		'detail_badan',
-		'lokasi_penindakan',
+		'penindakan_id',
+		// 'tgl_dok',
+		// 'sprint_id',
+		// 'detail_sarkut',
+		// 'detail_barang',
+		// 'detail_bangunan',
+		// 'detail_badan',
+		// 'objek_penindakan',
+		// 'lokasi_penindakan',
 		'uraian_penindakan',
 		'alasan_penindakan',
 		'jenis_pelanggaran',
 		'wkt_mulai_penindakan',
 		'wkt_selesai_penindakan',
 		'hal_terjadi',
-		'saksi_id',
-		'petugas1_id',
-		'petugas2_id',
+		// 'saksi_id',
+		// 'petugas1_id',
+		// 'petugas2_id',
 		'kode_status'
 	];
 
 	protected $casts = [
-		'tgl_dok' => 'date',
+		// 'tgl_dok' => 'date',
 		'wkt_mulai_penindakan' => 'datetime',
 		'wkt_selesai_penindakan' => 'datetime',
 	];
+
+	// public function penindakan()
+	// {
+	// 	return $this->hasOne(Penindakan::class, 'id', 'penindakan_id');
+	// }
+	public function penindakan()
+	{
+		return $this->hasOneThrough(
+			Penindakan::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'sbp'
+		);
+	}
 
 	public function sarkut()
 	{
@@ -73,6 +97,11 @@ class Sbp extends Model
 		return $this->morphOne(DetailBadan::class, 'parent');
 	}
 
+	// public function objek()
+	// {
+	// 	return $this->morphTo(__FUNCTION__, 'objek_penindakan', 'objek_id');
+	// }
+
 	public function sprint()
 	{
 		return $this->belongsTo(RefSprint::class, 'sprint_id');
@@ -97,4 +126,34 @@ class Sbp extends Model
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
 	}
+
+	// public function segel()
+	// {
+	// 	return $this->hasOneThrough(
+	// 		Segel::class,
+	// 		DocRelation::class,
+	// 		'doc2_id',
+	// 		'id',
+	// 		'id',
+	// 		'doc1_id'
+	// 	)->where(
+	// 		'doc2_type',
+	// 		Sbp::class
+	// 	)->where(
+	// 		'doc1_type',
+	// 		Segel::class
+	// 	);
+	// }
+
+	// public function segel()
+	// {
+	// 	return $this->hasOneThrough(
+	// 		Segel::class,
+	// 		Penindakan::class,
+	// 		'id',
+	// 		'penindakan_id',
+	// 		'penindakan_id',
+	// 		'id'
+	// 	);
+	// }
 }
