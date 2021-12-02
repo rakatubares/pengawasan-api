@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangWithSingleItemResource;
 use App\Models\DetailBarang;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DetailBarangController extends DetailController
 {
+	use SwitcherTrait;
+
     /**
      * Store a newly created resource in storage.
      *
@@ -36,6 +39,8 @@ class DetailBarangController extends DetailController
 				
 				default:
 					$result = $this->upsertDetail($data_barang, $doc_type, $doc_id, 'barang');
+					$doc = $this->getModel($doc_type);
+					$doc::find($doc_id)->update(['objek_penindakan' => 'barang']);
 					break;
 			}
 	
