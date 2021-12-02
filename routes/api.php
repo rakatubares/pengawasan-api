@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
@@ -34,11 +35,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /**
+ * API for penindakan
+ */
+Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
  * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
-Route::get('/sbp/{sbp_id}/details', [SbpController::class, 'showDetails']);
+Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
+Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 
 /**

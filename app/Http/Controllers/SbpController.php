@@ -6,6 +6,7 @@ use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
 use App\Models\Sbp;
+use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
@@ -70,6 +71,45 @@ class SbpController extends Controller
 		return $insert_result;
 	}
 
+	public function storeLinkedDoc(Request $request, $id)
+	{
+		$sbp = Sbp::findOrFail($id);
+		$detail = $this->getDetail(Sbp::class, $id);
+
+		if ($request->segel == true) {
+			$request_segel = $this->requestSegel($sbp, $detail, $request);
+			$this->createRelation(Segel::class, $request_segel->id, Sbp::class, $id);
+			// DocRelation::create([
+			// 	'doc1_type' => Segel::class,
+			// 	'doc1_id' => $request_segel->id,
+			// 	'doc2_type' => Sbp::class,
+			// 	'doc2_id' => $id,
+			// ]);
+		}
+		return $request_segel;
+		
+		return $detail;
+	}
+
+	private function requestSegel($sbp, $detail, $request)
+	{
+		$segel_array = [
+			'sprint' => ['id' => $sbp->sprint_id],
+			'objek_penindakan' => 'barang',
+			'jenis_segel' => $request->data_segel['jenis'],
+			'jumlah_segel' => $request->data_segel['jumlah'],
+			'lokasi_segel' => $request->data_segel['lokasi'],
+			'saksi' => ['id' => $sbp->saksi_id],
+			'petugas1' => ['user_id' => $sbp->petugas1->user_id],
+			'petugas2' => ['user_id' => ($sbp->petugas2->user_id ?? null)],
+		];
+
+		$segel_request = new Request($segel_array);
+		$insert_result = app(SegelController::class)->store($segel_request);
+		
+		return $insert_result;
+	}
+
 	/**
 	 * Display the specified resource.
 	 *
@@ -99,10 +139,10 @@ class SbpController extends Controller
 	 * 
 	 * @param int $id
 	 */
-	public function showDetails($id)
+	public function objek($id)
 	{
-		$detailStatus = new DetailStatusResource(Sbp::findOrFail($id));
-		return $detailStatus;
+		$objek = new SbpResource(Sbp::find($id));
+		return $objek;
 	}
 
 	/**

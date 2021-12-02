@@ -11,7 +11,7 @@ class Tegah extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'tegah';
+	protected $table = 'dok_tegah';
 
 	protected $fillable = [
 		'no_dok',
@@ -20,17 +20,35 @@ class Tegah extends Model
 		'no_dok_lengkap',
 		'tgl_dok',
 		'sprint_id',
-		'detail_sarkut',
-		'detail_barang',
-		'saksi_id',
-		'petugas1_id',
-		'petugas2_id',
+		// 'detail_sarkut',
+		// 'detail_barang',
+		// 'saksi_id',
+		// 'petugas1_id',
+		// 'petugas2_id',
 		'kode_status'
 	];
 
 	protected $casts = [
 		'tgl_dok' => 'date',
 	];
+
+	public function penindakan()
+	{
+		return $this->hasOneThrough(
+			Penindakan::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'tegah'
+		);
+	}
 
 	public function sarkut()
 	{

@@ -11,7 +11,7 @@ class Segel extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'segel';
+	protected $table = 'dok_segel';
 
 	protected $fillable = [
 		'no_dok',
@@ -20,22 +20,42 @@ class Segel extends Model
 		'no_dok_lengkap',
 		'tgl_dok',
 		'sprint_id',
-		'detail_sarkut',
-		'detail_barang',
-		'detail_bangunan',
+		// 'detail_sarkut',
+		// 'detail_barang',
+		// 'detail_bangunan',
+		'objek_penindakan',
 		'jenis_segel',
 		'jumlah_segel',
+		'satuan_segel',
 		'nomor_segel',
-		'lokasi_segel',
-		'saksi_id',
-		'petugas1_id',
-		'petugas2_id',
+		'tempat_segel',
+		// 'saksi_id',
+		// 'petugas1_id',
+		// 'petugas2_id',
 		'kode_status'
 	];
 
 	protected $casts = [
 		'tgl_dok' => 'date',
 	];
+
+	public function penindakan()
+	{
+		return $this->hasOneThrough(
+			Penindakan::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'segel'
+		);
+	}
 
 	public function sarkut()
 	{

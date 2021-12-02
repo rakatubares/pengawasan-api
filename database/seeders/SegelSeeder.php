@@ -19,9 +19,10 @@ class SegelSeeder extends Seeder
         $faker = Faker::create();
 
 		for ($i=1; $i < 11; $i++) { 
-			$detail_sarkut = $faker->boolean();
-			$detail_barang = $faker->boolean();
-			$detail_bangunan = $faker->boolean();
+			// $detail_sarkut = $faker->boolean();
+			// $detail_barang = $faker->boolean();
+			// $detail_bangunan = $faker->boolean();
+			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan']);
 
 			Segel::create([
 				'no_dok' => $i,
@@ -30,9 +31,10 @@ class SegelSeeder extends Seeder
 				'no_dok_lengkap' => 'BA-' . $i . '/SEGEL/KPU.03/BD.05/' . date("Y"),
 				'tgl_dok' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'sprint_id' => $faker->numberBetween(1,10),
-				'detail_sarkut' => $detail_sarkut,
-				'detail_barang' => $detail_barang,
-				'detail_bangunan' => $detail_bangunan,
+				// 'detail_sarkut' => $detail_sarkut,
+				// 'detail_barang' => $detail_barang,
+				// 'detail_bangunan' => $detail_bangunan,
+				'objek_penindakan' => $objek_penindakan,
 				'jenis_segel' => $faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 				'jumlah_segel' => $faker->randomDigit(),
 				'nomor_segel' => $faker->word(),
@@ -43,7 +45,7 @@ class SegelSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
-			if ($detail_sarkut) {
+			if ($objek_penindakan == 'sarkut') {
 				Segel::find($i)
 					->sarkut()
 					->create([
@@ -58,7 +60,7 @@ class SegelSeeder extends Seeder
 					]);
 			}
 
-			if ($detail_barang) {
+			if ($objek_penindakan == 'barang') {
 				$insert_result = Segel::find($i)
 					->barang()
 					->create([
@@ -89,7 +91,7 @@ class SegelSeeder extends Seeder
 				}
 			}
 
-			if ($detail_bangunan) {
+			if ($objek_penindakan == 'bangunan') {
 				Segel::find($i)
 					->bangunan()
 					->create([

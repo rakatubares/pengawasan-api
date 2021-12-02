@@ -12,10 +12,10 @@ class SbpResource extends JsonResource
      * @param  mixed  $resource
      * @return void
      */
-    public function __construct($resource, $type='basic')
+    public function __construct($resource, $element=null)
     {
         $this->resource = $resource;
-		$this->type = $type;
+		$this->element = $element;
     }
 
     /**
@@ -32,30 +32,35 @@ class SbpResource extends JsonResource
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'lokasi_penindakan' => $this->lokasi_penindakan,
 			'uraian_penindakan' => $this->uraian_penindakan,
 			'alasan_penindakan' => $this->alasan_penindakan,
 			'jenis_pelanggaran' => $this->jenis_pelanggaran,
 			'wkt_mulai_penindakan' => $this->wkt_mulai_penindakan->format('d-m-Y H:i'),
 			'wkt_selesai_penindakan' => $this->wkt_selesai_penindakan->format('d-m-Y H:i'),
 			'hal_terjadi' => $this->hal_terjadi,
-			'sprint' => new RefSprintResource($this->sprint),
-			'saksi' => new PersonEntityResource($this->saksi),
-			'petugas1' => new RefUserResource($this->petugas1),
-			'petugas2' => new RefUserResource($this->petugas2),
-			'status' => new RefStatusResource($this->status),
 		];
 
-		if ($this->type == 'complete') {
-			$sbp['detail'] = [
-				'sarkut' => new DetailSarkutResource($this->sarkut),
-				'bangunan' => new DetailBangunanResource($this->bangunan),
-				'barang' => new DetailBarangResource($this->barang),
-				'badan' => new DetailBadanResource($this->badan)
+		$penindakan = new PenindakanResource($this->penindakan, 'basic');
+		$status = new RefStatusResource($this->status);
+		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
+
+		if ($this->element == 'basic') {
+			$array = $sbp;
+			$array['kode_status'] = $this->kode_status;
+		} else {
+			$array = [
+				'main' => [
+					'type' => 'sbp',
+					'data' => $sbp
+				],
+				'penindakan' => $penindakan,
+				'status' => $status,
+				'objek' => $objek,
+				'dokumen' => $dokumen,
 			];
 		}
 
-		return $sbp;
+		return $array;
     }
 }
