@@ -10,6 +10,7 @@ use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\SbpController;
+use App\Http\Controllers\SegelController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,14 @@ Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
 Route::get('/sbp/{sbp_id}/details', [SbpController::class, 'showDetails']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
+
+/** 
+ * API for BA Segel
+ */
+Route::apiResource('segel', SegelController::class);
+Route::get('/segel/{segel_id}/complete', [SegelController::class, 'showComplete']);
+Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
+Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**
  * API for Details
