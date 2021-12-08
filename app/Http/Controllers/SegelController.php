@@ -9,6 +9,7 @@ use App\Http\Resources\SegelTableResource;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SegelController extends Controller
 {
@@ -32,39 +33,75 @@ class SegelController extends Controller
 	}
 
 	/**
+	 * Validate request
+	 */
+	private function validateSegel(Request $request)
+	{
+		$request->validate([
+			// 'sprint.id' => 'required|integer',
+			'jenis_segel' => 'required',
+			'jumlah_segel' => 'required|integer',
+			// 'saksi.id' => 'required|integer',
+			// 'petugas1.user_id' => 'required'
+		]);
+	}
+
+	/**
+	 * Prepare data segel
+	 */
+	private function prepareData(Request $request, $state='insert')
+	{
+		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+
+		$data_segel = [
+			'jenis_segel' => $request->jenis_segel,
+			'jumlah_segel' => $request->jumlah_segel,
+			'satuan_segel' => $request->satuan_segel,
+			'nomor_segel' => $no_dok_lengkap,
+			'tempat_segel' => $request->tempat_segel,
+		];
+
+		if ($state == 'insert') {
+			$data_segel['agenda_dok'] = $this->agenda_dok;
+			$data_segel['no_dok_lengkap'] = $no_dok_lengkap;
+			$data_segel['kode_status'] = 100;
+		}
+
+		return $data_segel;
+	}
+
+	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
+	public function store(Request $request, $linked_doc=false)
 	{
-		$request->validate([
-			'sprint.id' => 'required|integer',
-			'jenis_segel' => 'required',
-			'jumlah_segel' => 'required|integer',
-			'saksi.id' => 'required|integer',
-			'petugas1.user_id' => 'required'
-		]);
+		// Validate data segel
+		$this->validateSegel($request);
 
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+		DB::beginTransaction();
+		try {
+			// Validate data segel
+			$this->validateSegel($request);
 
-		$insert_result = Segel::create([
-			'agenda_dok' => $this->agenda_dok,
-			'no_dok_lengkap' => $no_dok_lengkap,
-			'sprint_id' => $request->sprint['id'],
-			'objek_penindakan' => $request->objek_penindakan,
-			'jenis_segel' => $request->jenis_segel,
-			'jumlah_segel' => $request->jumlah_segel,
-			'nomor_segel' => $no_dok_lengkap,
-			'lokasi_segel' => $request->lokasi_segel,
-			'saksi_id' => $request->saksi['id'],
-			'petugas1_id' => $request->petugas1['user_id'],
-			'petugas2_id' => $request->petugas2['user_id'],
-			'kode_status' => 100,
-		]);
+			// Save data segel
+			$data_segel = $this->prepareData($request, 'insert');
+			$segel = Segel::create($data_segel);
 
-		return $insert_result;
+			// Commit store query
+			DB::commit();
+
+			// Return created segel
+			$segel_resource = new SegelResource(Segel::findOrFail($segel->id));
+			return $segel_resource;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+
+		// return $insert_result;
 		// return $request;
 	}
 
@@ -76,7 +113,7 @@ class SegelController extends Controller
 	 */
 	public function show($id)
 	{
-		$segel = new SegelResource2(Segel::findOrFail($id));
+		$segel = new SegelResource(Segel::findOrFail($id));
 		return $segel;
 	}
 
@@ -117,28 +154,25 @@ class SegelController extends Controller
 
 		// Update if not published
 		if ($is_unpublished) {
-			$request->validate([
-				'sprint.id' => 'required|integer',
-				'jenis_segel' => 'required',
-				'jumlah_segel' => 'required|integer',
-				'saksi.id' => 'required|integer',
-				'petugas1.user_id' => 'required'
-			]);
+			$this->validateSegel($request);
+
+			$data_segel = $this->prepareData($request, 'update');
+			$update_result = Segel::where('id', $id)->update($data_segel);
 	
-			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
+			// $tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
 	
-			$update_result = Segel::where('id', $id)
-				->update([
-					'sprint_id' => $request->sprint['id'],
-					'jenis_segel' => $request->jenis_segel,
-					'jumlah_segel' => $request->jumlah_segel,
-					'nomor_segel' => $request->nomor_segel,
-					'lokasi_segel' => $request->lokasi_segel,
-					'saksi_id' => $request->saksi['id'],
-					'petugas1_id' => $request->petugas1['user_id'],
-					'petugas2_id' => $request->petugas2['user_id'],
-					'kode_status' => 101,
-				]);
+			// $update_result = Segel::where('id', $id)
+			// 	->update([
+			// 		'sprint_id' => $request->sprint['id'],
+			// 		'jenis_segel' => $request->jenis_segel,
+			// 		'jumlah_segel' => $request->jumlah_segel,
+			// 		'nomor_segel' => $request->nomor_segel,
+			// 		'lokasi_segel' => $request->lokasi_segel,
+			// 		'saksi_id' => $request->saksi['id'],
+			// 		'petugas1_id' => $request->petugas1['user_id'],
+			// 		'petugas2_id' => $request->petugas2['user_id'],
+			// 		'kode_status' => 101,
+			// 	]);
 	
 			$result = $update_result;
 		} else {

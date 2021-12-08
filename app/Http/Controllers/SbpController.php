@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DetailStatusResource;
+use App\Http\Resources\PenindakanResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
+use App\Models\Lptp;
+use App\Models\Penindakan;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SbpController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 	
 	private $tipe_dok = 'SBP';
 	private $agenda_dok = '/KPU.03/BD.05/';
@@ -32,63 +37,120 @@ class SbpController extends Controller
 	}
 
 	/**
+	 * Validate request
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	private function validateSbp(Request $request)
+	{
+		$request->validate([
+			'main.data.wkt_mulai_penindakan' => 'required|date',
+			'main.data.wkt_selesai_penindakan' => 'required|date',
+		]);
+	}
+
+	private function prepareData(Request $request, $state='insert')
+	{
+		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
+		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_mulai_penindakan']));
+		$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_selesai_penindakan']));
+
+		// Data SBP
+		$data_sbp = [
+			'uraian_penindakan' => $request->main['data']['uraian_penindakan'],
+			'alasan_penindakan' => $request->main['data']['alasan_penindakan'],
+			'jenis_pelanggaran' => $request->main['data']['jenis_pelanggaran'],
+			'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
+			'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
+			'hal_terjadi' => $request->main['data']['hal_terjadi'],
+		];
+
+		if ($state == 'insert') {
+			$data_sbp['agenda_dok'] = $this->agenda_dok;
+			$data_sbp['no_dok_lengkap'] = $no_dok_lengkap;
+			$data_sbp['kode_status'] = 100;
+		}
+
+		return $data_sbp;
+	}
+
+	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
+	public function store(Request $request, $linked_doc=false)
 	{
-		$request->validate([
-			'sprint.id' => 'required|integer',
-			'lokasi_penindakan' => 'required',
-			'wkt_mulai_penindakan' => 'required|date',
-			'wkt_selesai_penindakan' => 'required|date',
-			'saksi.id' => 'required|integer',
-			'petugas1.user_id' => 'required'
-		]);
+		// Validate data penindakan if not from linked doc
+		if ($linked_doc == false) {
+			$this->validatePenindakan($request); 
+		}
 		
-		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
-		$wkt_mulai_penindakan = strtotime($request->wkt_mulai_penindakan);
-		$wkt_selesai_penindakan = strtotime($request->wkt_selesai_penindakan);
-		$insert_result = Sbp::create([
-			'agenda_dok' => $this->agenda_dok,
-			'no_dok_lengkap' => $no_dok_lengkap,
-			'sprint_id' => $request->sprint['id'],
-			'lokasi_penindakan' => $request->lokasi_penindakan,
-			'uraian_penindakan' => $request->uraian_penindakan,
-			'alasan_penindakan' => $request->alasan_penindakan,
-			'jenis_pelanggaran' => $request->jenis_pelanggaran,
-			'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
-			'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
-			'hal_terjadi' => $request->hal_terjadi,
-			'saksi_id' => $request->saksi['id'],
-			'petugas1_id' => $request->petugas1['user_id'],
-			'petugas2_id' => $request->petugas2['user_id'],
-			'kode_status' => 100
-		]);
+		// Validate data SBP
+		$this->validateSbp($request);
 
-		return $insert_result;
+		DB::beginTransaction();
+		try {
+			// Save data SBP
+			$data_sbp = $this->prepareData($request, 'insert');
+			$sbp = Sbp::create($data_sbp);
+
+			// Save data penindakan and create object relation
+			if ($linked_doc == false) {
+				$this->storePenindakan($request, 'sbp', $sbp->id);
+			}
+
+			$lptp_request = new Request($request->dokumen['lptp']);
+			$lptp = app(LptpController::class)->store($lptp_request);
+			$this->createRelation('sbp', $sbp->id, 'lptp', $lptp->id);
+
+			// Commit store query
+			DB::commit();
+
+			// Return created SBP
+			$sbp_resource = new SbpResource(Sbp::findOrFail($sbp->id));
+			return $sbp_resource;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
 	}
 
 	public function storeLinkedDoc(Request $request, $id)
 	{
-		$sbp = Sbp::findOrFail($id);
-		$detail = $this->getDetail(Sbp::class, $id);
+		DB::beginTransaction();
 
-		if ($request->segel == true) {
-			$request_segel = $this->requestSegel($sbp, $detail, $request);
-			$this->createRelation(Segel::class, $request_segel->id, Sbp::class, $id);
-			// DocRelation::create([
-			// 	'doc1_type' => Segel::class,
-			// 	'doc1_id' => $request_segel->id,
-			// 	'doc2_type' => Sbp::class,
-			// 	'doc2_id' => $id,
-			// ]);
+		try {
+			// Get object penindakan
+			$sbp = Sbp::findOrFail($id);
+			$penindakan = $sbp->penindakan;
+
+			// Upsert segel
+			if ($request->segel == true) {
+				$this->createSegel($request, $penindakan->id);
+			};
+
+			// Upsert Tegah
+			if ($request->tegah == true) {
+				$this->createTegah($request, $penindakan->id);
+			}
+
+			// Upsert Riksa
+			if ($request->riksa == true) {
+				$this->createRiksa($request, $penindakan->id);
+			}
+
+			$penindakan = new PenindakanResource(Penindakan::find($penindakan->id));
+
+			// Commit transaction
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
 		}
-		return $request_segel;
-		
-		return $detail;
+
+		return $penindakan;
 	}
 
 	private function requestSegel($sbp, $detail, $request)
@@ -141,7 +203,7 @@ class SbpController extends Controller
 	 */
 	public function objek($id)
 	{
-		$objek = new SbpResource(Sbp::find($id));
+		$objek = new SbpResource(Sbp::find($id), 'objek');
 		return $objek;
 	}
 
@@ -159,40 +221,17 @@ class SbpController extends Controller
 
 		// Update if not published
 		if ($is_unpublished) {
-			$request->validate([
-				'sprint.id' => 'required|integer',
-				'lokasi_penindakan' => 'required',
-				'wkt_mulai_penindakan' => 'required|date',
-				'wkt_selesai_penindakan' => 'required|date',
-				'saksi.id' => 'required|integer',
-				'petugas1.user_id' => 'required'
-			]);
-	
-			$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
-			$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_selesai_penindakan));
-			
-			$update_result = Sbp::where('id', $id)
-				->update([
-					'sprint_id' => $request->sprint['id'],
-					'lokasi_penindakan' => $request->lokasi_penindakan,
-					'uraian_penindakan' => $request->uraian_penindakan,
-					'alasan_penindakan' => $request->alasan_penindakan,
-					'jenis_pelanggaran' => $request->jenis_pelanggaran,
-					'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
-					'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
-					'hal_terjadi' => $request->hal_terjadi,
-					'saksi_id' => $request->saksi['id'],
-					'petugas1_id' => $request->petugas1['user_id'],
-					'petugas2_id' => $request->petugas2['user_id'],
-				]);
-	
-			$result = $update_result;
+			$this->validation($request);
+			$data = $this->prepareData($request, 'update');
+
+			$penindakan_id = $request->penindakan['id'];
+			$sbp_id = $request->main['data']['id'];
+			$result = $this->updatePenindakan('sbp', $sbp_id, $data['sbp'], $penindakan_id, $data['penindakan']);
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
 		}
 		
 		return $result;
-		// return $request;
 	}
 
 	/**
@@ -214,7 +253,16 @@ class SbpController extends Controller
 	 */
 	public function publish($id)
 	{
-		$doc = $this->publishDocument(Sbp::class, $id, $this->tipe_dok);
-		return $doc;
+		// Create array from SBP object
+		$sbp = new SbpResource(Sbp::find($id));
+		$arr = json_decode($sbp->toJson(), true);
+
+		// Check penindakan date
+		$year = $this->datePenindakan(Sbp::class, $id);
+	
+		// Publish each document
+		foreach ($arr['dokumen'] as $type => $data) {
+			$this->publishDocument($type, $data['id'], $year);
+		}
 	}
 }

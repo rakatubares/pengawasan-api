@@ -67,6 +67,24 @@ class Sbp extends Model
 		);
 	}
 
+	public function lptp()
+	{
+		return $this->hasOneThrough(
+			Lptp::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'sbp'
+		)->where(
+			'object2_type',
+			'lptp'
+		);
+	}
+
 	public function sarkut()
 	{
 		return $this->morphOne(DetailSarkut::class, 'parent');

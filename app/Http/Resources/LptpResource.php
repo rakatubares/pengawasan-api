@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Services\SSO;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpTableResource extends JsonResource
+class LptpResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,16 +17,16 @@ class SbpTableResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
+			'no_dok' => $this->no_dok,
+			'agenda_dok' => $this->agenda_dok,
+			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tanggal_dokumen' => $this->penindakan->tanggal_penindakan 
-				? $this->penindakan->tanggal_penindakan->format('d-m-Y') 
-				: null,
-			'nama_saksi' => $this->penindakan->saksi->nama,
-			'petugas1' => $this->penindakan->petugas1->name,
-			'petugas2' => $this->penindakan->petugas2
-				? $this->penindakan->petugas2->name
-				: null,
-			'status' => new RefStatusResource($this->status)
+			'alasan_tidak_penindakan' => $this->alasan_tidak_penindakan,
+			'plh' => $this->plh,
+			'jabatan_atasan' => new JabatanResource($this->jabatan),
+			'atasan' => new RefUserResource($this->atasan),
+			'kode_status' => $this->kode_status,
+			'penindakan' => $this->penindakan
 		];
 
 		return $array;
