@@ -43,7 +43,7 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
-Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
+// Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
 Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
@@ -55,6 +55,22 @@ Route::apiResource('segel', SegelController::class);
 Route::get('/segel/{segel_id}/complete', [SegelController::class, 'showComplete']);
 Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
+
+/**
+ * API for BA Buka Segel
+ */
+Route::apiResource('bukasegel', BukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/complete', [BukaSegelController::class, 'showComplete']);
+Route::get('/bukasegel/{buka_segel_id}/details', [BukaSegelController::class, 'showDetails']);
+Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
+
+/** 
+ * API for BA Titip
+ */
+Route::apiResource('titip', TitipController::class);
+Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
+Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
+Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
 
 /** 
  * API for BA Tegah
@@ -80,6 +96,9 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::get('/{how?}', [DetailBarangController::class, 'show']);
 		Route::post('/new', [DetailBarangController::class, 'store']);
 		Route::post('/upsert', [DetailBarangController::class, 'store']);
+		// Route::get('/{how?}', [DetailBarangController::class, 'show']);
+		Route::post('/', [DetailBarangController::class, 'store']);
+		Route::put('/{barang_id}', [DetailBarangController::class, 'update']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
 		// Item barang
@@ -136,7 +155,9 @@ Route::apiResource('jabatan', RefJabatanController::class);
  */
 Route::apiResource('user', RefUserCacheController::class);
 Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
-Route::get('/user/role/{role}', [RefUserCacheController::class, 'role']);
+Route::post('/user/role', [RefUserCacheController::class, 'role']);
+Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
+Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);
 
 Route::get('test', function() {
 	# code...
