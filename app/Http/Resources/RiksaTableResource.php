@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RefUserResource extends JsonResource
+class RiksaTableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,14 +15,12 @@ class RefUserResource extends JsonResource
     public function toArray($request)
     {
         $array = [
-			'user_id' => $this->user_id,
-			'username' => $this->username,
-			'name' => $this->name,
-			'nip' => $this->nip,
-			'pangkat' => $this->pangkat,
-			'penempatan' => $this->penempatan,
-			'pejabat' => $this->pejabat,
-			'status' => $this->status,
+			'id' => $this->id,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
+			'nama_saksi' => $this->saksi->nama,
+			'petugas1' => $this->petugas1->name,
+			'status' => new RefStatusResource($this->status)
 		];
 
 		return $array;

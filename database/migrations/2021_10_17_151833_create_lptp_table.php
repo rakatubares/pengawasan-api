@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefJabatanTable extends Migration
+class CreateLptpTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,17 @@ class CreateRefJabatanTable extends Migration
      */
     public function up()
     {
-        Schema::create('ref_jabatan', function (Blueprint $table) {
+        Schema::create('dok_lptp', function (Blueprint $table) {
             $table->id();
-			$table->integer('parent_id')->nullable()->index();
-			$table->integer('level')->index();
-			$table->string('kode')->index();
-			$table->string('jabatan')->unique();
-			$table->boolean('active')->index();
+			$table->integer('no_dok')->nullable()->index();
+			$table->string('agenda_dok')->index();
+			$table->integer('thn_dok')->nullable()->index();
+			$table->string('no_dok_lengkap')->index();
+			$table->string('alasan_tidak_penindakan')->nullable();
+			$table->string('jabatan_atasan')->index();
+			$table->boolean('plh')->nullable()->index();
+			$table->integer('atasan_id')->index();
+			$table->integer('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
@@ -35,6 +39,6 @@ class CreateRefJabatanTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ref_jabatan');
+        Schema::dropIfExists('dok_lptp');
     }
 }

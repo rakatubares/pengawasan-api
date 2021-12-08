@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BukaSegelController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\SbpController;
 use App\Http\Controllers\SegelController;
 use App\Http\Controllers\TegahController;
-use App\Http\Controllers\TitipController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +41,7 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
-Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
+// Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
 Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
@@ -93,9 +91,10 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Barang
 	Route::prefix('/barang')->group(function() {
-		Route::get('/{how?}', [DetailBarangController::class, 'show']);
 		Route::post('/new', [DetailBarangController::class, 'store']);
 		Route::post('/upsert', [DetailBarangController::class, 'store']);
+		Route::post('/', [DetailBarangController::class, 'store']);
+		Route::put('/{barang_id}', [DetailBarangController::class, 'update']);
 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
 		// Item barang
@@ -152,7 +151,9 @@ Route::apiResource('jabatan', RefJabatanController::class);
  */
 Route::apiResource('user', RefUserCacheController::class);
 Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
-Route::get('/user/role/{role}', [RefUserCacheController::class, 'role']);
+Route::post('/user/role', [RefUserCacheController::class, 'role']);
+Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
+Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);
 
 Route::get('test', function() {
 	# code...

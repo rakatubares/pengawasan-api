@@ -64,15 +64,27 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'sbp':
-					$data = new SbpResource($this->sbp, 'basic');
+					$sbp = new SbpResource($this->sbp, 'basic');
+					$list_dokumen['sbp'] = $sbp;
+
+					$lptp = new LptpResource($this->sbp->lptp);
+					$list_dokumen['lptp'] = $lptp;
+
 					break;
 
 				case 'segel':
-					$data = new SegelResource($this->segel, 'basic');
+					$segel = new SegelResource($this->segel, 'basic');
+					$list_dokumen['segel'] = $segel;
 					break;
 
 				case 'tegah':
-					$data = new TegahResource($this->tegah, 'basic');
+					$tegah = new TegahResource($this->tegah, 'basic');
+					$list_dokumen['tegah'] = $tegah;
+					break;
+
+				case 'riksa':
+					$riksa = new RiksaResource($this->riksa, 'basic');
+					$list_dokumen['riksa'] = $riksa;
 					break;
 				
 				default:
@@ -80,7 +92,7 @@ class PenindakanResource extends JsonResource
 					break;
 			}
 
-			$list_dokumen[$jenis] = $data;
+			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;

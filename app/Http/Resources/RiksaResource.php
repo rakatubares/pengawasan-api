@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpResource extends JsonResource
+class RiksaResource extends JsonResource
 {
 	/**
      * Create a new resource instance.
@@ -26,18 +26,12 @@ class SbpResource extends JsonResource
      */
     public function toArray($request)
     {
-		$sbp = [
+        $riksa = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'uraian_penindakan' => $this->uraian_penindakan,
-			'alasan_penindakan' => $this->alasan_penindakan,
-			'jenis_pelanggaran' => $this->jenis_pelanggaran,
-			'wkt_mulai_penindakan' => $this->wkt_mulai_penindakan->format('d-m-Y H:i'),
-			'wkt_selesai_penindakan' => $this->wkt_selesai_penindakan->format('d-m-Y H:i'),
-			'hal_terjadi' => $this->hal_terjadi,
 		];
 
 		$penindakan = new PenindakanResource($this->penindakan, 'basic');
@@ -46,15 +40,13 @@ class SbpResource extends JsonResource
 		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
 
 		if ($this->element == 'basic') {
-			$array = $sbp;
+			$array = $riksa;
 			$array['kode_status'] = $this->kode_status;
-		} else if ($this->element == 'objek') {
-			$array = $objek;
 		} else {
 			$array = [
 				'main' => [
-					'type' => 'sbp',
-					'data' => $sbp
+					'type' => 'tegah',
+					'data' => $riksa
 				],
 				'penindakan' => $penindakan,
 				'status' => $status,

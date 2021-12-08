@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\Lptp;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
@@ -53,6 +55,18 @@ class SbpSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
+			$lptp = Lptp::create([
+				'no_dok' => $i,
+				'agenda_dok' => '/KPU.03/BD.05/',
+				'thn_dok' => date("Y"),
+				'no_dok_lengkap' => 'LPTP-' . $i . '/KPU.03/BD.05/' . date("Y"),
+				'jabatan_atasan' => 'bd.0503',
+				'plh' => false,
+				'atasan_id' => 4,
+				'kode_status' => 200,
+			]);
+
+			// Create relation Penindakan - SBP
 			ObjectRelation::create([
 				'object1_type' => 'penindakan',
 				'object1_id' => $penindakan->id,
@@ -60,24 +74,35 @@ class SbpSeeder extends Seeder
 				'object2_id' => $sbp->id,
 			]);
 
+			// Create relation SBP - LPTP
+			ObjectRelation::create([
+				'object1_type' => 'sbp',
+				'object1_id' => $sbp->id,
+				'object2_type' => 'lptp',
+				'object2_id' => $lptp->id,
+			]);
+
 			switch ($objek_penindakan) {
 				case 'sarkut':
 					$object = $this->createSarkut();
 					$object_id = $object->id;
-					$this->createSegel($penindakan->id);
+					$this->createRiksa($penindakan->id);
 					$this->createTegah($penindakan->id);
+					$this->createSegel($penindakan->id);
 					break;
 
 				case 'barang':
 					$object = $this->createBarang();
 					$object_id = $object->id;
-					$this->createSegel($penindakan->id);
+					$this->createRiksa($penindakan->id);
 					$this->createTegah($penindakan->id);
+					$this->createSegel($penindakan->id);
 					break;
 
 				case 'bangunan':
 					$object = $this->createBangunan();
 					$object_id = $object->id;
+					$this->createRiksa($penindakan->id);
 					$this->createSegel($penindakan->id);
 					break;
 
@@ -153,6 +178,50 @@ class SbpSeeder extends Seeder
 		return $bangunan;
 	}
 
+	private function createRiksa($penindakan_id)
+	{
+		$tegah = Riksa::create([
+			'agenda_dok' => '/RIKSA/KPU.03/BD.05/',
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => 'BA-     /RIKSA/KPU.03/BD.05/',
+			'kode_status' => 200,
+		]);
+
+		$tegah->update([
+			'no_dok' => $tegah->id,
+			'no_dok_lengkap' => 'BA-' . $tegah->id . '/RIKSA/KPU.03/BD.05/' . date("Y"),
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'penindakan',
+			'object1_id' => $penindakan_id,
+			'object2_type' => 'riksa',
+			'object2_id' => $tegah->id,
+		]);
+	}
+
+	private function createTegah($penindakan_id)
+	{
+		$tegah = Tegah::create([
+			'agenda_dok' => '/TEGAH/KPU.03/BD.05/',
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => 'BA-     /TEGAH/KPU.03/BD.05/',
+			'kode_status' => 200,
+		]);
+
+		$tegah->update([
+			'no_dok' => $tegah->id,
+			'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'penindakan',
+			'object1_id' => $penindakan_id,
+			'object2_type' => 'tegah',
+			'object2_id' => $tegah->id,
+		]);
+	}
+
 	private function createSegel($penindakan_id)
 	{
 		$segel = Segel::create([
@@ -177,28 +246,6 @@ class SbpSeeder extends Seeder
 			'object1_id' => $penindakan_id,
 			'object2_type' => 'segel',
 			'object2_id' => $segel->id,
-		]);
-	}
-
-	private function createTegah($penindakan_id)
-	{
-		$tegah = Tegah::create([
-			'agenda_dok' => '/TEGAH/KPU.03/BD.05/',
-			'thn_dok' => date("Y"),
-			'no_dok_lengkap' => 'BA-     /TEGAH/KPU.03/BD.05/',
-			'kode_status' => 200,
-		]);
-
-		$tegah->update([
-			'no_dok' => $tegah->id,
-			'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
-		]);
-
-		ObjectRelation::create([
-			'object1_type' => 'penindakan',
-			'object1_id' => $penindakan_id,
-			'object2_type' => 'tegah',
-			'object2_id' => $tegah->id,
 		]);
 	}
 }
