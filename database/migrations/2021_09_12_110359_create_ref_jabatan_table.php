@@ -16,6 +16,8 @@ class CreateRefJabatanTable extends Migration
         Schema::create('ref_jabatan', function (Blueprint $table) {
             $table->id();
 			$table->integer('parent_id')->nullable()->index();
+			$table->integer('level')->index();
+			$table->string('kode')->index();
 			$table->string('jabatan')->unique();
 			$table->boolean('active')->index();
             $table->timestamps();
