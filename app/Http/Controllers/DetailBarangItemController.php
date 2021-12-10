@@ -126,7 +126,7 @@ class DetailBarangItemController extends Controller
 
 		if ($header) {
 			// Get data item barang
-			$item_barang = $header->itemBarang()
+			$item_barang = $header->penindakan->objectable->itemBarang()
 				->where('detail_barang_items.id', $item_id)
 				->first();
 
@@ -165,7 +165,7 @@ class DetailBarangItemController extends Controller
 
 			if ($header) {
 				// Update data item barang
-				$update_result = $header->itemBarang()
+				$update_result = $header->penindakan->objectable->itemBarang()
 					->where('detail_barang_items.id', $item_id)
 					->update([
 						'uraian_barang' => $request->uraian_barang,
