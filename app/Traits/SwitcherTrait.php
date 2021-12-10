@@ -7,10 +7,12 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
-use App\Models\SerahTerima;
 use App\Models\BukaSegel;
+use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailSarkut;
 use App\Models\Lptp;
+use App\Models\RefEntitas;
 use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Segel;
@@ -21,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 trait SwitcherTrait
 {
 	private $models = [
+		// Dokumen
 		'bukasegel' => [
 			'class' => BukaSegel::class,
 			'tipe_dok' => 'BA'
@@ -49,8 +52,19 @@ trait SwitcherTrait
 			'class' => Tegah::class,
 			'tipe_dok' => 'BA'
 		],
+
+		// Objek
+		'bangunan' => [
+			'class' => DetailBangunan::class
+		],
 		'barang' => [
 			'class' => DetailBarang::class
+		],
+		'orang' => [
+			'class' => RefEntitas::class
+		],
+		'sarkut' => [
+			'class' => DetailSarkut::class
 		],
 	];
 
