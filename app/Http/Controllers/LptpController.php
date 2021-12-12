@@ -89,7 +89,12 @@ class LptpController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Lptp::where('id', $id)->update([
+			'jabatan_atasan' => $request->jabatan_atasan['kode'],
+			'plh' => $request->plh,
+			'atasan_id' => $request->atasan['user_id'],
+			'alasan_tidak_penindakan' => $request->alasan_tidak_penindakan,
+		]);
     }
 
     /**

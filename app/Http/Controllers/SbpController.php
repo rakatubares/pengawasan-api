@@ -21,7 +21,13 @@ class SbpController extends Controller
 	
 	private $tipe_dok = 'SBP';
 	private $agenda_dok = '/KPU.03/BD.05/';
-	
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -37,6 +43,35 @@ class SbpController extends Controller
 	}
 
 	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$sbp = new SbpResource(Sbp::findOrFail($id));
+		return $sbp;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function objek($id)
+	{
+		$objek = new SbpResource(Sbp::find($id), 'objek');
+		return $objek;
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Data modify functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
 	 * Validate request
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
@@ -49,6 +84,13 @@ class SbpController extends Controller
 		]);
 	}
 
+	/**
+	 * Prepare data SBP from request to array
+	 * 
+	 * @param Request $request
+	 * @param String $state
+	 * @return Array
+	 */
 	private function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
@@ -96,14 +138,15 @@ class SbpController extends Controller
 			$data_sbp = $this->prepareData($request, 'insert');
 			$sbp = Sbp::create($data_sbp);
 
+			// Save data LPTP
+			$lptp_request = new Request($request->dokumen['lptp']);
+			$lptp = app(LptpController::class)->store($lptp_request);
+			$this->createRelation('sbp', $sbp->id, 'lptp', $lptp->id);
+
 			// Save data penindakan and create object relation
 			if ($linked_doc == false) {
 				$this->storePenindakan($request, 'sbp', $sbp->id);
 			}
-
-			$lptp_request = new Request($request->dokumen['lptp']);
-			$lptp = app(LptpController::class)->store($lptp_request);
-			$this->createRelation('sbp', $sbp->id, 'lptp', $lptp->id);
 
 			// Commit store query
 			DB::commit();
@@ -117,6 +160,60 @@ class SbpController extends Controller
 		}
 	}
 
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		// Check if document is published
+		$is_unpublished = $this->checkUnpublished(Sbp::class, $id);
+
+		// Update if not published
+		if ($is_unpublished) {
+			DB::beginTransaction();
+			try {
+				// Validate data
+				$this->validatePenindakan($request);
+				$this->validateSbp($request);
+
+				// Update SBP
+				$data_sbp = $this->prepareData($request, 'update');
+				Sbp::where('id', $id)->update($data_sbp);
+
+				// Update LPTP
+				$lptp_request = new Request($request->dokumen['lptp']);
+				app(LptpController::class)->update($lptp_request, $request->dokumen['lptp']['id']);
+
+				// Update penindakan
+				$this->updatePenindakan($request);
+
+				// Commit store query
+				DB::commit();
+
+				// Return updated SBP
+				$sbp_resource = new SbpResource(Sbp::findOrFail($id));
+				return $sbp_resource;
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
+		}
+		
+		return $result;
+	}
+
+	/**
+	 * Modify linked documents
+	 * 
+	 * @param Request $request
+	 * @param Int $id
+	 */
 	public function storeLinkedDoc(Request $request, $id)
 	{
 		DB::beginTransaction();
@@ -153,88 +250,13 @@ class SbpController extends Controller
 		return $penindakan;
 	}
 
-	private function requestSegel($sbp, $detail, $request)
-	{
-		$segel_array = [
-			'sprint' => ['id' => $sbp->sprint_id],
-			'objek_penindakan' => 'barang',
-			'jenis_segel' => $request->data_segel['jenis'],
-			'jumlah_segel' => $request->data_segel['jumlah'],
-			'lokasi_segel' => $request->data_segel['lokasi'],
-			'saksi' => ['id' => $sbp->saksi_id],
-			'petugas1' => ['user_id' => $sbp->petugas1->user_id],
-			'petugas2' => ['user_id' => ($sbp->petugas2->user_id ?? null)],
-		];
-
-		$segel_request = new Request($segel_array);
-		$insert_result = app(SegelController::class)->store($segel_request);
-		
-		return $insert_result;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	/*
+	 |--------------------------------------------------------------------------
+	 | Destroy or publish functions
+	 |--------------------------------------------------------------------------
 	 */
-	public function show($id)
-	{
-		$sbp = new SbpResource(Sbp::findOrFail($id));
-		return $sbp;
-	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function showComplete($id)
-	{
-		$sbp = new SbpResource(Sbp::findOrFail($id), 'complete');
-		return $sbp;
-	}
-
-	/**
-	 * Display available details
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new SbpResource(Sbp::find($id), 'objek');
-		return $objek;
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		// Check if document is published
-		$is_unpublished = $this->checkUnpublished(Sbp::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			$this->validation($request);
-			$data = $this->prepareData($request, 'update');
-
-			$penindakan_id = $request->penindakan['id'];
-			$sbp_id = $request->main['data']['id'];
-			$result = $this->updatePenindakan('sbp', $sbp_id, $data['sbp'], $penindakan_id, $data['penindakan']);
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
-		return $result;
-	}
-
-	/**
+	 /**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
@@ -265,4 +287,41 @@ class SbpController extends Controller
 			$this->publishDocument($type, $data['id'], $year);
 		}
 	}
+
+	// private function requestSegel($sbp, $detail, $request)
+	// {
+	// 	$segel_array = [
+	// 		'sprint' => ['id' => $sbp->sprint_id],
+	// 		'objek_penindakan' => 'barang',
+	// 		'jenis_segel' => $request->data_segel['jenis'],
+	// 		'jumlah_segel' => $request->data_segel['jumlah'],
+	// 		'lokasi_segel' => $request->data_segel['lokasi'],
+	// 		'saksi' => ['id' => $sbp->saksi_id],
+	// 		'petugas1' => ['user_id' => $sbp->petugas1->user_id],
+	// 		'petugas2' => ['user_id' => ($sbp->petugas2->user_id ?? null)],
+	// 	];
+
+	// 	$segel_request = new Request($segel_array);
+	// 	$insert_result = app(SegelController::class)->store($segel_request);
+		
+	// 	return $insert_result;
+	// }
+
+	
+
+	// /**
+	//  * Display the specified resource.
+	//  *
+	//  * @param  int  $id
+	//  * @return \Illuminate\Http\Response
+	//  */
+	// public function showComplete($id)
+	// {
+	// 	$sbp = new SbpResource(Sbp::findOrFail($id), 'complete');
+	// 	return $sbp;
+	// }
+
+	
+
+	
 }

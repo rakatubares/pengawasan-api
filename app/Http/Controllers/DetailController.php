@@ -46,30 +46,6 @@ class DetailController extends Controller
 		$model::find($detail_id)->update($detail_data);
 	}
 
-	// public function insertDetailDep($detail_data, $doc_type, $doc_id, $detail_type)
-	// {
-	// 	// Get model
-	// 	$model = $this->getModel($doc_type);
-
-	// 	// Update kolom status detail di tabel parent menjadi TRUE
-	// 	$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
-
-	// 	// Upsert data detail
-	// 	if ($update_result == 1) {
-	// 		$resource = $this->getResource($detail_type);
-
-	// 		$insert_result = $model::find($doc_id)
-	// 			->$detail_type()
-	// 			->create($detail_data);
-			
-	// 		$result = new $resource($insert_result);
-	// 	} else {
-	// 		$result = $update_result;
-	// 	}
-
-	// 	return $result;
-	// }
-
 	/**
      * Store a newly created resource in storage or update if exists.
      *
