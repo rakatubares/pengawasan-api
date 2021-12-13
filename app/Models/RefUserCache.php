@@ -18,6 +18,7 @@ class RefUserCache extends Model
 		'nip',
 		'pangkat',
 		'penempatan',
+		'pejabat',
 		'status'
 	];
 

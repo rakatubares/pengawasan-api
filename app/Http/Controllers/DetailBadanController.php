@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SbpResource;
+use App\Models\Sbp;
 use Illuminate\Http\Request;
 
 class DetailBadanController extends DetailController
 {
+	private function validateData(Request $request)
+	{
+		$request->validate([
+			'orang_id' => 'required'
+		]);
+	}
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -16,20 +24,12 @@ class DetailBadanController extends DetailController
 	 */
 	public function store(Request $request, $doc_type, $doc_id, $how='upsert')
 	{
-		$tgl_lahir = strtotime($request->tgl_lahir);
-		$detail_data = [
-			'entitas_id' => $request->entitas['id']
-		];
+		$this->validateData($request);
 
-		switch ($how) {
-			case 'new':
-				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'badan');
-				break;
-			
-			default:
-				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'badan');
-				break;
-		}
+		$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
+		$model = $this->switchObject($doc_type, 'model');
+		$resource = $this->switchObject($doc_type, 'resource');
+		$result = new $resource($model::find($doc_id), 'objek');
 
 		return $result;
 	}
