@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 trait DokumenTrait
 {
@@ -391,10 +392,14 @@ trait DokumenTrait
 	public function createSegel(Request $request, $penindakan_id)
 	{
 		$segel_array = [
-			'jenis_segel' => $request->data_segel['jenis'],
-			'jumlah_segel' => $request->data_segel['jumlah'],
-			'satuan_segel' => $request->data_segel['satuan'],
-			'tempat_segel' => $request->data_segel['tempat'],
+			'main' => [
+				'data' => [
+					'jenis_segel' => $request->data_segel['jenis'],
+					'jumlah_segel' => $request->data_segel['jumlah'],
+					'satuan_segel' => $request->data_segel['satuan'],
+					'tempat_segel' => $request->data_segel['tempat'],
+				]
+			]
 		];
 
 		$segel_request = new Request($segel_array);
@@ -402,7 +407,7 @@ trait DokumenTrait
 		$penindakan = Penindakan::find($penindakan_id);
 		$existing_segel = $penindakan->segel;
 		if ($existing_segel == null) {
-			$segel = app(SegelController::class)->store($segel_request);
+			$segel = app(SegelController::class)->store($segel_request, true);
 			$this->createRelation('penindakan', $penindakan_id, 'segel', $segel->id);
 		} else {
 			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id);
