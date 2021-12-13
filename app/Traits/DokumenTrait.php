@@ -92,6 +92,11 @@ trait DokumenTrait
 			$number = $this->getNewDocNumber($model, $doc_id);
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
+
+			if ($doc_type == 'segel') {
+				$model::where('id', $doc_id)
+					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 		}
@@ -311,7 +316,6 @@ trait DokumenTrait
 	{
 		$request->validate([
 			'penindakan.sprint.id' => 'required|integer',
-			'penindakan.lokasi_penindakan' => 'required',
 			'penindakan.saksi.id' => 'required|integer',
 			'penindakan.petugas1.user_id' => 'required'
 		]);
@@ -341,22 +345,9 @@ trait DokumenTrait
 	 */
 	public function storePenindakan($request, $doc_type, $doc_id)
 	{
-		// DB::beginTransaction();
-		// try {
-			$data_penindakan = $this->prepareDataPenindakan($request);
-			$penindakan = Penindakan::create($data_penindakan);
-
-			// $model = $this->getModel($doc_type);
-			// $doc = $model::create($data_dokumen);
-			$this->createRelation('penindakan', $penindakan->id, $doc_type, $doc_id);
-
-		// 	DB::commit();
-
-		// 	return $doc->id;
-		// } catch (\Throwable $th) {
-		// 	DB::rollBack();
-		// 	throw $th;
-		// }
+		$data_penindakan = $this->prepareDataPenindakan($request);
+		$penindakan = Penindakan::create($data_penindakan);
+		$this->createRelation('penindakan', $penindakan->id, $doc_type, $doc_id);
 		return $penindakan;
 	}
 
@@ -367,22 +358,10 @@ trait DokumenTrait
 	 * @param Array $data_dokumen
 	 * @param Array $data_penindakan
 	 */
-	public function updatePenindakan($doc_type, $doc_id, $data_dokumen, $penindakan_id, $data_penindakan)
+	public function updatePenindakan($request)
 	{
-		DB::beginTransaction();
-		try {
-			Penindakan::where('id', $penindakan_id)->update($data_penindakan);
-
-			$model = $this->getModel($doc_type);
-			$doc = $model::where('id', $doc_id)->update($data_dokumen);
-
-			DB::commit();
-
-			return $doc;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$data_penindakan = $this->prepareDataPenindakan($request);
+		Penindakan::where('id', $request->penindakan['id'])->update($data_penindakan);
 	}
 
 	/**
