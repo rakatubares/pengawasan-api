@@ -4,18 +4,15 @@ use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
-use App\Http\Controllers\DetailController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
+use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\SbpController;
 use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
-use App\Http\Controllers\RefUserCacheController;
-use App\Http\Controllers\TitipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,17 +49,7 @@ Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
  * API for BA Segel
  */
 Route::apiResource('segel', SegelController::class);
-Route::get('/segel/{segel_id}/complete', [SegelController::class, 'showComplete']);
-Route::get('/segel/{segel_id}/details', [SegelController::class, 'showDetails']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
-
-/** 
- * API for BA Tegah
- */
-Route::apiResource('tegah', TegahController::class);
-Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
-Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
-Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
 
 /**
  * API for Details

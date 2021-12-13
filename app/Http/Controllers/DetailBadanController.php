@@ -27,7 +27,9 @@ class DetailBadanController extends DetailController
 		$this->validateData($request);
 
 		$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
-		$result = new SbpResource(Sbp::find($doc_id), 'objek');
+		$model = $this->switchObject($doc_type, 'model');
+		$resource = $this->switchObject($doc_type, 'resource');
+		$result = new $resource($model::find($doc_id), 'objek');
 
 		return $result;
 	}

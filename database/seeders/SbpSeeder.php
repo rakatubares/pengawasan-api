@@ -41,11 +41,13 @@ class SbpSeeder extends Seeder
 				'petugas2_id' => 2,
 			]);
 
+			$max_sbp = Sbp::max('no_dok');
+			$crn_sbp = $max_sbp + 1;
 			$sbp = Sbp::create([
-				'no_dok' => $i,
+				'no_dok' => $crn_sbp,
 				'agenda_dok' => '/KPU.03/BD.05/',
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'SBP-' . $i . '/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => 'SBP-' . $crn_sbp . '/KPU.03/BD.05/' . date("Y"),
 				'uraian_penindakan' => $this->faker->sentence($nbWOrds = 20),
 				'alasan_penindakan' => $this->faker->sentence($nbWOrds = 20),
 				'jenis_pelanggaran' => $this->faker->randomElement(['Kepabeanan', 'Cukai']),
@@ -55,11 +57,13 @@ class SbpSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
+			$max_lptp = Lptp::max('no_dok');
+			$crn_lptp = $max_lptp + 1;
 			$lptp = Lptp::create([
-				'no_dok' => $i,
+				'no_dok' => $crn_lptp,
 				'agenda_dok' => '/KPU.03/BD.05/',
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'LPTP-' . $i . '/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => 'LPTP-' . $crn_lptp . '/KPU.03/BD.05/' . date("Y"),
 				'jabatan_atasan' => 'bd.0503',
 				'plh' => false,
 				'atasan_id' => 4,
@@ -180,17 +184,20 @@ class SbpSeeder extends Seeder
 
 	private function createRiksa($penindakan_id)
 	{
+		$max_riksa = Riksa::max('no_dok');
+		$crn_riksa = $max_riksa + 1;
 		$tegah = Riksa::create([
+			'no_dok' => $crn_riksa,
 			'agenda_dok' => '/RIKSA/KPU.03/BD.05/',
 			'thn_dok' => date("Y"),
-			'no_dok_lengkap' => 'BA-     /RIKSA/KPU.03/BD.05/',
+			'no_dok_lengkap' => 'BA-' . $crn_riksa . '/RIKSA/KPU.03/BD.05/' . date("Y"),
 			'kode_status' => 200,
 		]);
 
-		$tegah->update([
-			'no_dok' => $tegah->id,
-			'no_dok_lengkap' => 'BA-' . $tegah->id . '/RIKSA/KPU.03/BD.05/' . date("Y"),
-		]);
+		// $tegah->update([
+		// 	'no_dok' => $tegah->id,
+		// 	'no_dok_lengkap' => 'BA-' . $tegah->id . '/RIKSA/KPU.03/BD.05/' . date("Y"),
+		// ]);
 
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
@@ -202,17 +209,20 @@ class SbpSeeder extends Seeder
 
 	private function createTegah($penindakan_id)
 	{
+		$max_tegah = Tegah::max('no_dok');
+		$crn_tegah = $max_tegah + 1;
 		$tegah = Tegah::create([
+			'no_dok' => $crn_tegah,
 			'agenda_dok' => '/TEGAH/KPU.03/BD.05/',
 			'thn_dok' => date("Y"),
-			'no_dok_lengkap' => 'BA-     /TEGAH/KPU.03/BD.05/',
+			'no_dok_lengkap' => 'BA-' . $crn_tegah . '/TEGAH/KPU.03/BD.05/' . date("Y"),
 			'kode_status' => 200,
 		]);
 
-		$tegah->update([
-			'no_dok' => $tegah->id,
-			'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
-		]);
+		// $tegah->update([
+		// 	'no_dok' => $tegah->id,
+		// 	'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
+		// ]);
 
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
@@ -224,22 +234,26 @@ class SbpSeeder extends Seeder
 
 	private function createSegel($penindakan_id)
 	{
+		$max_segel = Segel::max('no_dok');
+		$crn_segel = $max_segel + 1;
 		$segel = Segel::create([
+			'no_dok' => $crn_segel,
 			'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
 			'thn_dok' => date("Y"),
-			'no_dok_lengkap' => 'BA-     /SEGEL/KPU.03/BD.05/',
+			'no_dok_lengkap' => 'BA-' . $crn_segel . '/SEGEL/KPU.03/BD.05/' . date("Y"),
 			'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
-			'jumlah_segel' => $this->faker->randomDigit(),
-			'satuan_segel' => $this->faker->regexify('[a-z]{2}'),
+			'jumlah_segel' => $this->faker->numberBetween(1,5),
+			'satuan_segel' => $this->faker->randomElement(['lembar', 'buah']),
 			'tempat_segel' => $this->faker->word(),
+			'nomor_segel' => 'BA-' . $crn_segel . '/SEGEL/KPU.03/BD.05/' . date("Y"),
 			'kode_status' => 200,
 		]);
 
-		$segel->update([
-			'no_dok' => $segel->id,
-			'no_dok_lengkap' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-			'nomor_segel' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-		]);
+		// $segel->update([
+		// 	'no_dok' => $segel->id,
+		// 	'no_dok_lengkap' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+		// 	'nomor_segel' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+		// ]);
 
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
