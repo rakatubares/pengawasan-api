@@ -71,11 +71,6 @@ trait SwitcherTrait
 		'bangunan' => [
 			'model' => DetailBangunan::class
 		],
-
-		// Objek
-		'bangunan' => [
-			'class' => DetailBangunan::class
-		],
 		'barang' => [
 			'model' => DetailBarang::class
 		],
@@ -84,12 +79,6 @@ trait SwitcherTrait
 		],
 		'sarkut' => [
 			'model' => DetailSarkut::class
-		],
-		'orang' => [
-			'class' => RefEntitas::class
-		],
-		'sarkut' => [
-			'class' => DetailSarkut::class
 		],
 	];
 
