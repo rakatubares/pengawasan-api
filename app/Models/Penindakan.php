@@ -105,7 +105,7 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * Segel
+	 * BA Penyegelan
 	 */
 	public function segel()
 	{
@@ -126,7 +126,7 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * Tegah
+	 * BA Penegahan
 	 */
 	public function tegah()
 	{
@@ -143,6 +143,27 @@ class Penindakan extends Model
 		)->where(
 			'object2_type',
 			'tegah'
+		);
+	}
+
+	/**
+	 * BA Pemeriksaan
+	 */
+	public function riksa()
+	{
+		return $this->hasOneThrough(
+			Riksa::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'riksa'
 		);
 	}
 }

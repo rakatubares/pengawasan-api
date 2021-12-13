@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Support\Facades\DB;
@@ -11,28 +12,38 @@ class DetailController extends Controller
 	use DokumenTrait;
     use SwitcherTrait;
 
-	public function insertDetail($detail_data, $doc_type, $doc_id, $detail_type)
+	public function insertDetail($doc_type, $doc_id, $detail_type, $detail_data)
 	{
-		// Get model
+		$detail = $this->insertData($detail_type, $detail_data);
+		$this->updateObjectType($doc_type, $doc_id, $detail_type, $detail->id);
+
+		return $detail;
+	}
+
+	public function insertData($type, $data)
+	{
+		$model = $this->getModel($type);
+		$detail = $model::create($data);
+		return $detail;
+	}
+
+	public function updateObjectType($doc_type, $doc_id, $detail_type, $detail_id)
+	{
 		$model = $this->getModel($doc_type);
-
-		// Update kolom status detail di tabel parent menjadi TRUE
-		$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
-
-		// Upsert data detail
-		if ($update_result == 1) {
-			$resource = $this->getResource($detail_type);
-
-			$insert_result = $model::find($doc_id)
-				->$detail_type()
-				->create($detail_data);
-			
-			$result = new $resource($insert_result);
-		} else {
-			$result = $update_result;
-		}
+		$doc = $model::find($doc_id);
+		$penindakan = $doc->penindakan;
+		$result = $penindakan->update([
+			'object_type' => $detail_type,
+			'object_id' => $detail_id
+		]);
 
 		return $result;
+	}
+
+	public function updateDetail($detail_type, $detail_data, $detail_id)
+	{
+		$model = $this->getModel($detail_type);
+		$model::find($detail_id)->update($detail_data);
 	}
 
 	/**

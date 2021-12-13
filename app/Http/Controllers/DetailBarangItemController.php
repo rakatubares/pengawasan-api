@@ -38,17 +38,17 @@ class DetailBarangItemController extends Controller
     {
 		// Get header model
 		$model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
+		$dokumen = $model::find($doc_id);
 
 		// Show data detail barang
-		if ($header) {
+		if ($dokumen) {
 			try {
 				// Get valid detail_barang id
-				$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
+				// $detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
 
 				// Get list item barang
-				$item_barang_list = $header->itemBarang()
-					->where('detail_barangs.id', $detail_barang_id)
+				$item_barang_list = $dokumen->penindakan->objectable->itemBarang()
+					// ->where('detail_barangs.id', $detail_barang_id)
 					->get();
 				$result = DetailBarangItemResource::collection($item_barang_list);
 			} catch (\Throwable $th) {
@@ -59,6 +59,7 @@ class DetailBarangItemController extends Controller
 		}
 
 		return $result;
+		// return 'test';
     }
 
 	/**
@@ -79,18 +80,18 @@ class DetailBarangItemController extends Controller
 
 		if ($is_unpublished) {
 			// Get header document
-			$header = $model::find($doc_id);
+			$dokumen = $model::find($doc_id);
 
 			// Insert data detail barang
-			if ($header) {
+			if ($dokumen) {
 				try {
 					// Get valid detail_barang id
-					$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
+					// $detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
 
 					// Insert detail barang
-					$insert_result = $header->itemBarang()
+					$insert_result = $dokumen->penindakan->objectable->itemBarang()
 						->create([
-							'detail_barang_id' => $detail_barang_id,
+							// 'detail_barang_id' => $detail_barang_id,
 							'uraian_barang' => $request->uraian_barang,
 							'jumlah_barang' => $request->jumlah_barang,
 							'satuan_barang' => $request->satuan_barang,
@@ -125,7 +126,7 @@ class DetailBarangItemController extends Controller
 
 		if ($header) {
 			// Get data item barang
-			$item_barang = $header->itemBarang()
+			$item_barang = $header->penindakan->objectable->itemBarang()
 				->where('detail_barang_items.id', $item_id)
 				->first();
 
@@ -164,7 +165,7 @@ class DetailBarangItemController extends Controller
 
 			if ($header) {
 				// Update data item barang
-				$update_result = $header->itemBarang()
+				$update_result = $header->penindakan->objectable->itemBarang()
 					->where('detail_barang_items.id', $item_id)
 					->update([
 						'uraian_barang' => $request->uraian_barang,

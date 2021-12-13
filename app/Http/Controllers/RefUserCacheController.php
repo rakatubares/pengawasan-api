@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\JabatanResource;
+use App\Models\RefJabatan;
 use App\Models\RefUserCache;
 use App\Services\SSO;
 use Illuminate\Http\Request;
@@ -19,22 +21,61 @@ class RefUserCacheController extends Controller
 	}
 
 	/**
-	 * Display a listing of penindakan.
+	 * Display a listing of users by role.
 	 *
 	 * @param  \Illuminate\Http\Request $r
 	 * @return \Illuminate\Http\Response
 	 */
-	public function role(Request $request, $role)
+	public function role(Request $request)
 	{
-		$roles = [
-			'penindakan' => 'p2vue.penindakan'
-		];
+		// $roles = [
+		// 	'penindakan' => 'p2vue.penindakan'
+		// ];
 
 		$token = $request->bearerToken();
         $this->sso->setToken($token);
 
-		$data = $this->sso->getUserByRole([$roles[$role]], false);
+		$roles = $request->roles;
+
+		$data = $this->sso->getUserByRole($roles, false);
 		return $data;
+	}
+
+	/**
+	 * Display a listing of users by jabatan.
+	 *
+	 * @param  \Illuminate\Http\Request $r
+	 * @return \Illuminate\Http\Response
+	 */
+	public function jabatan(Request $request)
+	{
+		$token = $request->bearerToken();
+        $this->sso->setToken($token);
+
+		$positions = $request->positions;
+
+		$data = $this->sso->getUserByPosition($positions, true);
+		return $data;
+	}
+
+	/**
+	 * Display a listing of users by jabatan.
+	 *
+	 * @param  \Illuminate\Http\Request $r
+	 * @return \Illuminate\Http\Response
+	 */
+	public function listJabatan(Request $request)
+	{
+		// $token = $request->bearerToken();
+        // $this->sso->setToken($token);
+
+		// $positions = $request->positions;
+
+		// $data = $this->sso->getJabatanByCode($positions);
+		// return $data;
+		$results = RefJabatan::whereIn('kode', $request->positions)->get();
+		$jabatan = JabatanResource::collection($results);
+		return $jabatan;
 	}
 
 	/**
@@ -61,6 +102,7 @@ class RefUserCacheController extends Controller
 				'nip' => $request->nip,
 				'pangkat' => $request->pangkat,
 				'penempatan' => $request->penempatan,
+				'pejabat' => $request->pejabat,
 				'status' => $request->status,
 			]
 		);
