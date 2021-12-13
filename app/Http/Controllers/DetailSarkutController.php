@@ -53,7 +53,9 @@ class DetailSarkutController extends DetailController
 			$this->insertDetail($doc_type, $doc_id, 'sarkut', $data_sarkut);
 
 			// Return doc detail
-			$result = new SbpResource(Sbp::find($doc_id), 'objek');
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
 
 			DB::commit();
 		} catch (\Throwable $th) {
@@ -75,7 +77,9 @@ class DetailSarkutController extends DetailController
 			$this->updateDetail('sarkut', $data_sarkut, $sarkut_id);
 
 			// Return doc detail
-			$result = new SbpResource(Sbp::find($doc_id), 'objek');
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
 
 			DB::commit();
 		} catch (\Throwable $th) {

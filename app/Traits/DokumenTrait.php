@@ -92,6 +92,11 @@ trait DokumenTrait
 			$number = $this->getNewDocNumber($model, $doc_id);
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
+
+			if ($doc_type == 'segel') {
+				$model::where('id', $doc_id)
+					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 		}
@@ -311,7 +316,6 @@ trait DokumenTrait
 	{
 		$request->validate([
 			'penindakan.sprint.id' => 'required|integer',
-			'penindakan.lokasi_penindakan' => 'required',
 			'penindakan.saksi.id' => 'required|integer',
 			'penindakan.petugas1.user_id' => 'required'
 		]);
