@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangWithSingleItemResource;
-use App\Http\Resources\SbpResource;
+// use App\Http\Resources\SbpResource;
 use App\Models\DetailBarang;
-use App\Models\Sbp;
+// use App\Models\Sbp;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +47,9 @@ class DetailBarangController extends DetailController
 			}
 
 			// Return doc detail
-			$result = new SbpResource(Sbp::find($doc_id), 'objek');
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
 
 			DB::commit();
 		} catch (\Throwable $th) {
@@ -83,7 +85,10 @@ class DetailBarangController extends DetailController
 			}
 
 			// Return doc detail
-			$result = new SbpResource(Sbp::find($doc_id), 'objek');
+			// $result = new SbpResource(Sbp::find($doc_id), 'objek');
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
 
 			DB::commit();
 		} catch (\Throwable $th) {
