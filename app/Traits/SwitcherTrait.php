@@ -2,11 +2,18 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\LptpResource;
+use App\Http\Resources\RiksaResource;
+use App\Http\Resources\SbpResource;
+use App\Http\Resources\SegelResource;
+use App\Http\Resources\TegahResource;
+use App\Http\Resources\TitipResource;
 use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
@@ -25,32 +32,44 @@ trait SwitcherTrait
 	private $models = [
 		// Dokumen
 		'bukasegel' => [
-			'class' => BukaSegel::class,
-			'tipe_dok' => 'BA'
+			'tipe_dok' => 'BA',
+			'model' => BukaSegel::class,
+			'resource' => BukaSegelResource::class,
 		],
 		'lptp' => [
-			'class' => Lptp::class,
-			'tipe_dok' => 'LPTP'
+			'tipe_dok' => 'LPTP',
+			'model' => Lptp::class,
+			'resource' => LptpResource::class,
 		],
 		'riksa' => [
-			'class' => Riksa::class,
-			'tipe_dok' => 'BA'
+			'tipe_dok' => 'BA',
+			'model' => Riksa::class,
+			'resource' => RiksaResource::class,
 		],
 		'sbp' => [
-			'class' => Sbp::class,
-			'tipe_dok' => 'SBP'
+			'tipe_dok' => 'SBP',
+			'model' => Sbp::class,
+			'resource' => SbpResource::class,
 		],
 		'segel' => [
-			'class' => Segel::class,
-			'tipe_dok' => 'BA'
+			'tipe_dok' => 'BA',
+			'model' => Segel::class,
+			'resource' => SegelResource::class,
 		],
 		'titip' => [
-			'class' => Titip::class,
-			'tipe_dok' => 'BA'
+			'tipe_dok' => 'BA',
+			'model' => Titip::class,
+			'resource' => TitipResource::class,
 		],
 		'tegah' => [
-			'class' => Tegah::class,
-			'tipe_dok' => 'BA'
+			'tipe_dok' => 'BA',
+			'model' => Tegah::class,
+			'resource' => TegahResource::class
+		],
+
+		// Objek
+		'bangunan' => [
+			'model' => DetailBangunan::class
 		],
 
 		// Objek
@@ -58,7 +77,13 @@ trait SwitcherTrait
 			'class' => DetailBangunan::class
 		],
 		'barang' => [
-			'class' => DetailBarang::class
+			'model' => DetailBarang::class
+		],
+		'orang' => [
+			'model' => RefEntitas::class
+		],
+		'sarkut' => [
+			'model' => DetailSarkut::class
 		],
 		'orang' => [
 			'class' => RefEntitas::class
@@ -76,6 +101,17 @@ trait SwitcherTrait
 		'sarkut' => DetailSarkutResource::class,
 	];
 
+	public function switchObject($object_name, $object_type)
+	{
+		if (array_key_exists($object_name, $this->models)) {
+			$model = $this->models[$object_name][$object_type];
+		} else {
+			$model = null;
+		}
+		
+		return $model;
+	}
+
 	/**
 	 * Get model by doc type
 	 * 
@@ -85,7 +121,7 @@ trait SwitcherTrait
 	public function getModel($doc_type)
 	{
 		if (array_key_exists($doc_type, $this->models)) {
-			$model = $this->models[$doc_type]['class'];
+			$model = $this->models[$doc_type]['model'];
 		} else {
 			$model = null;
 		}
