@@ -12,6 +12,7 @@ use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for BA Segel
+ */
+Route::apiResource('segel', SegelController::class);
+Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**
  * API for BA Buka Segel

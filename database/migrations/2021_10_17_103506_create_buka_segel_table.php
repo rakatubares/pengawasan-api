@@ -13,20 +13,22 @@ class CreateBukaSegelTable extends Migration
      */
     public function up()
     {
-        Schema::create('buka_segel', function (Blueprint $table) {
+        Schema::create('dok_buka_segel', function (Blueprint $table) {
             $table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->date('tgl_dok')->nullable()->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('sprint_id')->index();
-			$table->boolean('detail_sarkut')->default(0)->index();
-			$table->boolean('detail_barang')->default(0)->index();
-			$table->boolean('detail_bangunan')->default(0)->index();
+			// $table->boolean('detail_sarkut')->default(0)->index();
+			// $table->boolean('detail_barang')->default(0)->index();
+			// $table->boolean('detail_bangunan')->default(0)->index();
 			$table->string('jenis_segel')->index();
 			$table->integer('jumlah_segel');
+			$table->string('satuan_segel')->nullable()->index();
 			$table->string('nomor_segel')->nullable()->index();
+			$table->date('tanggal_segel')->nullable()->index();
 			$table->string('tempat_segel')->nullable()->index();
 			$table->integer('saksi_id')->index();
 			$table->integer('petugas1_id')->index();
@@ -47,6 +49,6 @@ class CreateBukaSegelTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buka_segel');
+        Schema::dropIfExists('dok_buka_segel');
     }
 }

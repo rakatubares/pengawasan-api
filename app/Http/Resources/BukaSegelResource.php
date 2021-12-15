@@ -12,10 +12,10 @@ class BukaSegelResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type='basic')
+	public function __construct($resource, $element=null)
 	{
 		$this->resource = $resource;
-		$this->type = $type;
+		$this->element = $element;
 	}
 
     /**
@@ -31,30 +31,55 @@ class BukaSegelResource extends JsonResource
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
+			'tanggal_dokumen' => $this->tanggal_dokumen ? $this->tanggal_dokumen->format('d-m-Y') : null,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'detail_sarkut' => $this->detail_sarkut,
-			'detail_barang' => $this->detail_barang,
-			'detail_bangunan' => $this->detail_bangunan,
 			'jenis_segel' => $this->jenis_segel,
 			'jumlah_segel' => $this->jumlah_segel,
+			'satuan_segel' => $this->satuan_segel,
 			'nomor_segel' => $this->nomor_segel,
+			'tanggal_segel' => $this->tanggal_segel ? $this->tanggal_segel->format('d-m-Y') : null,
 			'tempat_segel' => $this->tempat_segel,
 			'sprint' => new RefSprintResource($this->sprint),
 			'saksi' => new PersonEntityResource($this->saksi),
 			'petugas1' => new RefUserResource($this->petugas1),
 			'petugas2' => new RefUserResource($this->petugas2),
-			'status' => new RefStatusResource($this->status),
 		];
 
-		if ($this->type == 'complete') {
-			$buka_segel['detail'] = [
-				'sarkut' => new DetailSarkutResource($this->sarkut),
-				'bangunan' => new DetailBangunanResource($this->bangunan),
-				'barang' => new DetailBarangResource($this->barang),
+		$penindakan = new PenindakanResource($this->penindakan, 'basic');
+		$status = new RefStatusResource($this->status);
+		if ($this->penindakan != null) {
+			$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+		} else {
+			$objek = null;
+		}
+		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
+
+		if ($this->element == 'basic') {
+			$array = $buka_segel;
+			$array['kode_status'] = $this->kode_status;
+		} else if ($this->element == 'objek') {
+			$array = $objek;
+		} else {
+			$array = [
+				'main' => [
+					'type' => 'bukasegel',
+					'data' => $buka_segel
+				],
+				'penindakan' => $penindakan,
+				'status' => $status,
+				'objek' => $objek,
+				'dokumen' => $dokumen,
 			];
 		}
 
-		return $buka_segel;
+		// if ($this->type == 'complete') {
+		// 	$buka_segel['detail'] = [
+		// 		'sarkut' => new DetailSarkutResource($this->sarkut),
+		// 		'bangunan' => new DetailBangunanResource($this->bangunan),
+		// 		'barang' => new DetailBarangResource($this->barang),
+		// 	];
+		// }
+
+		return $array;
     }
 }

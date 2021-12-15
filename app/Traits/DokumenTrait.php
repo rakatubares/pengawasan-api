@@ -344,9 +344,13 @@ trait DokumenTrait
 	 * @param Array $data_dokumen
 	 * @param Array $data_penindakan
 	 */
-	public function storePenindakan($request, $doc_type, $doc_id)
+	public function storePenindakan($request, $doc_type, $doc_id, $empty=false)
 	{
-		$data_penindakan = $this->prepareDataPenindakan($request);
+		if (!$empty) {
+			$data_penindakan = $this->prepareDataPenindakan($request);
+		} else {
+			$data_penindakan = [];
+		}
 		$penindakan = Penindakan::create($data_penindakan);
 		$this->createRelation('penindakan', $penindakan->id, $doc_type, $doc_id);
 		return $penindakan;
