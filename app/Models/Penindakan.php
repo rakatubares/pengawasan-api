@@ -126,6 +126,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Penyegelan
+	 */
+	public function bukasegel()
+	{
+		return $this->hasOneThrough(
+			BukaSegel::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'bukasegel'
+		);
+	}
+
+	/**
 	 * BA Penegahan
 	 */
 	public function tegah()

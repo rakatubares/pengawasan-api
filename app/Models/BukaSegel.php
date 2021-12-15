@@ -11,21 +11,23 @@ class BukaSegel extends Model
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'buka_segel';
+	protected $table = 'dok_buka_segel';
 
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
+		'tanggal_dokumen',
 		'no_dok_lengkap',
-		'tgl_dok',
 		'sprint_id',
-		'detail_sarkut',
-		'detail_barang',
-		'detail_bangunan',
+		// 'detail_sarkut',
+		// 'detail_barang',
+		// 'detail_bangunan',
 		'jenis_segel',
 		'jumlah_segel',
+		'satuan_segel',
 		'nomor_segel',
+		'tanggal_segel',
 		'tempat_segel',
 		'saksi_id',
 		'petugas1_id',
@@ -34,32 +36,51 @@ class BukaSegel extends Model
 	];
 
 	protected $casts = [
-		'tgl_dok' => 'date',
+		'tanggal_dokumen' => 'date',
+		'tanggal_segel' => 'date'
 	];
 
-	public function sarkut()
-	{
-		return $this->morphOne(DetailSarkut::class, 'parent');
-	}
+	// public function sarkut()
+	// {
+	// 	return $this->morphOne(DetailSarkut::class, 'parent');
+	// }
 
-	public function barang()
-	{
-		return $this->morphOne(DetailBarang::class, 'parent');
-	}
+	// public function barang()
+	// {
+	// 	return $this->morphOne(DetailBarang::class, 'parent');
+	// }
 
-	public function itemBarang()
-	{
-		return $this->hasManyThrough(
-			DetailBarangItem::class,
-			DetailBarang::class,
-			'parent_id',
-			'detail_barang_id'
-		)->where('parent_type', BukaSegel::class);
-	}
+	// public function itemBarang()
+	// {
+	// 	return $this->hasManyThrough(
+	// 		DetailBarangItem::class,
+	// 		DetailBarang::class,
+	// 		'parent_id',
+	// 		'detail_barang_id'
+	// 	)->where('parent_type', BukaSegel::class);
+	// }
 
-	public function bangunan()
+	// public function bangunan()
+	// {
+	// 	return $this->morphOne(DetailBangunan::class, 'parent');
+	// }
+
+	public function penindakan()
 	{
-		return $this->morphOne(DetailBangunan::class, 'parent');
+		return $this->hasOneThrough(
+			Penindakan::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'bukasegel'
+		);
 	}
 
 	public function sprint()

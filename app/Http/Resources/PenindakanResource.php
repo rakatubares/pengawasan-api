@@ -72,11 +72,6 @@ class PenindakanResource extends JsonResource
 
 					break;
 
-				case 'segel':
-					$segel = new SegelResource($this->segel, 'basic');
-					$list_dokumen['segel'] = $segel;
-					break;
-
 				case 'tegah':
 					$tegah = new TegahResource($this->tegah, 'basic');
 					$list_dokumen['tegah'] = $tegah;
@@ -85,6 +80,16 @@ class PenindakanResource extends JsonResource
 				case 'riksa':
 					$riksa = new RiksaResource($this->riksa, 'basic');
 					$list_dokumen['riksa'] = $riksa;
+					break;
+
+				case 'segel':
+					$segel = new SegelResource($this->segel, 'basic');
+					$list_dokumen['segel'] = $segel;
+					break;
+
+				case 'bukasegel':
+					$bukasegel = new BukaSegelResource($this->bukasegel, 'basic');
+					$list_dokumen['bukasegel'] = $bukasegel;
 					break;
 				
 				default:
