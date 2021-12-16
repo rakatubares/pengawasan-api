@@ -49,6 +49,7 @@ Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
  * API for BA Segel
  */
 Route::apiResource('segel', SegelController::class);
+Route::post('/segel/search', [SegelController::class, 'search']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**
