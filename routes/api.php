@@ -40,6 +40,7 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for BA Segel
  */
 Route::apiResource('segel', SegelController::class);
+Route::post('/segel/search', [SegelController::class, 'search']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**
