@@ -12,6 +12,7 @@ use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\RiksaController;
 use App\Http\Controllers\SbpController;
 use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
@@ -44,6 +45,12 @@ Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
+
+/**
+ * API for BA Pemeriksaan
+ */
+Route::apiResource('riksa', RiksaController::class);
+Route::put('/riksa/{riksa_id}/publish', [RiksaController::class, 'publish']);
 
 /**
  * API for BA Segel

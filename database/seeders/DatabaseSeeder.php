@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			SbpSeeder::class,
+			RiksaSeeder::class,
 			SegelSeeder::class,
 			BukaSegelSeeder::class,
 			// TitipSeeder::class,
