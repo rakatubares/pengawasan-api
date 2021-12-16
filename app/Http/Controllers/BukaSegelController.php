@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\BukaSegelTableResource;
 use App\Models\BukaSegel;
+use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -102,7 +103,7 @@ class BukaSegelController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $linked_doc=false)
+	public function store(Request $request)
 	{ 
 		// Validate data buka segel
 		$this->validateBukaSegel($request);
@@ -114,8 +115,14 @@ class BukaSegelController extends Controller
 			$buka_segel = BukaSegel::create($data_buka_segel);
 
 			// Save data penindakan and create object relation
-			if ($linked_doc == false) {
+			$segel_id = $request->dokumen['segel']['id'];
+			if ($segel_id == null) {
 				$this->storePenindakan($request, 'bukasegel', $buka_segel->id, true);
+			} else {
+				$segel = Segel::find($segel_id);
+				$penindakan_id = $segel->penindakan->id;
+				$this->createRelation('penindakan', $penindakan_id, 'bukasegel', $buka_segel->id);
+				$segel->update(['kode_status' => 210]);
 			}
 
 			// Commit store query
@@ -189,10 +196,22 @@ class BukaSegelController extends Controller
 	 */
 	public function publish($id)
 	{
-		// $doc = $this->publishDocument(BukaSegel::class, $id, $this->tipe_dok);
-		// return $doc;
+		DB::beginTransaction();
+		try {
+			$this->getDocument(BukaSegel::class, $id);
+			$this->getCurrentDate();
+			$number = $this->getNewDocNumber(BukaSegel::class);
+			$this->updateDocNumberAndYear($number, $this->tipe_dok, true);
 
-		$year = date('Y');
-		$this->publishDocument('bukasegel', $id, $year);
+			$segel = $this->doc->penindakan->segel;
+			if ($segel != null) {
+				$segel->update(['kode_status' => 211]);
+			}
+			
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
 	}
 }

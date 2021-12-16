@@ -20,9 +20,6 @@ class BukaSegel extends Model
 		'tanggal_dokumen',
 		'no_dok_lengkap',
 		'sprint_id',
-		// 'detail_sarkut',
-		// 'detail_barang',
-		// 'detail_bangunan',
 		'jenis_segel',
 		'jumlah_segel',
 		'satuan_segel',
@@ -39,31 +36,6 @@ class BukaSegel extends Model
 		'tanggal_dokumen' => 'date',
 		'tanggal_segel' => 'date'
 	];
-
-	// public function sarkut()
-	// {
-	// 	return $this->morphOne(DetailSarkut::class, 'parent');
-	// }
-
-	// public function barang()
-	// {
-	// 	return $this->morphOne(DetailBarang::class, 'parent');
-	// }
-
-	// public function itemBarang()
-	// {
-	// 	return $this->hasManyThrough(
-	// 		DetailBarangItem::class,
-	// 		DetailBarang::class,
-	// 		'parent_id',
-	// 		'detail_barang_id'
-	// 	)->where('parent_type', BukaSegel::class);
-	// }
-
-	// public function bangunan()
-	// {
-	// 	return $this->morphOne(DetailBangunan::class, 'parent');
-	// }
 
 	public function penindakan()
 	{

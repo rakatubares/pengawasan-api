@@ -140,7 +140,7 @@ trait DokumenTrait
 	 * @param string $jenis_surat
 	 * @return Response
 	 */
-	private function updateDocNumberAndYear($number, $jenis_surat)
+	private function updateDocNumberAndYear($number, $jenis_surat, $update_date=false)
 	{
 		// Construct full document number
 		$no_dok_lengkap = $jenis_surat 
@@ -153,6 +153,9 @@ trait DokumenTrait
 		$this->doc->no_dok = $number;
 		$this->doc->thn_dok = $this->tahun;
 		$this->doc->no_dok_lengkap = $no_dok_lengkap;
+		if ($update_date == true) {
+			$this->doc->tanggal_dokumen = $this->tanggal;
+		}
 		$this->doc->kode_status = 200;
 		$update_result = $this->doc->save();
 
@@ -377,7 +380,7 @@ trait DokumenTrait
 	 * @param Model $doc2_type
 	 * @param int $doc2_id
 	 */
-	private function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
+	public function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
 	{
 		ObjectRelation::create([
 			'object1_type' => $object1_type,
