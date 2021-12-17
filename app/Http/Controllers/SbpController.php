@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PenindakanResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
-use App\Models\Lptp;
 use App\Models\Penindakan;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -250,24 +248,6 @@ class SbpController extends Controller
 		return $penindakan;
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy or publish functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	 /**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		$result = $this->deleteDocument(Sbp::class, $id);
-		return $result;
-	}
-
 	/**
 	 * Terbitkan penomoran SBP
 	 * 
@@ -288,40 +268,64 @@ class SbpController extends Controller
 		}
 	}
 
-	// private function requestSegel($sbp, $detail, $request)
-	// {
-	// 	$segel_array = [
-	// 		'sprint' => ['id' => $sbp->sprint_id],
-	// 		'objek_penindakan' => 'barang',
-	// 		'jenis_segel' => $request->data_segel['jenis'],
-	// 		'jumlah_segel' => $request->data_segel['jumlah'],
-	// 		'lokasi_segel' => $request->data_segel['lokasi'],
-	// 		'saksi' => ['id' => $sbp->saksi_id],
-	// 		'petugas1' => ['user_id' => $sbp->petugas1->user_id],
-	// 		'petugas2' => ['user_id' => ($sbp->petugas2->user_id ?? null)],
-	// 	];
+	/*
+	 |--------------------------------------------------------------------------
+	 | Destroy functions
+	 |--------------------------------------------------------------------------
+	 */
 
-	// 	$segel_request = new Request($segel_array);
-	// 	$insert_result = app(SegelController::class)->store($segel_request);
-		
-	// 	return $insert_result;
-	// }
+	 /**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 */
+	public function destroy($id)
+	{
+		DB::beginTransaction();
+		try {
+			// Create array from SBP object
+			$sbp = new SbpResource(Sbp::find($id));
+			$arr = json_decode($sbp->toJson(), true);
 
-	
+			// Get penindakan
+			$penindakan = $sbp->penindakan;
 
-	// /**
-	//  * Display the specified resource.
-	//  *
-	//  * @param  int  $id
-	//  * @return \Illuminate\Http\Response
-	//  */
-	// public function showComplete($id)
-	// {
-	// 	$sbp = new SbpResource(Sbp::findOrFail($id), 'complete');
-	// 	return $sbp;
-	// }
+			// Delete each document
+			$failed = false;
+			foreach ($arr['dokumen'] as $type => $data) {
+				// Delete document
+				$delete_result = $this->deleteDocument($type, $data['id']);
+				
+				// Delete document relation
+				if ($delete_result == true) {
+					if ($type == 'lptp') {
+						$object1_type = 'sbp';
+						$object1_id = $sbp->id;
+					} else {
+						$object1_type = 'penindakan';
+						$object1_id = $penindakan->id;
+					}
+					$this->deleteRelation($object1_type, $object1_id, $type, $data['id']);
+				} else {
+					$failed = true;
+				}
+			}
 
-	
+			// Delete penindakan and its object if exists
+			if ($failed == false) {
+				$object = $penindakan->objectable;
+				if ($object != null) {
+					$object->delete();
+				}
+				$penindakan->delete();
+			}
 
+			// Commit queries
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+	}
 	
 }

@@ -38,21 +38,11 @@ class TegahController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// $request->validate([
-		// 	'sprint.id' => 'required|integer',
-		// 	'saksi.id' => 'integer',
-		// 	'petugas1.user_id' => 'required'
-		// ]);
-
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
 
 		$insert_result = Tegah::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
-			// 'sprint_id' => $request->sprint['id'],
-			// 'saksi_id' => $request->saksi['id'],
-			// 'petugas1_id' => $request->petugas1['user_id'],
-			// 'petugas2_id' => $request->petugas2['user_id'],
 			'kode_status' => 100,
 		]);
 
