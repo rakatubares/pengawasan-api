@@ -2,20 +2,15 @@
 
 namespace App\Traits;
 
-use App\Http\Controllers\DetailBarangController;
-use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\RiksaController;
 use App\Http\Controllers\SegelController;
 use App\Http\Controllers\TegahController;
-use App\Models\DocRelation;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 
 trait DokumenTrait
 {
@@ -190,32 +185,41 @@ trait DokumenTrait
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function deleteDocument($model, $doc_id)
+	public function deleteDocument($doc_type, $doc_id)
 	{
+		// Get model
+		$model = $this->getModel($doc_type);
+
 		// Check if document is unpublished
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
 
 		// Delete document if still unpulished
 		if ($is_unpublished) {
-			// Use transaction
-			DB::beginTransaction();
-
-			$update_result = $this->doc->update(['kode_status' => 300]); // Update kode status
-			$delete_result = $this->doc->delete(); // Delete data
-
-			// Rollback if either transaction failed
-			if ($update_result != 1 || $delete_result != 1) {
-				DB::rollBack();
-				$result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
-			} else {
-				DB::commit();
-				$result = $delete_result;
-			}
+			$this->doc->update(['kode_status' => 300]); // Update kode status
+			$result = $this->doc->delete(); // Delete data
 		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat menghapus dokumen.'], 422);
+			$result = false;
 		}
-		
+
 		return $result;
+	}
+
+	/**
+	 * Remove object relation
+	 * 
+	 * @param String $object1_type
+	 * @param Int $object1_id
+	 * @param String $object2_type
+	 * @param Int $object2_id
+	 */
+	public function deleteRelation($object1_type, $object1_id, $object2_type, $object2_id)
+	{
+		ObjectRelation::where([
+			'object1_type' => $object1_type,
+			'object1_id' => $object1_id,
+			'object2_type' => $object2_type,
+			'object2_id' => $object2_id,
+		])->delete();
 	}
 
 	/*
@@ -228,9 +232,9 @@ trait DokumenTrait
 	 * Update status detail dokumen
 	 * 
 	 * @param Model $model
-	 * @param int $doc_id
-	 * @param string $detail_type
-	 * @param int $detail_status
+	 * @param Int $doc_id
+	 * @param String $detail_type
+	 * @param Int $detail_status
 	 * @return Response
 	 */
 	public function updateStatusDetail($model, $doc_id, $detail_type, $detail_status)
@@ -322,6 +326,11 @@ trait DokumenTrait
 		]);
 	}
 
+	/**
+	 * Prepare/transform data penindakan
+	 * 
+	 * @param Request $request
+	 */
 	private function prepareDataPenindakan(Request $request)
 	{
 		$data_penindakan = [
@@ -368,10 +377,10 @@ trait DokumenTrait
 	/**
 	 * Create document relation
 	 * 
-	 * @param Model $doc1_type
-	 * @param int $doc1_id
-	 * @param Model $doc2_type
-	 * @param int $doc2_id
+	 * @param String $doc1_type
+	 * @param Int $doc1_id
+	 * @param String $doc2_type
+	 * @param Int $doc2_id
 	 */
 	private function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
 	{
@@ -382,6 +391,12 @@ trait DokumenTrait
 			'object2_id' => $object2_id,
 		]);
 	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | CREATE LINKED DOCUMENTS
+	 |--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Create segel
@@ -410,12 +425,15 @@ trait DokumenTrait
 			$segel = app(SegelController::class)->store($segel_request, true);
 			$this->createRelation('penindakan', $penindakan_id, 'segel', $segel->id);
 		} else {
-			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id);
+			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id, true);
 		}
 	}
 
 	/**
 	 * Create BA Tegah
+	 * 
+	 * @param Request $request
+	 * @param Int $penindakan_id
 	 */
 	public function createTegah(Request $request, $penindakan_id)
 	{
@@ -430,6 +448,12 @@ trait DokumenTrait
 		}
 	}
 
+	/**
+	 * Create BA Periksa
+	 * 
+	 * @param Request $request
+	 * @param Int $penindakan_id
+	 */
 	public function createRiksa(Request $request, $penindakan_id)
 	{
 		// Check existing document
@@ -438,37 +462,8 @@ trait DokumenTrait
 
 		// Save if document not exists
 		if ($existing_riksa == null) {
-			$riksa = app(RiksaController::class)->store($request);
+			$riksa = app(RiksaController::class)->store($request, true);
 			$this->createRelation('penindakan', $penindakan_id, 'riksa', $riksa->id);
 		}
-	}
-
-	private function createObjek($doc_type, $doc_id, $objek)
-	{
-		switch ($objek['jenis']) {
-			case 'sarkut':
-				$this->createSarkut($doc_type, $doc_id, $objek);
-				break;
-
-			case 'barang':
-				$this->createBarang($doc_type, $doc_id, $objek);
-				break;
-			
-			default:
-				# code...
-				break;
-		}
-	}
-
-	private function createSarkut($doc_type, $doc_id, $objek)
-	{
-		$sarkut_request = new Request($objek);
-		app(DetailSarkutController::class)->store($sarkut_request, $doc_type, $doc_id, 'upsert');
-	}
-
-	private function createBarang($doc_type, $doc_id, $objek)
-	{
-		$sarkut_request = new Request($objek);
-		app(DetailBarangController::class)->store($sarkut_request, $doc_type, $doc_id, 'upsert');
 	}
 }
