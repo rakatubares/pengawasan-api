@@ -39,6 +39,20 @@ class RefStatusSeeder extends Seeder
 				'updated_at' => $now
 			],
 			[ 
+				'kode_status' => 210, 
+				'short_status' => 'draft buka segel',
+				'uraian_status' => 'Buat draft pembukaan segel' ,
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 211, 
+				'short_status' => 'buka segel',
+				'uraian_status' => 'Penerbitan BA Buka Segel' ,
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
 				'kode_status' => 300, 
 				'short_status' => 'dihapus',
 				'uraian_status' => 'Hapus dokumen',
