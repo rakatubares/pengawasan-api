@@ -84,27 +84,6 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * SBP
-	 */
-	public function sbp()
-	{
-		return $this->hasOneThrough(
-			Sbp::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'sbp'
-		);
-	}
-
-	/**
 	 * BA Penyegelan
 	 */
 	public function segel()
@@ -147,44 +126,20 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * BA Penegahan
+	 * The "booted" method of the model.
+	 *
+	 * @return void
 	 */
-	public function tegah()
+	protected static function booted()
 	{
-		return $this->hasOneThrough(
-			Tegah::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'tegah'
-		);
-	}
-
-	/**
-	 * BA Pemeriksaan
-	 */
-	public function riksa()
-	{
-		return $this->hasOneThrough(
-			Riksa::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'riksa'
-		);
+		static::deleted(function ($penindakan) {
+			// Delete objek penindakan
+			if ($penindakan->objectable != null) {
+				$penindakan->objectable->delete();
+			}
+			
+			// Delete other linked documents
+			$penindakan->dokumen()->delete();
+		});
 	}
 }
