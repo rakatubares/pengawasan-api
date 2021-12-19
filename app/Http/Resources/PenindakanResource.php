@@ -72,7 +72,7 @@ class PenindakanResource extends JsonResource
 					$segel = new SegelResource($this->segel, 'basic');
 					$list_dokumen['segel'] = $segel;
 					break;
-				
+
 				default:
 					# code...
 					break;
