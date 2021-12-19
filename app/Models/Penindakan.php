@@ -84,12 +84,12 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * BA Pemeriksaan
+	 * BA Penyegelan
 	 */
-	public function riksa()
+	public function segel()
 	{
 		return $this->hasOneThrough(
-			Riksa::class,
+			Segel::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -100,7 +100,7 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'riksa'
+			'segel'
 		);
 	}
 

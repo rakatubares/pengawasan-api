@@ -206,6 +206,36 @@ class SegelController extends Controller
 		return $result;
 	}
 
+	/**
+	 * Terbitkan penomoran dokumen
+	 * 
+	 * @param  int  $id
+	 */
+	public function publish($id)
+	{
+		DB::transaction();
+
+		try {
+			// Create array from SBP object
+			$segel = new SegelResource(Segel::find($id));
+			$arr = json_decode($segel->toJson(), true);
+
+			// Check penindakan date
+			$year = $this->datePenindakan(Segel::class, $id);
+		
+			// Publish each document
+			foreach ($arr['dokumen'] as $type => $data) {
+				$this->publishDocument($type, $data['id'], $year);
+			}
+
+			// Commit transaction
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Destroy or publish functions
@@ -220,27 +250,19 @@ class SegelController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$result = $this->deleteDocument(Segel::class, $id);
-		return $result;
-	}
-
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
-	{
-		// Create array from SBP object
-		$segel = new SegelResource(Segel::find($id));
-		$arr = json_decode($segel->toJson(), true);
-
-		// Check penindakan date
-		$year = $this->datePenindakan(Segel::class, $id);
-	
-		// Publish each document
-		foreach ($arr['dokumen'] as $type => $data) {
-			$this->publishDocument($type, $data['id'], $year);
+		DB::beginTransaction();
+		try {
+			$is_unpublished = $this->checkUnpublished(Segel::class, $id);
+			if ($is_unpublished) {
+				Segel::find($id)->delete();
+			}
+			
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
 		}
 	}
+
+	
 }
