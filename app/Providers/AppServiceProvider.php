@@ -7,9 +7,8 @@ use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
-use App\Models\Sbp;
-use App\Models\Segel;
-use App\Models\Tegah;
+use App\Models\Riksa;
+use App\Observers\RiksaObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -43,10 +42,10 @@ class AppServiceProvider extends ServiceProvider
 			'barang' => DetailBarang::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
+			'riksa' => Riksa::class,
 			'sarkut' => DetailSarkut::class,
-			'sbp' => Sbp::class,
-			'segel' => Segel::class,
-			'tegah' => Tegah::class,
 		]);
+
+		Riksa::observe(RiksaObserver::class);
     }
 }
