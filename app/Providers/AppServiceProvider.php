@@ -10,6 +10,7 @@ use App\Models\RefEntitas;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
+use App\Observers\SbpObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -48,5 +49,7 @@ class AppServiceProvider extends ServiceProvider
 			'segel' => Segel::class,
 			'tegah' => Tegah::class,
 		]);
+
+		Sbp::observe(SbpObserver::class);
     }
 }

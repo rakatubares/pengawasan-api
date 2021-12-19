@@ -63,6 +63,30 @@ class PenindakanResource extends JsonResource
 			$jenis = $dok->object2_type;
 
 			switch ($jenis) {
+				case 'sbp':
+					$sbp = new SbpResource($this->sbp, 'basic');
+					$list_dokumen['sbp'] = $sbp;
+
+					$lptp = new LptpResource($this->sbp->lptp);
+					$list_dokumen['lptp'] = $lptp;
+
+					break;
+
+				case 'tegah':
+					$tegah = new TegahResource($this->tegah, 'basic');
+					$list_dokumen['tegah'] = $tegah;
+					break;
+
+				case 'riksa':
+					$riksa = new RiksaResource($this->riksa, 'basic');
+					$list_dokumen['riksa'] = $riksa;
+					break;
+
+				case 'segel':
+					$segel = new SegelResource($this->segel, 'basic');
+					$list_dokumen['segel'] = $segel;
+					break;
+
 				default:
 					# code...
 					break;

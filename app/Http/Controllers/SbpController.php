@@ -283,44 +283,11 @@ class SbpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			// Create array from SBP object
-			$sbp = new SbpResource(Sbp::find($id));
-			$arr = json_decode($sbp->toJson(), true);
-
-			// Get penindakan
-			$penindakan = $sbp->penindakan;
-
-			// Delete each document
-			$failed = false;
-			foreach ($arr['dokumen'] as $type => $data) {
-				// Delete document
-				$delete_result = $this->deleteDocument($type, $data['id']);
-				
-				// Delete document relation
-				if ($delete_result == true) {
-					if ($type == 'lptp') {
-						$object1_type = 'sbp';
-						$object1_id = $sbp->id;
-					} else {
-						$object1_type = 'penindakan';
-						$object1_id = $penindakan->id;
-					}
-					$this->deleteRelation($object1_type, $object1_id, $type, $data['id']);
-				} else {
-					$failed = true;
-				}
+			$is_unpublished = $this->checkUnpublished(Sbp::class, $id);
+			if ($is_unpublished) {
+				Sbp::find($id)->delete();
 			}
-
-			// Delete penindakan and its object if exists
-			if ($failed == false) {
-				$object = $penindakan->objectable;
-				if ($object != null) {
-					$object->delete();
-				}
-				$penindakan->delete();
-			}
-
-			// Commit queries
+			
 			DB::commit();
 		} catch (\Throwable $th) {
 			DB::rollBack();
