@@ -174,56 +174,6 @@ trait DokumenTrait
 
 	/*
 	 |--------------------------------------------------------------------------
-	 | DELETE DOCUMENT
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  Model $model
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function deleteDocument($doc_type, $doc_id)
-	{
-		// Get model
-		$model = $this->getModel($doc_type);
-
-		// Check if document is unpublished
-		$is_unpublished = $this->checkUnpublished($model, $doc_id);
-
-		// Delete document if still unpulished
-		if ($is_unpublished) {
-			$this->doc->update(['kode_status' => 300]); // Update kode status
-			$result = $this->doc->delete(); // Delete data
-		} else {
-			$result = false;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Remove object relation
-	 * 
-	 * @param String $object1_type
-	 * @param Int $object1_id
-	 * @param String $object2_type
-	 * @param Int $object2_id
-	 */
-	public function deleteRelation($object1_type, $object1_id, $object2_type, $object2_id)
-	{
-		ObjectRelation::where([
-			'object1_type' => $object1_type,
-			'object1_id' => $object1_id,
-			'object2_type' => $object2_type,
-			'object2_id' => $object2_id,
-		])->delete();
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
 	 | UPDATE DOCUMENT DETAIL STATUS
 	 |--------------------------------------------------------------------------
 	 */
