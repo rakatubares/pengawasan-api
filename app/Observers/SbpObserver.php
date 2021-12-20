@@ -49,15 +49,16 @@ class SbpObserver
 
 		// Delete related model
 		$sbp->lptp->delete();
-		$sbp->penindakan->delete();
-		$sbp->relations()->delete();
+		if ($sbp->penindakan != null) {
+			$sbp->penindakan->delete();
+		}
 
 		// Delete any possible relations
 		ObjectRelation::where(function($query) use ($sbp) {
-			$query->where('object1_type', 'riksa')
+			$query->where('object1_type', 'sbp')
 				->where('object1_id', $sbp->id);
 		})->orWhere(function($query) use ($sbp) {
-			$query->where('object2_type', 'riksa')
+			$query->where('object2_type', 'sbp')
 				->where('object2_id', $sbp->id);
 		})->delete();
 	}
