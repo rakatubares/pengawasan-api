@@ -80,7 +80,6 @@ class PenindakanResource extends JsonResource
 				case 'riksa':
 					$riksa = new RiksaResource($this->riksa, 'basic');
 					$list_dokumen['riksa'] = $riksa;
-					break;
 
 				case 'segel':
 					$segel = new SegelResource($this->segel, 'basic');

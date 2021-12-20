@@ -12,6 +12,7 @@ use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
+use App\Observers\BukaSegelObserver;
 use App\Observers\SbpObserver;
 use App\Observers\SegelObserver;
 use App\Services\SSO;
@@ -55,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
 			'tegah' => Tegah::class,
 		]);
 
+		BukaSegel::observe(BukaSegelObserver::class);
 		Sbp::observe(SbpObserver::class);
 		Segel::observe(SegelObserver::class);
     }
