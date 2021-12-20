@@ -48,7 +48,9 @@ class RiksaObserver
 		$riksa->update(['kode_status' => 300]);
 		
 		// Delete related model
-		$riksa->penindakan->delete();
+		if ($riksa->penindakan != null) {
+			$riksa->penindakan->delete();
+		}
 
 		// Delete any possible relations
 		ObjectRelation::where(function($query) use ($riksa) {
