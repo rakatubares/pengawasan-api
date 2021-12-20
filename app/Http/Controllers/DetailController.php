@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Support\Facades\DB;
@@ -22,14 +21,14 @@ class DetailController extends Controller
 
 	public function insertData($type, $data)
 	{
-		$model = $this->getModel($type);
+		$model = $this->switchObject($type, 'model');
 		$detail = $model::create($data);
 		return $detail;
 	}
 
 	public function updateObjectType($doc_type, $doc_id, $detail_type, $detail_id)
 	{
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 		$doc = $model::find($doc_id);
 		$penindakan = $doc->penindakan;
 		$result = $penindakan->update([
@@ -60,7 +59,7 @@ class DetailController extends Controller
 
 		try {
 			// Get model
-			$model = $this->getModel($doc_type);
+			$model = $this->switchObject($doc_type, 'model');
 
 			// Update kolom status detail di tabel parent menjadi TRUE
 			$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
@@ -105,7 +104,7 @@ class DetailController extends Controller
 	public function showDetail($doc_type, $doc_id, $detail_type)
 	{
 		// Get model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Get header
 		$header = $model::find($doc_id);
@@ -137,7 +136,7 @@ class DetailController extends Controller
 	public function showDetails($doc_type, $doc_id, $detail_type)
 	{
 		// Get model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Get header
 		$header = $model::find($doc_id);
@@ -172,7 +171,7 @@ class DetailController extends Controller
 
 		try {
 			 // Get model
-			$model = $this->getModel($doc_type);
+			 $model = $this->switchObject($doc_type, 'model');
 
 			// Update kolom detail di tabel parent menjadi FALSE
 			$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 0);
