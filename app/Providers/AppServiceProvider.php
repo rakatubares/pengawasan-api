@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\Segel;
+use App\Observers\BukaSegelObserver;
 use App\Observers\SegelObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
 			'segel' => Segel::class,
 		]);
 
+		BukaSegel::observe(BukaSegelObserver::class);
 		Segel::observe(SegelObserver::class);
     }
 }

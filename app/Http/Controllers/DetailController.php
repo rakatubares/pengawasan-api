@@ -42,7 +42,7 @@ class DetailController extends Controller
 
 	public function updateDetail($detail_type, $detail_data, $detail_id)
 	{
-		$model = $this->getModel($detail_type);
+		$model = $this->switchObject($detail_type, 'model');
 		$model::find($detail_id)->update($detail_data);
 	}
 

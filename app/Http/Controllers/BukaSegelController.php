@@ -178,18 +178,6 @@ class BukaSegelController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		$result = $this->deleteDocument(BukaSegel::class, $id);
-		return $result;
-	}
-
-	/**
 	 * Terbitkan penomoran dokumen
 	 * 
 	 * @param  int  $id
@@ -214,4 +202,34 @@ class BukaSegelController extends Controller
 			throw $th;
 		}
 	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Destroy function
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		DB::beginTransaction();
+		try {
+			$is_unpublished = $this->checkUnpublished(BukaSegel::class, $id);
+			if ($is_unpublished) {
+				BukaSegel::find($id)->delete();
+			}
+			
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+	}
+
+	
 }

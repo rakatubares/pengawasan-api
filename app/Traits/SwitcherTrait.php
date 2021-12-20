@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\SegelResource;
+use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
@@ -19,6 +21,11 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'bukasegel' => [
+			'tipe_dok' => 'BA',
+			'model' => BukaSegel::class,
+			'resource' => BukaSegelResource::class,
+		],
 		'segel' => [
 			'tipe_dok' => 'BA',
 			'model' => Segel::class,

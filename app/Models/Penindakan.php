@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\DokumenTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Penindakan extends Model
 {
+	use DokumenTrait;
     use HasFactory;
 	use SoftDeletes;
 
@@ -137,9 +139,6 @@ class Penindakan extends Model
 			if ($penindakan->objectable != null) {
 				$penindakan->objectable->delete();
 			}
-			
-			// Delete other linked documents
-			$penindakan->dokumen()->delete();
 		});
 	}
 }
