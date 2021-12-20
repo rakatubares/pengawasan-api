@@ -16,6 +16,7 @@ use App\Observers\BukaSegelObserver;
 use App\Observers\RiksaObserver;
 use App\Observers\SbpObserver;
 use App\Observers\SegelObserver;
+use App\Observers\TegahObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -58,5 +59,6 @@ class AppServiceProvider extends ServiceProvider
 		Riksa::observe(RiksaObserver::class);
 		Sbp::observe(SbpObserver::class);
 		Segel::observe(SegelObserver::class);
+		Tegah::observe(TegahObserver::class);
     }
 }
