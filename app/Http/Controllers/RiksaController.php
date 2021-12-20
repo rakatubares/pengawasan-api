@@ -160,6 +160,9 @@ class RiksaController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		$is_unpublished = $this->checkUnpublished(Riksa::class, $id);
+		if ($is_unpublished) {
+			Riksa::find($id)->delete();
+		}
 	}
 }
