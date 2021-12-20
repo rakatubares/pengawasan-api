@@ -216,7 +216,6 @@ class Penindakan extends Model
 			if ($penindakan->riksa != null) {
 				$penindakan->riksa->delete();
 			}
-			$penindakan->dokumen()->delete();
 		});
 	}
 }
