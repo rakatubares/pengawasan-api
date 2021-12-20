@@ -187,4 +187,37 @@ class Penindakan extends Model
 			'riksa'
 		);
 	}
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($penindakan) {
+			// Delete objek penindakan
+			if (($penindakan->object_type != null) && ($penindakan->object != 'orang')) {
+				echo 'delete object';
+				$penindakan->objectable->delete();
+			} else {
+				echo 'no delete object';
+			};
+			
+			// Delete other linked documents
+			if ($penindakan->sbp != null) {
+				$penindakan->sbp->delete();
+			}
+			if ($penindakan->segel != null) {
+				$penindakan->segel->delete();
+			}
+			if ($penindakan->tegah != null) {
+				$penindakan->tegah->delete();
+			}
+			if ($penindakan->riksa != null) {
+				$penindakan->riksa->delete();
+			}
+			$penindakan->dokumen()->delete();
+		});
+	}
 }

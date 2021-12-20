@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DetailBarang extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	use SoftDeletes;
 
 	protected $table = 'detail_barang';
@@ -51,5 +51,23 @@ class DetailBarang extends Model
 	public function itemBarang()
 	{
 		return $this->hasMany(DetailBarangItem::class, 'detail_barang_id');
+	}
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($detailBarang) {
+			// Delete item barang
+			$detailBarang->itemBarang()->delete();
+
+			// Delete dokumen dasar
+			if ($detailBarang->dokumen != null) {
+				$detailBarang->dokumen->delete();
+			}
+		});
 	}
 }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BukaSegelController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
