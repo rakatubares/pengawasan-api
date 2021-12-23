@@ -122,7 +122,7 @@ class BukaSegelController extends Controller
 				$segel = Segel::find($segel_id);
 				$penindakan_id = $segel->penindakan->id;
 				$this->createRelation('penindakan', $penindakan_id, 'bukasegel', $buka_segel->id);
-				$segel->update(['kode_status' => 210]);
+				$segel->update(['kode_status' => 101]);
 			}
 
 			// Commit store query
@@ -193,7 +193,7 @@ class BukaSegelController extends Controller
 
 			$segel = $this->doc->penindakan->segel;
 			if ($segel != null) {
-				$segel->update(['kode_status' => 211]);
+				$segel->update(['kode_status' => 201]);
 			}
 			
 			DB::commit();
