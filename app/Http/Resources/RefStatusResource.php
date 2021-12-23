@@ -18,6 +18,7 @@ class RefStatusResource extends JsonResource
 			'kode_status' => $this->kode_status,
 			'short_status' => $this->short_status,
 			'uraian_status' => $this->uraian_status,
+			'color' => $this->color,
 		];
 
 		return $array;

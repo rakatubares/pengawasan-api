@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 			RiksaSeeder::class,
 			SegelSeeder::class,
 			BukaSegelSeeder::class,
+			DokLphpSeeder::class,
 			// TitipSeeder::class,
 			// TegahSeeder::class,
 		]);
