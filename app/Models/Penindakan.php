@@ -136,7 +136,7 @@ class Penindakan extends Model
 	{
 		static::deleted(function ($penindakan) {
 			// Delete objek penindakan
-			if ($penindakan->objectable != null) {
+			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
 			}
 		});
