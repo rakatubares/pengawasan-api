@@ -213,7 +213,7 @@ class SegelController extends Controller
 	 */
 	public function publish($id)
 	{
-		DB::transaction();
+		DB::beginTransaction();
 
 		try {
 			// Create array from SBP object
