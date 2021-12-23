@@ -18,6 +18,7 @@ class CreateRefStatusTable extends Migration
 			$table->integer('kode_status')->unique();
 			$table->string('short_status')->index();
 			$table->string('uraian_status')->index();
+			$table->string('color')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
