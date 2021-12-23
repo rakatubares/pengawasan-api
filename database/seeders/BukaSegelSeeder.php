@@ -43,7 +43,7 @@ class BukaSegelSeeder extends Seeder
 					unset($available_segel_id[$key]);
 				}
 				$segel = Segel::find($segel_id);
-				$segel->update(['kode_status' => 211]);
+				$segel->update(['kode_status' => 201]);
 
 				// Create BA buka segel
 				$buka_segel = BukaSegel::create([
