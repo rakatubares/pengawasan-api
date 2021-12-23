@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokLphp;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
+use App\Observers\DokLphpObserver;
 use App\Observers\SbpObserver;
 use App\Observers\TegahObserver;
 use App\Services\SSO;
@@ -51,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
 			'tegah' => Tegah::class,
 		]);
 
+		DokLphp::observe(DokLphpObserver::class);
 		Sbp::observe(SbpObserver::class);
 		Tegah::observe(TegahObserver::class);
     }

@@ -6,52 +6,43 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lptp extends Model
+class DokLphp extends Model
 {
-    use HasFactory;
+	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'dok_lptp';
+	protected $table = 'dok_lphp';
 
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
-		'alasan_tidak_penindakan',
-		'jabatan_atasan',
-		'plh',
+		'tanggal_dokumen',
+		'analisa',
+		'catatan',
+		'kode_jabatan_penyusun',
+		'plh_penyusun',
+		'penyusun_id',
+		'kode_jabatan_atasan',
+		'plh_atasan',
 		'atasan_id',
 		'kode_status'
 	];
 
-	public function sbp()
+	protected $casts = [
+		'tanggal_dokumen' => 'date'
+	];
+
+	public function lptp()
 	{
 		return $this->hasOneThrough(
-			Sbp::class,
+			Lptp::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
 			'id',
 			'object1_id'
-		)->where(
-			'object1_type',
-			'sbp'
-		)->where(
-			'object2_type',
-			'lptp'
-		);
-	}
-
-	public function lphp()
-	{
-		return $this->hasOneThrough(
-			DokLphp::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
 		)->where(
 			'object1_type',
 			'lptp'
@@ -62,18 +53,31 @@ class Lptp extends Model
 	}
 
 	/**
-	 * Detail atasan
+	 * Detail pejabat
 	 */
+	public function penyusun()
+	{
+		return $this->belongsTo(RefUserCache::class, 'penyusun_id');
+	}
+
+	public function jabatan_penyusun()
+	{
+		return $this->belongsTo(RefJabatan::class, 'kode_jabatan_penyusun', 'kode');
+	}
+
 	public function atasan()
 	{
 		return $this->belongsTo(RefUserCache::class, 'atasan_id');
 	}
 
-	public function jabatan()
+	public function jabatan_atasan()
 	{
-		return $this->belongsTo(RefJabatan::class, 'jabatan_atasan', 'kode');
+		return $this->belongsTo(RefJabatan::class, 'kode_jabatan_atasan', 'kode');
 	}
 
+	/**
+	 * Status dokumen
+	 */
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
