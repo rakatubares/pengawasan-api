@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -58,6 +59,13 @@ Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 Route::post('/sbp/{sbp_id}/lphp', [DokLphpController::class, 'store']);
 Route::put('/sbp/{sbp_id}/lphp/publish', [DokLphpController::class, 'publish']);
 Route::delete('/lphp/{lphp_id}', [DokLphpController::class, 'destroy']);
+
+/**
+ * API for LP
+ */
+Route::post('/sbp/{sbp_id}/lp', [DokLpController::class, 'store']);
+Route::put('/sbp/{sbp_id}/lp/publish', [DokLpController::class, 'publish']);
+Route::delete('/lp/{lp_id}', [DokLpController::class, 'destroy']);
 
 /**
  * API for Details
