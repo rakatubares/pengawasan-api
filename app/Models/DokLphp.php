@@ -52,6 +52,24 @@ class DokLphp extends Model
 		);
 	}
 
+	public function lp()
+	{
+		return $this->hasOneThrough(
+			DokLp::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'lphp'
+		)->where(
+			'object2_type',
+			'lp'
+		);
+	}
+
 	/**
 	 * Detail pejabat
 	 */

@@ -9,6 +9,7 @@ use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLpResource;
 use App\Http\Resources\LptpResource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\SbpResource;
@@ -19,6 +20,7 @@ use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
@@ -37,6 +39,11 @@ trait SwitcherTrait
 			'tipe_dok' => 'BA',
 			'model' => BukaSegel::class,
 			'resource' => BukaSegelResource::class,
+		],
+		'lp' => [
+			'tipe_dok' => 'LP',
+			'model' => DokLp::class,
+			'resource' => DokLpResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',

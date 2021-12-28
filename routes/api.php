@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -88,6 +89,13 @@ Route::delete('/lphp/{lphp_id}', [DokLphpController::class, 'destroy']);
 // Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
 // Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
 // Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::post('/sbp/{sbp_id}/lp', [DokLpController::class, 'store']);
+Route::put('/sbp/{sbp_id}/lp/publish', [DokLpController::class, 'publish']);
+Route::delete('/lp/{lp_id}', [DokLpController::class, 'destroy']);
 
 /**
  * API for Details
