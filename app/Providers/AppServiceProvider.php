@@ -8,9 +8,6 @@ use App\Models\DetailSarkut;
 use App\Models\DokPengaman;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
-use App\Models\Sbp;
-use App\Models\Segel;
-use App\Models\Tegah;
 use App\Observers\DokPengamanObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -46,9 +43,6 @@ class AppServiceProvider extends ServiceProvider
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
-			'sbp' => Sbp::class,
-			'segel' => Segel::class,
-			'tegah' => Tegah::class,
 		]);
 
 		DokPengaman::observe(DokPengamanObserver::class);
