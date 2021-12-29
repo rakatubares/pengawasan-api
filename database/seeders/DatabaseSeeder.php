@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
 			RefJabatanSeeder::class,
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
-			RefSprintSeeder::class
+			RefSprintSeeder::class,
+			DokPengamanSeeder::class,
 		]);
 	}
 }

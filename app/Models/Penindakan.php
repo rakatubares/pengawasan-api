@@ -86,12 +86,12 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * SBP
+	 * BA Pengaman
 	 */
-	public function sbp()
+	public function pengaman()
 	{
 		return $this->hasOneThrough(
-			Sbp::class,
+			DokPengaman::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -102,91 +102,7 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'sbp'
-		);
-	}
-
-	/**
-	 * BA Penyegelan
-	 */
-	public function segel()
-	{
-		return $this->hasOneThrough(
-			Segel::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'segel'
-		);
-	}
-
-	/**
-	 * BA Penyegelan
-	 */
-	public function bukasegel()
-	{
-		return $this->hasOneThrough(
-			BukaSegel::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'bukasegel'
-		);
-	}
-
-	/**
-	 * BA Penegahan
-	 */
-	public function tegah()
-	{
-		return $this->hasOneThrough(
-			Tegah::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'tegah'
-		);
-	}
-
-	/**
-	 * BA Pemeriksaan
-	 */
-	public function riksa()
-	{
-		return $this->hasOneThrough(
-			Riksa::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			'penindakan'
-		)->where(
-			'object2_type',
-			'riksa'
+			'pengaman'
 		);
 	}
 
@@ -202,20 +118,6 @@ class Penindakan extends Model
 			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
 			};
-			
-			// Delete other linked documents
-			if ($penindakan->sbp != null) {
-				$penindakan->sbp->delete();
-			}
-			if ($penindakan->segel != null) {
-				$penindakan->segel->delete();
-			}
-			if ($penindakan->tegah != null) {
-				$penindakan->tegah->delete();
-			}
-			if ($penindakan->riksa != null) {
-				$penindakan->riksa->delete();
-			}
 		});
 	}
 }
