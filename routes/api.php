@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
+use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -96,6 +97,13 @@ Route::delete('/lphp/{lphp_id}', [DokLphpController::class, 'destroy']);
 Route::post('/sbp/{sbp_id}/lp', [DokLpController::class, 'store']);
 Route::put('/sbp/{sbp_id}/lp/publish', [DokLpController::class, 'publish']);
 Route::delete('/lp/{lp_id}', [DokLpController::class, 'destroy']);
+
+/** 
+ * API for BA Tanda Pengaman
+ */
+Route::apiResource('pengaman', DokPengamanController::class);
+Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
+Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
 
 /**
  * API for Details

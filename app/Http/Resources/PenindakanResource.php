@@ -100,6 +100,11 @@ class PenindakanResource extends JsonResource
 					$list_dokumen['bukasegel'] = $bukasegel;
 					break;
 				
+				case 'pengaman':
+					$pengaman = new DokPengamanResource($this->pengaman, 'basic');
+					$list_dokumen['pengaman'] = $pengaman;
+					break;
+
 				default:
 					# code...
 					break;

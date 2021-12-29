@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
@@ -10,6 +9,7 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
+use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\LptpResource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\SbpResource;
@@ -22,13 +22,9 @@ use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
+use App\Models\DokPengaman;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
-use App\Models\Riksa;
-use App\Models\Sbp;
-use App\Models\Segel;
-use App\Models\Titip;
-use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -55,6 +51,11 @@ trait SwitcherTrait
 			'model' => Lptp::class,
 			'resource' => LptpResource::class,
 		],
+		'pengaman' => [
+			'tipe_dok' => 'BA',
+			'model' => DokPengaman::class,
+			'resource' => DokPengamanResource::class,
+		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
 			'model' => Riksa::class,
@@ -78,9 +79,9 @@ trait SwitcherTrait
 		'tegah' => [
 			'tipe_dok' => 'BA',
 			'model' => Tegah::class,
-			'resource' => TegahResource::class
+			'resource' => TegahResource::class,
 		],
-
+		
 		// Objek
 		'bangunan' => [
 			'model' => DetailBangunan::class
