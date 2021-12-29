@@ -31,41 +31,6 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
-		'bukasegel' => [
-			'tipe_dok' => 'BA',
-			'model' => BukaSegel::class,
-			'resource' => BukaSegelResource::class,
-		],
-		'lptp' => [
-			'tipe_dok' => 'LPTP',
-			'model' => Lptp::class,
-			'resource' => LptpResource::class,
-		],
-		'riksa' => [
-			'tipe_dok' => 'BA',
-			'model' => Riksa::class,
-			'resource' => RiksaResource::class,
-		],
-		'sbp' => [
-			'tipe_dok' => 'SBP',
-			'model' => Sbp::class,
-			'resource' => SbpResource::class,
-		],
-		'segel' => [
-			'tipe_dok' => 'BA',
-			'model' => Segel::class,
-			'resource' => SegelResource::class,
-		],
-		'titip' => [
-			'tipe_dok' => 'BA',
-			'model' => Titip::class,
-			'resource' => TitipResource::class,
-		],
-		'tegah' => [
-			'tipe_dok' => 'BA',
-			'model' => Tegah::class,
-			'resource' => TegahResource::class
-		],
 
 		// Objek
 		'bangunan' => [
