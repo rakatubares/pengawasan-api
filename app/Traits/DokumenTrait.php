@@ -90,9 +90,15 @@ trait DokumenTrait
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
 
-			if ($doc_type == 'segel') {
-				$model::where('id', $doc_id)
-					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			switch ($doc_type) {
+				case 'segel':
+					$model::where('id', $doc_id)
+						->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+					break;
+				
+				default:
+					# code...
+					break;
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
