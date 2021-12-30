@@ -118,20 +118,6 @@ class Penindakan extends Model
 			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
 			};
-			
-			// Delete other linked documents
-			if ($penindakan->sbp != null) {
-				$penindakan->sbp->delete();
-			}
-			if ($penindakan->segel != null) {
-				$penindakan->segel->delete();
-			}
-			if ($penindakan->tegah != null) {
-				$penindakan->tegah->delete();
-			}
-			if ($penindakan->riksa != null) {
-				$penindakan->riksa->delete();
-			}
 		});
 	}
 }
