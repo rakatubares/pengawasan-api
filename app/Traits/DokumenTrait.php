@@ -90,6 +90,11 @@ trait DokumenTrait
 			$result = $this->tanggal;
 
 			switch ($doc_type) {
+				case 'segel':
+					$model::where('id', $doc_id)
+						->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+					break;
+
 				case 'pengaman':
 					$model::where('id', $doc_id)
 						->update(['nomor_pengaman' => DB::raw('no_dok_lengkap')]);

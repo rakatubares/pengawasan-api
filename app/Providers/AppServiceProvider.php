@@ -59,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
 			'penindakan' => Penindakan::class,
 			'riksa' => Riksa::class,
 			'sarkut' => DetailSarkut::class,
+			'segel' => Segel::class,
 		]);
 
 		BukaSegel::observe(BukaSegelObserver::class);
