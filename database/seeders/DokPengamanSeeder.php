@@ -25,7 +25,7 @@ class DokPengamanSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1; $i < 11; $i++) { 
+        for ($i=1; $i < 21; $i++) { 
 			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang']);
 
 			$penindakan = Penindakan::create([

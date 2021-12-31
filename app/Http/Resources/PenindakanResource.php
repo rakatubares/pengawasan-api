@@ -63,6 +63,11 @@ class PenindakanResource extends JsonResource
 			$jenis = $dok->object2_type;
 
 			switch ($jenis) {
+				case 'bukapengaman':
+					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'basic');
+					$list_dokumen['bukapengaman'] = $bukapengaman;
+					break;
+				
 				case 'pengaman':
 					$pengaman = new DokPengamanResource($this->pengaman, 'basic');
 					$list_dokumen['pengaman'] = $pengaman;

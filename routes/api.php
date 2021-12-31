@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -41,6 +42,12 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 Route::apiResource('pengaman', DokPengamanController::class);
 Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
 Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
+
+/**
+ * API for BA Buka Tanda Pengaman
+ */
+Route::apiResource('bukapengaman', DokBukaPengamanController::class);
+Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
 
 /**
  * API for Details
