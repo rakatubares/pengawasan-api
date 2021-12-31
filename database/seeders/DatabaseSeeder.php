@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
 			DokLphpSeeder::class,
 			DokLpSeeder::class,
 			DokPengamanSeeder::class,
+			DokBukaPengamanSeeder::class,
 			// TitipSeeder::class,
 			// TegahSeeder::class,
 		]);
