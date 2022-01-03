@@ -20,7 +20,7 @@ class CheckPermission
 		$sso = app(SSO::class);
 		$userInfo = $sso->getUserInfo();
 
-		return $userInfo;
-        // return $next($request);
+		$request->attributes->add(['userInfo' => $userInfo]);
+        return $next($request);
     }
 }

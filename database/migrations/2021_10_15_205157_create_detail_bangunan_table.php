@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailDokumensTable extends Migration
+class CreateDetailBangunanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateDetailDokumensTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_dokumens', function (Blueprint $table) {
+        Schema::create('detail_bangunan', function (Blueprint $table) {
             $table->id();
-			$table->morphs('dokumenable');
-			$table->string('jns_dok')->nullable()->index();
-			$table->string('no_dok')->index();
-			$table->date('tgl_dok')->nullable()->index();
+			$table->text('alamat');
+			$table->string('no_reg')->nullable()->index();
+			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-            $table->index('dokumenable_type');
-			$table->index('dokumenable_id');
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
@@ -36,6 +33,6 @@ class CreateDetailDokumensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_dokumens');
+        Schema::dropIfExists('detail_bangunan');
     }
 }

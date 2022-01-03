@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangWithSingleItemResource;
+// use App\Http\Resources\SbpResource;
+use App\Models\DetailBarang;
+// use App\Models\Sbp;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DetailBarangController extends DetailController
 {
+	use SwitcherTrait;
+
     /**
      * Store a newly created resource in storage.
      *
@@ -15,30 +22,97 @@ class DetailBarangController extends DetailController
 	 * @param  string $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $doc_type, $doc_id, $how='upsert')
+    public function store(Request $request, $doc_type, $doc_id)
     {
-		$tgl_dok = $request->tgl_dok != null ? strtotime($request->tgl_dok) : $request->tgl_dok;
-		$detail_data = [
-			'jumlah_kemasan' => $request->jumlah_kemasan,
-			'satuan_kemasan' => $request->satuan_kemasan,
-			'jns_dok' => $request->jns_dok,
-			'no_dok' => $request->no_dok,
-			'tgl_dok' => $tgl_dok,
-			'pemilik' => $request->pemilik
-		];
+		DB::beginTransaction();
 
-		switch ($how) {
-			case 'new':
-				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'barang');
-				break;
-			
-			default:
-				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'barang');
-				break;
+		try {
+			// Insert detail barang
+			$data_barang = [
+				'jumlah_kemasan' => $request->jumlah_kemasan,
+				'satuan_kemasan' => $request->satuan_kemasan,
+				'pemilik_id' => $request->pemilik['id']
+			];
+			$barang = $this->insertDetail($doc_type, $doc_id, 'barang', $data_barang);
+	
+			// Insert dokumen barang
+			if ($request->dokumen['no_dok'] != null) {
+				$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
+				$data_dokumen = [
+					'jns_dok' => $request->dokumen['jns_dok'],
+					'no_dok' => $request->dokumen['no_dok'],
+					'tgl_dok' => $tgl_dok,
+				];
+				$this->upsertDokumen($data_dokumen, $barang->id);
+			}
+
+			// Return doc detail
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			$result = $th;
 		}
-
+		
 		return $result;
     }
+
+	public function update(Request $request, $doc_type, $doc_id, $barang_id)
+	{
+		DB::beginTransaction();
+
+		try {
+			// Insert detail barang
+			$data_barang = [
+				'jumlah_kemasan' => $request->jumlah_kemasan,
+				'satuan_kemasan' => $request->satuan_kemasan,
+				'pemilik_id' => $request->pemilik['id']
+			];
+			$this->updateDetail('barang', $data_barang, $barang_id);
+	
+			// Insert dokumen barang
+			if ($request->dokumen['no_dok'] != null) {
+				$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
+				$data_dokumen = [
+					'jns_dok' => $request->dokumen['jns_dok'],
+					'no_dok' => $request->dokumen['no_dok'],
+					'tgl_dok' => $tgl_dok,
+				];
+				$this->upsertDokumen($data_dokumen, $barang_id);
+			}
+
+			// Return doc detail
+			// $result = new SbpResource(Sbp::find($doc_id), 'objek');
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			$result = $th;
+		}
+		
+		return $result;
+	}
+
+	private function upsertDokumen($data_dokumen, $barang_id)
+	{
+		$insert_result = DetailBarang::find($barang_id)
+			->dokumen()
+			->updateOrCreate(
+				[
+					'parent_type' => 'barang',
+					'parent_id' => $barang_id
+				],
+				$data_dokumen
+			);
+
+		return $insert_result;
+	}
 
     /**
      * Display the specified resource.

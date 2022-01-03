@@ -2,10 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SbpResource;
+use App\Models\Sbp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DetailBangunanController extends DetailController
 {
+	private function validateData(Request $request)
+	{
+		$request->validate([
+			'alamat' => 'required'
+		]);
+	}
+
+	private function prepareData(Request $request)
+	{
+		$data_bangunan = [
+			'alamat' => $request->alamat,
+			'no_reg' => $request->no_reg,
+			'pemilik_id' => $request->pemilik['id'],
+		];
+
+		return $data_bangunan;
+	}
+
     /**
      * Store a newly created resource in storage.
      *
@@ -14,28 +35,53 @@ class DetailBangunanController extends DetailController
 	 * @param  string $doc_id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $doc_type, $doc_id, $how='upsert')
+    public function store(Request $request, $doc_type, $doc_id)
     {
-		$detail_data = [
-			'alamat' => $request->alamat,
-			'no_reg' => $request->no_reg,
-			'pemilik' => $request->pemilik,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
-		];
+		$this->validateData($request);
 
-		switch ($how) {
-			case 'new':
-				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
-				break;
-			
-			default:
-				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'bangunan');
-				break;
+		DB::beginTransaction();
+		try {
+			// Insert detail sarkut
+			$data_bangunan = $this->prepareData($request);
+			$this->insertDetail($doc_type, $doc_id, 'bangunan', $data_bangunan);
+
+			// Return doc detail
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			$result = $th;
 		}
 
 		return $result;
     }
+
+	public function update(Request $request, $doc_type, $doc_id, $sarkut_id)
+	{
+		$this->validateData($request);
+
+		DB::beginTransaction();
+		try {
+			// Insert detail sarkut
+			$data_bangunan = $this->prepareData($request);
+			$this->updateDetail('bangunan', $data_bangunan, $sarkut_id);
+
+			// Return doc detail
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			$result = $th;
+		}
+
+		return $result;
+	}
 
     /**
      * Display the specified resource.

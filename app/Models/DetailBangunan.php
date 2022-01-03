@@ -11,21 +11,29 @@ class DetailBangunan extends Model
     use HasFactory;
 	use SoftDeletes;
 
+	protected $table = 'detail_bangunan';
+
 	protected $fillable = [
-		'bangunanable_type',
-		'bangunanable_id',
+		'parent_type',
+		'parent_id',
 		'alamat',
 		'no_reg',
-		'pemilik',
-		'jns_identitas',
-		'no_identitas',
+		'pemilik_id',
 	];
 
 	/**
 	 * Define polymorphic properties
 	 */
-	public function bangunanable()
+	public function buildingable()
 	{
-		return $this->morphTo(__FUNCTION__, 'bangunanable_type', 'bangunanable_id');
+		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
+	}
+
+	/**
+	 * Detail entitas pemilik
+	 */
+	public function pemilik()
+	{
+		return $this->belongsTo(RefEntitas::class, 'pemilik_id');
 	}
 }
