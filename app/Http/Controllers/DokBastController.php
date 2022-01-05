@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
+use App\Http\Resources\DokBastResource;
+use App\Http\Resources\DokBastTableResource;
 use App\Http\Resources\SerahTerimaResource;
+use App\Models\DokBast;
 use App\Models\SerahTerima;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
-class SerahTerimaController extends Controller
+class DokBastController extends Controller
 {
 	use DokumenTrait;
 
 	private $tipe_dok = 'BAST';
-	private $agenda_dok = '/KPU.03/';
+	private $agenda_dok = '/KPU.03/BD.05/';
 
 	/**
 	 * Display a listing of the resource.
@@ -22,9 +25,23 @@ class SerahTerimaController extends Controller
 	 */
 	public function index()
 	{
-		$all_bast = SerahTerima::all();
-		$bast_list = SerahTerimaResource::collection($all_bast);
+		$all_bast = DokBast::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
+		$bast_list = DokBastTableResource::collection($all_bast);
 		return $bast_list;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$bast = new DokBastResource(DokBast::findOrFail($id));
+		return $bast;
 	}
 
 	/**
@@ -59,18 +76,6 @@ class SerahTerimaController extends Controller
 		]);
 
 		return $insert_result;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$bast = new SerahTerimaResource(SerahTerima::findOrFail($id));
-		return $bast;
 	}
 
 	/**

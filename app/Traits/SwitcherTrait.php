@@ -2,31 +2,17 @@
 
 namespace App\Traits;
 
-use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
-use App\Http\Resources\LptpResource;
-use App\Http\Resources\RiksaResource;
-use App\Http\Resources\SbpResource;
-use App\Http\Resources\SegelResource;
-use App\Http\Resources\SerahTerimaResource;
-use App\Http\Resources\TegahResource;
-use App\Http\Resources\TitipResource;
-use App\Models\BukaSegel;
+use App\Http\Resources\DokBastResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
-use App\Models\Lptp;
+use App\Models\DokBast;
 use App\Models\RefEntitas;
-use App\Models\Riksa;
-use App\Models\Sbp;
-use App\Models\Segel;
-use App\Models\SerahTerima;
-use App\Models\Titip;
-use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -35,8 +21,8 @@ trait SwitcherTrait
 		// Dokumen
 		'bast' => [
 			'tipe_dok' => 'BAST',
-			'model' => SerahTerima::class,
-			'resource' => SerahTerimaResource::class,
+			'model' => DokBast::class,
+			'resource' => DokBastResource::class,
 		],
 
 		// Objek

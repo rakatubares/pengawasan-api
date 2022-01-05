@@ -43,13 +43,15 @@ class DetailBarangItemController extends Controller
 		// Show data detail barang
 		if ($dokumen) {
 			try {
-				// Get valid detail_barang id
-				// $detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
-
 				// Get list item barang
-				$item_barang_list = $dokumen->penindakan->objectable->itemBarang()
-					// ->where('detail_barangs.id', $detail_barang_id)
-					->get();
+				if ($doc_type == 'bast') {
+					$item_barang_list = $dokumen->objectable->itemBarang()
+						->get();
+				} else {
+					$item_barang_list = $dokumen->penindakan->objectable->itemBarang()
+						->get();
+				}
+				
 				$result = DetailBarangItemResource::collection($item_barang_list);
 			} catch (\Throwable $th) {
 				$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
@@ -59,7 +61,6 @@ class DetailBarangItemController extends Controller
 		}
 
 		return $result;
-		// return 'test';
     }
 
 	/**

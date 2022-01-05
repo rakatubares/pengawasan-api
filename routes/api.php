@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\SerahTerimaController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -43,9 +44,9 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /**
  * API for BAST
  */
-Route::apiResource('bast', SerahTerimaController::class);
-Route::get('/bast/{bast_id}/details', [SerahTerimaController::class, 'showDetails']);
-Route::put('/bast/{bast_id}/publish', [SerahTerimaController::class, 'publish']);
+Route::apiResource('bast', DokBastController::class);
+Route::get('/bast/{bast_id}/details', [DokBastController::class, 'showDetails']);
+Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
 /**
  * API for Details
