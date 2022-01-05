@@ -29,8 +29,7 @@ class DatabaseSeeder extends Seeder
 			DokLpSeeder::class,
 			DokPengamanSeeder::class,
 			DokBukaPengamanSeeder::class,
-			// TitipSeeder::class,
-			// TegahSeeder::class,
+			DokBastSeeder::class,
 		]);
 	}
 }

@@ -7,6 +7,7 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
@@ -21,6 +22,7 @@ use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokLp;
 use App\Models\DokLphp;
@@ -38,6 +40,11 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'bast' => [
+			'tipe_dok' => 'BAST',
+			'model' => DokBast::class,
+			'resource' => DokBastResource::class,
+		],
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
 			'model' => DokBukaPengaman::class,
@@ -93,7 +100,7 @@ trait SwitcherTrait
 			'model' => Tegah::class,
 			'resource' => TegahResource::class,
 		],
-		
+
 		// Objek
 		'bangunan' => [
 			'model' => DetailBangunan::class

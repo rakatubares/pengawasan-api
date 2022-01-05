@@ -11,6 +11,8 @@ use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokPengamanController;
+use App\Http\Controllers\DokBastController;
+use App\Http\Controllers\SerahTerimaController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -111,6 +113,13 @@ Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'pu
  */
 Route::apiResource('bukapengaman', DokBukaPengamanController::class);
 Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
+
+/**
+ * API for BAST
+ */
+Route::apiResource('bast', DokBastController::class);
+Route::get('/bast/{bast_id}/details', [DokBastController::class, 'showDetails']);
+Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
 /**
  * API for Details
