@@ -86,6 +86,11 @@ trait DokumenTrait
 			$result = $this->tanggal;
 
 			switch ($doc_type) {
+				case 'bast':
+					$model::where('id', $doc_id)
+						->update(['tanggal_dokumen' => $this->tanggal]);
+					break;
+				
 				default:
 					# code...
 					break;
