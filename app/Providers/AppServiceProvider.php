@@ -50,9 +50,6 @@ class AppServiceProvider extends ServiceProvider
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
-			'sbp' => Sbp::class,
-			'segel' => Segel::class,
-			'tegah' => Tegah::class,
 		]);
 
 		DokLp::observe(DokLpObserver::class);

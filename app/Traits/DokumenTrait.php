@@ -2,15 +2,11 @@
 
 namespace App\Traits;
 
-use App\Http\Controllers\RiksaController;
-use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 trait DokumenTrait
 {
@@ -89,9 +85,10 @@ trait DokumenTrait
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
 
-			if ($doc_type == 'segel') {
-				$model::where('id', $doc_id)
-					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			switch ($doc_type) {
+				default:
+					# code...
+					break;
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
@@ -347,80 +344,5 @@ trait DokumenTrait
 			'object2_type' => $object2_type,
 			'object2_id' => $object2_id,
 		]);
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | CREATE LINKED DOCUMENTS
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Create segel
-	 * 
-	 * @param Request $request
-	 * @param Int $penindakan_id
-	 */
-	public function createSegel(Request $request, $penindakan_id)
-	{
-		$segel_array = [
-			'main' => [
-				'data' => [
-					'jenis_segel' => $request->data_segel['jenis'],
-					'jumlah_segel' => $request->data_segel['jumlah'],
-					'satuan_segel' => $request->data_segel['satuan'],
-					'tempat_segel' => $request->data_segel['tempat'],
-				]
-			]
-		];
-
-		$segel_request = new Request($segel_array);
-
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_segel = $penindakan->segel;
-		if ($existing_segel == null) {
-			$segel = app(SegelController::class)->store($segel_request, true);
-			$this->createRelation('penindakan', $penindakan_id, 'segel', $segel->id);
-		} else {
-			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id, true);
-		}
-	}
-
-	/**
-	 * Create BA Tegah
-	 * 
-	 * @param Request $request
-	 * @param Int $penindakan_id
-	 */
-	public function createTegah(Request $request, $penindakan_id)
-	{
-		// Check existing document
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_tegah = $penindakan->tegah;
-
-		// Save if document not exists
-		if ($existing_tegah == null) {
-			$tegah = app(TegahController::class)->store($request);
-			$this->createRelation('penindakan', $penindakan_id, 'tegah', $tegah->id);
-		}
-	}
-
-	/**
-	 * Create BA Periksa
-	 * 
-	 * @param Request $request
-	 * @param Int $penindakan_id
-	 */
-	public function createRiksa(Request $request, $penindakan_id)
-	{
-		// Check existing document
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_riksa = $penindakan->riksa;
-
-		// Save if document not exists
-		if ($existing_riksa == null) {
-			$riksa = app(RiksaController::class)->store($request, true);
-			$this->createRelation('penindakan', $penindakan_id, 'riksa', $riksa->id);
-		}
 	}
 }
