@@ -2,82 +2,42 @@
 
 namespace App\Traits;
 
-use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
-use App\Http\Resources\LptpResource;
-use App\Http\Resources\RiksaResource;
-use App\Http\Resources\SbpResource;
-use App\Http\Resources\SegelResource;
-use App\Http\Resources\TegahResource;
-use App\Http\Resources\TitipResource;
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
-use App\Models\Lptp;
 use App\Models\RefEntitas;
-use App\Models\Riksa;
-use App\Models\Sbp;
-use App\Models\Segel;
-use App\Models\Titip;
-use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
-		'bukasegel' => [
-			'tipe_dok' => 'BA',
-			'model' => BukaSegel::class,
-			'resource' => BukaSegelResource::class,
-		],
-		'lptp' => [
-			'tipe_dok' => 'LPTP',
-			'model' => Lptp::class,
-			'resource' => LptpResource::class,
-		],
-		'riksa' => [
-			'tipe_dok' => 'BA',
-			'model' => Riksa::class,
-			'resource' => RiksaResource::class,
-		],
-		'sbp' => [
-			'tipe_dok' => 'SBP',
-			'model' => Sbp::class,
-			'resource' => SbpResource::class,
-		],
-		'segel' => [
-			'tipe_dok' => 'BA',
-			'model' => Segel::class,
-			'resource' => SegelResource::class,
-		],
-		'titip' => [
-			'tipe_dok' => 'BA',
-			'model' => Titip::class,
-			'resource' => TitipResource::class,
-		],
-		'tegah' => [
-			'tipe_dok' => 'BA',
-			'model' => Tegah::class,
-			'resource' => TegahResource::class
-		],
 
 		// Objek
 		'bangunan' => [
+			'parent' => 'objek',
 			'model' => DetailBangunan::class
 		],
 		'barang' => [
+			'parent' => 'objek',
 			'model' => DetailBarang::class
 		],
+		'dokumen' => [
+			'parent' => 'objek',
+			'model' => DetailDokumen::class
+		],
 		'orang' => [
+			'parent' => 'objek',
 			'model' => RefEntitas::class
 		],
 		'sarkut' => [
+			'parent' => 'objek',
 			'model' => DetailSarkut::class
 		],
 	];
@@ -99,6 +59,17 @@ trait SwitcherTrait
 		}
 		
 		return $model;
+	}
+
+	public function getModelsListByParent($parent)
+	{
+		$docs = [];
+		foreach ($this->models as $model => $values) {
+			if ($values['parent'] == $parent) {
+				array_push($docs, $model);
+			}
+		}
+		return $docs;
 	}
 
 	/**
