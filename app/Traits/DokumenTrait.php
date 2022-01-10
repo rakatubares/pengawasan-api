@@ -2,19 +2,11 @@
 
 namespace App\Traits;
 
-use App\Http\Controllers\DetailBarangController;
-use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\RiksaController;
-use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
-use App\Models\DocRelation;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 trait DokumenTrait
 {
@@ -80,8 +72,8 @@ trait DokumenTrait
 	public function publishDocument($doc_type, $doc_id, $year)
 	{
 		// Get model and doc type
-		$model = $this->getModel($doc_type);
-		$jenis_surat = $this->getDocType($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
+		$jenis_surat = $this->switchObject($doc_type, 'tipe_dok');
 
 		// Check if document is unpublished
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
@@ -93,9 +85,10 @@ trait DokumenTrait
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
 
-			if ($doc_type == 'segel') {
-				$model::where('id', $doc_id)
-					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			switch ($doc_type) {
+				default:
+					# code...
+					break;
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
@@ -178,47 +171,6 @@ trait DokumenTrait
 
 	/*
 	 |--------------------------------------------------------------------------
-	 | DELETE DOCUMENT
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  Model $model
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function deleteDocument($model, $doc_id)
-	{
-		// Check if document is unpublished
-		$is_unpublished = $this->checkUnpublished($model, $doc_id);
-
-		// Delete document if still unpulished
-		if ($is_unpublished) {
-			// Use transaction
-			DB::beginTransaction();
-
-			$update_result = $this->doc->update(['kode_status' => 300]); // Update kode status
-			$delete_result = $this->doc->delete(); // Delete data
-
-			// Rollback if either transaction failed
-			if ($update_result != 1 || $delete_result != 1) {
-				DB::rollBack();
-				$result = response()->json(['error' => 'Gagal menghapus dokumen.'], 422);
-			} else {
-				DB::commit();
-				$result = $delete_result;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat menghapus dokumen.'], 422);
-		}
-		
-		return $result;
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
 	 | UPDATE DOCUMENT DETAIL STATUS
 	 |--------------------------------------------------------------------------
 	 */
@@ -227,9 +179,9 @@ trait DokumenTrait
 	 * Update status detail dokumen
 	 * 
 	 * @param Model $model
-	 * @param int $doc_id
-	 * @param string $detail_type
-	 * @param int $detail_status
+	 * @param Int $doc_id
+	 * @param String $detail_type
+	 * @param Int $detail_status
 	 * @return Response
 	 */
 	public function updateStatusDetail($model, $doc_id, $detail_type, $detail_status)
@@ -321,6 +273,11 @@ trait DokumenTrait
 		]);
 	}
 
+	/**
+	 * Prepare/transform data penindakan
+	 * 
+	 * @param Request $request
+	 */
 	private function prepareDataPenindakan(Request $request)
 	{
 		$data_penindakan = [
@@ -367,10 +324,10 @@ trait DokumenTrait
 	/**
 	 * Create document relation
 	 * 
-	 * @param Model $doc1_type
-	 * @param int $doc1_id
-	 * @param Model $doc2_type
-	 * @param int $doc2_id
+	 * @param String $doc1_type
+	 * @param Int $doc1_id
+	 * @param String $doc2_type
+	 * @param Int $doc2_id
 	 */
 	private function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
 	{
@@ -380,90 +337,5 @@ trait DokumenTrait
 			'object2_type' => $object2_type,
 			'object2_id' => $object2_id,
 		]);
-	}
-
-	/**
-	 * Create segel
-	 * 
-	 * @param Request $request
-	 * @param Int $penindakan_id
-	 */
-	public function createSegel(Request $request, $penindakan_id)
-	{
-		$segel_array = [
-			'jenis_segel' => $request->data_segel['jenis'],
-			'jumlah_segel' => $request->data_segel['jumlah'],
-			'satuan_segel' => $request->data_segel['satuan'],
-			'tempat_segel' => $request->data_segel['tempat'],
-		];
-
-		$segel_request = new Request($segel_array);
-
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_segel = $penindakan->segel;
-		if ($existing_segel == null) {
-			$segel = app(SegelController::class)->store($segel_request);
-			$this->createRelation('penindakan', $penindakan_id, 'segel', $segel->id);
-		} else {
-			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id);
-		}
-	}
-
-	/**
-	 * Create BA Tegah
-	 */
-	public function createTegah(Request $request, $penindakan_id)
-	{
-		// Check existing document
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_tegah = $penindakan->tegah;
-
-		// Save if document not exists
-		if ($existing_tegah == null) {
-			$tegah = app(TegahController::class)->store($request);
-			$this->createRelation('penindakan', $penindakan_id, 'tegah', $tegah->id);
-		}
-	}
-
-	public function createRiksa(Request $request, $penindakan_id)
-	{
-		// Check existing document
-		$penindakan = Penindakan::find($penindakan_id);
-		$existing_riksa = $penindakan->riksa;
-
-		// Save if document not exists
-		if ($existing_riksa == null) {
-			$riksa = app(RiksaController::class)->store($request);
-			$this->createRelation('penindakan', $penindakan_id, 'riksa', $riksa->id);
-		}
-	}
-
-	private function createObjek($doc_type, $doc_id, $objek)
-	{
-		switch ($objek['jenis']) {
-			case 'sarkut':
-				$this->createSarkut($doc_type, $doc_id, $objek);
-				break;
-
-			case 'barang':
-				$this->createBarang($doc_type, $doc_id, $objek);
-				break;
-			
-			default:
-				# code...
-				break;
-		}
-	}
-
-	private function createSarkut($doc_type, $doc_id, $objek)
-	{
-		$sarkut_request = new Request($objek);
-		app(DetailSarkutController::class)->store($sarkut_request, $doc_type, $doc_id, 'upsert');
-	}
-
-	private function createBarang($doc_type, $doc_id, $objek)
-	{
-		$sarkut_request = new Request($objek);
-		app(DetailBarangController::class)->store($sarkut_request, $doc_type, $doc_id, 'upsert');
 	}
 }
