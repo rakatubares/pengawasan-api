@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SbpResource;
-use App\Models\Sbp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DetailBadanController extends DetailController
 {
@@ -22,16 +21,29 @@ class DetailBadanController extends DetailController
 	 * @param  string $doc_id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $doc_type, $doc_id, $how='upsert')
+	public function store(Request $request, $doc_type, $doc_id)
 	{
 		$this->validateData($request);
 
-		$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
-		$model = $this->switchObject($doc_type, 'model');
-		$resource = $this->switchObject($doc_type, 'resource');
-		$result = new $resource($model::find($doc_id), 'objek');
+		DB::beginTransaction();
+		try {
+			// Update object
+			$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
 
-		return $result;
+			// Commit change
+			DB::commit();
+
+			// Get changed data
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			// Return data
+			return $result;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
 	}
 
 	/**
