@@ -32,46 +32,55 @@ trait SwitcherTrait
 		// Dokumen
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => BukaSegel::class,
 			'resource' => BukaSegelResource::class,
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',
+			'parent' => 'penindakan',
 			'model' => DokLp::class,
 			'resource' => DokLpResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
+			'parent' => 'penindakan',
 			'model' => DokLphp::class,
 			'resource' => DokLphpResource::class,
 		],
 		'lptp' => [
 			'tipe_dok' => 'LPTP',
+			'parent' => 'penindakan',
 			'model' => Lptp::class,
 			'resource' => LptpResource::class,
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => Riksa::class,
 			'resource' => RiksaResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',
+			'parent' => 'penindakan',
 			'model' => Sbp::class,
 			'resource' => SbpResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => Segel::class,
 			'resource' => SegelResource::class,
 		],
 		'titip' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => Titip::class,
 			'resource' => TitipResource::class,
 		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => Tegah::class,
 			'resource' => TegahResource::class
 		],
