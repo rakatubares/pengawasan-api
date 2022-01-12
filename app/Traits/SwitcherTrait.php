@@ -24,6 +24,10 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
+use App\Models\Riksa;
+use App\Models\Sbp;
+use App\Models\Segel;
+use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait

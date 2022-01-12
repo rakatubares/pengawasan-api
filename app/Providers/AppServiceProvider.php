@@ -9,12 +9,15 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
+use App\Observers\RiksaObserver;
 use App\Observers\SbpObserver;
+use App\Observers\SegelObserver;
 use App\Observers\TegahObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -54,7 +57,9 @@ class AppServiceProvider extends ServiceProvider
 
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
+		Riksa::observe(RiksaObserver::class);
 		Sbp::observe(SbpObserver::class);
+		Segel::observe(SegelObserver::class);
 		Tegah::observe(TegahObserver::class);
     }
 }

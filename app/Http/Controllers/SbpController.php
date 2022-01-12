@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PenindakanResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
+use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Sbp;
+use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -57,9 +59,31 @@ class SbpController extends Controller
 	 * 
 	 * @param int $id
 	 */
+	public function basic($id)
+	{
+		$sbp = new SbpResource(Sbp::find($id), 'basic');
+		return $sbp;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
 	public function objek($id)
 	{
 		$objek = new SbpResource(Sbp::find($id), 'objek');
+		return $objek;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function linked($id)
+	{
+		$objek = new SbpResource(Sbp::find($id), 'linked');
 		return $objek;
 	}
 
@@ -207,48 +231,6 @@ class SbpController extends Controller
 	}
 
 	/**
-	 * Modify linked documents
-	 * 
-	 * @param Request $request
-	 * @param Int $id
-	 */
-	public function storeLinkedDoc(Request $request, $id)
-	{
-		DB::beginTransaction();
-
-		try {
-			// Get object penindakan
-			$sbp = Sbp::findOrFail($id);
-			$penindakan = $sbp->penindakan;
-
-			// Upsert segel
-			if ($request->segel == true) {
-				$this->createSegel($request, $penindakan->id);
-			};
-
-			// Upsert Tegah
-			if ($request->tegah == true) {
-				$this->createTegah($request, $penindakan->id);
-			}
-
-			// Upsert Riksa
-			if ($request->riksa == true) {
-				$this->createRiksa($request, $penindakan->id);
-			}
-
-			$penindakan = new PenindakanResource(Penindakan::find($penindakan->id));
-
-			// Commit transaction
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-
-		return $penindakan;
-	}
-
-	/**
 	 * Terbitkan penomoran SBP
 	 * 
 	 * @param  int  $id
@@ -265,6 +247,153 @@ class SbpController extends Controller
 		// Publish each document
 		foreach ($arr['dokumen'] as $type => $data) {
 			$this->publishDocument($type, $data['id'], $year);
+		}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | CREATE LINKED DOCUMENTS
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Modify linked documents
+	 * 
+	 * @param Request $request
+	 * @param Int $id
+	 */
+	public function storeLinkedDoc(Request $request, $id)
+	{
+		DB::beginTransaction();
+
+		try {
+			// Get object penindakan
+			$sbp = Sbp::findOrFail($id);
+			$penindakan = $sbp->penindakan;
+
+			// Upsert segel
+			if ($request->segel == true) {
+				$this->createSegel($request, $penindakan);
+			} else {
+				$this->deleteLinkedDoc($penindakan, 'segel');
+			};
+
+			// Upsert Tegah
+			if ($request->tegah == true) {
+				$this->createTegah($request, $penindakan);
+			} else {
+				$this->deleteLinkedDoc($penindakan, 'tegah');
+			};
+
+			// Upsert Riksa
+			if ($request->riksa == true) {
+				$this->createRiksa($request, $penindakan);
+			} else {
+				$this->deleteLinkedDoc($penindakan, 'riksa');
+			};
+
+			// Commit transaction
+			DB::commit();
+
+			// Return linked doc
+			$dokumen = new SbpResource(Sbp::findOrFail($id), 'linked');
+			return $dokumen;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+
+		
+	}
+
+	/**
+	 * Create segel
+	 * 
+	 * @param Request $request
+	 * @param Penindakan $penindakan
+	 */
+	private function createSegel(Request $request, Penindakan $penindakan)
+	{
+		$segel_array = [
+			'main' => [
+				'data' => [
+					'jenis_segel' => $request->data_segel['jenis'],
+					'jumlah_segel' => $request->data_segel['jumlah'],
+					'satuan_segel' => $request->data_segel['satuan'],
+					'tempat_segel' => $request->data_segel['tempat'],
+				]
+			]
+		];
+
+		$segel_request = new Request($segel_array);
+
+		$existing_segel = $penindakan->segel;
+		if ($existing_segel == null) {
+			$segel = app(SegelController::class)->store($segel_request, true);
+			$this->createRelation('penindakan', $penindakan->id, 'segel', $segel->id);
+		} else {
+			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id, true);
+		}
+	}
+
+	/**
+	 * Create BA Tegah
+	 * 
+	 * @param Request $request
+	 * @param Penindakan $penindakan_id
+	 */
+	private function createTegah(Request $request, Penindakan $penindakan)
+	{
+		// Check existing document
+		$existing_tegah = $penindakan->tegah;
+
+		// Save if document not exists
+		if ($existing_tegah == null) {
+			$tegah = app(TegahController::class)->store($request);
+			$this->createRelation('penindakan', $penindakan->id, 'tegah', $tegah->id);
+		}
+	}
+
+	/**
+	 * Create BA Periksa
+	 * 
+	 * @param Request $request
+	 * @param Penindakan $penindakan
+	 */
+	private function createRiksa(Request $request, Penindakan $penindakan)
+	{
+		// Check existing document
+		$existing_riksa = $penindakan->riksa;
+
+		// Save if document not exists
+		if ($existing_riksa == null) {
+			$riksa = app(RiksaController::class)->store($request, true);
+			$this->createRelation('penindakan', $penindakan->id, 'riksa', $riksa->id);
+		}
+	}
+
+	/**
+	 * Delete linked doc without observer
+	 * 
+	 * @param Penindakan $penindakan
+	 */
+	private function deleteLinkedDoc(Penindakan $penindakan, $doc_type)
+	{
+		// Get existing doc
+		$existing_doc = $penindakan->$doc_type;
+
+		if ($existing_doc) {
+			// Remove relation between doc and penindakan
+			ObjectRelation::where([
+				'object1_type' => 'penindakan',
+				'object1_id' => $penindakan->id,
+				'object2_type' => $doc_type,
+				'object2_id' => $existing_doc->id
+			])->delete();
+
+			// Delete doc
+			$model = $this->switchObject($doc_type, 'model');
+			$model::find($existing_doc->id)->delete();
 		}
 	}
 
