@@ -10,6 +10,7 @@ use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\SegelResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\RefEntitas;
 use App\Models\Segel;
@@ -21,21 +22,30 @@ trait SwitcherTrait
 		// Dokumen
 		'segel' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => Segel::class,
 			'resource' => SegelResource::class,
 		],
 
 		// Objek
 		'bangunan' => [
+			'parent' => 'objek',
 			'model' => DetailBangunan::class
 		],
 		'barang' => [
+			'parent' => 'objek',
 			'model' => DetailBarang::class
 		],
+		'dokumen' => [
+			'parent' => 'objek',
+			'model' => DetailDokumen::class
+		],
 		'orang' => [
+			'parent' => 'objek',
 			'model' => RefEntitas::class
 		],
 		'sarkut' => [
+			'parent' => 'objek',
 			'model' => DetailSarkut::class
 		],
 	];
@@ -57,6 +67,17 @@ trait SwitcherTrait
 		}
 		
 		return $model;
+	}
+
+	public function getModelsListByParent($parent)
+	{
+		$docs = [];
+		foreach ($this->models as $model => $values) {
+			if ($values['parent'] == $parent) {
+				array_push($docs, $model);
+			}
+		}
+		return $docs;
 	}
 
 	/**
