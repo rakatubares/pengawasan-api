@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BukaSegelResource extends JsonResource
+class DokBukaSegelResource extends JsonResource
 {
 	/**
 	 * Create a new resource instance.
@@ -71,14 +71,6 @@ class BukaSegelResource extends JsonResource
 				'dokumen' => $dokumen,
 			];
 		}
-
-		// if ($this->type == 'complete') {
-		// 	$buka_segel['detail'] = [
-		// 		'sarkut' => new DetailSarkutResource($this->sarkut),
-		// 		'bangunan' => new DetailBangunanResource($this->bangunan),
-		// 		'barang' => new DetailBarangResource($this->barang),
-		// 	];
-		// }
 
 		return $array;
     }

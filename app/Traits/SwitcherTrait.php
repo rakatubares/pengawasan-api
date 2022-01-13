@@ -2,18 +2,18 @@
 
 namespace App\Traits;
 
-use App\Http\Resources\BukaSegelResource;
 use App\Http\Resources\DetailBadanResource;
 use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\SegelResource;
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokBukaSegel;
 use App\Models\RefEntitas;
 use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
@@ -24,8 +24,9 @@ trait SwitcherTrait
 		// Dokumen
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
-			'model' => BukaSegel::class,
-			'resource' => BukaSegelResource::class,
+			'parent' => 'penindakan',
+			'model' => DokBukaSegel::class,
+			'resource' => DokBukaSegelResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',

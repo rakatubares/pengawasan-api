@@ -112,7 +112,7 @@ class Penindakan extends Model
 	public function bukasegel()
 	{
 		return $this->hasOneThrough(
-			BukaSegel::class,
+			DokBukaSegel::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

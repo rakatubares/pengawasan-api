@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			SegelSeeder::class,
-			BukaSegelSeeder::class,
+			DokBukaSegelSeeder::class,
 		]);
 	}
 }

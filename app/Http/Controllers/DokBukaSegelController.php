@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BukaSegelResource;
-use App\Http\Resources\BukaSegelTableResource;
-use App\Models\BukaSegel;
+use App\Http\Resources\DokBukaSegelResource;
+use App\Http\Resources\DokBukaSegelTableResource;
+use App\Models\DokBukaSegel;
 use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class BukaSegelController extends Controller
+class DokBukaSegelController extends Controller
 {
 	use DokumenTrait;
 	
@@ -30,10 +30,10 @@ class BukaSegelController extends Controller
 	 */
 	public function index()
 	{
-		$all_buka_segel = BukaSegel::orderBy('created_at', 'desc')
+		$all_buka_segel = DokBukaSegel::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$buka_segel_list = BukaSegelTableResource::collection($all_buka_segel);
+		$buka_segel_list = DokBukaSegelTableResource::collection($all_buka_segel);
 		return $buka_segel_list;
 	}
 
@@ -45,7 +45,31 @@ class BukaSegelController extends Controller
 	 */
 	public function show($id)
 	{
-		$buka_segel = new BukaSegelResource(BukaSegel::findOrFail($id));
+		$buka_segel = new DokBukaSegelResource(DokBukaSegel::findOrFail($id));
+		return $buka_segel;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function basic($id)
+	{
+		$buka_segel = new DokBukaSegelResource(DokBukaSegel::findOrFail($id), 'basic');
+		return $buka_segel;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function objek($id)
+	{
+		$buka_segel = new DokBukaSegelResource(DokBukaSegel::findOrFail($id), 'objek');
 		return $buka_segel;
 	}
 
@@ -112,7 +136,7 @@ class BukaSegelController extends Controller
 		try {
 			// Save data buka segel
 			$data_buka_segel = $this->prepareData($request, 'insert');
-			$buka_segel = BukaSegel::create($data_buka_segel);
+			$buka_segel = DokBukaSegel::create($data_buka_segel);
 
 			// Save data penindakan and create object relation
 			$segel_id = $request->dokumen['segel']['id'];
@@ -129,7 +153,7 @@ class BukaSegelController extends Controller
 			DB::commit();
 
 			// Return created buka segel
-			$buka_segel_resource = new BukaSegelResource(BukaSegel::findOrFail($buka_segel->id));
+			$buka_segel_resource = new DokBukaSegelResource(DokBukaSegel::findOrFail($buka_segel->id));
 			return $buka_segel_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -147,7 +171,7 @@ class BukaSegelController extends Controller
 	public function update(Request $request, $id, $linked_doc=false)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(BukaSegel::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokBukaSegel::class, $id);
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -158,13 +182,13 @@ class BukaSegelController extends Controller
 			try {
 				// Update BA Segel
 				$data_buka_segel = $this->prepareData($request, 'update');
-				BukaSegel::where('id', $id)->update($data_buka_segel);
+				DokBukaSegel::where('id', $id)->update($data_buka_segel);
 
 				// Commit store query
 				DB::commit();
 
 				// Return updated SBP
-				$buka_segel_resource = new BukaSegelResource(BukaSegel::findOrFail($id));
+				$buka_segel_resource = new DokBukaSegelResource(DokBukaSegel::findOrFail($id));
 				$result = $buka_segel_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -186,9 +210,9 @@ class BukaSegelController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$this->getDocument(BukaSegel::class, $id);
+			$this->getDocument(DokBukaSegel::class, $id);
 			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(BukaSegel::class);
+			$number = $this->getNewDocNumber(DokBukaSegel::class);
 			$this->updateDocNumberAndYear($number, $this->tipe_dok, true);
 
 			$segel = $this->doc->penindakan->segel;
@@ -219,9 +243,9 @@ class BukaSegelController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(BukaSegel::class, $id);
+			$is_unpublished = $this->checkUnpublished(DokBukaSegel::class, $id);
 			if ($is_unpublished) {
-				BukaSegel::find($id)->delete();
+				DokBukaSegel::find($id)->delete();
 			}
 			
 			DB::commit();

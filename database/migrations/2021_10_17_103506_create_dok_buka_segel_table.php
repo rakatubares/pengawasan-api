@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBukaSegelTable extends Migration
+class CreateDokBukaSegelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -21,9 +21,6 @@ class CreateBukaSegelTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('sprint_id')->index();
-			// $table->boolean('detail_sarkut')->default(0)->index();
-			// $table->boolean('detail_barang')->default(0)->index();
-			// $table->boolean('detail_bangunan')->default(0)->index();
 			$table->string('jenis_segel')->index();
 			$table->integer('jumlah_segel');
 			$table->string('satuan_segel')->nullable()->index();

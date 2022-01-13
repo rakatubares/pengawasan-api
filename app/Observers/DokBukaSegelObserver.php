@@ -2,40 +2,40 @@
 
 namespace App\Observers;
 
-use App\Models\BukaSegel;
+use App\Models\DokBukaSegel;
 use App\Models\ObjectRelation;
 
-class BukaSegelObserver
+class DokBukaSegelObserver
 {
     /**
-     * Handle the BukaSegel "created" event.
+     * Handle the DokBukaSegel "created" event.
      *
-     * @param  \App\Models\BukaSegel  $bukaSegel
+     * @param  \App\Models\DokBukaSegel  $bukaSegel
      * @return void
      */
-    public function created(BukaSegel $bukaSegel)
+    public function created(DokBukaSegel $bukaSegel)
     {
         //
     }
 
     /**
-     * Handle the BukaSegel "updated" event.
+     * Handle the DokBukaSegel "updated" event.
      *
-     * @param  \App\Models\BukaSegel  $bukaSegel
+     * @param  \App\Models\DokBukaSegel  $bukaSegel
      * @return void
      */
-    public function updated(BukaSegel $bukaSegel)
+    public function updated(DokBukaSegel $bukaSegel)
     {
         //
     }
 
     /**
-     * Handle the BukaSegel "deleted" event.
+     * Handle the DokBukaSegel "deleted" event.
      *
-     * @param  \App\Models\BukaSegel  $bukaSegel
+     * @param  \App\Models\DokBukaSegel  $bukaSegel
      * @return void
      */
-    public function deleted(BukaSegel $bukaSegel)
+    public function deleted(DokBukaSegel $bukaSegel)
     {
         // Change status to 300
 		$bukaSegel->update(['kode_status' => 300]);
@@ -65,23 +65,23 @@ class BukaSegelObserver
     }
 
     /**
-     * Handle the BukaSegel "restored" event.
+     * Handle the DokBukaSegel "restored" event.
      *
-     * @param  \App\Models\BukaSegel  $bukaSegel
+     * @param  \App\Models\DokBukaSegel  $bukaSegel
      * @return void
      */
-    public function restored(BukaSegel $bukaSegel)
+    public function restored(DokBukaSegel $bukaSegel)
     {
         //
     }
 
     /**
-     * Handle the BukaSegel "force deleted" event.
+     * Handle the DokBukaSegel "force deleted" event.
      *
-     * @param  \App\Models\BukaSegel  $bukaSegel
+     * @param  \App\Models\DokBukaSegel  $bukaSegel
      * @return void
      */
-    public function forceDeleted(BukaSegel $bukaSegel)
+    public function forceDeleted(DokBukaSegel $bukaSegel)
     {
         //
     }
