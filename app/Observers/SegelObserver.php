@@ -41,7 +41,9 @@ class SegelObserver
 		$segel->update(['kode_status' => 300]);
 		
 		// Delete related model
-		$segel->penindakan->delete();
+		if ($segel->penindakan != null) {
+			$segel->penindakan->delete();
+		}
 
 		// Delete any possible relations
 		ObjectRelation::where(function($query) use ($segel) {

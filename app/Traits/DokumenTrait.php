@@ -2,16 +2,12 @@
 
 namespace App\Traits;
 
-use App\Http\Controllers\RiksaController;
-use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 
 trait DokumenTrait
 {
@@ -77,8 +73,8 @@ trait DokumenTrait
 	public function publishDocument($doc_type, $doc_id, $year)
 	{
 		// Get model and doc type
-		$model = $this->getModel($doc_type);
-		$jenis_surat = $this->getDocType($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
+		$jenis_surat = $this->switchObject($doc_type, 'tipe_dok');
 
 		// Check if document is unpublished
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
@@ -90,9 +86,15 @@ trait DokumenTrait
 			$result = $this->updateDocNumberAndYear($number, $jenis_surat);
 			$result = $this->tanggal;
 
-			if ($doc_type == 'segel') {
-				$model::where('id', $doc_id)
-					->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+			switch ($doc_type) {
+				case 'segel':
+					$model::where('id', $doc_id)
+						->update(['nomor_segel' => DB::raw('no_dok_lengkap')]);
+					break;
+				
+				default:
+					# code...
+					break;
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
