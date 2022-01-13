@@ -11,6 +11,7 @@ use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBukaPengaman;
 use App\Models\DokPengaman;
@@ -28,21 +29,30 @@ trait SwitcherTrait
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,
 		],
 
 		// Objek
 		'bangunan' => [
+			'parent' => 'objek',
 			'model' => DetailBangunan::class
 		],
 		'barang' => [
+			'parent' => 'objek',
 			'model' => DetailBarang::class
 		],
+		'dokumen' => [
+			'parent' => 'objek',
+			'model' => DetailDokumen::class
+		],
 		'orang' => [
+			'parent' => 'objek',
 			'model' => RefEntitas::class
 		],
 		'sarkut' => [
+			'parent' => 'objek',
 			'model' => DetailSarkut::class
 		],
 	];
@@ -64,6 +74,17 @@ trait SwitcherTrait
 		}
 		
 		return $model;
+	}
+
+	public function getModelsListByParent($parent)
+	{
+		$docs = [];
+		foreach ($this->models as $model => $values) {
+			if ($values['parent'] == $parent) {
+				array_push($docs, $model);
+			}
+		}
+		return $docs;
 	}
 
 	/**

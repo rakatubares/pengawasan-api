@@ -48,6 +48,7 @@ class DokPengamanResource extends JsonResource
 
 		if ($this->element == 'basic') {
 			$array = $pengaman;
+			$array['penindakan'] = $penindakan;
 			$array['kode_status'] = $this->kode_status;
 		} else if ($this->element == 'objek') {
 			$array = $objek;

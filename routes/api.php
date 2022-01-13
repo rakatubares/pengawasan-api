@@ -40,6 +40,8 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for BA Tanda Pengaman
  */
 Route::apiResource('pengaman', DokPengamanController::class);
+Route::get('/pengaman/{pengaman_id}/basic', [DokPengamanController::class, 'basic']);
+Route::get('/pengaman/{pengaman_id}/objek', [DokPengamanController::class, 'objek']);
 Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
 Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
 
