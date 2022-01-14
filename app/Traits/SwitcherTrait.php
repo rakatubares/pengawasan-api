@@ -79,6 +79,7 @@ trait SwitcherTrait
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,
 		],

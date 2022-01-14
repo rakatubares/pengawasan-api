@@ -53,6 +53,17 @@ class DokPengamanController extends Controller
 	 * 
 	 * @param int $id
 	 */
+	public function basic($id)
+	{
+		$objek = new DokPengamanResource(DokPengaman::find($id), 'basic');
+		return $objek;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
 	public function objek($id)
 	{
 		$objek = new DokPengamanResource(DokPengaman::find($id), 'objek');
