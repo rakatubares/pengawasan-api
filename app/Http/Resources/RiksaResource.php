@@ -41,6 +41,7 @@ class RiksaResource extends JsonResource
 
 		if ($this->element == 'basic') {
 			$array = $riksa;
+			$array['penindakan'] = $penindakan;
 			$array['kode_status'] = $this->kode_status;
 		} else if ($this->element == 'objek') {
 			$array = $objek;

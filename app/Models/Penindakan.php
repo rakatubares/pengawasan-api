@@ -86,6 +86,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Pemeriksaan
+	 */
+	public function riksa()
+	{
+		return $this->hasOneThrough(
+			Riksa::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'riksa'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

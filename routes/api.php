@@ -39,6 +39,8 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for BA Pemeriksaan
  */
 Route::apiResource('riksa', RiksaController::class);
+Route::get('/riksa/{riksa_id}/basic', [RiksaController::class, 'basic']);
+Route::get('/riksa/{riksa_id}/objek', [RiksaController::class, 'objek']);
 Route::put('/riksa/{riksa_id}/publish', [RiksaController::class, 'publish']);
 
 /**

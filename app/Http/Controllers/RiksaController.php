@@ -48,6 +48,30 @@ class RiksaController extends Controller
 		return $riksa;
 	}
 
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function basic($id)
+	{
+		$riksa = new RiksaResource(Riksa::findOrFail($id), 'basic');
+		return $riksa;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function objek($id)
+	{
+		$riksa = new RiksaResource(Riksa::findOrFail($id), 'objek');
+		return $riksa;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
