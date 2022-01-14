@@ -60,6 +60,8 @@ class RefEntitasController extends Controller
 			'nomor_identitas' => $request->nomor_identitas,
 			'pekerjaan' => $request->pekerjaan,
 			'alamat' => $request->alamat,
+			'nomor_telepon' => $request->nomor_telepon,
+			'email' => $request->email
 		]);
 
 		return $insert_result;
