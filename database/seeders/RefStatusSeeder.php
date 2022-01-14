@@ -21,13 +21,23 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 100, 
 				'short_status' => 'draft',
 				'uraian_status' => 'Buat dokumen',
+				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[ 
 				'kode_status' => 101, 
-				'short_status' => 'draft',
-				'uraian_status' => 'Edit dokumen',
+				'short_status' => 'draft buka segel',
+				'uraian_status' => 'Pembuatan draft BA Buka Segel',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[
+				'kode_status' => 102, 
+				'short_status' => 'draft lphp',
+				'uraian_status' => 'Pembuatan draft LPHP',
+				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -35,6 +45,23 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 200, 
 				'short_status' => 'terbit',
 				'uraian_status' => 'Terbitkan dokumen' ,
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 201, 
+				'short_status' => 'buka segel',
+				'uraian_status' => 'Penerbitan BA Buka Segel',
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 202, 
+				'short_status' => 'lphp',
+				'uraian_status' => 'Penerbitan LPHP',
+				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -42,6 +69,7 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 300, 
 				'short_status' => 'dihapus',
 				'uraian_status' => 'Hapus dokumen',
+				'color' => 'danger',
 				'created_at' => $now,
 				'updated_at' => $now
 			]

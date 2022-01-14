@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SbpResource;
-use App\Models\Sbp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
