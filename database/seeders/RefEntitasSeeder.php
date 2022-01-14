@@ -31,18 +31,10 @@ class RefEntitasSeeder extends Seeder
 				'jenis_identitas' => $faker->regexify('[A-Z]{3}'),
 				'nomor_identitas' => $faker->regexify('[0-9]{6,15}'),
 				'pekerjaan' => $faker->jobTitle(),
+				'no_handphone' => $faker->phoneNumber(),
+				'email' => $faker->email(),
 				'alamat' => $faker->address()
 			]);
-			// } else {
-			// 	RefEntitas::create([
-			// 		'jenis_entitas' => $jenis_entitas,
-			// 		'nama' => $faker->company(),
-			// 		'jenis_identitas' => $faker->regexify('[A-Z]{3}'),
-			// 		'nomor_identitas' => $faker->regexify('[0-9]{6,15}'),
-			// 		'alamat' => $faker->address()
-			// 	]);
-			// }
-			
 		}
 	}
 }
