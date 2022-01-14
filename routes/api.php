@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BukaSegelController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
@@ -12,7 +11,7 @@ use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokBastController;
-use App\Http\Controllers\SerahTerimaController;
+use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -72,8 +71,10 @@ Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 /**
  * API for BA Buka Segel
  */
-Route::apiResource('bukasegel', BukaSegelController::class);
-Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
+Route::apiResource('bukasegel', DokBukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/basic', [DokBukaSegelController::class, 'basic']);
+Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
+Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
 /**
  * API for LPHP

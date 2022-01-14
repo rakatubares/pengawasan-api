@@ -9,6 +9,7 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
+use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokPengamanResource;
@@ -25,6 +26,7 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
+use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
@@ -54,8 +56,8 @@ trait SwitcherTrait
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
 			'parent' => 'penindakan',
-			'model' => BukaSegel::class,
-			'resource' => BukaSegelResource::class,
+			'model' => DokBukaSegel::class,
+			'resource' => DokBukaSegelResource::class,
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',

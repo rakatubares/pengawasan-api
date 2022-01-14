@@ -80,10 +80,18 @@ class SegelController extends Controller
 	public function search(Request $request)
 	{
 		$s = $request->s;
+		$e = $request->e;
 		$search = '%' . $s . '%';
-		$search_result = Segel::where('no_dok_lengkap', 'like', $search)
-			->where('kode_status', 200)
+		$search_result = Segel::where(function ($query) use ($search) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->where('kode_status', 200);
+			})
+			->when($e != null, function ($query) use ($e)
+			{
+				return $query->orWhere('id', $e);
+			})
 			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
 			->take(5)
 			->get();
 		$search_list = SegelTableResource::collection($search_result);

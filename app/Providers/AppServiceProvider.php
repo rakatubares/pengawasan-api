@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
+use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
@@ -18,7 +18,7 @@ use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
-use App\Observers\BukaSegelObserver;
+use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
 			'segel' => Segel::class,
 		]);
 
-		BukaSegel::observe(BukaSegelObserver::class);
+		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);

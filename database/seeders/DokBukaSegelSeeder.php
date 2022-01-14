@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokBukaSegel;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Segel;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class BukaSegelSeeder extends Seeder
+class DokBukaSegelSeeder extends Seeder
 {
 	public function __construct()
 	{
@@ -32,7 +32,7 @@ class BukaSegelSeeder extends Seeder
 			
 		for ($i=1; $i < 21; $i++) { 
 			// Get current number for buka segel
-			$max_buka_segel = BukaSegel::max('no_dok');
+			$max_buka_segel = DokBukaSegel::max('no_dok');
 			$no_current = $max_buka_segel + 1;
 				
 			$linked = $this->faker->boolean();
@@ -46,7 +46,7 @@ class BukaSegelSeeder extends Seeder
 				$segel->update(['kode_status' => 201]);
 
 				// Create BA buka segel
-				$buka_segel = BukaSegel::create([
+				$buka_segel = DokBukaSegel::create([
 					'no_dok' => $no_current,
 					'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.05/',
 					'thn_dok' => date("Y"),
@@ -74,14 +74,14 @@ class BukaSegelSeeder extends Seeder
 				]);
 			} else {
 				// Create BA buka segel
-				$buka_segel = BukaSegel::create([
+				$buka_segel = DokBukaSegel::create([
 					'no_dok' => $no_current,
 					'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.05/',
 					'thn_dok' => date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 					'no_dok_lengkap' => 'BA-' . $no_current . '/BUKA SEGEL/KPU.03/BD.05/' . date("Y"),
 					'sprint_id' => $this->faker->numberBetween(1,10),
-					'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
+					'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Lainnya']),
 					'jumlah_segel' => $this->faker->numberBetween(1,5),
 					'satuan_segel' => $this->faker->randomElement(['lembar', 'buah']),
 					'tempat_segel' => $this->faker->word(),

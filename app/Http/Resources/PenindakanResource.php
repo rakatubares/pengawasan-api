@@ -91,14 +91,14 @@ class PenindakanResource extends JsonResource
 					$list_dokumen['riksa'] = $riksa;
 					break;
 
+				case 'bukasegel':
+					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'basic');
+					$list_dokumen['bukasegel'] = $bukasegel;
+					break;
+
 				case 'segel':
 					$segel = new SegelResource($this->segel, 'basic');
 					$list_dokumen['segel'] = $segel;
-					break;
-
-				case 'bukasegel':
-					$bukasegel = new BukaSegelResource($this->bukasegel, 'basic');
-					$list_dokumen['bukasegel'] = $bukasegel;
 					break;
 				
 				case 'pengaman':
@@ -115,8 +115,6 @@ class PenindakanResource extends JsonResource
 					# code...
 					break;
 			}
-
-			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;
