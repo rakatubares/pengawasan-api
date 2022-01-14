@@ -48,7 +48,9 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
+Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
 Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
+Route::get('/sbp/{sbp_id}/linked', [SbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 

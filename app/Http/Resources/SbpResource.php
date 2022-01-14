@@ -47,9 +47,12 @@ class SbpResource extends JsonResource
 
 		if ($this->element == 'basic') {
 			$array = $sbp;
+			$array['penindakan'] = $penindakan;
 			$array['kode_status'] = $this->kode_status;
 		} else if ($this->element == 'objek') {
 			$array = $objek;
+		} else if ($this->element == 'linked') {
+			$array = $dokumen;
 		} else {
 			$array = [
 				'main' => [
