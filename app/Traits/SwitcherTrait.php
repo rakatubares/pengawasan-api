@@ -24,6 +24,7 @@ trait SwitcherTrait
 		// Dokumen
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
 		],

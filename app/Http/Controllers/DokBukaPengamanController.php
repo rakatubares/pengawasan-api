@@ -50,6 +50,18 @@ class DokBukaPengamanController extends Controller
 	}
 
 	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function basic($id)
+	{
+		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'basic');
+		return $segel;
+	}
+
+	/**
 	 * Display object type
 	 * 
 	 * @param int $id
