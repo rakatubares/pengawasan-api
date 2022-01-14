@@ -26,7 +26,7 @@ class DokBukaPengaman extends Model
 		'nomor_pengaman',
 		'tanggal_pengaman',
 		'tempat_pengaman',
-		'dasar_pengaman',
+		'dasar_pengamanan',
 		'saksi_id',
 		'petugas1_id',
 		'petugas2_id',

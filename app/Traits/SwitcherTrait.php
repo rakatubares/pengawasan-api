@@ -50,6 +50,7 @@ trait SwitcherTrait
 		],
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
 		],
