@@ -22,6 +22,7 @@ class DokBastTableResource extends JsonResource
 				: null,
 			'yang_menerima' => $this->getEntity($this->yang_menerima, $this->yang_menerima_type),
 			'yang_menyerahkan' => $this->getEntity($this->yang_menyerahkan, $this->yang_menyerahkan_type),
+			'dalam_rangka' => $this->dalam_rangka,
 			'status' => new RefStatusResource($this->status)
 		];
 

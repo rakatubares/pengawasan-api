@@ -233,7 +233,9 @@ class DokBastController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$result = $this->deleteDocument(SerahTerima::class, $id);
-		return $result;
+		$is_unpublished = $this->checkUnpublished(DokBast::class, $id);
+		if ($is_unpublished) {
+			DokBast::find($id)->delete();
+		}
 	}
 }
