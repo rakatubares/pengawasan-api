@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DetailStatusResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBastTableResource;
-use App\Http\Resources\SerahTerimaResource;
 use App\Models\DokBast;
 use App\Models\SerahTerima;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DokBastController extends Controller
 {
@@ -17,6 +16,12 @@ class DokBastController extends Controller
 
 	private $tipe_dok = 'BAST';
 	private $agenda_dok = '/KPU.03/BD.05/';
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Display a listing of the resource.
@@ -45,6 +50,85 @@ class DokBastController extends Controller
 	}
 
 	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function basic($id)
+	{
+		$bast = new DokBastResource(DokBast::findOrFail($id), 'basic');
+		return $bast;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function objek($id)
+	{
+		$bast = new DokBastResource(DokBast::findOrFail($id), 'objek');
+		return $bast;
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Data modify functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Validate request
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	private function validateData(Request $request)
+	{
+		$request->validate([
+			'dalam_rangka' => 'required',
+			'yang_menyerahkan.type' => 'required',
+			'yang_menyerahkan.data.id' => 'required|integer',
+			'yang_menyerahkan.atas_nama' => 'required',
+			'yang_menerima.type' => 'required',
+			'yang_menerima.data.id' => 'required|integer',
+			'yang_menerima.atas_nama' => 'required',
+		]);
+	}
+
+	/**
+	 * Prepare data SBP from request to array
+	 * 
+	 * @param Request $request
+	 * @param String $state
+	 * @return Array
+	 */
+	private function prepareData(Request $request, $state='insert')
+	{
+		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
+
+		// Data BAST
+		$data_bast = [
+			'dalam_rangka' => $request->dalam_rangka,
+			'yang_menerima_type' => $request->yang_menerima['type'],
+			'yang_menerima_id'  => $request->yang_menerima['data']['id'],
+			'atas_nama_yang_menerima'  => $request->yang_menerima['atas_nama'],
+			'yang_menyerahkan_type' => $request->yang_menyerahkan['type'],
+			'yang_menyerahkan_id'  => $request->yang_menyerahkan['data']['id'],
+			'atas_nama_yang_menyerahkan'  => $request->yang_menyerahkan['atas_nama'],
+		];
+
+		if ($state == 'insert') {
+			$data_bast['agenda_dok'] = $this->agenda_dok;
+			$data_bast['no_dok_lengkap'] = $no_dok_lengkap;
+			$data_bast['kode_status'] = 100;
+		}
+
+		return $data_bast;
+	}
+
+	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -52,41 +136,25 @@ class DokBastController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'no_sprint' => 'required',
-			'tgl_sprint' => 'required|date',
-			'nama_penerima' => 'required',
-			'pejabat' => 'required'
-		]);
+		// Validate data BAST
+		$this->validateData($request);
 
-		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
-		$tgl_sprint = strtotime($request->tgl_sprint);
-		$insert_result = SerahTerima::create([
-			'agenda_dok' => $this->agenda_dok,
-			'no_dok_lengkap' => $no_dok_lengkap,
-			'no_sprint' => $request->no_sprint,
-			'tgl_sprint' => $tgl_sprint,
-			'nama_penerima' => $request->nama_penerima,
-			'jns_identitas' => $request->jns_identitas,
-			'no_identitas' => $request->no_identitas,
-			'atas_nama_penerima' => $request->atas_nama_penerima,
-			'dalam_rangka' => $request->dalam_rangka,
-			'pejabat' => $request->pejabat,
-			'kode_status' => 100
-		]);
+		DB::beginTransaction();
+		try {
+			// Save data BAST
+			$data_bast = $this->prepareData($request, 'insert');
+			$bast = DokBast::create($data_bast);
 
-		return $insert_result;
-	}
+			// Commit store query
+			DB::commit();
 
-	/**
-	 * Display available details
-	 * 
-	 * @param int $id
-	 */
-	public function showDetails($id)
-	{
-		$detailStatus = new DetailStatusResource(SerahTerima::findOrFail($id));
-		return $detailStatus;
+			// Return created BAST
+			$bast_resource = new DokBastResource(DokBast::findOrFail($bast->id), 'basic');
+			return $bast_resource;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
 	}
 
 	/**
@@ -99,36 +167,63 @@ class DokBastController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is published
-		$is_unpublished = $this->checkUnpublished(SerahTerima::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokBast::class, $id);
 
+		// Update if not published
 		if ($is_unpublished) {
-			$request->validate([
-				'no_sprint' => 'required',
-				'tgl_sprint' => 'required|date',
-				'nama_penerima' => 'required',
-				'pejabat' => 'required'
-			]);
-	
-			$tgl_sprint = date('Y-m-d', strtotime($request->tgl_sprint));
-			$update_result = SerahTerima::where('id', $id)
-				->update([
-					'no_sprint' => $request->no_sprint,
-					'tgl_sprint' => $tgl_sprint,
-					'nama_penerima' => $request->nama_penerima,
-					'jns_identitas' => $request->jns_identitas,
-					'no_identitas' => $request->no_identitas,
-					'atas_nama_penerima' => $request->atas_nama_penerima,
-					'dalam_rangka' => $request->dalam_rangka,
-					'pejabat' => $request->pejabat
-				]);
+			// Validate data
+			$this->validateData($request);
 
-			$result = $update_result;
+			DB::beginTransaction();
+			try {
+				// update BAST
+				$data_bast = $this->prepareData($request, 'update');
+				DokBast::where('id', $id)->update($data_bast);
+
+				// Commit query
+				DB::commit();
+
+				// Return updated BAST
+				$result = new DokBastResource(DokBast::find($id));
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
 		}
 
 		return $result;
 	}
+
+	/**
+	 * Terbitkan penomoran dokumen
+	 * 
+	 * @param  int  $id
+	 */
+	public function publish($id)
+	{
+		DB::beginTransaction();
+
+		try {
+			$this->getCurrentDate();
+			$doc = $this->publishDocument('bast', $id, $this->tahun);
+
+			DB::commit();
+
+			return $doc;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+		
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Data delete functions
+	 |--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Remove the specified resource from storage.
@@ -140,16 +235,5 @@ class DokBastController extends Controller
 	{
 		$result = $this->deleteDocument(SerahTerima::class, $id);
 		return $result;
-	}
-
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
-	{
-		$doc = $this->publishDocument(SerahTerima::class, $id, $this->tipe_dok);
-		return $doc;
 	}
 }

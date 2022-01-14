@@ -45,6 +45,7 @@ trait SwitcherTrait
 		// Dokumen
 		'bast' => [
 			'tipe_dok' => 'BAST',
+			'parent' => 'bast',
 			'model' => DokBast::class,
 			'resource' => DokBastResource::class,
 		],

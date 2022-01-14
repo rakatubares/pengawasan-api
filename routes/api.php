@@ -129,7 +129,8 @@ Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanControlle
  * API for BAST
  */
 Route::apiResource('bast', DokBastController::class);
-Route::get('/bast/{bast_id}/details', [DokBastController::class, 'showDetails']);
+Route::get('/bast/{bast_id}/basic', [DokBastController::class, 'basic']);
+Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
 /**
@@ -138,7 +139,7 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	// Sarkut
 	Route::prefix('/sarkut')->group(function() {
-		Route::get('/{how?}', [DetailSarkutController::class, 'show']);
+		Route::get('/', [DetailSarkutController::class, 'show']);
 		Route::post('/', [DetailSarkutController::class, 'store']);
 		Route::put('/{sarkut_id}', [DetailSarkutController::class, 'update']);
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
@@ -164,7 +165,7 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Bangunan
 	Route::prefix('/bangunan')->group(function() {
-		Route::get('/{how?}', [DetailBangunanController::class, 'show']);
+		Route::get('/', [DetailBangunanController::class, 'show']);
 		Route::post('/', [DetailBangunanController::class, 'store']);
 		Route::put('/{bangunan_id}', [DetailBangunanController::class, 'update']);
 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
@@ -179,8 +180,9 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Dokumen
 	Route::prefix('/dokumen')->group(function() {
-		Route::get('/{how?}', [DetailDokumenController::class, 'show']);
-		Route::post('/{how?}', [DetailDokumenController::class, 'store']);
+		Route::get('/', [DetailDokumenController::class, 'show']);
+		Route::post('/', [DetailDokumenController::class, 'store']);
+		Route::put('/{dokumen_id}', [DetailDokumenController::class, 'update']);
 		Route::delete('/', [DetailDokumenController::class, 'destroy']);
 	});
 });

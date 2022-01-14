@@ -96,6 +96,11 @@ trait DokumenTrait
 					$model::where('id', $doc_id)
 						->update(['nomor_pengaman' => DB::raw('no_dok_lengkap')]);
 					break;
+					
+				case 'bast':
+					$model::where('id', $doc_id)
+						->update(['tanggal_dokumen' => $this->tanggal]);
+					break;
 				
 				default:
 					# code...
