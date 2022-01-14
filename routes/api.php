@@ -65,6 +65,8 @@ Route::put('/riksa/{riksa_id}/publish', [RiksaController::class, 'publish']);
  */
 Route::apiResource('segel', SegelController::class);
 Route::post('/segel/search', [SegelController::class, 'search']);
+Route::get('/segel/{segel_id}/basic', [SegelController::class, 'basic']);
+Route::get('/segel/{segel_id}/objek', [SegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
 
 /**

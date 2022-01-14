@@ -49,6 +49,18 @@ class SegelController extends Controller
 	}
 
 	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function basic($id)
+	{
+		$segel = new SegelResource(Segel::findOrFail($id), 'basic');
+		return $segel;
+	}
+
+	/**
 	 * Display object type
 	 * 
 	 * @param int $id
