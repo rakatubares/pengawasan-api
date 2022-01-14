@@ -23,7 +23,7 @@ class CreateRefEntitasTable extends Migration
 			$table->string('jenis_identitas')->nullable()->index();
 			$table->string('nomor_identitas')->nullable()->index();
 			$table->string('pekerjaan')->nullable()->index();
-			$table->string('no_handphone')->nullable()->index();
+			$table->string('nomor_telepon')->nullable()->index();
 			$table->string('email')->nullable()->index();
 			$table->string('alamat')->nullable()->index();
             $table->timestamps();
