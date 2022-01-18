@@ -61,6 +61,8 @@ Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
  * API for LP
  */
 Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 
 /**
  * API for Details
