@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokLpResource;
+use App\Http\Resources\DokLpTableResource;
 use App\Models\DokLp;
 use App\Models\Sbp;
 use App\Traits\DokumenTrait;
@@ -14,6 +16,62 @@ class DokLpController extends Controller
 
 	private $tipe_dok = 'LP';
 	private $agenda_dok = '/KPU.03/BD.05/';
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$all_lp = DokLp::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
+		$lp_list = DokLpTableResource::collection($all_lp);
+		return $lp_list;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$lphp = new DokLpResource(DokLp::findOrFail($id));
+		return $lphp;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function display($id)
+	{
+		$lp = new DokLpResource(DokLp::findOrFail($id), 'display');
+		return $lp;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function objek($id)
+	{
+		$lp = new DokLpResource(DokLp::findOrFail($id), 'objek');
+		return $lp;
+	}
 
 	/*
 	 |--------------------------------------------------------------------------

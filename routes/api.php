@@ -19,7 +19,6 @@ use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RiksaController;
 use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -135,6 +134,13 @@ Route::apiResource('bast', DokBastController::class);
 Route::get('/bast/{bast_id}/basic', [DokBastController::class, 'basic']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 
 /**
  * API for Details
