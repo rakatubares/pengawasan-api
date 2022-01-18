@@ -14,7 +14,6 @@ use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +56,11 @@ Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
 Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
 Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
 Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
 
 /**
  * API for Details

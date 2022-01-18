@@ -20,6 +20,7 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
@@ -38,6 +39,12 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => BukaSegel::class,
 			'resource' => BukaSegelResource::class,
+		],
+		'lp' => [
+			'tipe_dok' => 'LP',
+			'parent' => 'penindakan',
+			'model' => DokLp::class,
+			'resource' => DokLpResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
