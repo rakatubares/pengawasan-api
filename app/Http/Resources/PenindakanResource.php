@@ -72,7 +72,7 @@ class PenindakanResource extends JsonResource
 
 					$lphp = $this->sbp->lptp->lphp;
 					if ($lphp != null) {
-						$list_dokumen['lphp'] = new DokLphpResource($lphp);
+						$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
 
 						$lp = $this->sbp->lptp->lphp->lp;
 						if ($lp != null) {
@@ -101,7 +101,6 @@ class PenindakanResource extends JsonResource
 					break;
 			}
 
-			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;

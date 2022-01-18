@@ -39,12 +39,6 @@ trait SwitcherTrait
 			'model' => BukaSegel::class,
 			'resource' => BukaSegelResource::class,
 		],
-		'lp' => [
-			'tipe_dok' => 'LP',
-			'parent' => 'penindakan',
-			'model' => DokLp::class,
-			'resource' => DokLpResource::class,
-		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
 			'parent' => 'penindakan',
