@@ -19,7 +19,6 @@ use App\Http\Resources\SbpResource;
 use App\Http\Resources\SegelResource;
 use App\Http\Resources\TegahResource;
 use App\Http\Resources\TitipResource;
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;

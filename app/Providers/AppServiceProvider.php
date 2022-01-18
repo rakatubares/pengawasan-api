@@ -24,8 +24,6 @@ use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
 use App\Observers\RiksaObserver;
 use App\Observers\SbpObserver;
-use App\Observers\SegelObserver;
-use App\Observers\TegahObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -66,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
 			'riksa' => Riksa::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => Segel::class,
+			'tegah' => Tegah::class,
 		]);
 
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
@@ -74,7 +73,5 @@ class AppServiceProvider extends ServiceProvider
 		DokPengaman::observe(DokPengamanObserver::class);
 		Riksa::observe(RiksaObserver::class);
 		Sbp::observe(SbpObserver::class);
-		Segel::observe(SegelObserver::class);
-		Tegah::observe(TegahObserver::class);
     }
 }

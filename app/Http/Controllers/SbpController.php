@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PenindakanResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -85,6 +83,36 @@ class SbpController extends Controller
 	{
 		$objek = new SbpResource(Sbp::find($id), 'linked');
 		return $objek;
+	}
+
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+		$search = '%' . $src . '%';
+
+		$search_result = Sbp::where(function ($query) use ($search, $sta) 
+			{
+				$query->where('no_dok_lengkap', 'like', $search)
+					->where('kode_status', $sta);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = SbpTableResource::collection($search_result);
+		return $search_list;
 	}
 
 	/*

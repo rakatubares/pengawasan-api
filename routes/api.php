@@ -51,6 +51,7 @@ Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
 Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [SbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
+Route::post('/sbp/search', [SbpController::class, 'search']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
 
 /**
@@ -81,9 +82,11 @@ Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class,
 /**
  * API for LPHP
  */
-Route::post('/sbp/{sbp_id}/lphp', [DokLphpController::class, 'store']);
-Route::put('/sbp/{sbp_id}/lphp/publish', [DokLphpController::class, 'publish']);
-Route::delete('/lphp/{lphp_id}', [DokLphpController::class, 'destroy']);
+Route::apiResource('lphp', DokLphpController::class);
+Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
+Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
+Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
+Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 
 /** 
  * API for BA Titip
