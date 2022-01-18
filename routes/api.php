@@ -19,6 +19,7 @@ use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RiksaController;
 use App\Http\Controllers\SbpController;
+use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
