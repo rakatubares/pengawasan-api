@@ -122,9 +122,15 @@ class DokLphpResource extends JsonResource
 	 */
 	private function display()
 	{
+		$lptp = $this->lptp;
+		$sbp = $lptp->sbp;
+
 		$array = $this->basic();
-		$array['no_sbp'] = $this->lptp->sbp->no_dok_lengkap;
-		$array['tanggal_sbp'] = $this->lptp->sbp->penindakan->tanggal_penindakan->format('d-m-Y');
+		$array['no_sbp'] = $sbp->no_dok_lengkap;
+		$array['tanggal_sbp'] = $sbp->penindakan->tanggal_penindakan->format('d-m-Y');
+		$array['no_lptp'] = $lptp->no_dok_lengkap;
+		$array['tanggal_lptp'] = $sbp->penindakan->tanggal_penindakan->format('d-m-Y');
+		$array['uraian_penindakan'] = $sbp->uraian_penindakan;
 
 		return $array;
 	}
