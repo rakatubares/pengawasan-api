@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PenindakanResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\SbpTableResource;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -329,10 +327,10 @@ class SbpController extends Controller
 
 		$existing_segel = $penindakan->segel;
 		if ($existing_segel == null) {
-			$segel = app(SegelController::class)->store($segel_request, true);
+			$segel = app(DokSegelController::class)->store($segel_request, true);
 			$this->createRelation('penindakan', $penindakan->id, 'segel', $segel->id);
 		} else {
-			$segel = app(SegelController::class)->update($segel_request, $existing_segel->id, true);
+			$segel = app(DokSegelController::class)->update($segel_request, $existing_segel->id, true);
 		}
 	}
 
