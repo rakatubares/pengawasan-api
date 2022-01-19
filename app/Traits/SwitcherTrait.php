@@ -7,13 +7,13 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
-use App\Http\Resources\SegelResource;
+use App\Http\Resources\DokSegelResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokSegel;
 use App\Models\RefEntitas;
-use App\Models\Segel;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -23,8 +23,8 @@ trait SwitcherTrait
 		'segel' => [
 			'tipe_dok' => 'BA',
 			'parent' => 'penindakan',
-			'model' => Segel::class,
-			'resource' => SegelResource::class,
+			'model' => DokSegel::class,
+			'resource' => DokSegelResource::class,
 		],
 
 		// Objek

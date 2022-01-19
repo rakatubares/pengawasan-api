@@ -5,13 +5,13 @@ namespace Database\Seeders;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokSegel;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Segel;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class SegelSeeder extends Seeder
+class DokSegelSeeder extends Seeder
 {
 	public function __construct()
 	{
@@ -37,9 +37,9 @@ class SegelSeeder extends Seeder
 				'petugas2_id' => 2,
 			]);
 
-			$max_segel = Segel::max('no_dok');
+			$max_segel = DokSegel::max('no_dok');
 			$no_current = $max_segel + 1;
-			$segel = Segel::create([
+			$segel = DokSegel::create([
 				'no_dok' => $no_current,
 				'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
 				'thn_dok' => date("Y"),
@@ -85,63 +85,6 @@ class SegelSeeder extends Seeder
 				'object_type' => $objek_penindakan,
 				'object_id' => $object_id
 			]);
-
-			// if ($objek_penindakan == 'sarkut') {
-			// 	Segel::find($i)
-			// 		->sarkut()
-			// 		->create([
-			// 			'nama_sarkut' => $faker->company(),
-			// 			'jenis_sarkut' => 'Pesawat',
-			// 			'no_flight_trayek' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-			// 			'jumlah_kapasitas' => $faker->numberBetween(1, 100),
-			// 			'satuan_kapasitas' => $faker->regexify('[A-Z]{3}'),
-			// 			'pilot_id' => $faker->numberBetween(1, 100),
-			// 			'bendera' => $faker->countryCode(),
-			// 			'no_reg_polisi' => $faker->regexify('[A-Z]{5}'),
-			// 		]);
-			// }
-
-			// if ($objek_penindakan == 'barang') {
-			// 	$insert_result = Segel::find($i)
-			// 		->barang()
-			// 		->create([
-			// 			'jumlah_kemasan' => $faker->numberBetween(1, 100),
-			// 			'satuan_kemasan' => $faker->regexify('[a-z]{2}'),
-			// 			'pemilik_id' => $faker->numberBetween(1, 100)
-			// 		]);
-
-			// 	$detail_barang_id = $insert_result->id;
-			// 	$item_count = $faker->numberBetween(1, 10);
-
-			// 	for ($c=1; $c <= $item_count; $c++) { 
-			// 		DetailBarang::find($detail_barang_id)
-			// 			->itemBarang()
-			// 			->create([
-			// 				'jumlah_barang' => $faker->numberBetween(1, 100),
-			// 				'satuan_barang' => $faker->regexify('[a-z]{2}'),
-			// 				'uraian_barang' => $faker->text()
-			// 			]);
-
-			// 		DetailBarang::find($detail_barang_id)
-			// 			->dokumen()
-			// 			->create([
-			// 				'jns_dok' => $faker->regexify('[A-Z]{3}'),
-			// 				'no_dok' => $faker->numberBetween(1, 999999),
-			// 				'tgl_dok' => $faker->date()
-			// 			]);
-			// 	}
-			// }
-
-			// if ($objek_penindakan == 'bangunan') {
-			// 	Segel::find($i)
-			// 		->bangunan()
-			// 		->create([
-			// 			'alamat' => $faker->address(),
-			// 			'no_reg' => $faker->regexify('[0-9]{15}'),
-			// 			'pemilik_id' => $faker->numberBetween(1, 100),
-			// 		]);
-			// }
-			
 		}
     }
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SegelResource;
-use App\Http\Resources\SegelTableResource;
-use App\Models\Segel;
+use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokSegelTableResource;
+use App\Models\DokSegel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SegelController extends Controller
+class DokSegelController extends Controller
 {
 	use DokumenTrait;
 
@@ -29,10 +29,10 @@ class SegelController extends Controller
 	 */
 	public function index()
 	{
-		$all_segel = Segel::orderBy('created_at', 'desc')
+		$all_segel = DokSegel::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$segel_list = SegelTableResource::collection($all_segel);
+		$segel_list = DokSegelTableResource::collection($all_segel);
 		return $segel_list;
 	}
 
@@ -44,7 +44,7 @@ class SegelController extends Controller
 	 */
 	public function show($id)
 	{
-		$segel = new SegelResource(Segel::findOrFail($id));
+		$segel = new DokSegelResource(DokSegel::findOrFail($id));
 		return $segel;
 	}
 
@@ -56,7 +56,7 @@ class SegelController extends Controller
 	 */
 	public function basic($id)
 	{
-		$segel = new SegelResource(Segel::findOrFail($id), 'basic');
+		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'basic');
 		return $segel;
 	}
 
@@ -67,7 +67,7 @@ class SegelController extends Controller
 	 */
 	public function objek($id)
 	{
-		$objek = new SegelResource(Segel::find($id), 'objek');
+		$objek = new DokSegelResource(DokSegel::find($id), 'objek');
 		return $objek;
 	}
 
@@ -81,12 +81,12 @@ class SegelController extends Controller
 	{
 		$s = $request->s;
 		$search = '%' . $s . '%';
-		$search_result = Segel::where('no_dok_lengkap', 'like', $search)
+		$search_result = DokSegel::where('no_dok_lengkap', 'like', $search)
 			->where('kode_status', 200)
 			->orderBy('created_at', 'desc')
 			->take(5)
 			->get();
-		$search_list = SegelTableResource::collection($search_result);
+		$search_list = DokSegelTableResource::collection($search_result);
 		return $search_list;
 	}
 
@@ -152,7 +152,7 @@ class SegelController extends Controller
 
 			// Save data segel
 			$data_segel = $this->prepareData($request, 'insert');
-			$segel = Segel::create($data_segel);
+			$segel = DokSegel::create($data_segel);
 
 			// Save data penindakan and create object relation
 			if ($linked_doc == false) {
@@ -163,7 +163,7 @@ class SegelController extends Controller
 			DB::commit();
 
 			// Return created segel
-			$segel_resource = new SegelResource(Segel::findOrFail($segel->id));
+			$segel_resource = new DokSegelResource(DokSegel::findOrFail($segel->id));
 			return $segel_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -181,7 +181,7 @@ class SegelController extends Controller
 	public function update(Request $request, $id, $linked_doc=false)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(Segel::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokSegel::class, $id);
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -193,7 +193,7 @@ class SegelController extends Controller
 
 				// Update BA Segel
 				$data_segel = $this->prepareData($request, 'update');
-				Segel::where('id', $id)->update($data_segel);
+				DokSegel::where('id', $id)->update($data_segel);
 
 				// Update data penindakan if not from linked doc
 				if ($linked_doc == false) {
@@ -205,7 +205,7 @@ class SegelController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$segel_resource = new SegelResource(Segel::findOrFail($id));
+				$segel_resource = new DokSegelResource(DokSegel::findOrFail($id));
 				$result = $segel_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -229,11 +229,11 @@ class SegelController extends Controller
 
 		try {
 			// Create array from SBP object
-			$segel = new SegelResource(Segel::find($id));
+			$segel = new DokSegelResource(DokSegel::find($id));
 			$arr = json_decode($segel->toJson(), true);
 
 			// Check penindakan date
-			$year = $this->datePenindakan(Segel::class, $id);
+			$year = $this->datePenindakan(DokSegel::class, $id);
 		
 			// Publish each document
 			foreach ($arr['dokumen'] as $type => $data) {
@@ -264,9 +264,9 @@ class SegelController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(Segel::class, $id);
+			$is_unpublished = $this->checkUnpublished(DokSegel::class, $id);
 			if ($is_unpublished) {
-				Segel::find($id)->delete();
+				DokSegel::find($id)->delete();
 			}
 			
 			DB::commit();

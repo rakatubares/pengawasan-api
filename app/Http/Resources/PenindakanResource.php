@@ -64,7 +64,7 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'segel':
-					$segel = new SegelResource($this->segel, 'basic');
+					$segel = new DokSegelResource($this->segel, 'basic');
 					$list_dokumen['segel'] = $segel;
 					break;
 

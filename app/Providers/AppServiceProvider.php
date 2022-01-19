@@ -5,10 +5,10 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokSegel;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
-use App\Models\Segel;
-use App\Observers\SegelObserver;
+use App\Observers\DokSegelObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -43,9 +43,9 @@ class AppServiceProvider extends ServiceProvider
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
-			'segel' => Segel::class,
+			'segel' => DokSegel::class,
 		]);
 
-		Segel::observe(SegelObserver::class);
+		DokSegel::observe(DokSegelObserver::class);
     }
 }
