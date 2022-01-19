@@ -141,7 +141,9 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
  */
 Route::apiResource('lp', DokLpController::class);
 Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
+Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
 
 /**
  * API for Details
