@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
 			SbpSeeder::class,
 			SegelSeeder::class,
 			DokLphpSeeder::class,
-			DokLpSeeder::class,
 		]);
 	}
 }
