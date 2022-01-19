@@ -38,6 +38,10 @@ class DokLpResource extends JsonResource
 			case 'pdf':
 				$array = $this->pdf();
 				break;
+
+			case 'form':
+				$array = $this->form();
+				break;
 			
 			default:
 				$array = $this->default();
@@ -130,6 +134,19 @@ class DokLpResource extends JsonResource
 	{
 		$array = $this->basic();
 		$array['kode_status'] = $this->kode_status;
+
+		return $array;
+	}
+
+	/**
+	 * Transform the resource into an array for display.
+	 *
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	private function form()
+	{
+		$array = $this->basic();
+		$array['id_sbp'] = $this->lphp->lptp->sbp->id;
 
 		return $array;
 	}
