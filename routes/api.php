@@ -12,6 +12,7 @@ use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaSegelController;
+use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -19,7 +20,6 @@ use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RiksaController;
 use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -65,11 +65,11 @@ Route::put('/riksa/{riksa_id}/publish', [RiksaController::class, 'publish']);
 /**
  * API for BA Segel
  */
-Route::apiResource('segel', SegelController::class);
-Route::post('/segel/search', [SegelController::class, 'search']);
-Route::get('/segel/{segel_id}/basic', [SegelController::class, 'basic']);
-Route::get('/segel/{segel_id}/objek', [SegelController::class, 'objek']);
-Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
+Route::apiResource('segel', DokSegelController::class);
+Route::post('/segel/search', [DokSegelController::class, 'search']);
+Route::get('/segel/{segel_id}/basic', [DokSegelController::class, 'basic']);
+Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
+Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 
 /**
  * API for BA Buka Segel

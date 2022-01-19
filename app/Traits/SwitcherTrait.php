@@ -13,10 +13,10 @@ use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokPengamanResource;
+use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\LptpResource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\SbpResource;
-use App\Http\Resources\SegelResource;
 use App\Http\Resources\TegahResource;
 use App\Http\Resources\TitipResource;
 use App\Models\DetailBangunan;
@@ -29,11 +29,11 @@ use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
+use App\Models\DokSegel;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
 use App\Models\Riksa;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Models\Tegah;
 use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
@@ -99,8 +99,8 @@ trait SwitcherTrait
 		'segel' => [
 			'tipe_dok' => 'BA',
 			'parent' => 'penindakan',
-			'model' => Segel::class,
-			'resource' => SegelResource::class,
+			'model' => DokSegel::class,
+			'resource' => DokSegelResource::class,
 		],
 		'titip' => [
 			'tipe_dok' => 'BA',

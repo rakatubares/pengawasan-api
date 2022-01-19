@@ -11,17 +11,18 @@ use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
+use App\Models\DokSegel;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Models\Riksa;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Models\Tegah;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
+use App\Observers\DokSegelObserver;
 use App\Observers\RiksaObserver;
 use App\Observers\SbpObserver;
 use App\Services\SSO;
@@ -63,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
 			'penindakan' => Penindakan::class,
 			'riksa' => Riksa::class,
 			'sarkut' => DetailSarkut::class,
-			'segel' => Segel::class,
+			'segel' => DokSegel::class,
 			'tegah' => Tegah::class,
 		]);
 
@@ -71,6 +72,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
+		DokSegel::observe(DokSegelObserver::class);
 		Riksa::observe(RiksaObserver::class);
 		Sbp::observe(SbpObserver::class);
     }

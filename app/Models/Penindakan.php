@@ -112,7 +112,7 @@ class Penindakan extends Model
 	public function segel()
 	{
 		return $this->hasOneThrough(
-			Segel::class,
+			DokSegel::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

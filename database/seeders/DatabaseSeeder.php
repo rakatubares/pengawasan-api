@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
 			RefSprintSeeder::class,
 			SbpSeeder::class,
 			RiksaSeeder::class,
-			SegelSeeder::class,
 			DokLphpSeeder::class,
 			DokLpSeeder::class,
+			DokSegelSeeder::class,
+			DokBukaSegelSeeder::class,
 			DokPengamanSeeder::class,
 			DokBukaPengamanSeeder::class,
 			DokBastSeeder::class,
-			DokBukaSegelSeeder::class,
 		]);
 	}
 }
