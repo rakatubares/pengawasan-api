@@ -6,9 +6,9 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\DokBukaSegel;
+use App\Models\DokSegel;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Segel;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -27,7 +27,7 @@ class DokBukaSegelSeeder extends Seeder
     public function run()
     {
 		// Get segel ids
-		$max_segel_id = Segel::max('id');
+		$max_segel_id = DokSegel::max('id');
 		$available_segel_id = range(1, $max_segel_id);
 			
 		for ($i=1; $i < 21; $i++) { 
@@ -42,7 +42,7 @@ class DokBukaSegelSeeder extends Seeder
 				if (($key = array_search($segel_id, $available_segel_id)) !== false) {
 					unset($available_segel_id[$key]);
 				}
-				$segel = Segel::find($segel_id);
+				$segel = DokSegel::find($segel_id);
 				$segel->update(['kode_status' => 201]);
 
 				// Create BA buka segel

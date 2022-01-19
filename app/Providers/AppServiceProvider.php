@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
 			'bast' => DokBast::class,
-			'bukasegel' => BukaSegel::class,
+			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
