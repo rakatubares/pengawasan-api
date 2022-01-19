@@ -5,12 +5,12 @@ namespace Database\Seeders;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokSegel;
 use App\Models\Lptp;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Riksa;
 use App\Models\Sbp;
-use App\Models\Segel;
 use App\Models\Tegah;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -194,11 +194,6 @@ class SbpSeeder extends Seeder
 			'kode_status' => 200,
 		]);
 
-		// $tegah->update([
-		// 	'no_dok' => $tegah->id,
-		// 	'no_dok_lengkap' => 'BA-' . $tegah->id . '/RIKSA/KPU.03/BD.05/' . date("Y"),
-		// ]);
-
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
 			'object1_id' => $penindakan_id,
@@ -219,11 +214,6 @@ class SbpSeeder extends Seeder
 			'kode_status' => 200,
 		]);
 
-		// $tegah->update([
-		// 	'no_dok' => $tegah->id,
-		// 	'no_dok_lengkap' => 'BA-' . $tegah->id . '/TEGAH/KPU.03/BD.05/' . date("Y"),
-		// ]);
-
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
 			'object1_id' => $penindakan_id,
@@ -234,9 +224,9 @@ class SbpSeeder extends Seeder
 
 	private function createSegel($penindakan_id)
 	{
-		$max_segel = Segel::max('no_dok');
+		$max_segel = DokSegel::max('no_dok');
 		$crn_segel = $max_segel + 1;
-		$segel = Segel::create([
+		$segel = DokSegel::create([
 			'no_dok' => $crn_segel,
 			'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
 			'thn_dok' => date("Y"),
@@ -248,12 +238,6 @@ class SbpSeeder extends Seeder
 			'nomor_segel' => 'BA-' . $crn_segel . '/SEGEL/KPU.03/BD.05/' . date("Y"),
 			'kode_status' => 200,
 		]);
-
-		// $segel->update([
-		// 	'no_dok' => $segel->id,
-		// 	'no_dok_lengkap' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-		// 	'nomor_segel' => 'BA-' . $segel->id . '/SEGEL/KPU.03/BD.05/' . date("Y"),
-		// ]);
 
 		ObjectRelation::create([
 			'object1_type' => 'penindakan',
