@@ -21,6 +21,8 @@ class RefEntitas extends Model
 		'nomor_identitas',
 		'pekerjaan',
 		'alamat',
+		'nomor_telepon',
+		'email',
 	];
 
 	protected $casts = [

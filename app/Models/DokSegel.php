@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Segel extends Model
+class DokSegel extends Model
 {
     use HasFactory;
 	use SoftDeletes;
