@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokBukaSegelTableResource;
 use App\Models\DokBukaSegel;
-use App\Models\Segel;
+use App\Models\DokSegel;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,7 +143,7 @@ class DokBukaSegelController extends Controller
 			if ($segel_id == null) {
 				$this->storePenindakan($request, 'bukasegel', $buka_segel->id, true);
 			} else {
-				$segel = Segel::find($segel_id);
+				$segel = DokSegel::find($segel_id);
 				$penindakan_id = $segel->penindakan->id;
 				$this->createRelation('penindakan', $penindakan_id, 'bukasegel', $buka_segel->id);
 				$segel->update(['kode_status' => 101]);
