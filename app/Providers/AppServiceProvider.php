@@ -7,6 +7,7 @@ use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
+use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
@@ -18,6 +19,7 @@ use App\Models\RefUserCache;
 use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Tegah;
+use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
@@ -68,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
 			'tegah' => Tegah::class,
 		]);
 
+		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
