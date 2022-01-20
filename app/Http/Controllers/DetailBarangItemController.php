@@ -37,19 +37,21 @@ class DetailBarangItemController extends Controller
     public function index($doc_type, $doc_id)
     {
 		// Get header model
-		$model = $this->getModel($doc_type);
-		$header = $model::find($doc_id);
+		$model = $this->switchObject($doc_type, 'model');
+		$dokumen = $model::find($doc_id);
 
 		// Show data detail barang
-		if ($header) {
+		if ($dokumen) {
 			try {
-				// Get valid detail_barang id
-				$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
-
 				// Get list item barang
-				$item_barang_list = $header->itemBarang()
-					->where('detail_barangs.id', $detail_barang_id)
-					->get();
+				if ($doc_type == 'bast') {
+					$item_barang_list = $dokumen->objectable->itemBarang()
+						->get();
+				} else {
+					$item_barang_list = $dokumen->penindakan->objectable->itemBarang()
+						->get();
+				}
+				
 				$result = DetailBarangItemResource::collection($item_barang_list);
 			} catch (\Throwable $th) {
 				$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
@@ -72,7 +74,7 @@ class DetailBarangItemController extends Controller
 	public function store(Request $request, $doc_type, $doc_id)
 	{
 		// Get header model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Check if document is not published yet
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
@@ -84,13 +86,18 @@ class DetailBarangItemController extends Controller
 			// Insert data detail barang
 			if ($header) {
 				try {
-					// Get valid detail_barang id
-					$detail_barang_id = $this->getDetailBarangId($doc_type, $doc_id);
+					// Get parent object
+					$parent_name = $this->switchObject($doc_type, 'parent');
+					if ($parent_name == 'penindakan') {
+						$parent_object = $header->penindakan;
+					} else if ($parent_name == 'bast') {
+						$parent_object = $header;
+					}
 
 					// Insert detail barang
-					$insert_result = $header->itemBarang()
+					$insert_result = $parent_object->objectable->itemBarang()
 						->create([
-							'detail_barang_id' => $detail_barang_id,
+							// 'detail_barang_id' => $detail_barang_id,
 							'uraian_barang' => $request->uraian_barang,
 							'jumlah_barang' => $request->jumlah_barang,
 							'satuan_barang' => $request->satuan_barang,
@@ -120,12 +127,20 @@ class DetailBarangItemController extends Controller
 	public function show($doc_type, $doc_id, $item_id)
 	{
 		// Get header model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 		$header = $model::find($doc_id);
 
 		if ($header) {
+			// Get parent object
+			$parent_name = $this->switchObject($doc_type, 'parent');
+			if ($parent_name == 'penindakan') {
+				$parent_object = $header->penindakan;
+			} else if ($parent_name == 'bast') {
+				$parent_object = $header;
+			}
+
 			// Get data item barang
-			$item_barang = $header->itemBarang()
+			$item_barang = $parent_object->objectable->itemBarang()
 				->where('detail_barang_items.id', $item_id)
 				->first();
 
@@ -153,7 +168,7 @@ class DetailBarangItemController extends Controller
 	public function update(Request $request, $doc_type, $doc_id, $item_id)
 	{
 		// Get header model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Check if document is not published yet
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
@@ -163,8 +178,16 @@ class DetailBarangItemController extends Controller
 			$header = $model::find($doc_id);
 
 			if ($header) {
+				// Get parent object
+				$parent_name = $this->switchObject($doc_type, 'parent');
+				if ($parent_name == 'penindakan') {
+					$parent_object = $header->penindakan;
+				} else if ($parent_name == 'bast') {
+					$parent_object = $header;
+				}
+
 				// Update data item barang
-				$update_result = $header->itemBarang()
+				$update_result = $parent_object->objectable->itemBarang()
 					->where('detail_barang_items.id', $item_id)
 					->update([
 						'uraian_barang' => $request->uraian_barang,
@@ -198,7 +221,7 @@ class DetailBarangItemController extends Controller
     public function destroy($doc_type, $doc_id, $item_id)
     {
 		// Get header model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Check if document is not published yet
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);
@@ -207,9 +230,22 @@ class DetailBarangItemController extends Controller
 			// Get header document
 			$header = $model::find($doc_id);
 
-			$result = $header->itemBarang()
-				->where('detail_barang_items.id', $item_id)
-				->delete();
+			// Get parent object
+			$parent_name = $this->switchObject($doc_type, 'parent');
+			if ($parent_name == 'penindakan') {
+				$parent_object = $header->penindakan;
+			} else if ($parent_name == 'bast') {
+				$parent_object = $header;
+			}
+
+			$objek = $parent_object->objectable;
+			if ($parent_object->object_type == 'barang') {
+				$result = $objek->itemBarang()
+					->where('detail_barang_items.id', $item_id)
+					->delete();
+			} else {
+				$result = response()->json(['error' => 'Objek bukan barang, tidak dapat menghapus item barang.'], 422);
+			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat menghapus item barang.'], 422);
 		}

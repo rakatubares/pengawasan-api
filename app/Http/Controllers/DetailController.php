@@ -11,28 +11,69 @@ class DetailController extends Controller
 	use DokumenTrait;
     use SwitcherTrait;
 
-	public function insertDetail($detail_data, $doc_type, $doc_id, $detail_type)
+	/**
+	 * INSERT FUNCTIONS
+	 */
+
+	public function insertDetail($doc_type, $doc_id, $detail_type, $detail_data)
 	{
-		// Get model
-		$model = $this->getModel($doc_type);
+		$detail = $this->insertData($detail_type, $detail_data);
+		$this->updateObjectType($doc_type, $doc_id, $detail_type, $detail->id);
 
-		// Update kolom status detail di tabel parent menjadi TRUE
-		$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
+		return $detail;
+	}
 
-		// Upsert data detail
-		if ($update_result == 1) {
-			$resource = $this->getResource($detail_type);
+	public function insertData($type, $data)
+	{
+		$model = $this->switchObject($type, 'model');
+		$detail = $model::create($data);
+		return $detail;
+	}
 
-			$insert_result = $model::find($doc_id)
-				->$detail_type()
-				->create($detail_data);
-			
-			$result = new $resource($insert_result);
-		} else {
-			$result = $update_result;
+	/**
+	 * UPDATE FUNCTIONS
+	 */
+
+	private function getParent($doc_type, $doc_id)
+	{
+		$model = $this->switchObject($doc_type, 'model');
+		$doc = $model::find($doc_id);
+
+		// Get parent model
+		$doc_penindakan = $this->getModelsListByParent('penindakan');
+		if (in_array($doc_type, $doc_penindakan)) {
+			$parent = $doc->penindakan;
+		} else if ($doc_type == 'bast') {
+			$parent = $doc;
 		}
 
-		return $result;
+		return $parent;
+	}
+
+	public function updateObjectType($doc_type, $doc_id, $detail_type, $detail_id)
+	{
+		// Get parent
+		$parent = $this->getParent($doc_type, $doc_id);
+
+		// Delete detail if parent already has detail
+		if ($parent->object_type != null) {
+			$this->deleteDetail($doc_type, $doc_id);
+		}
+
+		// Get parent after delete
+		$parent = $this->getParent($doc_type, $doc_id);
+
+		// Update object type and id
+		$parent->update([
+			'object_type' => $detail_type,
+			'object_id' => $detail_id
+		]);
+	}
+
+	public function updateDetail($detail_type, $detail_data, $detail_id)
+	{
+		$model = $this->switchObject($detail_type, 'model');
+		$model::find($detail_id)->update($detail_data);
 	}
 
 	/**
@@ -49,7 +90,7 @@ class DetailController extends Controller
 
 		try {
 			// Get model
-			$model = $this->getModel($doc_type);
+			$model = $this->switchObject($doc_type, 'model');
 
 			// Update kolom status detail di tabel parent menjadi TRUE
 			$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 1);
@@ -84,6 +125,10 @@ class DetailController extends Controller
     }
 
 	/**
+	 * SHOW FUNCTIONS
+	 */
+
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param  string  $doc_type
@@ -94,7 +139,7 @@ class DetailController extends Controller
 	public function showDetail($doc_type, $doc_id, $detail_type)
 	{
 		// Get model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Get header
 		$header = $model::find($doc_id);
@@ -126,7 +171,7 @@ class DetailController extends Controller
 	public function showDetails($doc_type, $doc_id, $detail_type)
 	{
 		// Get model
-		$model = $this->getModel($doc_type);
+		$model = $this->switchObject($doc_type, 'model');
 
 		// Get header
 		$header = $model::find($doc_id);
@@ -152,35 +197,22 @@ class DetailController extends Controller
 	 *
 	 * @param  string  $doc_type
 	 * @param  int  $doc_id
-	 * @param  string  $detail_type
 	 * @return \Illuminate\Http\Response
 	 */
-	public function deleteDetail($doc_type, $doc_id, $detail_type)
+	public function deleteDetail($doc_type, $doc_id)
 	{
-		DB::beginTransaction();
+		// Get parent
+		$parent = $this->getParent($doc_type, $doc_id);
 
-		try {
-			 // Get model
-			$model = $this->getModel($doc_type);
-
-			// Update kolom detail di tabel parent menjadi FALSE
-			$update_result = $this->updateStatusDetail($model, $doc_id, $detail_type, 0);
-
-			// Delete detail
-			if ($update_result == 1) {
-				$result = $model::find($doc_id)
-					->$detail_type()
-					->delete();
-			} else {
-				$result = $update_result;
-			}
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			$result = response()->json(['error' => 'Gagal menghapus detail ' . $detail_type], 422);
+		// Delete detail
+		if ($parent->object_type != 'orang') {
+			$parent->objectable->delete();
 		}
-	   
-		return $result;
+
+		// Update kolom detail di tabel parent menjadi NULL
+		$parent->update([
+			'object_type' => null,
+			'object_id' => null
+		]);
 	}
 }

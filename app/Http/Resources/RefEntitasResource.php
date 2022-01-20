@@ -24,6 +24,8 @@ class RefEntitasResource extends JsonResource
 			'nomor_identitas' => $this->nomor_identitas,
 			'pekerjaan' => $this->pekerjaan,
 			'alamat' => $this->alamat,
+			'nomor_telepon' => $this->nomor_telepon,
+			'email' => $this->email,
 		];
 
 		return $array;

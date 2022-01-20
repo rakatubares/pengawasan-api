@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DetailBadanController extends DetailController
 {
+	private function validateData(Request $request)
+	{
+		$request->validate([
+			'orang_id' => 'required'
+		]);
+	}
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -14,24 +21,29 @@ class DetailBadanController extends DetailController
 	 * @param  string $doc_id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $doc_type, $doc_id, $how='upsert')
+	public function store(Request $request, $doc_type, $doc_id)
 	{
-		$tgl_lahir = strtotime($request->tgl_lahir);
-		$detail_data = [
-			'entitas_id' => $request->entitas['id']
-		];
+		$this->validateData($request);
 
-		switch ($how) {
-			case 'new':
-				$result = $this->insertDetail($detail_data, $doc_type, $doc_id, 'badan');
-				break;
-			
-			default:
-				$result = $this->upsertDetail($detail_data, $doc_type, $doc_id, 'badan');
-				break;
+		DB::beginTransaction();
+		try {
+			// Update object
+			$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
+
+			// Commit change
+			DB::commit();
+
+			// Get changed data
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+			$result = new $resource($model::find($doc_id), 'objek');
+
+			// Return data
+			return $result;
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
 		}
-
-		return $result;
 	}
 
 	/**

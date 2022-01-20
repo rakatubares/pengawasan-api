@@ -7,13 +7,55 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\TitipResource;
+use App\Models\DetailBangunan;
+use App\Models\DetailBarang;
+use App\Models\DetailDokumen;
+use App\Models\DetailSarkut;
+use App\Models\DokSegel;
+use App\Models\RefEntitas;
 use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
 	private $models = [
-		'titip' => Titip::class,
+		// Dokumen
+		'segel' => [
+			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
+			'model' => DokSegel::class,
+			'resource' => DokSegelResource::class,
+		],
+		'titip' => [
+			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
+			'model' => Titip::class,
+			'resource' => TitipResource::class,
+		],
+
+		// Objek
+		'bangunan' => [
+			'parent' => 'objek',
+			'model' => DetailBangunan::class
+		],
+		'barang' => [
+			'parent' => 'objek',
+			'model' => DetailBarang::class
+		],
+		'dokumen' => [
+			'parent' => 'objek',
+			'model' => DetailDokumen::class
+		],
+		'orang' => [
+			'parent' => 'objek',
+			'model' => RefEntitas::class
+		],
+		'sarkut' => [
+			'parent' => 'objek',
+			'model' => DetailSarkut::class
+		],
 	];
 
 	private $resources = [
@@ -24,6 +66,28 @@ trait SwitcherTrait
 		'sarkut' => DetailSarkutResource::class,
 	];
 
+	public function switchObject($object_name, $object_type)
+	{
+		if (array_key_exists($object_name, $this->models)) {
+			$model = $this->models[$object_name][$object_type];
+		} else {
+			$model = null;
+		}
+		
+		return $model;
+	}
+
+	public function getModelsListByParent($parent)
+	{
+		$docs = [];
+		foreach ($this->models as $model => $values) {
+			if ($values['parent'] == $parent) {
+				array_push($docs, $model);
+			}
+		}
+		return $docs;
+	}
+
 	/**
 	 * Get model by doc type
 	 * 
@@ -33,7 +97,24 @@ trait SwitcherTrait
 	public function getModel($doc_type)
 	{
 		if (array_key_exists($doc_type, $this->models)) {
-			$model = $this->models[$doc_type];
+			$model = $this->models[$doc_type]['model'];
+		} else {
+			$model = null;
+		}
+		
+		return $model;
+	}
+
+	/**
+	 * Get model by doc type
+	 * 
+	 * @param string $doc_type
+	 * @return Model
+	 */
+	public function getDocType($doc_type)
+	{
+		if (array_key_exists($doc_type, $this->models)) {
+			$model = $this->models[$doc_type]['tipe_dok'];
 		} else {
 			$model = null;
 		}
