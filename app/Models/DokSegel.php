@@ -51,6 +51,24 @@ class DokSegel extends Model
 		);
 	}
 
+	public function titip()
+	{
+		return $this->hasOneThrough(
+			DokTitip::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'segel'
+		)->where(
+			'object2_type',
+			'titip'
+		);
+	}
+
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');

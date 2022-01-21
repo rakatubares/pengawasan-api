@@ -6,26 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Titip extends Model
+class DokTitip extends Model
 {
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'titip';
+	protected $table = 'dok_titip';
 
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
-		'tgl_dok',
+		'tanggal_dokumen',
 		'sprint_id',
 		'lokasi_titip',
-		'detail_sarkut',
-		'detail_barang',
-		'detail_bangunan',
-		'nomor_ba_segel',
-		'tanggal_segel',
 		'penerima_id',
 		'saksi_id',
 		'petugas1_id',
@@ -34,33 +29,25 @@ class Titip extends Model
 	];
 
 	protected $casts = [
-		'tgl_dok' => 'date',
-		'tanggal_segel' => 'date',
+		'tanggal_dokumen' => 'date',
 	];
 
-	public function sarkut()
+	public function segel()
 	{
-		return $this->morphOne(DetailSarkut::class, 'parent');
-	}
-
-	public function barang()
-	{
-		return $this->morphOne(DetailBarang::class, 'parent');
-	}
-
-	public function itemBarang()
-	{
-		return $this->hasManyThrough(
-			DetailBarangItem::class,
-			DetailBarang::class,
-			'parent_id',
-			'detail_barang_id'
-		)->where('parent_type', Titip::class);
-	}
-
-	public function bangunan()
-	{
-		return $this->morphOne(DetailBangunan::class, 'parent');
+		return $this->hasOneThrough(
+			DokSegel::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'segel'
+		)->where(
+			'object2_type',
+			'titip'
+		);
 	}
 
 	public function sprint()

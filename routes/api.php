@@ -7,11 +7,11 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
-use App\Http\Controllers\TitipController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,10 +47,11 @@ Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 /**
  * API for BA Titip
  */
-Route::apiResource('titip', TitipController::class);
-Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
-Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
-Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
+Route::apiResource('titip', DokTitipController::class);
+Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
+Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
+Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
+Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
 /**
  * API for Details

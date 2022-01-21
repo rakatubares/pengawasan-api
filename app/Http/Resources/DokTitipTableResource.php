@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TitipTableResource extends JsonResource
+class DokTitipTableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class TitipTableResource extends JsonResource
         $array = [
 			'id' => $this->id,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
+			'tanggal_dokumen' => $this->tanggal_dokumen ? $this->tanggal_dokumen->format('d-m-Y') : null,
 			'nama_penerima' => $this->penerima->nama,
 			'petugas1' => $this->petugas1->name,
 			'status' => new RefStatusResource($this->status)

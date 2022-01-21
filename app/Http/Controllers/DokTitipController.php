@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
-use App\Http\Resources\TitipResource;
-use App\Http\Resources\TitipTableResource;
-use App\Models\Titip;
+use App\Http\Resources\DokTitipResource;
+use App\Http\Resources\DokTitipTableResource;
+use App\Models\DokTitip;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
-class TitipController extends Controller
+class DokTitipController extends Controller
 {
 	use DokumenTrait;
 
@@ -23,11 +23,46 @@ class TitipController extends Controller
 	 */
 	public function index()
 	{
-		$all_titip = Titip::orderBy('created_at', 'desc')
+		$all_titip = DokTitip::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$titip_list = TitipTableResource::collection($all_titip);
+		$titip_list = DokTitipTableResource::collection($all_titip);
 		return $titip_list;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function display($id)
+	{
+		$titip = new DokTitipResource(DokTitip::findOrFail($id), 'display');
+		return $titip;
+	}
+
+	/**
+	 * Display the specified resource form input form.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$titip = new DokTitipResource(DokTitip::findOrFail($id), 'form');
+		return $titip;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function objek($id)
+	{
+		$objek = new DokTitipResource(DokTitip::find($id), 'objek');
+		return $objek;
 	}
 
 	/**
@@ -49,7 +84,7 @@ class TitipController extends Controller
 
         $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
 
-		$insert_result = Titip::create([
+		$insert_result = DokTitip::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'sprint_id' => $request->sprint['id'],
@@ -74,7 +109,7 @@ class TitipController extends Controller
 	 */
 	public function show($id)
 	{
-		$titip = new TitipResource(Titip::findOrFail($id));
+		$titip = new DokTitipResource(DokTitip::findOrFail($id));
 		return $titip;
 	}
 
@@ -85,7 +120,7 @@ class TitipController extends Controller
 	 */
 	public function showComplete($id)
 	{
-		$titip = new TitipResource(Titip::findOrFail($id), 'complete');
+		$titip = new DokTitipResource(DokTitip::findOrFail($id), 'complete');
 		return $titip;
 	}
 
@@ -96,7 +131,7 @@ class TitipController extends Controller
 	 */
 	public function showDetails($id)
 	{
-		$titip_details = new DetailStatusResource(Titip::findOrFail($id));
+		$titip_details = new DetailStatusResource(DokTitip::findOrFail($id));
 		return $titip_details;
 	}
 
@@ -109,7 +144,7 @@ class TitipController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$is_unpublished = $this->checkUnpublished(Titip::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokTitip::class, $id);
 
 		if ($is_unpublished) {
 			$request->validate([
@@ -123,7 +158,7 @@ class TitipController extends Controller
 
 			$tanggal_segel = date('Y-m-d', strtotime($request->tanggal_segel));
 
-			$update_result = Titip::where('id', $id)
+			$update_result = DokTitip::where('id', $id)
 				->update([
 					'sprint_id' => $request->sprint['id'],
 					'lokasi_titip' => $request->lokasi_titip,
@@ -152,7 +187,7 @@ class TitipController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$result = $this->deleteDocument(Titip::class, $id);
+		$result = $this->deleteDocument(DokTitip::class, $id);
 		return $result;
 	}
 
@@ -163,7 +198,7 @@ class TitipController extends Controller
 	 */
 	public function publish($id)
 	{
-		$doc = $this->publishDocument(Titip::class, $id, $this->tipe_dok);
+		$doc = $this->publishDocument(DokTitip::class, $id, $this->tipe_dok);
 		return $doc;
 	}
 }
