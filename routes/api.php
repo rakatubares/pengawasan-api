@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -40,43 +41,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 
 /**
- * API for SBP
+ * API for BA Contoh
  */
-Route::apiResource('sbp', SbpController::class);
-// Route::get('/sbp/{sbp_id}/complete', [SbpController::class, 'showComplete']);
-Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
-Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
-Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
-
-/**
- * API for BA Segel
- */
-Route::apiResource('segel', SegelController::class);
-Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
-
-/**
- * API for BA Buka Segel
- */
-// Route::apiResource('bukasegel', BukaSegelController::class);
-// Route::get('/bukasegel/{buka_segel_id}/complete', [BukaSegelController::class, 'showComplete']);
-// Route::get('/bukasegel/{buka_segel_id}/details', [BukaSegelController::class, 'showDetails']);
-// Route::put('/bukasegel/{buka_segel_id}/publish', [BukaSegelController::class, 'publish']);
-
-/** 
- * API for BA Titip
- */
-// Route::apiResource('titip', TitipController::class);
-// Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
-// Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
-// Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
-
-/** 
- * API for BA Tegah
- */
-// Route::apiResource('tegah', TegahController::class);
-// Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
-// Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
-// Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
+Route::apiResource('contoh', DokContohController::class);
+Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
+Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
 
 /**
  * API for Details
