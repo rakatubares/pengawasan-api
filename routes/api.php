@@ -38,12 +38,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-<<<<<<< HEAD
 
 /**
-=======
-/** 
->>>>>>> penindakan/titip
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
@@ -58,6 +54,24 @@ Route::get('/sbp/{sbp_id}/linked', [SbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
 Route::post('/sbp/search', [SbpController::class, 'search']);
 Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
+
+/**
+ * API for LPHP
+ */
+Route::apiResource('lphp', DokLphpController::class);
+Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
+Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
+Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
+Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
+Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
 
 /**
  * API for BA Pemeriksaan
@@ -77,7 +91,6 @@ Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 
 /**
-<<<<<<< HEAD
  * API for BA Buka Segel
  */
 Route::apiResource('bukasegel', DokBukaSegelController::class);
@@ -86,21 +99,13 @@ Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, '
 Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
 /**
- * API for LPHP
- */
-Route::apiResource('lphp', DokLphpController::class);
-Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
-Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
-Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
-Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
-
-/** 
  * API for BA Titip
  */
-// Route::apiResource('titip', TitipController::class);
-// Route::get('/titip/{titip_id}/complete', [TitipController::class, 'showComplete']);
-// Route::get('/titip/{titip_id}/details', [TitipController::class, 'showDetails']);
-// Route::put('/titip/{titip_id}/publish', [TitipController::class, 'publish']);
+Route::apiResource('titip', DokTitipController::class);
+Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
+Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
+Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
+Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
 /** 
  * API for BA Tegah
@@ -109,13 +114,6 @@ Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 // Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
 // Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
 // Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
-
-/**
- * API for LP
- */
-Route::post('/sbp/{sbp_id}/lp', [DokLpController::class, 'store']);
-Route::put('/sbp/{sbp_id}/lp/publish', [DokLpController::class, 'publish']);
-Route::delete('/lp/{lp_id}', [DokLpController::class, 'destroy']);
 
 /** 
  * API for BA Tanda Pengaman
@@ -141,24 +139,6 @@ Route::apiResource('bast', DokBastController::class);
 Route::get('/bast/{bast_id}/basic', [DokBastController::class, 'basic']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
-
-/**
- * API for LP
- */
-Route::apiResource('lp', DokLpController::class);
-Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
-Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
-Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
-Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
-=======
- * API for BA Titip
- */
-Route::apiResource('titip', DokTitipController::class);
-Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
-Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
-Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
-Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
->>>>>>> penindakan/titip
 
 /**
  * API for Details
