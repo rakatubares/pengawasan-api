@@ -13,6 +13,7 @@ use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -37,8 +38,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+<<<<<<< HEAD
 
 /**
+=======
+/** 
+>>>>>>> penindakan/titip
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
@@ -72,6 +77,7 @@ Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 
 /**
+<<<<<<< HEAD
  * API for BA Buka Segel
  */
 Route::apiResource('bukasegel', DokBukaSegelController::class);
@@ -144,6 +150,15 @@ Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
 Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+=======
+ * API for BA Titip
+ */
+Route::apiResource('titip', DokTitipController::class);
+Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
+Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
+Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
+Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
+>>>>>>> penindakan/titip
 
 /**
  * API for Details

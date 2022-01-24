@@ -14,11 +14,11 @@ use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokTitipResource;
 use App\Http\Resources\LptpResource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\SbpResource;
 use App\Http\Resources\TegahResource;
-use App\Http\Resources\TitipResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -30,12 +30,12 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
 use App\Models\DokSegel;
+use App\Models\DokTitip;
 use App\Models\Lptp;
 use App\Models\RefEntitas;
 use App\Models\Riksa;
 use App\Models\Sbp;
 use App\Models\Tegah;
-use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -105,8 +105,8 @@ trait SwitcherTrait
 		'titip' => [
 			'tipe_dok' => 'BA',
 			'parent' => 'penindakan',
-			'model' => Titip::class,
-			'resource' => TitipResource::class,
+			'model' => DokTitip::class,
+			'resource' => DokTitipResource::class,
 		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
