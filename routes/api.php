@@ -12,6 +12,7 @@ use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaSegelController;
+use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\PenindakanController;
@@ -45,7 +46,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 
 /**
- * API for SBP
+ * API for BA Contoh
  */
 Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
@@ -108,12 +109,11 @@ Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
 Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
 /** 
- * API for BA Tegah
+ * API for BA COntoh Barang
  */
-// Route::apiResource('tegah', TegahController::class);
-// Route::get('/tegah/{tegah_id}/complete', [TegahController::class, 'showComplete']);
-// Route::get('/tegah/{tegah_id}/details', [TegahController::class, 'showDetails']);
-// Route::put('/tegah/{tegah_id}/publish', [TegahController::class, 'publish']);
+Route::apiResource('contoh', DokContohController::class);
+Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
+Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
 
 /** 
  * API for BA Tanda Pengaman

@@ -10,6 +10,7 @@ use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokBukaSegelResource;
+use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokPengamanResource;
@@ -26,6 +27,7 @@ use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
+use App\Models\DokContoh;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
@@ -59,6 +61,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokBukaSegel::class,
 			'resource' => DokBukaSegelResource::class,
+		],
+		'contoh' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/CONTOH/KPU.03/BD.05/',
+			'parent' => 'contoh',
+			'model' => DokContoh::class,
+			'resource' => DokContohResource::class,
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',
