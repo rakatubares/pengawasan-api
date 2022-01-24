@@ -6,9 +6,11 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\DokSegel;
+use App\Models\DokTitip;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Observers\DokSegelObserver;
+use App\Observers\DokTitipObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -47,5 +49,6 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DokSegel::observe(DokSegelObserver::class);
+		DokTitip::observe(DokTitipObserver::class);
     }
 }

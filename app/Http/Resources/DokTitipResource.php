@@ -130,7 +130,9 @@ class DokTitipResource extends JsonResource
 	private function form()
 	{
 		$array = $this->basic();
-		$array['id_segel'] = $this->segel->id;
+		$array['segel']['id'] = $this->segel->id;
+		$array['segel']['nomor'] = $this->segel->no_dok_lengkap;
+		$array['segel']['tanggal'] = $this->segel->penindakan->tanggal_penindakan->format('d-m-Y');
 
 		return $array;
 	}
