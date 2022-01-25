@@ -114,6 +114,7 @@ Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 Route::apiResource('contoh', DokContohController::class);
 Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
 Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
+Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish']);
 
 /** 
  * API for BA Tanda Pengaman

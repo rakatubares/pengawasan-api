@@ -22,6 +22,7 @@ class CreateDokContohTable extends Migration
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('sprint_id')->index();
 			$table->string('lokasi')->index();
+			$table->string('object_type')->nullable()->index();
 			$table->string('object_id')->nullable()->index();
 			$table->integer('saksi_id')->index();
 			$table->integer('petugas1_id')->index();

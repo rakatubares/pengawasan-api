@@ -19,6 +19,8 @@ class DokContoh extends Model
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
+		'sprint_id',
+		'object_type',
 		'object_id',
 		'lokasi',
 		'saksi_id',
@@ -42,7 +44,7 @@ class DokContoh extends Model
 	/**
 	 * Detail Barang
 	 */
-	public function barang()
+	public function objectable()
 	{
 		return $this->hasOne(DetailBarang::class, 'id', 'object_id');
 	}

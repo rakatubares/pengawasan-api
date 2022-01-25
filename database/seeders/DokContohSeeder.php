@@ -71,6 +71,7 @@ class DokContohSeeder extends Seeder
 			};
 
 			$contoh->update([
+				'object_type' => 'barang',
 				'object_id' => $contoh->id
 			]);
 		}

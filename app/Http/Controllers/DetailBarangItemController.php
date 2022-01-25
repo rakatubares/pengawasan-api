@@ -44,7 +44,7 @@ class DetailBarangItemController extends Controller
 		if ($dokumen) {
 			try {
 				// Get list item barang
-				if ($doc_type == 'bast') {
+				if (in_array($doc_type, ['bast', 'contoh'])) {
 					$item_barang_list = $dokumen->objectable->itemBarang()
 						->get();
 				} else {
@@ -90,7 +90,7 @@ class DetailBarangItemController extends Controller
 					$parent_name = $this->switchObject($doc_type, 'parent');
 					if ($parent_name == 'penindakan') {
 						$parent_object = $header->penindakan;
-					} else if ($parent_name == 'bast') {
+					} else if (in_array($doc_type, ['bast', 'contoh'])) {
 						$parent_object = $header;
 					}
 
@@ -135,7 +135,7 @@ class DetailBarangItemController extends Controller
 			$parent_name = $this->switchObject($doc_type, 'parent');
 			if ($parent_name == 'penindakan') {
 				$parent_object = $header->penindakan;
-			} else if ($parent_name == 'bast') {
+			} else if (in_array($doc_type, ['bast', 'contoh'])) {
 				$parent_object = $header;
 			}
 
@@ -182,7 +182,7 @@ class DetailBarangItemController extends Controller
 				$parent_name = $this->switchObject($doc_type, 'parent');
 				if ($parent_name == 'penindakan') {
 					$parent_object = $header->penindakan;
-				} else if ($parent_name == 'bast') {
+				} else if (in_array($doc_type, ['bast', 'contoh'])) {
 					$parent_object = $header;
 				}
 
@@ -234,7 +234,7 @@ class DetailBarangItemController extends Controller
 			$parent_name = $this->switchObject($doc_type, 'parent');
 			if ($parent_name == 'penindakan') {
 				$parent_object = $header->penindakan;
-			} else if ($parent_name == 'bast') {
+			} else if (in_array($doc_type, ['bast', 'contoh'])) {
 				$parent_object = $header;
 			}
 
