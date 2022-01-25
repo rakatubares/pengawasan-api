@@ -82,7 +82,7 @@ class DokContohResource extends JsonResource
 	{
 		$array = $this->basic();
 		$array['dokumen']['contoh']['kode_status'] = $this->kode_status;
-		$array['barang'] = new ObjectResource($this->objectable, 'barang');
+		$array['objek'] = new ObjectResource($this->objectable, 'barang');
 
 		return $array;
 	}
