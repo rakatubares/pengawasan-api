@@ -32,16 +32,12 @@ class DokContohResource extends JsonResource
 				break;
 
 			case 'objek':
-				$array = new ObjectResource($this->barang, 'barang');
+				$array = new ObjectResource($this->objectable, 'barang');
 				break;
 
 			case 'pdf':
 				$array = $this->pdf();
 				break;
-
-			// case 'form':
-			// 	$array = $this->form();
-			// 	break;
 			
 			default:
 				$array = $this->default();
@@ -86,7 +82,7 @@ class DokContohResource extends JsonResource
 	{
 		$array = $this->basic();
 		$array['dokumen']['contoh']['kode_status'] = $this->kode_status;
-		$array['barang'] = new ObjectResource($this->barang, 'barang');
+		$array['barang'] = new ObjectResource($this->objectable, 'barang');
 
 		return $array;
 	}
