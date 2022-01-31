@@ -14,6 +14,7 @@ use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokPengamanResource;
+use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokTitipResource;
 use App\Http\Resources\LptpResource;
@@ -31,6 +32,7 @@ use App\Models\DokContoh;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
+use App\Models\DokReekspor;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
 use App\Models\Lptp;
@@ -92,6 +94,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,
+		],
+		'reekspor' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/KPU.03/BD.05/',
+			'parent' => 'reekspor',
+			'model' => DokReekspor::class,
+			'resource' => DokReeksporResource::class,
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',

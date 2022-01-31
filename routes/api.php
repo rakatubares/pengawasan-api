@@ -13,6 +13,7 @@ use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
+use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\PenindakanController;
@@ -46,7 +47,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 
 /**
- * API for BA Contoh
+ * API for SBP
  */
 Route::apiResource('sbp', SbpController::class);
 Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
@@ -140,6 +141,12 @@ Route::apiResource('bast', DokBastController::class);
 Route::get('/bast/{bast_id}/basic', [DokBastController::class, 'basic']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
+
+/**
+ * API for BA Reekspor
+ */
+Route::apiResource('reekspor', DokReeksporController::class);
+Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
 
 /**
  * API for Details
