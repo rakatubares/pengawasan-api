@@ -4,18 +4,14 @@ use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
-use App\Http\Controllers\DetailController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
-use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
 use App\Http\Controllers\RefUserCacheController;
-use App\Http\Controllers\TitipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +34,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for BA Reekspor
+ */
+Route::apiResource('reekspor', DokReeksporController::class);
+Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
 
 /**
  * API for Details
