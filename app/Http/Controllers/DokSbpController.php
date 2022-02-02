@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SbpResource;
-use App\Http\Resources\SbpTableResource;
+use App\Http\Resources\DokSbpResource;
+use App\Http\Resources\DokSbpTableResource;
+use App\Models\DokSbp;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Sbp;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SbpController extends Controller
+class DokSbpController extends Controller
 {
 	use DokumenTrait;
 	use SwitcherTrait;
 	
-	private $tipe_dok = 'SBP';
-	private $agenda_dok = '/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'sbp';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -33,10 +37,10 @@ class SbpController extends Controller
 	 */
 	public function index()
 	{
-		$all_sbp = Sbp::orderBy('created_at', 'desc')
+		$all_sbp = DokSbp::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$sbp_list = SbpTableResource::collection($all_sbp);
+		$sbp_list = DokSbpTableResource::collection($all_sbp);
 		return $sbp_list;
 	}
 
@@ -48,7 +52,7 @@ class SbpController extends Controller
 	 */
 	public function show($id)
 	{
-		$sbp = new SbpResource(Sbp::findOrFail($id));
+		$sbp = new DokSbpResource(DokSbp::findOrFail($id));
 		return $sbp;
 	}
 
@@ -59,7 +63,7 @@ class SbpController extends Controller
 	 */
 	public function basic($id)
 	{
-		$sbp = new SbpResource(Sbp::find($id), 'basic');
+		$sbp = new DokSbpResource(DokSbp::find($id), 'basic');
 		return $sbp;
 	}
 
@@ -70,7 +74,7 @@ class SbpController extends Controller
 	 */
 	public function objek($id)
 	{
-		$objek = new SbpResource(Sbp::find($id), 'objek');
+		$objek = new DokSbpResource(DokSbp::find($id), 'objek');
 		return $objek;
 	}
 
@@ -81,7 +85,7 @@ class SbpController extends Controller
 	 */
 	public function linked($id)
 	{
-		$objek = new SbpResource(Sbp::find($id), 'linked');
+		$objek = new DokSbpResource(DokSbp::find($id), 'linked');
 		return $objek;
 	}
 
@@ -113,7 +117,7 @@ class SbpController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_mulai_penindakan']));
 		$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_selesai_penindakan']));
 
@@ -156,11 +160,11 @@ class SbpController extends Controller
 		try {
 			// Save data SBP
 			$data_sbp = $this->prepareData($request, 'insert');
-			$sbp = Sbp::create($data_sbp);
+			$sbp = DokSbp::create($data_sbp);
 
 			// Save data LPTP
 			$lptp_request = new Request($request->dokumen['lptp']);
-			$lptp = app(LptpController::class)->store($lptp_request);
+			$lptp = app(DokLptpController::class)->store($lptp_request);
 			$this->createRelation('sbp', $sbp->id, 'lptp', $lptp->id);
 
 			// Save data penindakan and create object relation
@@ -172,7 +176,7 @@ class SbpController extends Controller
 			DB::commit();
 
 			// Return created SBP
-			$sbp_resource = new SbpResource(Sbp::findOrFail($sbp->id));
+			$sbp_resource = new DokSbpResource(DokSbp::findOrFail($sbp->id));
 			return $sbp_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -190,7 +194,7 @@ class SbpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is published
-		$is_unpublished = $this->checkUnpublished(Sbp::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokSbp::class, $id);
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -202,11 +206,11 @@ class SbpController extends Controller
 
 				// Update SBP
 				$data_sbp = $this->prepareData($request, 'update');
-				Sbp::where('id', $id)->update($data_sbp);
+				DokSbp::where('id', $id)->update($data_sbp);
 
 				// Update LPTP
 				$lptp_request = new Request($request->dokumen['lptp']);
-				app(LptpController::class)->update($lptp_request, $request->dokumen['lptp']['id']);
+				app(DokLptpController::class)->update($lptp_request, $request->dokumen['lptp']['id']);
 
 				// Update penindakan
 				$this->updatePenindakan($request);
@@ -215,7 +219,7 @@ class SbpController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$sbp_resource = new SbpResource(Sbp::findOrFail($id));
+				$sbp_resource = new DokSbpResource(DokSbp::findOrFail($id));
 				return $sbp_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -236,11 +240,11 @@ class SbpController extends Controller
 	public function publish($id)
 	{
 		// Create array from SBP object
-		$sbp = new SbpResource(Sbp::find($id));
+		$sbp = new DokSbpResource(DokSbp::find($id));
 		$arr = json_decode($sbp->toJson(), true);
 
 		// Check penindakan date
-		$year = $this->datePenindakan(Sbp::class, $id);
+		$year = $this->datePenindakan(DokSbp::class, $id);
 	
 		// Publish each document
 		foreach ($arr['dokumen'] as $type => $data) {
@@ -266,7 +270,7 @@ class SbpController extends Controller
 
 		try {
 			// Get object penindakan
-			$sbp = Sbp::findOrFail($id);
+			$sbp = DokSbp::findOrFail($id);
 			$penindakan = $sbp->penindakan;
 
 			// Upsert segel
@@ -294,7 +298,7 @@ class SbpController extends Controller
 			DB::commit();
 
 			// Return linked doc
-			$dokumen = new SbpResource(Sbp::findOrFail($id), 'linked');
+			$dokumen = new DokSbpResource(DokSbp::findOrFail($id), 'linked');
 			return $dokumen;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -410,9 +414,9 @@ class SbpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(Sbp::class, $id);
+			$is_unpublished = $this->checkUnpublished(DokSbp::class, $id);
 			if ($is_unpublished) {
-				Sbp::find($id)->delete();
+				DokSbp::find($id)->delete();
 			}
 			
 			DB::commit();

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpTableResource extends JsonResource
+class DokSbpTableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

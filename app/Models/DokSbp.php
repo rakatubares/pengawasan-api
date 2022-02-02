@@ -6,29 +6,40 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lptp extends Model
+class DokSbp extends Model
 {
     use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'dok_lptp';
+	protected $table = 'dok_sbp';
 
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
-		'alasan_tidak_penindakan',
-		'jabatan_atasan',
-		'plh',
-		'atasan_id',
+		'penindakan_id',
+		'uraian_penindakan',
+		'alasan_penindakan',
+		'jenis_pelanggaran',
+		'wkt_mulai_penindakan',
+		'wkt_selesai_penindakan',
+		'hal_terjadi',
 		'kode_status'
 	];
 
-	public function sbp()
+	protected $casts = [
+		'wkt_mulai_penindakan' => 'datetime',
+		'wkt_selesai_penindakan' => 'datetime',
+	];
+
+	/**
+	 * Relation to main penindakan object
+	 */
+	public function penindakan()
 	{
 		return $this->hasOneThrough(
-			Sbp::class,
+			Penindakan::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
@@ -36,17 +47,35 @@ class Lptp extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			'sbp'
+			'penindakan'
 		)->where(
 			'object2_type',
-			'lptp'
+			'sbp'
 		);
 	}
 
-	public function lphp()
+	/**
+	 * Relations to other objects
+	 */
+	public function relations()
+	{
+		return $this->hasMany(
+			ObjectRelation::class, 
+			'object1_id', 
+			'id'
+		)->where(
+			'object1_type',
+			'sbp'
+		);
+	}
+
+	/**
+	 * Relation to LPTP through object relation model
+	 */
+	public function lptp()
 	{
 		return $this->hasOneThrough(
-			DokLphp::class,
+			DokLptp::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -54,24 +83,11 @@ class Lptp extends Model
 			'object2_id'
 		)->where(
 			'object1_type',
-			'lptp'
+			'sbp'
 		)->where(
 			'object2_type',
-			'lphp'
+			'lptp'
 		);
-	}
-
-	/**
-	 * Detail atasan
-	 */
-	public function atasan()
-	{
-		return $this->belongsTo(RefUserCache::class, 'atasan_id');
-	}
-
-	public function jabatan()
-	{
-		return $this->belongsTo(RefJabatan::class, 'jabatan_atasan', 'kode');
 	}
 
 	public function status()

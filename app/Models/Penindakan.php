@@ -91,7 +91,7 @@ class Penindakan extends Model
 	public function sbp()
 	{
 		return $this->hasOneThrough(
-			Sbp::class,
+			DokSbp::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

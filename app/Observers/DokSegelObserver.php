@@ -3,17 +3,17 @@
 namespace App\Observers;
 
 use App\Models\ObjectRelation;
-use App\Models\Segel;
+use App\Models\DokSegel;
 
-class SegelObserver
+class DokSegelObserver
 {
     /**
      * Handle the Segel "created" event.
      *
-     * @param  \App\Models\Segel  $segel
+     * @param  \App\Models\DokSegel  $segel
      * @return void
      */
-    public function created(Segel $segel)
+    public function created(DokSegel $segel)
     {
         //
     }
@@ -21,10 +21,10 @@ class SegelObserver
     /**
      * Handle the Segel "updated" event.
      *
-     * @param  \App\Models\Segel  $segel
+     * @param  \App\Models\DokSegel  $segel
      * @return void
      */
-    public function updated(Segel $segel)
+    public function updated(DokSegel $segel)
     {
         //
     }
@@ -32,10 +32,10 @@ class SegelObserver
     /**
      * Handle the Segel "deleted" event.
      *
-     * @param  \App\Models\Segel  $segel
+     * @param  \App\Models\DokSegel  $segel
      * @return void
      */
-    public function deleted(Segel $segel)
+    public function deleted(DokSegel $segel)
     {
         // Change status to 300
 		$segel->update(['kode_status' => 300]);
@@ -58,10 +58,10 @@ class SegelObserver
     /**
      * Handle the Segel "restored" event.
      *
-     * @param  \App\Models\Segel  $segel
+     * @param  \App\Models\DokSegel  $segel
      * @return void
      */
-    public function restored(Segel $segel)
+    public function restored(DokSegel $segel)
     {
         //
     }
@@ -69,10 +69,10 @@ class SegelObserver
     /**
      * Handle the Segel "force deleted" event.
      *
-     * @param  \App\Models\Segel  $segel
+     * @param  \App\Models\DokSegel  $segel
      * @return void
      */
-    public function forceDeleted(Segel $segel)
+    public function forceDeleted(DokSegel $segel)
     {
         //
     }

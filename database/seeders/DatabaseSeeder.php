@@ -21,9 +21,7 @@ class DatabaseSeeder extends Seeder
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
-			SbpSeeder::class,
-			DokLphpSeeder::class,
-			DokLpSeeder::class,
+			DokSbpSeeder::class,
 		]);
 	}
 }

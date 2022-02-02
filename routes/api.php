@@ -6,15 +6,12 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\DokLpController;
-use App\Http\Controllers\DokLphpController;
+use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
-use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,33 +38,12 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /**
  * API for SBP
  */
-Route::apiResource('sbp', SbpController::class);
-Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
-Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
-Route::get('/sbp/{sbp_id}/linked', [SbpController::class, 'linked']);
-Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
-Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
-
-/**
- * API for BA Segel
- */
-Route::apiResource('segel', SegelController::class);
-Route::post('/segel/search', [SegelController::class, 'search']);
-Route::put('/segel/{segel_id}/publish', [SegelController::class, 'publish']);
-
-/**
- * API for LPHP
- */
-Route::post('/sbp/{sbp_id}/lphp', [DokLphpController::class, 'store']);
-Route::put('/sbp/{sbp_id}/lphp/publish', [DokLphpController::class, 'publish']);
-Route::delete('/lphp/{lphp_id}', [DokLphpController::class, 'destroy']);
-
-/**
- * API for LP
- */
-Route::post('/sbp/{sbp_id}/lp', [DokLpController::class, 'store']);
-Route::put('/sbp/{sbp_id}/lp/publish', [DokLpController::class, 'publish']);
-Route::delete('/lp/{lp_id}', [DokLpController::class, 'destroy']);
+Route::apiResource('sbp', DokSbpController::class);
+Route::get('/sbp/{sbp_id}/basic', [DokSbpController::class, 'basic']);
+Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
+Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
+Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
+Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
 
 /**
  * API for Details

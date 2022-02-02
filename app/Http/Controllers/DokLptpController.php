@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LptpResource;
-use App\Models\Lptp;
+use App\Http\Resources\DokLptpResource;
+use App\Models\DokLptp;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
 
-class LptpController extends Controller
+class DokLptpController extends Controller
 {
 	use DokumenTrait;
 
-	private $tipe_dok = 'LPTP';
-	private $agenda_dok = '/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'lptp';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
     /**
      * Display a listing of the resource.
@@ -42,9 +46,9 @@ class LptpController extends Controller
      */
     public function store(Request $request)
     {
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-' . $this->agenda_dok;
 
-        $lptp = Lptp::create([
+        $lptp = DokLptp::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'jabatan_atasan' => $request->jabatan_atasan['kode'],
@@ -54,7 +58,7 @@ class LptpController extends Controller
 			'kode_status' => 100,
 		]);
 
-		$lptp_resource = new LptpResource($lptp);
+		$lptp_resource = new DokLptpResource($lptp);
 		return $lptp_resource;
     }
 
@@ -89,7 +93,7 @@ class LptpController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Lptp::where('id', $id)->update([
+        DokLptp::where('id', $id)->update([
 			'jabatan_atasan' => $request->jabatan_atasan['kode'],
 			'plh' => $request->plh,
 			'atasan_id' => $request->atasan['user_id'],

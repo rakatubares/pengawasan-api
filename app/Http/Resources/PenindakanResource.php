@@ -64,10 +64,10 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'sbp':
-					$sbp = new SbpResource($this->sbp, 'basic');
+					$sbp = new DokSbpResource($this->sbp, 'basic');
 					$list_dokumen['sbp'] = $sbp;
 
-					$lptp = new LptpResource($this->sbp->lptp);
+					$lptp = new DokLptpResource($this->sbp->lptp);
 					$list_dokumen['lptp'] = $lptp;
 
 					$lphp = $this->sbp->lptp->lphp;

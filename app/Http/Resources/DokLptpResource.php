@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Services\SSO;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LptpResource extends JsonResource
+class DokLptpResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

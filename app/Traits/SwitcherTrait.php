@@ -9,23 +9,21 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
-use App\Http\Resources\LptpResource;
+use App\Http\Resources\DokLptpResource;
+use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\RiksaResource;
-use App\Http\Resources\SbpResource;
 use App\Http\Resources\SegelResource;
 use App\Http\Resources\TegahResource;
-use App\Http\Resources\TitipResource;
-use App\Models\BukaSegel;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
-use App\Models\Lptp;
+use App\Models\DokLptp;
+use App\Models\DokSbp;
 use App\Models\RefEntitas;
 use App\Models\Riksa;
-use App\Models\Sbp;
 use App\Models\Segel;
 use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
@@ -34,12 +32,6 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
-		'bukasegel' => [
-			'tipe_dok' => 'BA',
-			'parent' => 'penindakan',
-			'model' => BukaSegel::class,
-			'resource' => BukaSegelResource::class,
-		],
 		'lp' => [
 			'tipe_dok' => 'LP',
 			'parent' => 'penindakan',
@@ -54,36 +46,35 @@ trait SwitcherTrait
 		],
 		'lptp' => [
 			'tipe_dok' => 'LPTP',
+			'agenda' => '/KPU.03/BD.05/',
 			'parent' => 'penindakan',
-			'model' => Lptp::class,
-			'resource' => LptpResource::class,
+			'model' => DokLptp::class,
+			'resource' => DokLptpResource::class,
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/RIKSA/KPU.03/BD.05/',
 			'parent' => 'penindakan',
 			'model' => Riksa::class,
 			'resource' => RiksaResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',
+			'agenda' => '/KPU.03/BD.05/',
 			'parent' => 'penindakan',
-			'model' => Sbp::class,
-			'resource' => SbpResource::class,
+			'model' => DokSbp::class,
+			'resource' => DokSbpResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/SEGEL/KPU.03/BD.05/',
 			'parent' => 'penindakan',
 			'model' => Segel::class,
 			'resource' => SegelResource::class,
 		],
-		'titip' => [
-			'tipe_dok' => 'BA',
-			'parent' => 'penindakan',
-			'model' => Titip::class,
-			'resource' => TitipResource::class,
-		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TEGAH/KPU.03/BD.05/',
 			'parent' => 'penindakan',
 			'model' => Tegah::class,
 			'resource' => TegahResource::class

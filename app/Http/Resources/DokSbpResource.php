@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SbpResource extends JsonResource
+class DokSbpResource extends JsonResource
 {
 	/**
      * Create a new resource instance.
