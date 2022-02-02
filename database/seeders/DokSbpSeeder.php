@@ -8,6 +8,8 @@ use App\Models\DetailSarkut;
 use App\Models\DokLptp;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
+use App\Models\DokTolakSbp1;
+use App\Models\DokTolakSbp2;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Riksa;
@@ -130,6 +132,16 @@ class DokSbpSeeder extends Seeder
 				'object_type' => $objek_penindakan,
 				'object_id' => $object_id
 			]);
+
+			$is_tolak1 = $this->faker->boolean();
+			if ($is_tolak1) {
+				$tolak1 = $this->createTolak1($sbp->id);
+
+				$is_tolak2 = $this->faker->boolean();
+				if ($is_tolak2) {
+					$this->createTolak2($tolak1->id);
+				}
+			}
 		}
     }
 
@@ -258,6 +270,54 @@ class DokSbpSeeder extends Seeder
 			'object1_id' => $penindakan_id,
 			'object2_type' => 'segel',
 			'object2_id' => $segel->id,
+		]);
+	}
+
+	private function createTolak1($sbp_id)
+	{
+		$tipe_surat_tolak = $this->switchObject('tolak1', 'tipe_dok');
+		$agenda_tolak = $this->switchObject('tolak1', 'agenda');
+		$max_tolak = DokTolakSbp1::max('no_dok');
+		$crn_tolak = $max_tolak + 1;
+		$tolak = DokTolakSbp1::create([
+			'no_dok' => $crn_tolak,
+			'agenda_dok' => $agenda_tolak,
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => $tipe_surat_tolak . '-' . $crn_tolak . $agenda_tolak . date("Y"),
+			'alasan' => $this->faker->text(),
+			'kode_status' => 200,
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'sbp',
+			'object1_id' => $sbp_id,
+			'object2_type' => 'tolak1',
+			'object2_id' => $tolak->id,
+		]);
+
+		return $tolak;
+	}
+
+	private function createTolak2($tolak1_id)
+	{
+		$tipe_surat_tolak = $this->switchObject('tolak2', 'tipe_dok');
+		$agenda_tolak = $this->switchObject('tolak2', 'agenda');
+		$max_tolak = DokTolakSbp2::max('no_dok');
+		$crn_tolak = $max_tolak + 1;
+		$tolak2 = DokTolakSbp2::create([
+			'no_dok' => $crn_tolak,
+			'agenda_dok' => $agenda_tolak,
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => $tipe_surat_tolak . '-' . $crn_tolak . $agenda_tolak . date("Y"),
+			'alasan' => $this->faker->text(),
+			'kode_status' => 200,
+		]);
+
+		ObjectRelation::create([
+			'object1_type' => 'tolak1',
+			'object1_id' => $tolak1_id,
+			'object2_type' => 'tolak2',
+			'object2_id' => $tolak2->id,
 		]);
 	}
 }

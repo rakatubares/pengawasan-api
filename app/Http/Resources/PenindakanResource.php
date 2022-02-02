@@ -74,10 +74,20 @@ class PenindakanResource extends JsonResource
 					if ($lphp != null) {
 						$list_dokumen['lphp'] = new DokLphpResource($lphp);
 
-						$lp = $this->sbp->lptp->lphp->lp;
+						$lp = $lphp->lp;
 						if ($lp != null) {
 							$list_dokumen['lp'] = new DokLpResource($lp);
 						} 
+					}
+
+					$tolak1 = $this->sbp->tolak1;
+					if ($tolak1 != null) {
+						$list_dokumen['tolak1'] = new DokTolakSbpResource($tolak1, 'pdf');
+
+						$tolak2 = $tolak1->tolak2;
+						if ($tolak2 != null) {
+							$list_dokumen['tolak2'] = new DokTolakSbpResource($tolak2, 'pdf');
+						}
 					}
 					break;
 
@@ -100,8 +110,6 @@ class PenindakanResource extends JsonResource
 					# code...
 					break;
 			}
-
-			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;

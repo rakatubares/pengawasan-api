@@ -11,6 +11,7 @@ use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokSbpResource;
+use App\Http\Resources\DokTolakSbpResource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\SegelResource;
 use App\Http\Resources\TegahResource;
@@ -22,6 +23,8 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLptp;
 use App\Models\DokSbp;
+use App\Models\DokTolakSbp1;
+use App\Models\DokTolakSbp2;
 use App\Models\RefEntitas;
 use App\Models\Riksa;
 use App\Models\Segel;
@@ -78,6 +81,20 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => Tegah::class,
 			'resource' => TegahResource::class
+		],
+		'tolak1' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TOLAK 1/KPU.03/BD.05/',
+			'parent' => 'penindakan',
+			'model' => DokTolakSbp1::class,
+			'resource' => DokTolakSbpResource::class
+		],
+		'tolak2' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TOLAK 2/KPU.03/BD.05/',
+			'parent' => 'penindakan',
+			'model' => DokTolakSbp2::class,
+			'resource' => DokTolakSbpResource::class
 		],
 
 		// Objek
