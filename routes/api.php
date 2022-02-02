@@ -147,6 +147,7 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
  */
 Route::apiResource('reekspor', DokReeksporController::class);
 Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
+Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'publish']);
 
 /**
  * API for Details
