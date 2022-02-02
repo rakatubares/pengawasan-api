@@ -12,23 +12,24 @@ use App\Models\DokBukaSegel;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
+use App\Models\DokSbp;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Models\Riksa;
-use App\Models\Sbp;
 use App\Models\Tegah;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
+use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
 use App\Observers\DokTitipObserver;
 use App\Observers\RiksaObserver;
-use App\Observers\SbpObserver;
+use App\Observers\TegahObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -77,9 +78,10 @@ class AppServiceProvider extends ServiceProvider
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
+		DokSbp::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
 		Riksa::observe(RiksaObserver::class);
-		Sbp::observe(SbpObserver::class);
+		Tegah::observe(TegahObserver::class);
     }
 }

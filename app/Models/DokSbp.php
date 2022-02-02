@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Sbp extends Model
+class DokSbp extends Model
 {
     use HasFactory;
 	use SoftDeletes;
@@ -75,7 +75,7 @@ class Sbp extends Model
 	public function lptp()
 	{
 		return $this->hasOneThrough(
-			Lptp::class,
+			DokLptp::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -87,6 +87,27 @@ class Sbp extends Model
 		)->where(
 			'object2_type',
 			'lptp'
+		);
+	}
+
+	/**
+	 * Relation to Penolakan SBP through object relation model
+	 */
+	public function tolak1()
+	{
+		return $this->hasOneThrough(
+			DokTolakSbp1::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'sbp'
+		)->where(
+			'object2_type',
+			'tolak1'
 		);
 	}
 

@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use App\Models\ObjectRelation;
-use App\Models\Sbp;
+use App\Models\DokSbp;
 
-class SbpObserver
+class DokSbpObserver
 {
 	/**
 	 * Handle events after all transactions are committed.
@@ -17,10 +17,10 @@ class SbpObserver
 	/**
 	 * Handle the Sbp "created" event.
 	 *
-	 * @param  \App\Models\Sbp  $sbp
+	 * @param  \App\Models\DokSbp  $sbp
 	 * @return void
 	 */
-	public function created(Sbp $sbp)
+	public function created(DokSbp $sbp)
 	{
 		//
 	}
@@ -28,10 +28,10 @@ class SbpObserver
 	/**
 	 * Handle the Sbp "updated" event.
 	 *
-	 * @param  \App\Models\Sbp  $sbp
+	 * @param  \App\Models\DokSbp  $sbp
 	 * @return void
 	 */
-	public function updated(Sbp $sbp)
+	public function updated(DokSbp $sbp)
 	{
 		//
 	}
@@ -39,10 +39,10 @@ class SbpObserver
 	/**
 	 * Handle the Sbp "deleted" event.
 	 *
-	 * @param  \App\Models\Sbp  $sbp
+	 * @param  \App\Models\DokSbp  $sbp
 	 * @return void
 	 */
-	public function deleted(Sbp $sbp)
+	public function deleted(DokSbp $sbp)
 	{
 		// Change status to 300
 		$sbp->update(['kode_status' => 300]);
@@ -66,10 +66,10 @@ class SbpObserver
 	/**
 	 * Handle the Sbp "restored" event.
 	 *
-	 * @param  \App\Models\Sbp  $sbp
+	 * @param  \App\Models\DokSbp  $sbp
 	 * @return void
 	 */
-	public function restored(Sbp $sbp)
+	public function restored(DokSbp $sbp)
 	{
 		//
 	}
@@ -77,10 +77,10 @@ class SbpObserver
 	/**
 	 * Handle the Sbp "force deleted" event.
 	 *
-	 * @param  \App\Models\Sbp  $sbp
+	 * @param  \App\Models\DokSbp  $sbp
 	 * @return void
 	 */
-	public function forceDeleted(Sbp $sbp)
+	public function forceDeleted(DokSbp $sbp)
 	{
 		//
 	}

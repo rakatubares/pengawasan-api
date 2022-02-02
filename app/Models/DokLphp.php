@@ -37,7 +37,7 @@ class DokLphp extends Model
 	public function lptp()
 	{
 		return $this->hasOneThrough(
-			Lptp::class,
+			DokLptp::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',

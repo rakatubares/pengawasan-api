@@ -16,13 +16,13 @@ use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\DokTitipController;
+use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RiksaController;
-use App\Http\Controllers\SbpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -49,13 +49,12 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /**
  * API for SBP
  */
-Route::apiResource('sbp', SbpController::class);
-Route::get('/sbp/{sbp_id}/basic', [SbpController::class, 'basic']);
-Route::get('/sbp/{sbp_id}/objek', [SbpController::class, 'objek']);
-Route::get('/sbp/{sbp_id}/linked', [SbpController::class, 'linked']);
-Route::post('/sbp/{sbp_id}/storelinked', [SbpController::class, 'storeLinkedDoc']);
-Route::post('/sbp/search', [SbpController::class, 'search']);
-Route::put('/sbp/{sbp_id}/publish', [SbpController::class, 'publish']);
+Route::apiResource('sbp', DokSbpController::class);
+Route::get('/sbp/{sbp_id}/basic', [DokSbpController::class, 'basic']);
+Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
+Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
+Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
+Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
 
 /**
  * API for LPHP

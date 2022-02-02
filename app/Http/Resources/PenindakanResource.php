@@ -64,20 +64,30 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'sbp':
-					$sbp = new SbpResource($this->sbp, 'basic');
+					$sbp = new DokSbpResource($this->sbp, 'basic');
 					$list_dokumen['sbp'] = $sbp;
 
-					$lptp = new LptpResource($this->sbp->lptp);
+					$lptp = new DokLptpResource($this->sbp->lptp);
 					$list_dokumen['lptp'] = $lptp;
 
 					$lphp = $this->sbp->lptp->lphp;
 					if ($lphp != null) {
 						$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
 
-						$lp = $this->sbp->lptp->lphp->lp;
+						$lp = $lphp->lp;
 						if ($lp != null) {
 							$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
 						} 
+					}
+
+					$tolak1 = $this->sbp->tolak1;
+					if ($tolak1 != null) {
+						$list_dokumen['tolak1'] = new DokTolakSbpResource($tolak1, 'pdf');
+
+						$tolak2 = $tolak1->tolak2;
+						if ($tolak2 != null) {
+							$list_dokumen['tolak2'] = new DokTolakSbpResource($tolak2, 'pdf');
+						}
 					}
 					break;
 

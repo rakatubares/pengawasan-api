@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DokLphp;
-use App\Models\Lptp;
+use App\Models\DokLptp;
 use App\Models\ObjectRelation;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -20,7 +20,7 @@ class DokLphpSeeder extends Seeder
 		$faker = Faker::create();
 
 		// Get lptp ids
-		$max_lptp_id = Lptp::max('id');
+		$max_lptp_id = DokLptp::max('id');
 		$available_lptp_id = range(1, $max_lptp_id);
 
 		for ($i=1; $i < 11; $i++) { 
