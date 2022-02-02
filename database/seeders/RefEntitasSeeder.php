@@ -18,16 +18,14 @@ class RefEntitasSeeder extends Seeder
 		$faker = Faker::create();
 
 		for ($i=0; $i < 100; $i++) { 
-			$jenis_entitas = $faker->randomElement(['perorangan', 'badan usaha']);
-
-			// if ($jenis_entitas == 'perorangan') {
-			$gender = $faker->randomElement(['male', 'female']);
+			$gender = $faker->randomElement(['laki-laki', 'perempuan']);
 			RefEntitas::create([
-				'jenis_entitas' => 'perorangan',
 				'nama' => $faker->name($gender),
 				'jenis_kelamin' => $gender,
+				'tempat_lahir' => $faker->city(),
 				'tanggal_lahir' => $faker->date(),
 				'warga_negara' => $faker->country(),
+				'agama' => $faker->randomElement(['islam', 'kristen', 'katolik', 'hindu', 'budha', 'kong hu cu']),
 				'jenis_identitas' => $faker->regexify('[A-Z]{3}'),
 				'nomor_identitas' => $faker->regexify('[0-9]{6,15}'),
 				'pekerjaan' => $faker->jobTitle(),
