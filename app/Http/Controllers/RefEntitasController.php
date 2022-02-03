@@ -51,7 +51,6 @@ class RefEntitasController extends Controller
 		]);
 
 		$insert_result = RefEntitas::create([
-			'jenis_entitas' => 'perorangan',
 			'nama' => $request->nama,
 			'jenis_kelamin' => $request->jenis_kelamin,
 			'tempat_lahir' => $request->tempat_lahir,
