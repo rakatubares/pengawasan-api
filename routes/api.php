@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokSbpController;
+use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -44,6 +45,12 @@ Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
+
+/**
+ * API for BA Penolakan SBP
+ */
+Route::apiResource('tolak1', DokTolakSbp1Controller::class);
+Route::get('/tolak1/{tolak1_id}/display', [DokTolakSbp1Controller::class, 'display']);
 
 /**
  * API for Details

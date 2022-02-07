@@ -19,7 +19,11 @@ class CreateDokTolakSbp1Table extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('sprint_id')->index();
 			$table->text('alasan');
+			$table->integer('petugas1_id')->index();
+			$table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

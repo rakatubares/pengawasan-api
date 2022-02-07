@@ -280,11 +280,15 @@ class DokSbpSeeder extends Seeder
 		$max_tolak = DokTolakSbp1::max('no_dok');
 		$crn_tolak = $max_tolak + 1;
 		$tolak = DokTolakSbp1::create([
+			'sprint_id' => $this->faker->numberBetween(1,10),
 			'no_dok' => $crn_tolak,
 			'agenda_dok' => $agenda_tolak,
 			'thn_dok' => date("Y"),
 			'no_dok_lengkap' => $tipe_surat_tolak . '-' . $crn_tolak . $agenda_tolak . date("Y"),
+			'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 			'alasan' => $this->faker->text(),
+			'petugas1_id' => 1,
+			'petugas2_id' => 2,
 			'kode_status' => 200,
 		]);
 

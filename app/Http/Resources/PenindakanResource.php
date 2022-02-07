@@ -82,11 +82,11 @@ class PenindakanResource extends JsonResource
 
 					$tolak1 = $this->sbp->tolak1;
 					if ($tolak1 != null) {
-						$list_dokumen['tolak1'] = new DokTolakSbpResource($tolak1, 'pdf');
+						$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
 
 						$tolak2 = $tolak1->tolak2;
 						if ($tolak2 != null) {
-							$list_dokumen['tolak2'] = new DokTolakSbpResource($tolak2, 'pdf');
+							$list_dokumen['tolak2'] = new DokTolakSbp1Resource($tolak2, 'pdf');
 						}
 					}
 					break;

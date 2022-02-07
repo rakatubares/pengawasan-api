@@ -18,8 +18,16 @@ class DokTolakSbp1 extends Model
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
+		'tanggal_dokumen',
+		'sprint_id',
 		'alasan',
+		'petugas1_id',
+		'petugas2_id',
 		'kode_status'
+	];
+
+	protected $casts = [
+		'tanggal_dokumen' => 'date'
 	];
 
 	public function sbp()
@@ -56,6 +64,21 @@ class DokTolakSbp1 extends Model
 			'object2_type',
 			'tolak2'
 		);
+	}
+
+	public function sprint()
+	{
+		return $this->belongsTo(RefSprint::class, 'sprint_id');
+	}
+
+	public function petugas1()
+	{
+		return $this->belongsTo(RefUserCache::class, 'petugas1_id');
+	}
+
+	public function petugas2()
+	{
+		return $this->belongsTo(RefUserCache::class, 'petugas2_id');
 	}
 
 	public function status()
