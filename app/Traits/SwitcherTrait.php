@@ -12,7 +12,8 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSegelResource;
-use App\Http\Resources\DokTolakSbpResource;
+use App\Http\Resources\DokTolakSbp1Resource;
+use App\Http\Resources\DokTolakSbp2Resource;
 use App\Http\Resources\RiksaResource;
 use App\Http\Resources\TegahResource;
 use App\Models\DetailBangunan;
@@ -87,14 +88,14 @@ trait SwitcherTrait
 			'agenda' => '/TOLAK 1/KPU.03/BD.05/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp1::class,
-			'resource' => DokTolakSbpResource::class
+			'resource' => DokTolakSbp1Resource::class
 		],
 		'tolak2' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TOLAK 2/KPU.03/BD.05/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp2::class,
-			'resource' => DokTolakSbpResource::class
+			'resource' => DokTolakSbp2Resource::class
 		],
 
 		// Objek
