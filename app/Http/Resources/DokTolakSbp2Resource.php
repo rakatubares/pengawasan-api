@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DokTolakSbp1Resource extends JsonResource
+class DokTolakSbp2Resource extends JsonResource
 {
 	/**
 	 * Create a new resource instance.
@@ -44,11 +44,6 @@ class DokTolakSbp1Resource extends JsonResource
 		return $array;
 	}
 
-	/**
-	 * Transform the resource into an array for display.
-	 *
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
 	private function basic()
 	{
 		$array = [
@@ -62,6 +57,7 @@ class DokTolakSbp1Resource extends JsonResource
 				: null,
 			'alasan' => $this->alasan,
 			'sprint' => new RefSprintResource($this->sprint),
+			'saksi' => new RefEntitasResource($this->saksi),
 			'petugas1' => new RefUserResource($this->petugas1),
 			'petugas2' => new RefUserResource($this->petugas2),
 		];
@@ -71,16 +67,16 @@ class DokTolakSbp1Resource extends JsonResource
 
 	private function default()
 	{
-		$tolak1 = $this->basic();
-		$penindakan = new PenindakanResource($this->sbp->penindakan, 'basic');
+		$tolak2 = $this->basic();
+		$penindakan = new PenindakanResource($this->tolak1->sbp->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->sbp->penindakan->objectable, $this->sbp->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->sbp->penindakan, 'dokumen');
+		$objek = new ObjectResource($this->tolak1->sbp->penindakan->objectable, $this->tolak1->sbp->penindakan->object_type);
+		$dokumen = new PenindakanResource($this->tolak1->sbp->penindakan, 'dokumen');
 
 		$array = [
 			'main' => [
-				'type' => 'tolak1',
-				'data' => $tolak1
+				'type' => 'tolak2',
+				'data' => $tolak2
 			],
 			'penindakan' => $penindakan,
 			'status' => $status,
@@ -101,11 +97,14 @@ class DokTolakSbp1Resource extends JsonResource
 
 	private function display()
 	{
-		$sbp = $this->sbp;
+		$tolak1 = $this->tolak1;
+		$sbp = $tolak1->sbp;
 		$array = $this->basic();
+		$array['nomor_tolak1'] = $tolak1->no_dok_lengkap;
+		$array['tanggal_tolak1'] = $tolak1->tanggal_dokumen->format('d-m-Y');
 		$array['nomor_sbp'] = $sbp->no_dok_lengkap;
 		$array['tanggal_sbp'] = $sbp->penindakan->tanggal_penindakan->format('d-m-Y');
-		$array['saksi'] = new RefEntitasResource($sbp->penindakan->saksi);
+		$array['pemilik'] = new RefEntitasResource($sbp->penindakan->saksi);
 		return $array;
 	}
 }

@@ -86,7 +86,7 @@ class PenindakanResource extends JsonResource
 
 						$tolak2 = $tolak1->tolak2;
 						if ($tolak2 != null) {
-							$list_dokumen['tolak2'] = new DokTolakSbp1Resource($tolak2, 'pdf');
+							$list_dokumen['tolak2'] = new DokTolakSbp2Resource($tolak2, 'pdf');
 						}
 					}
 					break;

@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokTolakSbp1Controller;
+use App\Http\Controllers\DokTolakSbp2Controller;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -51,6 +52,12 @@ Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
  */
 Route::apiResource('tolak1', DokTolakSbp1Controller::class);
 Route::get('/tolak1/{tolak1_id}/display', [DokTolakSbp1Controller::class, 'display']);
+
+/**
+ * API for BA Penolakan TTD BA Penolakan SBP
+ */
+Route::apiResource('tolak2', DokTolakSbp2Controller::class);
+Route::get('/tolak2/{tolak2_id}/display', [DokTolakSbp2Controller::class, 'display']);
 
 /**
  * API for Details
