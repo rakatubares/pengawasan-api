@@ -98,14 +98,27 @@ class DokSbpController extends Controller
 	public function search(Request $request)
 	{
 		$src = $request->src;
-		$sta = $request->sta;
+		$flt = $request->flt;
 		$exc = $request->exc;
 		$search = '%' . $src . '%';
 
-		$search_result = Sbp::where(function ($query) use ($search, $sta) 
+		$search_result = DokSbp::where(function ($query) use ($search, $flt) 
 			{
 				$query->where('no_dok_lengkap', 'like', $search)
-					->where('kode_status', $sta);
+					->when($flt != null, function ($query) use ($flt)
+					{
+						foreach ($flt as $column => $value) {
+							if (is_array($value)) {
+								$query->whereIn($column, $value);
+							} else if ($value == null) {
+								$query->where($column, $value);
+							} else {
+								$search_value = '%' . $value . '%';
+								$query->where($column, 'like', $search_value);
+							}
+						}
+						return $query;
+					});
 			})
 			->when($exc != null, function ($query) use ($exc)
 			{
@@ -115,7 +128,7 @@ class DokSbpController extends Controller
 			->orderBy('id', 'desc')
 			->take(5)
 			->get();
-		$search_list = SbpTableResource::collection($search_result);
+		$search_list = DokSbpTableResource::collection($search_result);
 		return $search_list;
 	}
 
