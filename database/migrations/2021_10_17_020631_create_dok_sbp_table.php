@@ -26,6 +26,7 @@ class CreateDokSbpTable extends Migration
 			$table->dateTime('wkt_selesai_penindakan')->index();
 			$table->text('hal_terjadi')->nullable();
 			$table->integer('kode_status')->index();
+			$table->integer('status_tolak')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

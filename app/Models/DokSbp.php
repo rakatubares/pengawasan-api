@@ -25,7 +25,8 @@ class DokSbp extends Model
 		'wkt_mulai_penindakan',
 		'wkt_selesai_penindakan',
 		'hal_terjadi',
-		'kode_status'
+		'kode_status',
+		'status_tolak'
 	];
 
 	protected $casts = [

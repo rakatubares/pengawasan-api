@@ -139,7 +139,7 @@ class DokSbpSeeder extends Seeder
 
 				$is_tolak2 = $this->faker->boolean();
 				if ($is_tolak2) {
-					$this->createTolak2($tolak1->id);
+					$this->createTolak2($tolak1->id, $sbp->id);
 				}
 			}
 		}
@@ -299,10 +299,12 @@ class DokSbpSeeder extends Seeder
 			'object2_id' => $tolak->id,
 		]);
 
+		DokSbp::find($sbp_id)->update(['status_tolak' => 11]);
+
 		return $tolak;
 	}
 
-	private function createTolak2($tolak1_id)
+	private function createTolak2($tolak1_id, $sbp_id)
 	{
 		$tipe_surat_tolak = $this->switchObject('tolak2', 'tipe_dok');
 		$agenda_tolak = $this->switchObject('tolak2', 'agenda');
@@ -328,5 +330,7 @@ class DokSbpSeeder extends Seeder
 			'object2_type' => 'tolak2',
 			'object2_id' => $tolak2->id,
 		]);
+
+		DokSbp::find($sbp_id)->update(['status_tolak' => 21]);
 	}
 }

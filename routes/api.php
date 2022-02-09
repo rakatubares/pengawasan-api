@@ -46,12 +46,15 @@ Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
+Route::post('/sbp/search', [DokSbpController::class, 'search']);
 
 /**
  * API for BA Penolakan SBP
  */
 Route::apiResource('tolak1', DokTolakSbp1Controller::class);
 Route::get('/tolak1/{tolak1_id}/display', [DokTolakSbp1Controller::class, 'display']);
+Route::get('/tolak1/{tolak1_id}/form', [DokTolakSbp1Controller::class, 'form']);
+Route::put('/tolak1/{tolak1_id}/publish', [DokTolakSbp1Controller::class, 'publish']);
 
 /**
  * API for BA Penolakan TTD BA Penolakan SBP
