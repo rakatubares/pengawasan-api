@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokTolakSbp1Controller;
@@ -74,6 +75,15 @@ Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
 Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
 Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
 Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
+Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
 
 /**
  * API for Details

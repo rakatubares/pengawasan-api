@@ -20,6 +20,7 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLptp;
 use App\Models\DokSbp;
@@ -35,6 +36,12 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'lp' => [
+			'tipe_dok' => 'LP',
+			'parent' => 'penindakan',
+			'model' => DokLp::class,
+			'resource' => DokLpResource::class,
+		],
 		'lp' => [
 			'tipe_dok' => 'LP',
 			'parent' => 'penindakan',
