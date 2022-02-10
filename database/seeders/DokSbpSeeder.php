@@ -8,12 +8,12 @@ use App\Models\DetailSarkut;
 use App\Models\DokLptp;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
+use App\Models\DokTegah;
 use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\Riksa;
-use App\Models\Tegah;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -228,9 +228,9 @@ class DokSbpSeeder extends Seeder
 	{
 		$tipe_surat_tegah = $this->switchObject('tegah', 'tipe_dok');
 		$agenda_tegah = $this->switchObject('tegah', 'agenda');
-		$max_tegah = Tegah::max('no_dok');
+		$max_tegah = DokTegah::max('no_dok');
 		$crn_tegah = $max_tegah + 1;
-		$tegah = Tegah::create([
+		$tegah = DokTegah::create([
 			'no_dok' => $crn_tegah,
 			'agenda_dok' => $agenda_tegah,
 			'thn_dok' => date("Y"),

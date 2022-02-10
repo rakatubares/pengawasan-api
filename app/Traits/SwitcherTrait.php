@@ -18,11 +18,11 @@ use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokTegahResource;
 use App\Http\Resources\DokTitipResource;
 use App\Http\Resources\DokTolakSbp1Resource;
 use App\Http\Resources\DokTolakSbp2Resource;
 use App\Http\Resources\RiksaResource;
-use App\Http\Resources\TegahResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -38,12 +38,12 @@ use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
+use App\Models\DokTegah;
 use App\Models\DokTitip;
 use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
 use App\Models\RefEntitas;
 use App\Models\Riksa;
-use App\Models\Tegah;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -140,8 +140,8 @@ trait SwitcherTrait
 			'tipe_dok' => 'BA',
 			'agenda' => '/TEGAH/KPU.305/',
 			'parent' => 'penindakan',
-			'model' => Tegah::class,
-			'resource' => TegahResource::class,
+			'model' => DokTegah::class,
+			'resource' => DokTegahResource::class
 		],
 		'tolak1' => [
 			'tipe_dok' => 'BA',

@@ -3,18 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailStatusResource;
-use App\Http\Resources\TegahResource;
-use App\Http\Resources\TegahTableResource;
-use App\Models\Tegah;
+use App\Http\Resources\DokTegahResource;
+use App\Http\Resources\DokTegahTableResource;
+use App\Models\DokTegah;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 
-class TegahController extends Controller
+class DokTegahController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/TEGAH/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'tegah';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/**
 	 * Display a listing of the resource.
@@ -23,10 +29,10 @@ class TegahController extends Controller
 	 */
 	public function index()
 	{
-		$all_tegah = Tegah::orderBy('created_at', 'desc')
+		$all_tegah = DokTegah::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$tegah_list = TegahTableResource::collection($all_tegah);
+		$tegah_list = DokTegahTableResource::collection($all_tegah);
 		return $tegah_list;
 	}
 
@@ -38,9 +44,9 @@ class TegahController extends Controller
 	 */
 	public function store(Request $request)
 	{
-        $no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
+        $no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 
-		$insert_result = Tegah::create([
+		$insert_result = DokTegah::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'kode_status' => 100,
@@ -57,7 +63,7 @@ class TegahController extends Controller
 	 */
 	public function show($id)
 	{
-		$tegah = new TegahResource(Tegah::findOrFail($id));
+		$tegah = new DokTegahResource(DokTegah::findOrFail($id));
 		return $tegah;
 	}
 
@@ -68,7 +74,7 @@ class TegahController extends Controller
 	 */
 	public function showComplete($id)
 	{
-		$tegah = new TegahResource(Tegah::findOrFail($id), 'complete');
+		$tegah = new DokTegahResource(DokTegah::findOrFail($id), 'complete');
 		return $tegah;
 	}
 
@@ -79,7 +85,7 @@ class TegahController extends Controller
 	 */
 	public function showDetails($id)
 	{
-		$tegah_details = new DetailStatusResource(Tegah::findOrFail($id));
+		$tegah_details = new DetailStatusResource(DokTegah::findOrFail($id));
 		return $tegah_details;
 	}
 
@@ -92,7 +98,7 @@ class TegahController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$is_unpublished = $this->checkUnpublished(Tegah::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokTegah::class, $id);
 
 		if ($is_unpublished) {
 			$request->validate([
@@ -101,7 +107,7 @@ class TegahController extends Controller
 				'petugas1.user_id' => 'required'
 			]);
 
-			$update_result = Tegah::where('id', $id)
+			$update_result = DokTegah::where('id', $id)
 				->update([
 					'sprint_id' => $request->sprint['id'],
 					'saksi_id' => $request->saksi['id'],
@@ -126,7 +132,7 @@ class TegahController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$result = $this->deleteDocument(Tegah::class, $id);
+		$result = $this->deleteDocument(DokTegah::class, $id);
 		return $result;
 	}
 
@@ -137,7 +143,7 @@ class TegahController extends Controller
 	 */
 	public function publish($id)
 	{
-		$doc = $this->publishDocument(Tegah::class, $id, $this->tipe_dok);
+		$doc = $this->publishDocument(DokTegah::class, $id, $this->tipe_dok);
 		return $doc;
 	}
 }

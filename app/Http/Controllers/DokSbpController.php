@@ -394,7 +394,7 @@ class DokSbpController extends Controller
 
 		// Save if document not exists
 		if ($existing_tegah == null) {
-			$tegah = app(TegahController::class)->store($request);
+			$tegah = app(DokTegahController::class)->store($request);
 			$this->createRelation('penindakan', $penindakan->id, 'tegah', $tegah->id);
 		}
 	}
