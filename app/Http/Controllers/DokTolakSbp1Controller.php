@@ -80,6 +80,49 @@ class DokTolakSbp1Controller extends Controller
 		return $tolak1;
 	}
 
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$flt = $request->flt;
+		$exc = $request->exc;
+		$search = '%' . $src . '%';
+
+		$search_result = DokTolakSbp1::where(function ($query) use ($search, $flt) 
+			{
+				$query->where('no_dok_lengkap', 'like', $search)
+					->when($flt != null, function ($query) use ($flt)
+					{
+						foreach ($flt as $column => $value) {
+							if (is_array($value)) {
+								$query->whereIn($column, $value);
+							} else if ($value == null) {
+								$query->where($column, $value);
+							} else {
+								$search_value = '%' . $value . '%';
+								$query->where($column, 'like', $search_value);
+							}
+						}
+						return $query;
+					});
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokTolakSbp1TableResource::collection($search_result);
+		return $search_list;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
@@ -144,7 +187,7 @@ class DokTolakSbp1Controller extends Controller
 
 				// Create relation
 				$this->createRelation('sbp', $sbp->id, 'tolak1', $tolak1->id);
-				$sbp->update(['status_tolak' => 10]);
+				$sbp->update(['status_tolak' => 0]);
 
 				// Commit store query
 				DB::commit();
@@ -206,7 +249,7 @@ class DokTolakSbp1Controller extends Controller
 						$this->createRelation('sbp', $sbp->id, 'tolak1', $id);
 
 						// Change SBP status
-						$sbp->update(['status_tolak' => 10]);
+						$sbp->update(['status_tolak' => 0]);
 
 						// Commit store query
 						DB::commit();
@@ -261,7 +304,7 @@ class DokTolakSbp1Controller extends Controller
 			$sbp = $tolak1->sbp;
 			
 			// Change SBP status
-			$sbp->update(['status_tolak' => 11]);
+			$sbp->update(['status_tolak' => 1]);
 
 			// Commit query
 			DB::commit();

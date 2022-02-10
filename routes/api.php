@@ -66,12 +66,15 @@ Route::apiResource('tolak1', DokTolakSbp1Controller::class);
 Route::get('/tolak1/{tolak1_id}/display', [DokTolakSbp1Controller::class, 'display']);
 Route::get('/tolak1/{tolak1_id}/form', [DokTolakSbp1Controller::class, 'form']);
 Route::put('/tolak1/{tolak1_id}/publish', [DokTolakSbp1Controller::class, 'publish']);
+Route::post('/tolak1/search', [DokTolakSbp1Controller::class, 'search']);
 
 /**
  * API for BA Penolakan TTD BA Penolakan SBP
  */
 Route::apiResource('tolak2', DokTolakSbp2Controller::class);
 Route::get('/tolak2/{tolak2_id}/display', [DokTolakSbp2Controller::class, 'display']);
+Route::get('/tolak2/{tolak2_id}/form', [DokTolakSbp2Controller::class, 'form']);
+Route::put('/tolak2/{tolak2_id}/publish', [DokTolakSbp2Controller::class, 'publish']);
 
 /**
  * API for LPHP

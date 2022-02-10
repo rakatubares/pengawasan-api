@@ -23,7 +23,8 @@ class DokTolakSbp1 extends Model
 		'alasan',
 		'petugas1_id',
 		'petugas2_id',
-		'kode_status'
+		'kode_status',
+		'status_tolak'
 	];
 
 	protected $casts = [
