@@ -12,11 +12,12 @@ class RefEntitas extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'jenis_entitas',
 		'nama',
 		'jenis_kelamin',
+		'tempat_lahir',
 		'tanggal_lahir',
 		'warga_negara',
+		'agama',
 		'jenis_identitas',
 		'nomor_identitas',
 		'pekerjaan',
