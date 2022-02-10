@@ -8,15 +8,21 @@ use App\Models\DokLp;
 use App\Models\DokSbp;
 use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokLpController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'LP';
-	private $agenda_dok = '/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'lp';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -115,7 +121,7 @@ class DokLpController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-     ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$thn_dok = date('Y', strtotime($request->tanggal_dokumen));
 		$tanggal_dokumen = date('Y-m-d', strtotime($request->tanggal_dokumen));
 
@@ -272,11 +278,11 @@ class DokLpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			// Find LPHP
+			// Find doc
 			$lp = DokLp::find($id);
 			$sbp = $lp->lphp->lptp->sbp;
 			
-			// Publish LPHP and chang SBP status
+			// Publish doc and change SBP status
 			$this->publishDocument('lp', $lp->id, $lp->thn_dok);
 			$sbp->update(['kode_status' => 203]);
 

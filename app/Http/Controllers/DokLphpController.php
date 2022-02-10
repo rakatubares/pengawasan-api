@@ -7,17 +7,22 @@ use App\Http\Resources\DokLphpTableResource;
 use App\Models\DokLphp;
 use App\Models\DokSbp;
 use App\Models\ObjectRelation;
-use App\Models\Sbp;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokLphpController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'LPHP';
-	private $agenda_dok = '/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'lphp';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -118,7 +123,7 @@ class DokLphpController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-     ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$thn_dok = date('Y', strtotime($request->tanggal_dokumen));
 		$tanggal_dokumen = date('Y-m-d', strtotime($request->tanggal_dokumen));
 
