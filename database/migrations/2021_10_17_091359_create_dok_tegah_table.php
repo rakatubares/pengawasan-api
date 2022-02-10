@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTegahTable extends Migration
+class CreateDokTegahTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -19,13 +19,6 @@ class CreateTegahTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			// $table->date('tgl_dok')->nullable()->index();
-			// $table->integer('sprint_id')->index();
-			// $table->boolean('detail_sarkut')->default(0)->index();
-			// $table->boolean('detail_barang')->default(0)->index();
-			// $table->integer('saksi_id')->nullable()->index();
-			// $table->integer('petugas1_id')->index();
-			// $table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

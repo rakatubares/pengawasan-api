@@ -92,7 +92,7 @@ class PenindakanResource extends JsonResource
 					break;
 
 				case 'tegah':
-					$tegah = new TegahResource($this->tegah, 'basic');
+					$tegah = new DokTegahResource($this->tegah, 'basic');
 					$list_dokumen['tegah'] = $tegah;
 					break;
 

@@ -133,7 +133,7 @@ class Penindakan extends Model
 	public function tegah()
 	{
 		return $this->hasOneThrough(
-			Tegah::class,
+			DokTegah::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

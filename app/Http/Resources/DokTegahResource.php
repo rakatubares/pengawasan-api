@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TegahResource extends JsonResource
+class DokTegahResource extends JsonResource
 {
 	/**
 	 * Create a new resource instance.

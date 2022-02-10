@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tegah extends Model
+class DokTegah extends Model
 {
     use HasFactory;
 	use SoftDeletes;
@@ -18,13 +18,6 @@ class Tegah extends Model
 		'agenda_dok',
 		'thn_dok',
 		'no_dok_lengkap',
-		// 'tgl_dok',
-		// 'sprint_id',
-		// 'detail_sarkut',
-		// 'detail_barang',
-		// 'saksi_id',
-		// 'petugas1_id',
-		// 'petugas2_id',
 		'kode_status'
 	];
 
