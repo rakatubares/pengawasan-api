@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
-use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
@@ -59,9 +58,7 @@ class AppServiceProvider extends ServiceProvider
 			'sarkut' => DetailSarkut::class,
 		]);
 
-		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
-		Riksa::observe(RiksaObserver::class);
 		DokSbp::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);

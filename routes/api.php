@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
@@ -64,6 +65,15 @@ Route::apiResource('tolak2', DokTolakSbp2Controller::class);
 Route::get('/tolak2/{tolak2_id}/display', [DokTolakSbp2Controller::class, 'display']);
 Route::get('/tolak2/{tolak2_id}/form', [DokTolakSbp2Controller::class, 'form']);
 Route::put('/tolak2/{tolak2_id}/publish', [DokTolakSbp2Controller::class, 'publish']);
+
+/**
+ * API for LPHP
+ */
+Route::apiResource('lphp', DokLphpController::class);
+Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
+Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
+Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
+Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 
 /**
  * API for Details

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			DokSbpSeeder::class,
+			DokLphpSeeder::class,
 		]);
 	}
 }

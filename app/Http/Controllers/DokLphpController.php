@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLphpTableResource;
 use App\Models\DokLphp;
+use App\Models\ObjectRelation;
 use App\Models\Sbp;
 use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
@@ -14,6 +17,71 @@ class DokLphpController extends Controller
 
 	private $tipe_dok = 'LPHP';
 	private $agenda_dok = '/KPU.03/BD.05/';
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		$all_lphp = DokLphp::orderBy('created_at', 'desc')
+			->orderBy('no_dok', 'desc')
+			->get();
+		$lphp_list = DokLphpTableResource::collection($all_lphp);
+		return $lphp_list;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$lphp = new DokLphpResource(DokLphp::findOrFail($id));
+		return $lphp;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function display($id)
+	{
+		$lphp = new DokLphpResource(DokLphp::find($id), 'display');
+		return $lphp;
+	}
+
+	/**
+	 * Display data for input form
+	 * 
+	 * @param int $id
+	 */
+	public function form($id)
+	{
+		$lphp = new DokLphpResource(DokLphp::find($id), 'form');
+		return $lphp;
+	}
+
+	/**
+	 * Display document's object
+	 * 
+	 * @param int $id
+	 */
+	public function objek($id)
+	{
+		$lphp = new DokLphpResource(DokLphp::find($id), 'objek');
+		return $lphp;
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -29,6 +97,7 @@ class DokLphpController extends Controller
 	private function validateData(Request $request)
 	{
 		$request->validate([
+			'id_sbp' => 'required|integer',
 			'tanggal_dokumen' => 'required|date',
 			'penyusun.jabatan.kode' => 'required',
 			'penyusun.plh' => 'required|boolean',
@@ -80,7 +149,7 @@ class DokLphpController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $sbp_id)
+	public function store(Request $request)
 	{
 		// Validate data
 		$this->validateData($request);
@@ -88,7 +157,7 @@ class DokLphpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Cek LPHP
-			$sbp = Sbp::find($sbp_id);
+			$sbp = Sbp::find($request->id_sbp);
 			$lptp = $sbp->lptp;
 			$lphp = $lptp->lphp;
 
@@ -102,13 +171,17 @@ class DokLphpController extends Controller
 
 				// Change SBP status
 				$sbp->update(['kode_status' => 102]);
-			} else {
-				// Update LPHP
-				$data_lphp = $this->prepareData($request, 'update');
-				$lphp->update($data_lphp);
-			}
 
-			DB::commit();
+				// Commit store query
+				DB::commit();
+
+				// Return LPHP
+				$lphp_resource = new DokLphpResource(DokLphp::findOrFail($lphp->id), 'form');
+				return $lphp_resource;
+			} else {
+				$result = response()->json(['error' => 'SBP telah dibuat LPHP.'], 422);
+				return $result;
+			}
 		} catch (\Throwable $th) {
 			DB::rollBack();
 			throw $th;
@@ -118,16 +191,95 @@ class DokLphpController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 *
+	 * @param  \Illuminate\Http\Request  $request
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($sbp_id)
+	public function update(Request $request, $id)
+	{
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished(DokLphp::class, $id);
+
+		if ($is_unpublished) {
+			// Validate data buka segel
+			$this->validateData($request);
+
+			DB::beginTransaction();
+			try {
+				// Check existing id_sbp
+				$existing_lphp = DokLphp::find($id);
+				$existing_sbp = $existing_lphp->lptp->sbp;
+				$existing_sbp_id = $existing_sbp->id;
+
+				if ($existing_sbp_id != $request->id_sbp) {
+					// Destroy existing relation
+					$existing_sbp->update(['kode_status' => 200]);
+					ObjectRelation::where([
+						'object2_type' => 'lphp',
+						'object2_id' => $id
+					])->delete();
+
+					// Create new relation
+					$sbp = Sbp::find($request->id_sbp);
+					$lptp = $sbp->lptp;
+					$lphp = $lptp->lphp;
+
+					if ($lphp == null) {
+						// Save data LPHP
+						$data_lphp = $this->prepareData($request);
+						DokLphp::find($id)->update($data_lphp);
+						
+						// Create relation
+						$this->createRelation('lptp', $lptp->id, 'lphp', $id);
+
+						// Change SBP status
+						$sbp->update(['kode_status' => 102]);
+
+						// Commit store query
+						DB::commit();
+
+						// Return LPHP
+						$lphp_resource = new DokLphpResource(DokLphp::findOrFail($id), 'form');
+						return $lphp_resource;
+					} else {
+						$result = response()->json(['error' => 'SBP telah dibuat LPHP.'], 422);
+						return $result;
+					}
+				} else {
+					// Save data LPHP
+					$data_lphp = $this->prepareData($request);
+					DokLphp::find($id)->update($data_lphp);
+
+					// Commit store query
+					DB::commit();
+
+					// Return LPHP
+					$lphp_resource = new DokLphpResource(DokLphp::findOrFail($id), 'form');
+					return $lphp_resource;
+				}
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
+			return $result;
+		}
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function publish($id)
 	{
 		DB::beginTransaction();
 		try {
 			// Find LPHP
-			$sbp = SBP::find($sbp_id);
-			$lphp = $sbp->lptp->lphp;
+			$lphp = DokLphp::find($id);
+			$sbp = $lphp->lptp->sbp;
 			
 			// Publish LPHP and chang SBP status
 			$this->publishDocument('lphp', $lphp->id, $lphp->thn_dok);
