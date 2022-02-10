@@ -35,6 +35,10 @@ class DokTolakSbp2Resource extends JsonResource
 			case 'display':
 				$array = $this->display();
 				break;
+
+			case 'form':
+				$array = $this->form();
+				break;
 			
 			default:
 				$array = $this->default();
@@ -105,6 +109,13 @@ class DokTolakSbp2Resource extends JsonResource
 		$array['nomor_sbp'] = $sbp->no_dok_lengkap;
 		$array['tanggal_sbp'] = $sbp->penindakan->tanggal_penindakan->format('d-m-Y');
 		$array['pemilik'] = new RefEntitasResource($sbp->penindakan->saksi);
+		return $array;
+	}
+
+	private function form()
+	{
+		$array = $this->basic();
+		$array['id_tolak1'] = $this->tolak1->id;
 		return $array;
 	}
 }

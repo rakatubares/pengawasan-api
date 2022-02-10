@@ -25,6 +25,7 @@ class CreateDokTolakSbp1Table extends Migration
 			$table->integer('petugas1_id')->index();
 			$table->integer('petugas2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
+			$table->integer('status_tolak')->nullable()->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

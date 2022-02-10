@@ -299,7 +299,7 @@ class DokSbpSeeder extends Seeder
 			'object2_id' => $tolak->id,
 		]);
 
-		DokSbp::find($sbp_id)->update(['status_tolak' => 11]);
+		DokSbp::find($sbp_id)->update(['status_tolak' => 1]);
 
 		return $tolak;
 	}
@@ -331,6 +331,7 @@ class DokSbpSeeder extends Seeder
 			'object2_id' => $tolak2->id,
 		]);
 
-		DokSbp::find($sbp_id)->update(['status_tolak' => 21]);
+		DokTolakSbp1::find($tolak1_id)->update(['status_tolak' => 1]);
+		DokSbp::find($sbp_id)->update(['status_tolak' => 2]);
 	}
 }
