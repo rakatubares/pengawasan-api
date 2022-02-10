@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\ObjectRelation;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DokLpSeeder extends Seeder
 {
+	use SwitcherTrait;
+
     /**
      * Run the database seeds.
      *
@@ -18,6 +21,10 @@ class DokLpSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
+
+		$tipe_dok = 'lp';
+		$tipe_surat = $this->switchObject($tipe_dok, 'tipe_dok');
+		$agenda = $this->switchObject($tipe_dok, 'agenda');
 
 		// Get LP ids
 		$max_lphp_id = DokLphp::max('id');
@@ -44,9 +51,9 @@ class DokLpSeeder extends Seeder
 			// Create LP
 			$lp = DokLp::create([
 				'no_dok' => $no_current,
-				'agenda_dok' => '/KPU.03/BD.05/',
+				'agenda_dok' => $agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'LP-' . $no_current . '/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => $tipe_surat . '-' . $no_current . $agenda . date("Y"),
 				'tanggal_dokumen' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'pasal' => $faker->sentence($nbWOrds = 5),
 				'modus' => $faker->sentence($nbWOrds = 20),

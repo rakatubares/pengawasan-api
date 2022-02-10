@@ -74,6 +74,7 @@ class DokLpResource extends JsonResource
 				'plh' => $this->plh,
 				'user' => new RefUserResource($this->pejabat),
 			],
+			'kode_status' => $this->kode_status,
 		];
 
 		return $array;

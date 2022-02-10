@@ -77,19 +77,21 @@ trait SwitcherTrait
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',
+			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLp::class,
 			'resource' => DokLpResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
+			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLphp::class,
 			'resource' => DokLphpResource::class,
 		],
 		'lptp' => [
 			'tipe_dok' => 'LPTP',
-			'agenda' => '/KPU.03/BD.05/',
+			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLptp::class,
 			'resource' => DokLptpResource::class,
@@ -109,21 +111,21 @@ trait SwitcherTrait
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/RIKSA/KPU.03/BD.05/',
+			'agenda' => '/RIKSA/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => Riksa::class,
 			'resource' => RiksaResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',
-			'agenda' => '/KPU.03/BD.05/',
+			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSbp::class,
 			'resource' => DokSbpResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/SEGEL/KPU.03/BD.05/',
+			'agenda' => '/SEGEL/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,
@@ -136,21 +138,21 @@ trait SwitcherTrait
 		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/TEGAH/KPU.03/BD.05/',
+			'agenda' => '/TEGAH/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => Tegah::class,
 			'resource' => TegahResource::class,
 		],
 		'tolak1' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/TOLAK 1/KPU.03/BD.05/',
+			'agenda' => '/TOLAK 1/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp1::class,
 			'resource' => DokTolakSbp1Resource::class
 		],
 		'tolak2' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/TOLAK 2/KPU.03/BD.05/',
+			'agenda' => '/TOLAK 2/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp2::class,
 			'resource' => DokTolakSbp2Resource::class
