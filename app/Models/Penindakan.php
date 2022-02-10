@@ -107,6 +107,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Penyegelan
+	 */
+	public function bukasegel()
+	{
+		return $this->hasOneThrough(
+			DokBukaSegel::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'bukasegel'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
@@ -117,7 +138,7 @@ class Penindakan extends Model
 			// Delete objek penindakan
 			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
-			};
+			}
 		});
 	}
 }

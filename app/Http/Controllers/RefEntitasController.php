@@ -51,11 +51,12 @@ class RefEntitasController extends Controller
 		]);
 
 		$insert_result = RefEntitas::create([
-			'jenis_entitas' => 'perorangan',
 			'nama' => $request->nama,
 			'jenis_kelamin' => $request->jenis_kelamin,
+			'tempat_lahir' => $request->tempat_lahir,
 			'tanggal_lahir' => $request->tanggal_lahir,
 			'warga_negara' => $request->warga_negara,
+			'agama' => $request->agama,
 			'jenis_identitas' => $request->jenis_identitas,
 			'nomor_identitas' => $request->nomor_identitas,
 			'pekerjaan' => $request->pekerjaan,

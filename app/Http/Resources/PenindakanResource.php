@@ -63,6 +63,11 @@ class PenindakanResource extends JsonResource
 			$jenis = $dok->object2_type;
 
 			switch ($jenis) {
+				case 'bukasegel':
+					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'basic');
+					$list_dokumen['bukasegel'] = $bukasegel;
+					break;
+
 				case 'segel':
 					$segel = new DokSegelResource($this->segel, 'basic');
 					$list_dokumen['segel'] = $segel;
@@ -72,8 +77,6 @@ class PenindakanResource extends JsonResource
 					# code...
 					break;
 			}
-
-			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;

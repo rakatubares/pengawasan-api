@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -43,6 +44,14 @@ Route::post('/segel/search', [DokSegelController::class, 'search']);
 Route::get('/segel/{segel_id}/basic', [DokSegelController::class, 'basic']);
 Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
+
+/**
+ * API for BA Buka Segel
+ */
+Route::apiResource('bukasegel', DokBukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/basic', [DokBukaSegelController::class, 'basic']);
+Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
+Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
 /**
  * API for Details

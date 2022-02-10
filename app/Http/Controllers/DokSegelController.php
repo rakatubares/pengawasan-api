@@ -79,11 +79,23 @@ class DokSegelController extends Controller
 	 */
 	public function search(Request $request)
 	{
-		$s = $request->s;
-		$search = '%' . $s . '%';
-		$search_result = DokSegel::where('no_dok_lengkap', 'like', $search)
-			->where('kode_status', 200)
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+
+		$search = '%' . $src . '%';
+		$status = $sta != null ? $sta : [200];
+
+		$search_result = DokSegel::where(function ($query) use ($search, $status) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->whereIn('kode_status', $status);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
 			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
 			->take(5)
 			->get();
 		$search_list = DokSegelTableResource::collection($search_result);

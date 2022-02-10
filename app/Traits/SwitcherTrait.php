@@ -7,11 +7,13 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokSegelResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,12 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'bukasegel' => [
+			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
+			'model' => DokBukaSegel::class,
+			'resource' => DokBukaSegelResource::class,
+		],
 		'segel' => [
 			'tipe_dok' => 'BA',
 			'parent' => 'penindakan',
