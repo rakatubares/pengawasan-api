@@ -62,8 +62,6 @@ class DetailController extends Controller
 
 		// Get parent after delete
 		$parent = $this->getParent($doc_type, $doc_id);
-		var_dump($parent);
-		var_dump($detail_type);
 
 		// Update object type and id
 		$parent->update([
