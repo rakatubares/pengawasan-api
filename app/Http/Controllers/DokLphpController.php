@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
 use App\Models\DokLphp;
+use App\Models\DokSbp;
 use App\Models\ObjectRelation;
 use App\Models\Sbp;
 use App\Traits\DokumenTrait;
@@ -157,7 +158,7 @@ class DokLphpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Cek LPHP
-			$sbp = Sbp::find($request->id_sbp);
+			$sbp = DokSbp::find($request->id_sbp);
 			$lptp = $sbp->lptp;
 			$lphp = $lptp->lphp;
 
@@ -220,7 +221,7 @@ class DokLphpController extends Controller
 					])->delete();
 
 					// Create new relation
-					$sbp = Sbp::find($request->id_sbp);
+					$sbp = DokSbp::find($request->id_sbp);
 					$lptp = $sbp->lptp;
 					$lphp = $lptp->lphp;
 
