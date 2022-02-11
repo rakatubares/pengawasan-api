@@ -12,21 +12,53 @@ class DokBukaSegelResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $element=null)
+	public function __construct($resource, $type=null)
 	{
 		$this->resource = $resource;
-		$this->element = $element;
+		$this->type = $type;
 	}
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
-    {
-        $buka_segel = [
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
+	{
+		switch ($this->type) {
+			case 'display':
+				$array = $this->basic();
+				break;
+
+			case 'form':
+				$array = $this->form();
+				break;
+
+			case 'objek':
+				$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+				break;
+
+			case 'pdf':
+				$array = $this->pdf();
+				break;
+			
+			default:
+				$array = $this->default();
+				break;
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Transform the resource into an array for display.
+	 *
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	private function basic()
+	{
+		$array = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
@@ -40,38 +72,53 @@ class DokBukaSegelResource extends JsonResource
 			'tanggal_segel' => $this->tanggal_segel ? $this->tanggal_segel->format('d-m-Y') : null,
 			'tempat_segel' => $this->tempat_segel,
 			'sprint' => new RefSprintResource($this->sprint),
-			'saksi' => new PersonEntityResource($this->saksi),
+			'saksi' => new RefEntitasResource($this->saksi),
 			'petugas1' => new RefUserResource($this->petugas1),
 			'petugas2' => new RefUserResource($this->petugas2),
 		];
 
+		return $array;
+	}
+
+	private function default()
+	{
+		$buka_segel = $this->basic();
 		$penindakan = new PenindakanResource($this->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
-		if ($this->penindakan != null) {
-			$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		} else {
-			$objek = null;
-		}
+		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
 
-		if ($this->element == 'basic') {
-			$array = $buka_segel;
-			$array['kode_status'] = $this->kode_status;
-		} else if ($this->element == 'objek') {
-			$array = $objek;
-		} else {
-			$array = [
-				'main' => [
-					'type' => 'bukasegel',
-					'data' => $buka_segel
-				],
-				'penindakan' => $penindakan,
-				'status' => $status,
-				'objek' => $objek,
-				'dokumen' => $dokumen,
-			];
-		}
+		$array = [
+			'main' => [
+				'type' => 'bukasegel',
+				'data' => $buka_segel
+			],
+			'penindakan' => $penindakan,
+			'status' => $status,
+			'objek' => $objek,
+			'dokumen' => $dokumen,
+		];
 
 		return $array;
-    }
+	}
+
+	private function pdf()
+	{
+		$array = $this->basic();
+		$array['kode_status'] = $this->kode_status;
+
+		return $array;
+	}
+
+	private function form()
+	{
+		$array = $this->basic();
+		if ($this->penindakan->segel != null) {
+			$array['segel'] = new DokSegelResource($this->penindakan->segel, 'basic');
+		} else {
+			$array['segel'] = null;
+		}
+		
+		return $array;
+	}
 }

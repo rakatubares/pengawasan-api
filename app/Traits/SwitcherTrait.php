@@ -64,6 +64,7 @@ trait SwitcherTrait
 		],
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/BUKA SEGEL/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokBukaSegel::class,
 			'resource' => DokBukaSegelResource::class,

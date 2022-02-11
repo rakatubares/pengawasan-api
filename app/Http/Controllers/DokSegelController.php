@@ -6,15 +6,21 @@ use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokSegelTableResource;
 use App\Models\DokSegel;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokSegelController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/SEGEL/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'segel';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -54,9 +60,21 @@ class DokSegelController extends Controller
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'basic');
+		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'display');
+		return $segel;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'form');
 		return $segel;
 	}
 
@@ -114,8 +132,8 @@ class DokSegelController extends Controller
 	private function validateSegel(Request $request)
 	{
 		$request->validate([
-			'main.data.jenis_segel' => 'required',
-			'main.data.jumlah_segel' => 'required|integer',
+			'jenis_segel' => 'required',
+			'jumlah_segel' => 'required|integer',
 		]);
 	}
 
@@ -124,13 +142,13 @@ class DokSegelController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok; 
 
 		$data_segel = [
-			'jenis_segel' => $request->main['data']['jenis_segel'],
-			'jumlah_segel' => $request->main['data']['jumlah_segel'],
-			'satuan_segel' => $request->main['data']['satuan_segel'],
-			'tempat_segel' => $request->main['data']['tempat_segel'],
+			'jenis_segel' => $request->jenis_segel,
+			'jumlah_segel' => $request->jumlah_segel,
+			'satuan_segel' => $request->satuan_segel,
+			'tempat_segel' => $request->tempat_segel,
 		];
 
 		if ($state == 'insert') {
@@ -175,7 +193,7 @@ class DokSegelController extends Controller
 			DB::commit();
 
 			// Return created segel
-			$segel_resource = new DokSegelResource(DokSegel::findOrFail($segel->id));
+			$segel_resource = new DokSegelResource(DokSegel::findOrFail($segel->id), 'form');
 			return $segel_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -217,7 +235,7 @@ class DokSegelController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$segel_resource = new DokSegelResource(DokSegel::findOrFail($id));
+				$segel_resource = new DokSegelResource(DokSegel::findOrFail($id), 'form');
 				$result = $segel_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
