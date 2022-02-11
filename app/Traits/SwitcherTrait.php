@@ -7,12 +7,14 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\TitipResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
 use App\Models\RefEntitas;
 use App\Models\Titip;
@@ -22,8 +24,16 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'bukasegel' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/BUKA SEGEL/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokBukaSegel::class,
+			'resource' => DokBukaSegelResource::class,
+		],
 		'segel' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/SEGEL/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,

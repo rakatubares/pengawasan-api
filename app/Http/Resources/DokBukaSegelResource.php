@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DokSegelResource extends JsonResource
+class DokBukaSegelResource extends JsonResource
 {
 	/**
 	 * Create a new resource instance.
@@ -49,45 +49,6 @@ class DokSegelResource extends JsonResource
 		}
 
 		return $array;
-
-		$segel = [
-			'id' => $this->id,
-			'no_dok' => $this->no_dok,
-			'agenda_dok' => $this->agenda_dok,
-			'thn_dok' => $this->thn_dok,
-			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'jenis_segel' => $this->jenis_segel,
-			'jumlah_segel' => $this->jumlah_segel,
-			'satuan_segel' => $this->satuan_segel,
-			'nomor_segel' => $this->nomor_segel,
-			'tempat_segel' => $this->tempat_segel,
-		];
-
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
-
-		if ($this->element == 'basic') {
-			$array = $segel;
-			$array['penindakan'] = $penindakan;
-			$array['kode_status'] = $this->kode_status;
-		} else if ($this->element == 'objek') {
-			$array = $objek;
-		} else {
-			$array = [
-				'main' => [
-					'type' => 'segel',
-					'data' => $segel
-				],
-				'penindakan' => $penindakan,
-				'status' => $status,
-				'objek' => $objek,
-				'dokumen' => $dokumen,
-			];
-		}
-
-		return $array;
 	}
 
 	/**
@@ -102,12 +63,18 @@ class DokSegelResource extends JsonResource
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
+			'tanggal_dokumen' => $this->tanggal_dokumen ? $this->tanggal_dokumen->format('d-m-Y') : null,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'jenis_segel' => $this->jenis_segel,
 			'jumlah_segel' => $this->jumlah_segel,
 			'satuan_segel' => $this->satuan_segel,
 			'nomor_segel' => $this->nomor_segel,
+			'tanggal_segel' => $this->tanggal_segel ? $this->tanggal_segel->format('d-m-Y') : null,
 			'tempat_segel' => $this->tempat_segel,
+			'sprint' => new RefSprintResource($this->sprint),
+			'saksi' => new RefEntitasResource($this->saksi),
+			'petugas1' => new RefUserResource($this->petugas1),
+			'petugas2' => new RefUserResource($this->petugas2),
 		];
 
 		return $array;
@@ -115,7 +82,7 @@ class DokSegelResource extends JsonResource
 
 	private function default()
 	{
-		$segel = $this->basic();
+		$buka_segel = $this->basic();
 		$penindakan = new PenindakanResource($this->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
 		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
@@ -123,8 +90,8 @@ class DokSegelResource extends JsonResource
 
 		$array = [
 			'main' => [
-				'type' => 'segel',
-				'data' => $segel
+				'type' => 'bukasegel',
+				'data' => $buka_segel
 			],
 			'penindakan' => $penindakan,
 			'status' => $status,
@@ -146,7 +113,12 @@ class DokSegelResource extends JsonResource
 	private function form()
 	{
 		$array = $this->basic();
-		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
+		if ($this->penindakan->segel != null) {
+			$array['segel'] = new DokSegelResource($this->penindakan->segel, 'basic');
+		} else {
+			$array['segel'] = null;
+		}
+		
 		return $array;
 	}
 }

@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokSegelObserver;
 use App\Observers\DokTitipObserver;
 use App\Services\SSO;
@@ -42,12 +44,14 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
+			'bukasegel' => DokBukaSegel::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
 		]);
 
+		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
     }
