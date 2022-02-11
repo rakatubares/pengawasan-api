@@ -360,14 +360,10 @@ class DokSbpController extends Controller
 	private function createSegel(Request $request, Penindakan $penindakan)
 	{
 		$segel_array = [
-			'main' => [
-				'data' => [
-					'jenis_segel' => $request->data_segel['jenis'],
-					'jumlah_segel' => $request->data_segel['jumlah'],
-					'satuan_segel' => $request->data_segel['satuan'],
-					'tempat_segel' => $request->data_segel['tempat'],
-				]
-			]
+			'jenis_segel' => $request->data_segel['jenis'],
+			'jumlah_segel' => $request->data_segel['jumlah'],
+			'satuan_segel' => $request->data_segel['satuan'],
+			'tempat_segel' => $request->data_segel['tempat'],
 		];
 
 		$segel_request = new Request($segel_array);
