@@ -91,7 +91,7 @@ class Penindakan extends Model
 	public function riksa()
 	{
 		return $this->hasOneThrough(
-			Riksa::class,
+			DokRiksa::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

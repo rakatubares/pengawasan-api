@@ -64,7 +64,7 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'riksa':
-					$riksa = new RiksaResource($this->riksa, 'basic');
+					$riksa = new DokRiksaResource($this->riksa, 'pdf');
 					$list_dokumen['riksa'] = $riksa;
 					break;
 				

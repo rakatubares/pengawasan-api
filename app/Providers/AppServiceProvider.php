@@ -5,10 +5,10 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokRiksa;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
-use App\Models\Riksa;
-use App\Observers\RiksaObserver;
+use App\Observers\DokRiksaObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -42,10 +42,10 @@ class AppServiceProvider extends ServiceProvider
 			'barang' => DetailBarang::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
-			'riksa' => Riksa::class,
+			'riksa' => DokRiksa::class,
 			'sarkut' => DetailSarkut::class,
 		]);
 
-		Riksa::observe(RiksaObserver::class);
+		DokRiksa::observe(DokRiksaObserver::class);
     }
 }

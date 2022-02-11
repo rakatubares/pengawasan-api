@@ -6,12 +6,12 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
-use App\Http\Controllers\RiksaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,10 +38,11 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /**
  * API for BA Pemeriksaan
  */
-Route::apiResource('riksa', RiksaController::class);
-Route::get('/riksa/{riksa_id}/basic', [RiksaController::class, 'basic']);
-Route::get('/riksa/{riksa_id}/objek', [RiksaController::class, 'objek']);
-Route::put('/riksa/{riksa_id}/publish', [RiksaController::class, 'publish']);
+Route::apiResource('riksa', DokRiksaController::class);
+Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
+Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
+Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
+Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
 
 /**
  * API for Details
