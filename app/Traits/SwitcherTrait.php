@@ -24,12 +24,14 @@ trait SwitcherTrait
 		// Dokumen
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/BUKA SEGEL/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokBukaSegel::class,
 			'resource' => DokBukaSegelResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/SEGEL/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,

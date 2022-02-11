@@ -6,15 +6,21 @@ use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokSegelTableResource;
 use App\Models\DokSegel;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokSegelController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/SEGEL/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'segel';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -124,7 +130,7 @@ class DokSegelController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok; 
 
 		$data_segel = [
 			'jenis_segel' => $request->main['data']['jenis_segel'],

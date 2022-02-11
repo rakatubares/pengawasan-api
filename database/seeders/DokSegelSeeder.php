@@ -8,14 +8,20 @@ use App\Models\DetailSarkut;
 use App\Models\DokSegel;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DokSegelSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'segel';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -41,14 +47,14 @@ class DokSegelSeeder extends Seeder
 			$no_current = $max_segel + 1;
 			$segel = DokSegel::create([
 				'no_dok' => $no_current,
-				'agenda_dok' => '/SEGEL/KPU.03/BD.05/',
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'BA-' . $no_current . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 				'jumlah_segel' => $this->faker->numberBetween(1,5),
 				'satuan_segel' => $this->faker->randomElement(['lembar', 'buah']),
 				'tempat_segel' => $this->faker->word(),
-				'nomor_segel' => 'BA-' . $no_current . '/SEGEL/KPU.03/BD.05/' . date("Y"),
+				'nomor_segel' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'kode_status' => 200,
 			]);
 

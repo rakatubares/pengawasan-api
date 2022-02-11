@@ -9,14 +9,20 @@ use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DokBukaSegelSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'bukasegel';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -48,10 +54,10 @@ class DokBukaSegelSeeder extends Seeder
 				// Create BA buka segel
 				$buka_segel = DokBukaSegel::create([
 					'no_dok' => $no_current,
-					'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.05/',
+					'agenda_dok' => $this->agenda,
 					'thn_dok' => date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-					'no_dok_lengkap' => 'BA-' . $no_current . '/BUKA SEGEL/KPU.03/BD.05/' . date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 					'sprint_id' => $this->faker->numberBetween(1,10),
 					'jenis_segel' => $segel->jenis_segel,
 					'jumlah_segel' => $segel->jumlah_segel,
@@ -76,16 +82,16 @@ class DokBukaSegelSeeder extends Seeder
 				// Create BA buka segel
 				$buka_segel = DokBukaSegel::create([
 					'no_dok' => $no_current,
-					'agenda_dok' => '/BUKA SEGEL/KPU.03/BD.05/',
+					'agenda_dok' => $this->agenda,
 					'thn_dok' => date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-					'no_dok_lengkap' => 'BA-' . $no_current . '/BUKA SEGEL/KPU.03/BD.05/' . date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 					'sprint_id' => $this->faker->numberBetween(1,10),
 					'jenis_segel' => $this->faker->randomElement(['Kertas', 'Timah', 'Lainnya']),
 					'jumlah_segel' => $this->faker->numberBetween(1,5),
 					'satuan_segel' => $this->faker->randomElement(['lembar', 'buah']),
 					'tempat_segel' => $this->faker->word(),
-					'nomor_segel' => 'BA-' . $this->faker->numberBetween(1,100) . '/SEGEL/BC/' . date("Y"),
+					'nomor_segel' => $this->tipe_surat . '-' . $this->faker->numberBetween(1,100) . '/SEGEL/BC/' . date("Y"),
 					'tanggal_segel' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 					'saksi_id' => $this->faker->numberBetween(1, 100),
 					'petugas1_id' => 1,

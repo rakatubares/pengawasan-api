@@ -49,7 +49,8 @@ Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
  * API for BA Buka Segel
  */
 Route::apiResource('bukasegel', DokBukaSegelController::class);
-Route::get('/bukasegel/{buka_segel_id}/basic', [DokBukaSegelController::class, 'basic']);
+Route::get('/bukasegel/{buka_segel_id}/display', [DokBukaSegelController::class, 'display']);
+Route::get('/bukasegel/{buka_segel_id}/form', [DokBukaSegelController::class, 'form']);
 Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
 Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
