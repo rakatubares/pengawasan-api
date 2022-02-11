@@ -6,6 +6,7 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\DokLptp;
+use App\Models\DokRiksa;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
@@ -13,7 +14,6 @@ use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Riksa;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -206,9 +206,9 @@ class DokSbpSeeder extends Seeder
 	{
 		$tipe_surat_riksa = $this->switchObject('riksa', 'tipe_dok');
 		$agenda_riksa = $this->switchObject('riksa', 'agenda');
-		$max_riksa = Riksa::max('no_dok');
+		$max_riksa = DokRiksa::max('no_dok');
 		$crn_riksa = $max_riksa + 1;
-		$tegah = Riksa::create([
+		$tegah = DokRiksa::create([
 			'no_dok' => $crn_riksa,
 			'agenda_dok' => $agenda_riksa,
 			'thn_dok' => date("Y"),

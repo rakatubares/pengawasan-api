@@ -36,13 +36,13 @@ use App\Models\DokLphp;
 use App\Models\DokLptp;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
+use App\Models\DokRiksa;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
 use App\Models\DokTitip;
 use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
-use App\Models\DokRiksa;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
