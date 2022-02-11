@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use App\Models\ObjectRelation;
-use App\Models\Riksa;
+use App\Models\DokRiksa;
 
-class RiksaObserver
+class DokRiksaObserver
 {
 	/**
 	 * Handle events after all transactions are committed.
@@ -15,34 +15,34 @@ class RiksaObserver
 	public $afterCommit = true;
 
 	/**
-	 * Handle the Riksa "created" event.
+	 * Handle the DokRiksa "created" event.
 	 *
-	 * @param  \App\Models\Riksa  $riksa
+	 * @param  \App\Models\DokRiksa  $riksa
 	 * @return void
 	 */
-	public function created(Riksa $riksa)
+	public function created(DokRiksa $riksa)
 	{
 		//
 	}
 
 	/**
-	 * Handle the Riksa "updated" event.
+	 * Handle the DokRiksa "updated" event.
 	 *
-	 * @param  \App\Models\Riksa  $riksa
+	 * @param  \App\Models\DokRiksa  $riksa
 	 * @return void
 	 */
-	public function updated(Riksa $riksa)
+	public function updated(DokRiksa $riksa)
 	{
 		//
 	}
 
 	/**
-	 * Handle the Riksa "deleted" event.
+	 * Handle the DokRiksa "deleted" event.
 	 *
-	 * @param  \App\Models\Riksa  $riksa
+	 * @param  \App\Models\DokRiksa  $riksa
 	 * @return void
 	 */
-	public function deleted(Riksa $riksa)
+	public function deleted(DokRiksa $riksa)
 	{
 		// Change status to 300
 		$riksa->update(['kode_status' => 300]);
@@ -63,23 +63,23 @@ class RiksaObserver
 	}
 
 	/**
-	 * Handle the Riksa "restored" event.
+	 * Handle the DokRiksa "restored" event.
 	 *
-	 * @param  \App\Models\Riksa  $riksa
+	 * @param  \App\Models\DokRiksa  $riksa
 	 * @return void
 	 */
-	public function restored(Riksa $riksa)
+	public function restored(DokRiksa $riksa)
 	{
 		//
 	}
 
 	/**
-	 * Handle the Riksa "force deleted" event.
+	 * Handle the DokRiksa "force deleted" event.
 	 *
-	 * @param  \App\Models\Riksa  $riksa
+	 * @param  \App\Models\DokRiksa  $riksa
 	 * @return void
 	 */
-	public function forceDeleted(Riksa $riksa)
+	public function forceDeleted(DokRiksa $riksa)
 	{
 		//
 	}

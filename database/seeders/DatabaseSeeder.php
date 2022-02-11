@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 			DokSegelSeeder::class,
 			DokTitipSeeder::class,
 			DokBukaSegelSeeder::class,
-			RiksaSeeder::class,
+			DokRiksaSeeder::class,
 			DokPengamanSeeder::class,
 			DokBukaPengamanSeeder::class,
 			DokBastSeeder::class,

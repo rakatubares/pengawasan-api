@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RiksaResource;
-use App\Http\Resources\RiksaTableResource;
-use App\Models\Riksa;
+use App\Http\Resources\DokRiksaResource;
+use App\Http\Resources\DokRiksaTableResource;
+use App\Models\DokRiksa;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RiksaController extends Controller
+class DokRiksaController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/RIKSA/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'riksa';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -29,10 +35,10 @@ class RiksaController extends Controller
 	 */
 	public function index()
 	{
-		$all_riksa = Riksa::orderBy('created_at', 'desc')
+		$all_riksa = DokRiksa::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$riksa_list = RiksaTableResource::collection($all_riksa);
+		$riksa_list = DokRiksaTableResource::collection($all_riksa);
 		return $riksa_list;
 	}
 
@@ -44,7 +50,7 @@ class RiksaController extends Controller
 	 */
 	public function show($id)
 	{
-		$riksa = new RiksaResource(Riksa::findOrFail($id));
+		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id));
 		return $riksa;
 	}
 
@@ -54,9 +60,21 @@ class RiksaController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$riksa = new RiksaResource(Riksa::findOrFail($id), 'basic');
+		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'display');
+		return $riksa;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'form');
 		return $riksa;
 	}
 
@@ -68,7 +86,7 @@ class RiksaController extends Controller
 	 */
 	public function objek($id)
 	{
-		$riksa = new RiksaResource(Riksa::findOrFail($id), 'objek');
+		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'objek');
 		return $riksa;
 	}
 
@@ -94,8 +112,8 @@ class RiksaController extends Controller
 		DB::beginTransaction();
 		try {
 			// Save data pemeriksaan
-			$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
-			$riksa = Riksa::create([
+			$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
+			$riksa = DokRiksa::create([
 				'agenda_dok' => $this->agenda_dok,
 				'no_dok_lengkap' => $no_dok_lengkap,
 				'kode_status' => 100,
@@ -110,7 +128,7 @@ class RiksaController extends Controller
 			DB::commit();
 
 			// Return created document
-			$riksa_resource = new RiksaResource(Riksa::findOrFail($riksa->id));
+			$riksa_resource = new DokRiksaResource(DokRiksa::findOrFail($riksa->id), 'form');
 			return $riksa_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -128,7 +146,7 @@ class RiksaController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(Riksa::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokRiksa::class, $id);
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -143,7 +161,7 @@ class RiksaController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$riksa_resource = new RiksaResource(Riksa::findOrFail($id));
+				$riksa_resource = new DokRiksaResource(DokRiksa::findOrFail($id), 'form');
 				$result = $riksa_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -164,11 +182,11 @@ class RiksaController extends Controller
 	public function publish($id)
 	{
 		// Create array from SBP object
-		$riksa = new RiksaResource(Riksa::find($id));
+		$riksa = new DokRiksaResource(DokRiksa::find($id));
 		$arr = json_decode($riksa->toJson(), true);
 
 		// Check penindakan date
-		$year = $this->datePenindakan(Riksa::class, $id);
+		$year = $this->datePenindakan(DokRiksa::class, $id);
 	
 		// Publish each document
 		foreach ($arr['dokumen'] as $type => $data) {
@@ -184,9 +202,9 @@ class RiksaController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$is_unpublished = $this->checkUnpublished(Riksa::class, $id);
+		$is_unpublished = $this->checkUnpublished(DokRiksa::class, $id);
 		if ($is_unpublished) {
-			Riksa::find($id)->delete();
+			DokRiksa::find($id)->delete();
 		}
 	}
 }

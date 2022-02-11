@@ -16,13 +16,13 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
+use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokTegahResource;
 use App\Http\Resources\DokTitipResource;
 use App\Http\Resources\DokTolakSbp1Resource;
 use App\Http\Resources\DokTolakSbp2Resource;
-use App\Http\Resources\RiksaResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -42,8 +42,8 @@ use App\Models\DokTegah;
 use App\Models\DokTitip;
 use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
+use App\Models\DokRiksa;
 use App\Models\RefEntitas;
-use App\Models\Riksa;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -114,8 +114,8 @@ trait SwitcherTrait
 			'tipe_dok' => 'BA',
 			'agenda' => '/RIKSA/KPU.305/',
 			'parent' => 'penindakan',
-			'model' => Riksa::class,
-			'resource' => RiksaResource::class,
+			'model' => DokRiksa::class,
+			'resource' => DokRiksaResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',

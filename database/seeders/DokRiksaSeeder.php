@@ -5,17 +5,23 @@ namespace Database\Seeders;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokRiksa;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Models\Riksa;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class RiksaSeeder extends Seeder
+class DokRiksaSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'riksa';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -37,13 +43,13 @@ class RiksaSeeder extends Seeder
 				'petugas2_id' => 2,
 			]);
 
-			$max_riksa = Riksa::max('no_dok');
+			$max_riksa = DokRiksa::max('no_dok');
 			$no_current = $max_riksa + 1;
-			$riksa = Riksa::create([
+			$riksa = DokRiksa::create([
 				'no_dok' => $no_current,
-				'agenda_dok' => '/RIKSA/KPU.03/BD.05/',
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'BA-' . $no_current . '/RIKSA/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'kode_status' => 200,
 			]);
 
