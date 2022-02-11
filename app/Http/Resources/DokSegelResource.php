@@ -28,11 +28,11 @@ class DokSegelResource extends JsonResource
 	{
 		switch ($this->type) {
 			case 'display':
-				$array = $this->basic();
+				$array = $this->display();
 				break;
 
 			case 'form':
-				$array = $this->form();
+				$array = $this->display();
 				break;
 
 			case 'objek':
@@ -62,32 +62,6 @@ class DokSegelResource extends JsonResource
 			'nomor_segel' => $this->nomor_segel,
 			'tempat_segel' => $this->tempat_segel,
 		];
-
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
-
-		if ($this->element == 'basic') {
-			$array = $segel;
-			$array['penindakan'] = $penindakan;
-			$array['kode_status'] = $this->kode_status;
-		} else if ($this->element == 'objek') {
-			$array = $objek;
-		} else {
-			$array = [
-				'main' => [
-					'type' => 'segel',
-					'data' => $segel
-				],
-				'penindakan' => $penindakan,
-				'status' => $status,
-				'objek' => $objek,
-				'dokumen' => $dokumen,
-			];
-		}
-
-		return $array;
 	}
 
 	/**
@@ -135,18 +109,18 @@ class DokSegelResource extends JsonResource
 		return $array;
 	}
 
+	private function display()
+	{
+		$array = $this->basic();
+		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
+		return $array;
+	}
+
 	private function pdf()
 	{
 		$array = $this->basic();
 		$array['kode_status'] = $this->kode_status;
 
-		return $array;
-	}
-
-	private function form()
-	{
-		$array = $this->basic();
-		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		return $array;
 	}
 }
