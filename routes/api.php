@@ -41,7 +41,8 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  */
 Route::apiResource('segel', DokSegelController::class);
 Route::post('/segel/search', [DokSegelController::class, 'search']);
-Route::get('/segel/{segel_id}/basic', [DokSegelController::class, 'basic']);
+Route::get('/segel/{segel_id}/display', [DokSegelController::class, 'display']);
+Route::get('/segel/{segel_id}/form', [DokSegelController::class, 'form']);
 Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 

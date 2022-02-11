@@ -36,11 +36,7 @@ class DokBukaSegelResource extends JsonResource
 				break;
 
 			case 'objek':
-				// if ($this->penindakan != null) {
-					$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-				// } else {
-				// 	$array = null;
-				// }
+				$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 				break;
 
 			case 'pdf':
@@ -89,11 +85,7 @@ class DokBukaSegelResource extends JsonResource
 		$buka_segel = $this->basic();
 		$penindakan = new PenindakanResource($this->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
-		if ($this->penindakan != null) {
-			$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		} else {
-			$objek = null;
-		}
+		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
 
 		$array = [

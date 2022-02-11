@@ -69,7 +69,7 @@ class PenindakanResource extends JsonResource
 					break;
 
 				case 'segel':
-					$segel = new DokSegelResource($this->segel, 'basic');
+					$segel = new DokSegelResource($this->segel, 'pdf');
 					$list_dokumen['segel'] = $segel;
 					break;
 
