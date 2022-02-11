@@ -408,7 +408,7 @@ class DokSbpController extends Controller
 
 		// Save if document not exists
 		if ($existing_riksa == null) {
-			$riksa = app(RiksaController::class)->store($request, true);
+			$riksa = app(DokRiksaController::class)->store($request, true);
 			$this->createRelation('penindakan', $penindakan->id, 'riksa', $riksa->id);
 		}
 	}

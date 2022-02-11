@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RiksaTableResource extends JsonResource
+class DokRiksaTableResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,11 @@ class RiksaTableResource extends JsonResource
         $array = [
 			'id' => $this->id,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tgl_dok' => $this->tgl_dok ? $this->tgl_dok->format('d-m-Y') : null,
-			'nama_saksi' => $this->saksi->nama,
-			'petugas1' => $this->petugas1->name,
+			'tanggal_penindakan' => $this->penindakan->tanggal_penindakan 
+				? $this->penindakan->tanggal_penindakan->format('d-m-Y') 
+				: null,
+			'nama_saksi' => $this->penindakan->saksi->nama,
+			'petugas1' => $this->penindakan->petugas1->name,
 			'status' => new RefStatusResource($this->status)
 		];
 
