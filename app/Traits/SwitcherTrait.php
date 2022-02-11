@@ -9,15 +9,15 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokSegelResource;
-use App\Http\Resources\TitipResource;
+use App\Http\Resources\DokTitipResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
+use App\Models\DokTitip;
 use App\Models\RefEntitas;
-use App\Models\Titip;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
@@ -40,9 +40,10 @@ trait SwitcherTrait
 		],
 		'titip' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TITIP/KPU.305/',
 			'parent' => 'penindakan',
-			'model' => Titip::class,
-			'resource' => TitipResource::class,
+			'model' => DokTitip::class,
+			'resource' => DokTitipResource::class,
 		],
 
 		// Objek

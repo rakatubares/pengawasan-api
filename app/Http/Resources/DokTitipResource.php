@@ -12,7 +12,7 @@ class DokTitipResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type='basic')
+	public function __construct($resource, $type=null)
 	{
 		$this->resource = $resource;
 		$this->type = $type;
