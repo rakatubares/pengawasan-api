@@ -235,7 +235,7 @@ class DokTitipController extends Controller
 			$number = $this->getNewDocNumber(DokTitip::class);
 
 			$this->doc->update(['tanggal_dokumen' => $this->tanggal]);
-			$this->updateDocNumberAndYear($number, $this->tipe_dok, true);
+			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 
 			$segel = $this->doc->segel;
 			if ($segel != null) {
