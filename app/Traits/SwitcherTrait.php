@@ -133,6 +133,7 @@ trait SwitcherTrait
 		],
 		'titip' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TITIP/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTitip::class,
 			'resource' => DokTitipResource::class,

@@ -7,15 +7,21 @@ use App\Http\Resources\DokTitipTableResource;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokTitipController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/TITIP/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'titip';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -110,7 +116,7 @@ class DokTitipController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 
 		$data_titip = [
 			'sprint_id' => $request->sprint['id'],
@@ -229,7 +235,7 @@ class DokTitipController extends Controller
 			$number = $this->getNewDocNumber(DokTitip::class);
 
 			$this->doc->update(['tanggal_dokumen' => $this->tanggal]);
-			$this->updateDocNumberAndYear($number, $this->tipe_dok, true);
+			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 
 			$segel = $this->doc->segel;
 			if ($segel != null) {

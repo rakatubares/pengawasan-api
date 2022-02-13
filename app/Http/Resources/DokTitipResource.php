@@ -12,7 +12,7 @@ class DokTitipResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type='basic')
+	public function __construct($resource, $type=null)
 	{
 		$this->resource = $resource;
 		$this->type = $type;
@@ -62,8 +62,8 @@ class DokTitipResource extends JsonResource
 			'tanggal_dokumen' => $this->tanggal_dokumen ? $this->tanggal_dokumen->format('d-m-Y') : null,
 			'lokasi_titip' => $this->lokasi_titip,
 			'sprint' => new RefSprintResource($this->sprint),
-			'penerima' => new PersonEntityResource($this->penerima),
-			'saksi' => new PersonEntityResource($this->saksi),
+			'penerima' => new RefEntitasResource($this->penerima),
+			'saksi' => new RefEntitasResource($this->saksi),
 			'petugas1' => new RefUserResource($this->petugas1),
 			'petugas2' => new RefUserResource($this->petugas2),
 		];
