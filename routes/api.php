@@ -162,7 +162,8 @@ Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanControlle
  * API for BAST
  */
 Route::apiResource('bast', DokBastController::class);
-Route::get('/bast/{bast_id}/basic', [DokBastController::class, 'basic']);
+Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
+Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 

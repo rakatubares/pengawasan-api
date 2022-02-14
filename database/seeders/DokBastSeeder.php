@@ -2,20 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DokBastSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'bast';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -48,9 +53,9 @@ class DokBastSeeder extends Seeder
 				$crn_bast = $max_bast + 1;
 				$bast = DokBast::create([
 					'no_dok' => $crn_bast,
-					'agenda_dok' => '/KPU.03/BD.05/',
+					'agenda_dok' => $this->agenda,
 					'thn_dok' => date("Y"),
-					'no_dok_lengkap' => 'BAST-' . $crn_bast . '/KPU.03/BD.05/' . date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $crn_bast . $this->agenda . date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 					'yang_menerima_type' => $yang_menerima_type,
 					'yang_menerima_id' => $yang_menerima_id,
