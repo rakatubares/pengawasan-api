@@ -30,14 +30,6 @@ class DokReeksporResource extends JsonResource
 			case 'display':
 				$array = $this->display();
 				break;
-
-			// case 'objek':
-			// 	$array = new ObjectResource($this->objectable, 'barang');
-			// 	break;
-
-			// case 'pdf':
-			// 	$array = $this->pdf();
-			// 	break;
 			
 			default:
 				$array = $this->default();

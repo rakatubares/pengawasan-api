@@ -108,7 +108,7 @@ trait SwitcherTrait
 		],
 		'reekspor' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/KPU.03/BD.05/',
+			'agenda' => '/KPU.305/',
 			'parent' => 'reekspor',
 			'model' => DokReekspor::class,
 			'resource' => DokReeksporResource::class,
