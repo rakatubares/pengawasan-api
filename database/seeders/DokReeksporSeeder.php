@@ -23,7 +23,7 @@ class DokReeksporSeeder extends Seeder
 		$agenda = $this->switchObject('reekspor', 'agenda');
 
 		for ($i=1; $i < 21; $i++) { 
-			// Get current number for titip
+			// Get current number
 			$max_reekspor = DokReekspor::max('no_dok');
 			$no_current = $max_reekspor + 1;
 

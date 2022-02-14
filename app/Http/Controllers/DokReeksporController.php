@@ -93,7 +93,7 @@ class DokReeksporController extends Controller
 
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_surat . '-' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$tanggal_dok_asal = date('Y-m-d', strtotime($request->tanggal_dok_asal));
 		$tanggal_dok_ekspor = date('Y-m-d', strtotime($request->tanggal_dok_ekspor));
 		$tanggal_mawb = $request->tanggal_mawb != null ? date('Y-m-d', strtotime($request->tanggal_mawb)) : null;
