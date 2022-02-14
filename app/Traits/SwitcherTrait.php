@@ -58,6 +58,7 @@ trait SwitcherTrait
 		],
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TANDAPENGAMAN/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
@@ -99,6 +100,7 @@ trait SwitcherTrait
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TANDAPENGAMAN/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,

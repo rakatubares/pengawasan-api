@@ -6,15 +6,21 @@ use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokPengamanTableResource;
 use App\Models\DokPengaman;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokPengamanController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/TANDAPENGAMAN/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'pengaman';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -53,9 +59,20 @@ class DokPengamanController extends Controller
 	 * 
 	 * @param int $id
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$objek = new DokPengamanResource(DokPengaman::find($id), 'basic');
+		$objek = new DokPengamanResource(DokPengaman::find($id), 'display');
+		return $objek;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function form($id)
+	{
+		$objek = new DokPengamanResource(DokPengaman::find($id), 'form');
 		return $objek;
 	}
 
@@ -108,8 +125,8 @@ class DokPengamanController extends Controller
 	private function validateData(Request $request)
 	{
 		$request->validate([
-			'main.data.jenis_pengaman' => 'required',
-			'main.data.jumlah_pengaman' => 'required|integer',
+			'jenis_pengaman' => 'required',
+			'jumlah_pengaman' => 'required|integer',
 		]);
 	}
 
@@ -118,15 +135,15 @@ class DokPengamanController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok; 
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok; 
 
 		$data_pengaman = [
-			'alasan_pengamanan' => $request->main['data']['alasan_pengamanan'],
-			'keterangan' => $request->main['data']['keterangan'],
-			'jenis_pengaman' => $request->main['data']['jenis_pengaman'],
-			'jumlah_pengaman' => $request->main['data']['jumlah_pengaman'],
-			'satuan_pengaman' => $request->main['data']['satuan_pengaman'],
-			'tempat_pengaman' => $request->main['data']['tempat_pengaman'],
+			'alasan_pengamanan' => $request->alasan_pengamanan,
+			'keterangan' => $request->keterangan,
+			'jenis_pengaman' => $request->jenis_pengaman,
+			'jumlah_pengaman' => $request->jumlah_pengaman,
+			'satuan_pengaman' => $request->satuan_pengaman,
+			'tempat_pengaman' => $request->tempat_pengaman,
 		];
 
 		if ($state == 'insert') {
@@ -164,7 +181,7 @@ class DokPengamanController extends Controller
 			DB::commit();
 
 			// Return created pengaman
-			$segel_resource = new DokPengamanResource(DokPengaman::findOrFail($pengaman->id));
+			$segel_resource = new DokPengamanResource(DokPengaman::findOrFail($pengaman->id), 'form');
 			return $segel_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -188,10 +205,10 @@ class DokPengamanController extends Controller
 			DB::beginTransaction();
 
 			try {
-				// Validate data segel
+				// Validate data
 				$this->validateData($request);
 
-				// Update BA Segel
+				// Update BA Tanda Pengaman
 				$data_pengaman = $this->prepareData($request, 'update');
 				DokPengaman::where('id', $id)->update($data_pengaman);
 
@@ -202,8 +219,8 @@ class DokPengamanController extends Controller
 				// Commit store query
 				DB::commit();
 
-				// Return updated SBP
-				$pengaman_resource = new DokPengamanResource(DokPengaman::findOrFail($id));
+				// Return updated BA Tanda Pengaman
+				$pengaman_resource = new DokPengamanResource(DokPengaman::findOrFail($id), 'form');
 				$result = $pengaman_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();

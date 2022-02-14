@@ -12,10 +12,10 @@ class DokPengamanResource extends JsonResource
      * @param  mixed  $resource
      * @return void
      */
-    public function __construct($resource, $element=null)
+    public function __construct($resource, $type=null)
     {
         $this->resource = $resource;
-		$this->element = $element;
+		$this->type = $type;
     }
 
 	/**
@@ -26,7 +26,34 @@ class DokPengamanResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$pengaman = [
+		switch ($this->type) {
+			case 'display':
+				$array = $this->display();
+				break;
+
+			case 'form':
+				$array = $this->display();
+				break;
+
+			case 'objek':
+				$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+				break;
+
+			case 'pdf':
+				$array = $this->pdf();
+				break;
+			
+			default:
+				$array = $this->default();
+				break;
+		}
+
+		return $array;
+	}
+
+	private function basic()
+	{
+		$array = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
@@ -41,29 +68,42 @@ class DokPengamanResource extends JsonResource
 			'tempat_pengaman' => $this->tempat_pengaman,
 		];
 
+		return $array;
+	}
+
+	private function default()
+	{
+		$pengaman = $this->basic();
 		$penindakan = new PenindakanResource($this->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
 		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
 
-		if ($this->element == 'basic') {
-			$array = $pengaman;
-			$array['penindakan'] = $penindakan;
-			$array['kode_status'] = $this->kode_status;
-		} else if ($this->element == 'objek') {
-			$array = $objek;
-		} else {
-			$array = [
-				'main' => [
-					'type' => 'pengaman',
-					'data' => $pengaman
-				],
-				'penindakan' => $penindakan,
-				'status' => $status,
-				'objek' => $objek,
-				'dokumen' => $dokumen,
-			];
-		}
+		$array = [
+			'main' => [
+				'type' => 'pengaman',
+				'data' => $pengaman
+			],
+			'penindakan' => $penindakan,
+			'status' => $status,
+			'objek' => $objek,
+			'dokumen' => $dokumen,
+		];
+
+		return $array;
+	}
+
+	private function display()
+	{
+		$array = $this->basic();
+		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
+		return $array;
+	}
+
+	private function pdf()
+	{
+		$array = $this->basic();
+		$array['kode_status'] = $this->kode_status;
 
 		return $array;
 	}

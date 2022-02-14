@@ -8,14 +8,20 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokPengaman;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DokBukaPengamanSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'bukapengaman';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
 	/**
@@ -47,10 +53,10 @@ class DokBukaPengamanSeeder extends Seeder
 				// Create BA buka tanda pengaman
 				$buka_pengaman = DokBukaPengaman::create([
 					'no_dok' => $no_current,
-					'agenda_dok' => '/TANDAPENGAMAN/KPU.03/BD.05/',
+					'agenda_dok' => $this->agenda,
 					'thn_dok' => date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-					'no_dok_lengkap' => 'BA-' . $no_current . '/TANDAPENGAMAN/KPU.03/BD.05/' . date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 					'sprint_id' => $this->faker->numberBetween(1,10),
 					'jenis_pengaman' => $pengaman->jenis_pengaman,
 					'jumlah_pengaman' => $pengaman->jumlah_pengaman,
@@ -65,7 +71,7 @@ class DokBukaPengamanSeeder extends Seeder
 					'kode_status' => 200,
 				]);
 
-				// Create relation Penindakan - Buka Segel
+				// Create relation Penindakan - Buka Pengaman
 				ObjectRelation::create([
 					'object1_type' => 'penindakan',
 					'object1_id' => $pengaman->penindakan->id,
@@ -76,10 +82,10 @@ class DokBukaPengamanSeeder extends Seeder
 				// Create BA buka tanda pengaman
 				$buka_pengaman = DokBukaPengaman::create([
 					'no_dok' => $no_current,
-					'agenda_dok' => '/TANDAPENGAMAN/KPU.03/BD.05/',
+					'agenda_dok' => $this->agenda,
 					'thn_dok' => date("Y"),
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-					'no_dok_lengkap' => 'BA-' . $no_current . '/TANDAPENGAMAN/KPU.03/BD.05/' . date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 					'sprint_id' => $this->faker->numberBetween(1,10),
 					'jenis_pengaman' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 					'jumlah_pengaman' => $this->faker->numberBetween(1,5),
