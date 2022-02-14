@@ -22,6 +22,7 @@ trait SwitcherTrait
 		// Dokumen
 		'pengaman' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TANDAPENGAMAN/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,

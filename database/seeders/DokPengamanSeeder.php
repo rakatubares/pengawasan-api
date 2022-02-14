@@ -7,15 +7,21 @@ use App\Models\DetailSarkut;
 use App\Models\DokPengaman;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 
 use Illuminate\Database\Seeder;
 
 class DokPengamanSeeder extends Seeder
 {
+	use SwitcherTrait;
+
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'pengaman';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -41,15 +47,15 @@ class DokPengamanSeeder extends Seeder
 			$no_current = $max_pengaman + 1;
 			$pengaman = DokPengaman::create([
 				'no_dok' => $no_current,
-				'agenda_dok' => '/TANDAPENGAMAN/KPU.03/BD.05/',
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => 'BA-' . $no_current . '/TANDAPENGAMAN/KPU.03/BD.05/' . date("Y"),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'alasan_pengamanan' => $this->faker->sentence($nbWOrds = 20),
 				'keterangan' => $this->faker->sentence($nbWOrds = 20),
 				'jenis_pengaman' => $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']),
 				'jumlah_pengaman' => $this->faker->numberBetween(1,5),
 				'satuan_pengaman' => $this->faker->randomElement(['lembar', 'buah']),
-				'nomor_pengaman' => 'BA-' . $no_current . '/TANDAPENGAMAN/KPU.03/BD.05/' . date("Y"),
+				'nomor_pengaman' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'tempat_pengaman' => $this->faker->word(),
 				'kode_status' => 200,
 			]);
