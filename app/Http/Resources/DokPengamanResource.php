@@ -27,6 +27,10 @@ class DokPengamanResource extends JsonResource
 	public function toArray($request)
 	{
 		switch ($this->type) {
+			case 'basic':
+				$array = $this->basic();
+				break;
+			
 			case 'display':
 				$array = $this->display();
 				break;
