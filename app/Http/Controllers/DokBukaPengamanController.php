@@ -6,16 +6,23 @@ use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokBukaPengamanTableResource;
 use App\Models\DokBukaPengaman;
 use App\Models\DokPengaman;
+use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokBukaPengamanController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BA';
-	private $agenda_dok = '/TANDAPENGAMAN/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'bukapengaman';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -55,9 +62,21 @@ class DokBukaPengamanController extends Controller
 	 * @param  int $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'basic');
+		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'display');
+		return $segel;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'form');
 		return $segel;
 	}
 
@@ -84,32 +103,32 @@ class DokBukaPengamanController extends Controller
 	private function validateData(Request $request)
 	{
 		$request->validate([
-			'main.data.sprint.id' => 'required|integer',
-			'main.data.jenis_pengaman' => 'required',
-			'main.data.jumlah_pengaman' => 'required|integer',
-			'main.data.nomor_pengaman' => 'required',
-			'main.data.saksi.id' => 'required|integer',
-			'main.data.petugas1.user_id' => 'required'
+			'sprint.id' => 'required|integer',
+			'jenis_pengaman' => 'required',
+			'jumlah_pengaman' => 'required|integer',
+			'nomor_pengaman' => 'required',
+			'saksi.id' => 'required|integer',
+			'petugas1.user_id' => 'required'
 		]);
 	}
 
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . $this->agenda_dok;
-		$tanggal_pengaman = date('Y-m-d', strtotime($request->main['data']['tanggal_pengaman']));
+		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
+		$tanggal_pengaman = date('Y-m-d', strtotime($request->tanggal_pengaman));
 
 		$data_buka_pengaman = [
-			'sprint_id' => $request->main['data']['sprint']['id'],
-			'nomor_pengaman' => $request->main['data']['nomor_pengaman'],
+			'sprint_id' => $request->sprint['id'],
+			'nomor_pengaman' => $request->nomor_pengaman,
 			'tanggal_pengaman' => $tanggal_pengaman,
-			'jenis_pengaman' => $request->main['data']['jenis_pengaman'],
-			'jumlah_pengaman' => $request->main['data']['jumlah_pengaman'],
-			'satuan_pengaman' => $request->main['data']['satuan_pengaman'],
-			'tempat_pengaman' => $request->main['data']['tempat_pengaman'],
-			'dasar_pengamanan' => $request->main['data']['dasar_pengamanan'],
-			'saksi_id' => $request->main['data']['saksi']['id'],
-			'petugas1_id' => $request->main['data']['petugas1']['user_id'],
-			'petugas2_id' => $request->main['data']['petugas2']['user_id'],
+			'jenis_pengaman' => $request->jenis_pengaman,
+			'jumlah_pengaman' => $request->jumlah_pengaman,
+			'satuan_pengaman' => $request->satuan_pengaman,
+			'tempat_pengaman' => $request->tempat_pengaman,
+			'dasar_pengamanan' => $request->dasar_pengamanan,
+			'saksi_id' => $request->saksi['id'],
+			'petugas1_id' => $request->petugas1['user_id'],
+			'petugas2_id' => $request->petugas2['user_id'],
 		];
 
 		if ($state == 'insert') {
@@ -139,13 +158,10 @@ class DokBukaPengamanController extends Controller
 			$buka_pengaman = DokBukaPengaman::create($data_buka_pengaman);
 
 			// Save data penindakan and create object relation
-			$pengaman_id = $request->dokumen['pengaman']['id'];
-			// var_dump($pengaman_id);
+			$pengaman_id = $request->pengaman['id'];
 			if ($pengaman_id == null) {
-				// echo 'pengaman is null';
 				$this->storePenindakan($request, 'bukapengaman', $buka_pengaman->id, true);
 			} else {
-				// echo 'pengaman is not null';
 				$pengaman = DokPengaman::find($pengaman_id);
 				$penindakan_id = $pengaman->penindakan->id;
 				$this->createRelation('penindakan', $penindakan_id, 'bukapengaman', $buka_pengaman->id);
@@ -155,8 +171,8 @@ class DokBukaPengamanController extends Controller
 			// Commit store query
 			DB::commit();
 
-			// Return created buka tanda pengaman
-			$buka_pengaman_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($buka_pengaman->id));
+			// Return created data
+			$buka_pengaman_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($buka_pengaman->id), 'form');
 			return $buka_pengaman_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -183,6 +199,65 @@ class DokBukaPengamanController extends Controller
 
 			DB::beginTransaction();
 			try {
+				// Get existing data
+				$buka_pengaman = DokBukaPengaman::find($id);
+				$existing_pengaman = $buka_pengaman->penindakan->pengaman;
+				$pengaman_id = $request->pengaman['id'];
+
+				// Change existing pengaman if new pengaman is different
+				if ($existing_pengaman == null) {
+					if ($pengaman_id != null) {
+
+						// Remove existing relation between buka pengaman and penindakan
+						$buka_pengaman->penindakan->delete();
+						ObjectRelation::where([
+							'object1_type' => 'penindakan',
+							'object1_id' => $buka_pengaman->penindakan->id,
+							'object2_type' => $this->doc_type,
+							'object2_id' => $id
+						])->delete();
+
+						// Create relation to new penindakan
+						$pengaman = DokPengaman::find($pengaman_id);
+						$this->createRelation('penindakan', $pengaman->penindakan->id, $this->doc_type, $id);
+						$pengaman->update(['kode_status' => 104]);
+
+					}
+				} else {
+					if ($pengaman_id == null) {
+
+						// Remove existing relation between buka pengaman and penindakan
+						$existing_pengaman->update(['kode_status' => 200]);
+						ObjectRelation::where([
+							'object1_type' => 'penindakan',
+							'object1_id' => $buka_pengaman->penindakan->id,
+							'object2_type' => $this->doc_type,
+							'object2_id' => $id
+						])->delete();
+
+						// Create new penindakan
+						$this->storePenindakan($request, $this->doc_type, $buka_pengaman->id, true);
+
+					} else if ($pengaman_id != $existing_pengaman->id) {
+
+						// Remove existing relation between buka pengaman and penindakan
+						$existing_pengaman->update(['kode_status' => 200]);
+						ObjectRelation::where([
+							'object1_type' => 'penindakan',
+							'object1_id' => $buka_pengaman->penindakan->id,
+							'object2_type' => $this->doc_type,
+							'object2_id' => $id
+						])->delete();
+
+						// Create relation to new penindakan
+						$pengaman = DokPengaman::find($pengaman_id);
+						$penindakan_id = $pengaman->penindakan->id;
+						$this->createRelation('penindakan', $penindakan_id, $this->doc_type, $buka_pengaman->id);
+						$pengaman->update(['kode_status' => 104]);
+
+					}
+				}
+
 				// Update BA Buka Tanda Pengaman
 				$data_buka_pengaman = $this->prepareData($request, 'update');
 				DokBukaPengaman::where('id', $id)->update($data_buka_pengaman);
@@ -190,9 +265,9 @@ class DokBukaPengamanController extends Controller
 				// Commit store query
 				DB::commit();
 
-				// Return updated SBP
-				$buka_segel_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id));
-				$result = $buka_segel_resource;
+				// Return updated data
+				$buka_pengaman_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'form');
+				$result = $buka_pengaman_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
 				throw $th;
@@ -216,7 +291,7 @@ class DokBukaPengamanController extends Controller
 			$this->getDocument(DokBukaPengaman::class, $id);
 			$this->getCurrentDate();
 			$number = $this->getNewDocNumber(DokBukaPengaman::class);
-			$this->updateDocNumberAndYear($number, $this->tipe_dok, true);
+			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 
 			$pengaman = $this->doc->penindakan->pengaman;
 			if ($pengaman != null) {

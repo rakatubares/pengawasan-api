@@ -50,7 +50,8 @@ Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'pu
  * API for BA Buka Tanda Pengaman
  */
 Route::apiResource('bukapengaman', DokBukaPengamanController::class);
-Route::get('/bukapengaman/{buka_pengaman_id}/basic', [DokBukaPengamanController::class, 'basic']);
+Route::get('/bukapengaman/{buka_pengaman_id}/display', [DokBukaPengamanController::class, 'display']);
+Route::get('/bukapengaman/{buka_pengaman_id}/form', [DokBukaPengamanController::class, 'form']);
 Route::get('/bukapengaman/{buka_pengaman_id}/objek', [DokBukaPengamanController::class, 'objek']);
 Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
 

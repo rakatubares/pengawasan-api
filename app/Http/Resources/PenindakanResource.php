@@ -64,7 +64,7 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'bukapengaman':
-					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'basic');
+					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'pdf');
 					$list_dokumen['bukapengaman'] = $bukapengaman;
 					break;
 				
