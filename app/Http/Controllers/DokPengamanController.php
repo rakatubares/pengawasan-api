@@ -87,6 +87,32 @@ class DokPengamanController extends Controller
 		return $objek;
 	}
 
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$s = $request->s;
+		$e = $request->e;
+		$search = '%' . $s . '%';
+		$search_result = DokPengaman::where(function ($query) use ($search) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->where('kode_status', 200);
+			})
+			->when($e != null, function ($query) use ($e)
+			{
+				return $query->orWhere('id', $e);
+			})
+			->orderBy('created_at', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokPengamanTableResource::collection($search_result);
+		return $search_list;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
