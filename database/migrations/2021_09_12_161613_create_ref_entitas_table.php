@@ -15,11 +15,12 @@ class CreateRefEntitasTable extends Migration
     {
         Schema::create('ref_entitas', function (Blueprint $table) {
             $table->id();
-			$table->string('jenis_entitas')->index();
 			$table->string('nama')->index();
 			$table->string('jenis_kelamin')->nullable()->index();
+			$table->string('tempat_lahir')->nullable()->index();
 			$table->date('tanggal_lahir')->nullable()->index();
 			$table->string('warga_negara')->nullable()->index();
+			$table->string('agama')->nullable()->index();
 			$table->string('jenis_identitas')->nullable()->index();
 			$table->string('nomor_identitas')->nullable()->index();
 			$table->string('pekerjaan')->nullable()->index();
