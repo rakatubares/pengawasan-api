@@ -73,7 +73,7 @@ trait SwitcherTrait
 		],
 		'contoh' => [
 			'tipe_dok' => 'BA',
-			'agenda' => '/CONTOH/KPU.03/BD.05/',
+			'agenda' => '/CONTOH/KPU.305/',
 			'parent' => 'contoh',
 			'model' => DokContoh::class,
 			'resource' => DokContohResource::class,

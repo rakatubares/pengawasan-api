@@ -15,6 +15,9 @@ class DokContohSeeder extends Seeder
 	public function __construct()
 	{
 		$this->faker = Faker::create();
+		$this->tipe_dok = 'contoh';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 	}
 
     /**
@@ -24,18 +27,15 @@ class DokContohSeeder extends Seeder
      */
     public function run()
     {
-		$tipe_dok = $this->switchObject('contoh', 'tipe_dok');
-		$agenda = $this->switchObject('contoh', 'agenda');
-
         for ($d=1; $d < 21; $d++) { 
 			$max_contoh = DokContoh::max('no_dok');
 			$crn_contoh = $max_contoh + 1;
 
 			$contoh = DokContoh::create([
 				'no_dok' => $crn_contoh,
-				'agenda_dok' => $agenda,
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => $tipe_dok . '-' . $crn_contoh . $agenda . date("Y"),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $crn_contoh . $this->agenda . date("Y"),
 				'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'sprint_id' => $this->faker->numberBetween(1,10),
 				'lokasi' => $this->faker->address(),
