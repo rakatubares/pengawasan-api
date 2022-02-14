@@ -71,9 +71,12 @@ trait DokumenTrait
 	 */
 	public function publishDocument($doc_type, $doc_id, $year)
 	{
+		echo "publish doc";
+		var_dump($doc_type);
 		// Get model and doc type
 		$model = $this->switchObject($doc_type, 'model');
 		$jenis_surat = $this->switchObject($doc_type, 'tipe_dok');
+		var_dump($model);
 
 		// Check if document is unpublished
 		$is_unpublished = $this->checkUnpublished($model, $doc_id);

@@ -22,6 +22,7 @@ trait SwitcherTrait
 		// Dokumen
 		'bast' => [
 			'tipe_dok' => 'BAST',
+			'agenda' => '/KPU.305/',
 			'parent' => 'bast',
 			'model' => DokBast::class,
 			'resource' => DokBastResource::class,

@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBastTableResource;
 use App\Models\DokBast;
-use App\Models\SerahTerima;
 use App\Traits\DokumenTrait;
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokBastController extends Controller
 {
 	use DokumenTrait;
+	use SwitcherTrait;
 
-	private $tipe_dok = 'BAST';
-	private $agenda_dok = '/KPU.03/BD.05/';
+	public function __construct()
+	{
+		$this->doc_type = 'bast';
+		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
+		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+	}
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -55,9 +60,21 @@ class DokBastController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$bast = new DokBastResource(DokBast::findOrFail($id), 'basic');
+		$bast = new DokBastResource(DokBast::findOrFail($id), 'display');
+		return $bast;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$bast = new DokBastResource(DokBast::findOrFail($id), 'form');
 		return $bast;
 	}
 
@@ -106,7 +123,7 @@ class DokBastController extends Controller
 	 */
 	private function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_dok . '-' . '      ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 
 		// Data BAST
 		$data_bast = [
@@ -149,7 +166,7 @@ class DokBastController extends Controller
 			DB::commit();
 
 			// Return created BAST
-			$bast_resource = new DokBastResource(DokBast::findOrFail($bast->id), 'basic');
+			$bast_resource = new DokBastResource(DokBast::findOrFail($bast->id), 'form');
 			return $bast_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -184,7 +201,7 @@ class DokBastController extends Controller
 				DB::commit();
 
 				// Return updated BAST
-				$result = new DokBastResource(DokBast::find($id));
+				$result = new DokBastResource(DokBast::find($id), 'form');
 			} catch (\Throwable $th) {
 				DB::rollBack();
 				throw $th;
@@ -207,7 +224,7 @@ class DokBastController extends Controller
 
 		try {
 			$this->getCurrentDate();
-			$doc = $this->publishDocument('bast', $id, $this->tahun);
+			$doc = $this->publishDocument($this->doc_type, $id, $this->tahun);
 
 			DB::commit();
 
