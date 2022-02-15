@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -33,6 +34,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for LPHP
+ */
+Route::resource('lap', DokLapController::class);
+Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
+Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
 /**
  * API for Details
