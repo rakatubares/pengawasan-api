@@ -114,6 +114,7 @@ class PenindakanResource extends JsonResource
 					if ($titip != null) {
 						$list_dokumen['titip'] = new DokTitipResource($titip, 'pdf');
 					}
+					break;
 				
 				case 'pengaman':
 					$pengaman = new DokPengamanResource($this->pengaman, 'pdf');
