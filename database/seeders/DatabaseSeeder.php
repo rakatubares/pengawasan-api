@@ -17,10 +17,13 @@ class DatabaseSeeder extends Seeder
 		$this->call([
 			RefStatusSeeder::class,
 			RefSatuanSeeder::class,
+			RefKategoriPelanggaranSeeder::class,
+			RefSkemaPenindakanSeeder::class,
 			RefJabatanSeeder::class,
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
+			DokLapSeeder::class,
 			DokSbpSeeder::class,
 			DokLphpSeeder::class,
 			DokLpSeeder::class,
