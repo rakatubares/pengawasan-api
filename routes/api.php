@@ -10,6 +10,8 @@ use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
+use App\Http\Controllers\RefKategoriPelanggaranController;
+use App\Http\Controllers\RefSkemaPenindakanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
@@ -27,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
 
 /**
@@ -40,6 +42,7 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  */
 Route::resource('lap', DokLapController::class);
 Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
+Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
 Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
@@ -112,6 +115,16 @@ Route::post('/entitas/search', [RefEntitasController::class, 'search']);
  * API for Jabatan
  */
 Route::apiResource('jabatan', RefJabatanController::class);
+
+/**
+ * API for Kategori Pelanggaran
+ */
+Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
+
+/**
+ * API for Skema Penindakan
+ */
+Route::apiResource('penindakan', RefSkemaPenindakanController::class);
 
 /**
  * API for User

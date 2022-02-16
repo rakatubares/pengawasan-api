@@ -36,7 +36,7 @@ class DokLapResource extends JsonResource
 				break;
 
 			case 'form':
-				$array = $this->form();
+				$array = $this->basic();
 				break;
 			
 			default:
