@@ -12,6 +12,7 @@ use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLapResource;
+use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
@@ -33,6 +34,7 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
+use App\Models\DokLi;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLptp;
@@ -86,6 +88,13 @@ trait SwitcherTrait
 			'parent' => 'lap',
 			'model' => DokLap::class,
 			'resource' => DokLapResource::class,
+		],
+		'li' => [
+			'tipe_dok' => 'LI-1',
+			'agenda' => '/KPU.305/',
+			'parent' => 'li',
+			'model' => DokLi::class,
+			'resource' => DokLiResource::class,
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',

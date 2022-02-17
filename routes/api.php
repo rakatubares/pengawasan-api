@@ -11,6 +11,7 @@ use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
+use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokPengamanController;
@@ -50,6 +51,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for LI-1
+ */
+Route::apiResource('li', DokLiController::class);
+Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
+Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
+Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
 
 /**
  * API for LAP

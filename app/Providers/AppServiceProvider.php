@@ -9,6 +9,7 @@ use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
+use App\Models\DokLi;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokPengaman;
@@ -34,6 +35,7 @@ use App\Observers\DokTegahObserver;
 use App\Observers\DokTitipObserver;
 use App\Observers\DokTolakSbp1Observer;
 use App\Observers\DokTolakSbp2Observer;
+use App\Observers\DokLiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -79,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
 
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
+		DokLi::observe(DokLiObserver::class);
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
