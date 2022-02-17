@@ -7,10 +7,12 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokLiResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokLi;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +20,13 @@ trait SwitcherTrait
 {
 	private $models = [
 		// Dokumen
+		'li' => [
+			'tipe_dok' => 'LI-1',
+			'agenda' => '/KPU.305/',
+			'parent' => 'li',
+			'model' => DokLi::class,
+			'resource' => DokLiResource::class,
+		],
 
 		// Objek
 		'bangunan' => [

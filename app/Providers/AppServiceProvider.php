@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
+use App\Models\DokLi;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Observers\DokLiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -42,5 +44,7 @@ class AppServiceProvider extends ServiceProvider
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
 		]);
+
+		DokLi::observe(DokLiObserver::class);
     }
 }
