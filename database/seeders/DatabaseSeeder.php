@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
+			DokLiSeeder::class,
 			DokLapSeeder::class,
 		]);
 	}

@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLapController;
+use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -45,6 +46,14 @@ Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
 Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
 Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
+
+/**
+ * API for LI-1
+ */
+Route::apiResource('li', DokLiController::class);
+Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
+Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
+Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
 
 /**
  * API for Details
