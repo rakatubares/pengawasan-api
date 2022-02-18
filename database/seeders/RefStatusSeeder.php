@@ -66,6 +66,14 @@ class RefStatusSeeder extends Seeder
 				'updated_at' => $now
 			],
 			[ 
+				'kode_status' => 106, 
+				'short_status' => 'draft lap',
+				'uraian_status' => 'Pembuatan draft LAP',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
 				'kode_status' => 200, 
 				'short_status' => 'terbit',
 				'uraian_status' => 'Terbitkan dokumen' ,
@@ -109,6 +117,14 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 205, 
 				'short_status' => 'titip',
 				'uraian_status' => 'Penerbitan BA Penitipan',
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 206, 
+				'short_status' => 'lap',
+				'uraian_status' => 'Penerbitan LAP',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLapTableResource;
 use App\Models\DokLap;
+use App\Models\DokLi;
+use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -91,6 +93,7 @@ class DokLapController extends Controller
 	{
 		$request->validate([
 			'tanggal_dokumen' => 'required|date',
+			'sumber_id' => 'nullable|integer',
 			'nomor_sumber' => 'required',
 			'tanggal_sumber' => 'required|date',
 			'dugaan_pelanggaran.id' => 'required|integer',
@@ -191,6 +194,11 @@ class DokLapController extends Controller
 			$data_lap = $this->prepareData($request, 'insert');
 			$lap = DokLap::create($data_lap);
 
+			// Create relation
+			if ($request->jenis_sumber == 'LI-1') {
+				$this->createLiRelation($request, $lap);
+			}
+
 			// Commit store query
 			DB::commit();
 
@@ -217,11 +225,30 @@ class DokLapController extends Controller
 
 		// Update if not published
 		if ($is_unpublished) {
-			DB::beginTransaction();
+			// Validate data
+			$this->validateData($request);
 
+			DB::beginTransaction();
 			try {
-				// Validate data
-				$this->validateData($request);
+				// Get existing data
+				$lap = DokLap::find($id);
+				$existing_sumber = $lap->jenis_sumber;
+
+				// Update relation if necessary
+				if ($existing_sumber == 'LI-1') {
+					if ($request->jenis_sumber == 'LI-1') {
+						if ($request->sumber_id != $lap->li->id) {
+							$this->deleteLiRelation($lap);
+							$this->createLiRelation($request, $lap);
+						}
+					} else {
+						$this->deleteLiRelation($lap);
+					}
+				} else {
+					if ($request->jenis_sumber == 'LI-1') {
+						$this->createLiRelation($request, $lap);
+					}
+				}
 
 				// Update data
 				$data_lap = $this->prepareData($request, 'update');
@@ -245,6 +272,34 @@ class DokLapController extends Controller
 	}
 
 	/**
+	 * Create relation with LI-1
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  App\Models\DokLap;
+	 */
+	private function createLiRelation(Request $request, DokLap $lap)
+	{
+		$this->createRelation('li', $request->sumber_id, 'lap', $lap->id);
+		DokLi::find($request->sumber_id)->update(['kode_status' => 106]);
+	}
+
+	/**
+	 * Delete relation with LI-1
+	 * 
+	 * @param  App\Models\DokLap;
+	 */
+	private function deleteLiRelation(DokLap $lap)
+	{
+		$lap->li->update(['kode_status' => 200]);
+		ObjectRelation::where([
+			'object1_type' => 'li',
+			'object1_id' => $lap->li->id,
+			'object2_type' => $this->doc_type,
+			'object2_id' => $lap->id
+		])->delete();
+	}
+
+	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
@@ -256,6 +311,10 @@ class DokLapController extends Controller
 		try {
 			$lap = DokLap::find($id);
 			$this->publishDocument('lap', $lap->id, $lap->thn_dok);
+
+			if ($lap->li != null) {
+				$lap->li->update(['kode_status' => 206]);
+			}
 			
 			DB::commit();
 		} catch (\Throwable $th) {

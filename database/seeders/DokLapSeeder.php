@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\DokLap;
+use App\Models\DokLi;
+use App\Models\ObjectRelation;
 use App\Models\RefKategoriPelanggaran;
 use App\Models\RefSkemaPenindakan;
 use App\Traits\SwitcherTrait;
@@ -28,7 +30,7 @@ class DokLapSeeder extends Seeder
      */
     public function run()
     {
-		$list_jenis_informasi = ['nhi', 'li', 'lainnya'];
+		$list_jenis_informasi = ['NHI', 'LI-1', 'Lainnya'];
 		$list_kategori_pelanggaran = RefKategoriPelanggaran::all('id')->toArray();
 		$list_skema_penindakan = RefSkemaPenindakan::all('id');
 		$list_kode_jabatan = [
@@ -36,15 +38,34 @@ class DokLapSeeder extends Seeder
 			'bd.0504' => 5
 		];
 
+		// Get LI-1 ids
+		$max_li_id = DokLi::max('id');
+		$available_li_id = range(1, $max_li_id);
+
         for ($i=1; $i < 21; $i++) { 
 			$max_pra_penindakan = DokLap::max('no_dok');
 			$no_current = $max_pra_penindakan + 1;
 
+			// Choose sumber
 			$jenis_sumber = $this->faker->randomElement($list_jenis_informasi);
-			if ($jenis_sumber == 'lainnya') {
+			if ($jenis_sumber == 'Lainnya') {
 				$nomor_sumber = $this->faker->numberBetween(1,1000);
+				$tanggal_sumber = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			} else if ($jenis_sumber == 'LI-1') {
+				// Get data li
+				$li_id = $this->faker->randomElement($available_li_id);
+				if (($key = array_search($li_id, $available_li_id)) !== false) {
+					unset($available_li_id[$key]);
+				}
+				$li = DokLi::find($li_id);
+				$li->update(['kode_status' => 206]);
+
+				// Get LI number
+				$nomor_sumber = $li->no_dok_lengkap;
+				$tanggal_sumber = $li->tanggal_dokumen;
 			} else {
 				$nomor_sumber = strtoupper($jenis_sumber) . '-' . $this->faker->numberBetween(1,1000) . $this->agenda . date("Y");
+				$tanggal_sumber = $this->faker->dateTimeThisYear()->format('Y-m-d');
 			}
 
 			$kategori_pelanggaran = $this->faker->randomElement($list_kategori_pelanggaran);
@@ -68,7 +89,7 @@ class DokLapSeeder extends Seeder
 			$jabatan_penerbit = $this->faker->randomElement(['bd.0503', 'bd.0504']);
 			$penerbit_id = $list_kode_jabatan[$jabatan_penerbit];
 
-			DokLap::create([
+			$lap = DokLap::create([
 				'no_dok' => $no_current,
 				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
@@ -76,7 +97,7 @@ class DokLapSeeder extends Seeder
 				'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'jenis_sumber' => $jenis_sumber,
 				'nomor_sumber' => $nomor_sumber,
-				'tanggal_sumber' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+				'tanggal_sumber' => $tanggal_sumber,
 				'dugaan_pelanggaran_id' => $kategori_pelanggaran['id'],
 				'flag_pelaku' => $this->faker->boolean(),
 				'keterangan_pelaku' => $this->faker->sentence($nbWords = 20),
@@ -108,6 +129,16 @@ class DokLapSeeder extends Seeder
 				'atasan_id' => 3,
 				'kode_status' => 200
 			]);
+
+			// Create relation
+			if ($jenis_sumber == 'LI-1') {
+				ObjectRelation::create([
+					'object1_type' => 'li',
+					'object1_id' => $li->id,
+					'object2_type' => 'lap',
+					'object2_id' => $lap->id,
+				]);
+			}
 		}
     }
 }
