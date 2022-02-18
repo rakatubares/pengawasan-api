@@ -36,7 +36,7 @@ class DokLapResource extends JsonResource
 				break;
 
 			case 'form':
-				$array = $this->basic();
+				$array = $this->form();
 				break;
 			
 			default:
@@ -102,8 +102,30 @@ class DokLapResource extends JsonResource
 	private function default()
 	{
 		$array = [];
-		$array['dokumen']['lap'] = $this->basic();
-		$array['dokumen']['lap']['kode_status'] = $this->kode_status;
+		$array['dokumen']['lap'] = $this->pdf();
+
+		if ($this->li != null) {
+			$array['dokumen']['li'] = new DokLiResource($this->li, 'pdf');
+		}
+
+		return $array;
+	}
+
+	private function form()
+	{
+		$array = $this->basic();
+		if ($this->jenis_sumber == 'LI-1') {
+			$array['sumber_id'] = $this->li->id;
+		} else {
+			$array['sumber_id'] = null;
+		}
+		return $array;
+	}
+
+	private function pdf()
+	{
+		$array = $this->basic();
+		$array['kode_status'] = $this->kode_status;
 		return $array;
 	}
 }

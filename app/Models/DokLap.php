@@ -60,6 +60,27 @@ class DokLap extends Model
 	];
 
 	/**
+	 * Relation to LI object
+	 */
+	public function li()
+	{
+		return $this->hasOneThrough(
+			DokLi::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'li'
+		)->where(
+			'object2_type',
+			'lap'
+		);
+	}
+
+	/**
 	 * Kategori pelanggaran
 	 */
 	public function dugaan_pelanggaran()

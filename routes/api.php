@@ -54,6 +54,7 @@ Route::apiResource('li', DokLiController::class);
 Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
 Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
 Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
+Route::post('/li/search', [DokLiController::class, 'search']);
 
 /**
  * API for Details
