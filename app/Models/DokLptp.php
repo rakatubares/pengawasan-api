@@ -12,6 +12,9 @@ class DokLptp extends Model
 	use SoftDeletes;
 
 	protected $table = 'dok_lptp';
+	protected $tipe_lptp = 'lptp';
+	protected $tipe_sbp = 'sbp';
+	protected $tipe_lphp = 'lphp';
 
 	protected $fillable = [
 		'no_dok',
@@ -36,10 +39,10 @@ class DokLptp extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			'sbp'
+			$this->tipe_sbp
 		)->where(
 			'object2_type',
-			'lptp'
+			$this->tipe_lptp
 		);
 	}
 
@@ -54,10 +57,10 @@ class DokLptp extends Model
 			'object2_id'
 		)->where(
 			'object1_type',
-			'lptp'
+			$this->tipe_lptp
 		)->where(
 			'object2_type',
-			'lphp'
+			$this->tipe_lphp
 		);
 	}
 

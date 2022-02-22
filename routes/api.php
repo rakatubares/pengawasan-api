@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokSbpController;
+use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
 use App\Http\Controllers\PenindakanController;
@@ -43,12 +44,25 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for SBP
  */
 Route::apiResource('sbp', DokSbpController::class);
-Route::get('/sbp/{sbp_id}/basic', [DokSbpController::class, 'basic']);
+Route::get('/sbp/{sbp_id}/display', [DokSbpController::class, 'display']);
+Route::get('/sbp/{sbp_id}/form', [DokSbpController::class, 'form']);
 Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
 Route::post('/sbp/search', [DokSbpController::class, 'search']);
+
+/**
+ * API for SBP-N
+ */
+Route::apiResource('sbpn', DokSbpNController::class);
+Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
+Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
+Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
+Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
+Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
+Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
+Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
 
 /**
  * API for BA Penolakan SBP

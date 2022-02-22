@@ -64,23 +64,27 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'sbp':
-					$sbp = new DokSbpResource($this->sbp, 'basic');
-					$list_dokumen['sbp'] = $sbp;
+				case 'sbpn':
+					$sbp = new DokSbpResource($this[$jenis], 'pdf');
+					$list_dokumen[$jenis] = $sbp;
 
-					$lptp = new DokLptpResource($this->sbp->lptp);
-					$list_dokumen['lptp'] = $lptp;
+					$tipe_lptp = $jenis == 'sbpn' ? 'lptpn' : 'lptp';
+					$lptp = new DokLptpResource($this[$jenis]->lptp);
+					$list_dokumen[$tipe_lptp] = $lptp;
 
-					$lphp = $this->sbp->lptp->lphp;
+					$lphp = $lptp->lphp;
 					if ($lphp != null) {
-						$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
+						$tipe_lphp = $jenis == 'sbpn' ? 'lphpn' : 'lphp';
+						$list_dokumen[$tipe_lphp] = new DokLphpResource($lphp, 'pdf');
 
 						$lp = $lphp->lp;
 						if ($lp != null) {
-							$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
+							$tipe_lp = $jenis == 'sbpn' ? 'lpn' : 'lp';
+							$list_dokumen[$tipe_lp] = new DokLpResource($lp, 'pdf');
 						} 
 					}
 
-					$tolak1 = $this->sbp->tolak1;
+					$tolak1 = $sbp->tolak1;
 					if ($tolak1 != null) {
 						$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
 
@@ -90,6 +94,34 @@ class PenindakanResource extends JsonResource
 						}
 					}
 					break;
+
+				// case 'sbpn':
+						// $sbpn = new DokSbpResource($this->sbpn, 'pdf');
+						// $list_dokumen['sbpn'] = $sbpn;
+	
+						// $lptpn = new DokLptpResource($this->sbpn->lptpn);
+						// $list_dokumen['lptpn'] = $lptpn;
+	
+						// $lphp = $this->sbp->lptp->lphp;
+						// if ($lphp != null) {
+						// 	$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
+	
+						// 	$lp = $lphp->lp;
+						// 	if ($lp != null) {
+						// 		$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
+						// 	} 
+						// }
+	
+						// $tolak1 = $this->sbp->tolak1;
+						// if ($tolak1 != null) {
+						// 	$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
+	
+						// 	$tolak2 = $tolak1->tolak2;
+						// 	if ($tolak2 != null) {
+						// 		$list_dokumen['tolak2'] = new DokTolakSbp2Resource($tolak2, 'pdf');
+						// 	}
+						// }
+						// break;
 
 				case 'tegah':
 					$tegah = new DokTegahResource($this->tegah, 'basic');

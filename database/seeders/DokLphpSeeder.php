@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DokLphp;
-use App\Models\DokLptp;
 use App\Models\ObjectRelation;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
@@ -13,6 +11,22 @@ class DokLphpSeeder extends Seeder
 {
 	use SwitcherTrait;
 
+	public function __construct()
+	{
+		$this->tipe_dok = 'lphp';
+		$this->tipe_lptp = 'lptp';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
+		$this->faker = Faker::create();
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
+		$this->model = $this->switchObject($this->tipe_dok, 'model');
+		$this->model_lptp = $this->switchObject($this->tipe_lptp, 'model');
+	}
+
 	/**
 	 * Run the database seeds.
 	 *
@@ -20,24 +34,18 @@ class DokLphpSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$faker = Faker::create();
-
-		$tipe_dok = 'lphp';
-		$tipe_surat = $this->switchObject($tipe_dok, 'tipe_dok');
-		$agenda = $this->switchObject($tipe_dok, 'agenda');
-
 		// Get lptp ids
-		$max_lptp_id = DokLptp::max('id');
+		$max_lptp_id = $this->model_lptp::max('id');
 		$available_lptp_id = range(1, $max_lptp_id);
 
 		for ($i=1; $i < 11; $i++) { 
 			// Get data lptp
-			$lptp_id = $faker->randomElement($available_lptp_id);
+			$lptp_id = $this->faker->randomElement($available_lptp_id);
 			$key = array_search($lptp_id, $available_lptp_id);
 			unset($available_lptp_id[$key]);
 
 			// Get current number for buka segel
-			$max_lphp = DokLphp::max('no_dok');
+			$max_lphp = $this->model::max('no_dok');
 			$no_current = $max_lphp + 1;
 
 			// Penyusun
@@ -45,18 +53,18 @@ class DokLphpSeeder extends Seeder
 				'bd.0503' => 4,
 				'bd.0504' => 5,
 			];
-			$jabatan_penyusun = $faker->randomElement(['bd.0503', 'bd.0504']);
+			$jabatan_penyusun = $this->faker->randomElement(['bd.0503', 'bd.0504']);
 			$penyusun_id = $pejabat[$jabatan_penyusun];
 
 			// Create LPHP
-			$lphp = DokLphp::create([
+			$lphp = $this->model::create([
 				'no_dok' => $no_current,
-				'agenda_dok' => $agenda,
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => $tipe_surat . '-' . $no_current . $agenda . date("Y"),
-				'tanggal_dokumen' => $faker->dateTimeThisYear()->format('Y-m-d'),
-				'analisa' => $faker->sentence($nbWOrds = 20),
-				'catatan' => $faker->sentence($nbWOrds = 20),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
+				'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+				'analisa' => $this->faker->sentence($nbWOrds = 20),
+				'catatan' => $this->faker->sentence($nbWOrds = 20),
 				'kode_jabatan_penyusun' => $jabatan_penyusun,
 				'plh_penyusun' => false,
 				'penyusun_id' => $penyusun_id,
@@ -67,9 +75,9 @@ class DokLphpSeeder extends Seeder
 			]);
 
 			ObjectRelation::create([
-				'object1_type' => 'lptp',
+				'object1_type' => $this->tipe_lptp,
 				'object1_id' => $lptp_id,
-				'object2_type' => 'lphp',
+				'object2_type' => $this->tipe_dok,
 				'object2_id' => $lphp->id,
 			]);
 

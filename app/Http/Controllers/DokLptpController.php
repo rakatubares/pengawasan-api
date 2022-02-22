@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLptpResource;
-use App\Models\DokLptp;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -16,8 +15,14 @@ class DokLptpController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'lptp';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
 	}
 
 	/**
@@ -30,7 +35,7 @@ class DokLptpController extends Controller
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 
-		$lptp = DokLptp::create([
+		$lptp = $this->model::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
 			'jabatan_atasan' => $request->jabatan_atasan['kode'],
@@ -53,7 +58,7 @@ class DokLptpController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		DokLptp::where('id', $id)->update([
+		$this->model::where('id', $id)->update([
 			'jabatan_atasan' => $request->jabatan_atasan['kode'],
 			'plh' => $request->plh,
 			'atasan_id' => $request->atasan['user_id'],

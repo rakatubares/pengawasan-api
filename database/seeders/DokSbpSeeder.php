@@ -5,9 +5,7 @@ namespace Database\Seeders;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
-use App\Models\DokLptp;
 use App\Models\DokRiksa;
-use App\Models\DokSbp;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
 use App\Models\DokTolakSbp1;
@@ -24,10 +22,18 @@ class DokSbpSeeder extends Seeder
 
 	public function __construct()
 	{
-		$this->faker = Faker::create();
 		$this->tipe_dok = 'sbp';
+		$this->tipe_lptp = 'lptp';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
+		$this->faker = Faker::create();
 		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
 		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
+		$this->model = $this->switchObject($this->tipe_dok, 'model');
+		$this->model_lptp = $this->switchObject($this->tipe_lptp, 'model');
 	}
 
     /**
@@ -49,9 +55,9 @@ class DokSbpSeeder extends Seeder
 				'petugas2_id' => 2,
 			]);
 
-			$max_sbp = DokSbp::max('no_dok');
+			$max_sbp = $this->model::max('no_dok');
 			$crn_sbp = $max_sbp + 1;
-			$sbp = DokSbp::create([
+			$sbp = $this->model::create([
 				'no_dok' => $crn_sbp,
 				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
@@ -65,11 +71,11 @@ class DokSbpSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
-			$tipe_surat_lptp = $this->switchObject('lptp', 'tipe_dok');
-			$agenda_lptp = $this->switchObject('lptp', 'agenda');
-			$max_lptp = DokLptp::max('no_dok');
+			$tipe_surat_lptp = $this->switchObject($this->tipe_lptp, 'tipe_dok');
+			$agenda_lptp = $this->switchObject($this->tipe_lptp, 'agenda');
+			$max_lptp = $this->model_lptp::max('no_dok');
 			$crn_lptp = $max_lptp + 1;
-			$lptp = DokLptp::create([
+			$lptp = $this->model_lptp::create([
 				'no_dok' => $crn_lptp,
 				'agenda_dok' => $agenda_lptp,
 				'thn_dok' => date("Y"),
@@ -84,15 +90,15 @@ class DokSbpSeeder extends Seeder
 			ObjectRelation::create([
 				'object1_type' => 'penindakan',
 				'object1_id' => $penindakan->id,
-				'object2_type' => 'sbp',
+				'object2_type' => $this->tipe_dok,
 				'object2_id' => $sbp->id,
 			]);
 
 			// Create relation SBP - LPTP
 			ObjectRelation::create([
-				'object1_type' => 'sbp',
+				'object1_type' => $this->tipe_dok,
 				'object1_id' => $sbp->id,
-				'object2_type' => 'lptp',
+				'object2_type' => $this->tipe_lptp,
 				'object2_id' => $lptp->id,
 			]);
 
@@ -299,7 +305,7 @@ class DokSbpSeeder extends Seeder
 			'object2_id' => $tolak->id,
 		]);
 
-		DokSbp::find($sbp_id)->update(['status_tolak' => 1]);
+		$this->model::find($sbp_id)->update(['status_tolak' => 1]);
 
 		return $tolak;
 	}
@@ -332,6 +338,6 @@ class DokSbpSeeder extends Seeder
 		]);
 
 		DokTolakSbp1::find($tolak1_id)->update(['status_tolak' => 1]);
-		DokSbp::find($sbp_id)->update(['status_tolak' => 2]);
+		$this->model::find($sbp_id)->update(['status_tolak' => 2]);
 	}
 }

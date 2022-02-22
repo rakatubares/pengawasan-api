@@ -6,15 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLptpTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('dok_lptp', function (Blueprint $table) {
-            $table->id();
+	public function __construct()
+	{
+		$this->table_name = 'dok_lptp';
+	}
+
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create($this->table_name, function (Blueprint $table) {
+			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
@@ -24,21 +29,21 @@ class CreateDokLptpTable extends Migration
 			$table->boolean('plh')->nullable()->index();
 			$table->integer('atasan_id')->index();
 			$table->integer('kode_status')->index();
-            $table->timestamps();
+			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
-        });
-    }
+		});
+	}
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('dok_lptp');
-    }
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::dropIfExists($this->table_name);
+	}
 }
