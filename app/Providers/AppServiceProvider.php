@@ -7,6 +7,7 @@ use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
+use App\Models\DokLphpN;
 use App\Models\DokRiksa;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
@@ -19,7 +20,6 @@ use App\Models\RefEntitas;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokRiksaObserver;
-use App\Observers\DokSbpNObserver;
 use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
 use App\Observers\DokTegahObserver;
@@ -63,8 +63,9 @@ class AppServiceProvider extends ServiceProvider
 
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
+		DokLphpN::observe(DokLphpObserver::class);
 		DokSbp::observe(DokSbpObserver::class);
-		DokSbpN::observe(DokSbpNObserver::class);
+		DokSbpN::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
 		DokTegah::observe(DokTegahObserver::class);
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);

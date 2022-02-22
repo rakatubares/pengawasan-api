@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\SwitcherTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ class DokLphp extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
+	use SwitcherTrait;
 
 	protected $table = 'dok_lphp';
 	protected $tipe_lptp = 'lptp';
@@ -39,8 +41,10 @@ class DokLphp extends Model
 
 	public function lptp()
 	{
+		$lptp_model = $this->switchObject($this->tipe_lptp, 'model');
+
 		return $this->hasOneThrough(
-			DokLptp::class,
+			$lptp_model,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
@@ -57,8 +61,10 @@ class DokLphp extends Model
 
 	public function lp()
 	{
+		$lp_model = $this->switchObject($this->tipe_lp, 'model');
+
 		return $this->hasOneThrough(
-			DokLp::class,
+			$lp_model,
 			ObjectRelation::class,
 			'object1_id',
 			'id',

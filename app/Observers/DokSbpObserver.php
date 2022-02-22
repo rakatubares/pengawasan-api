@@ -4,9 +4,12 @@ namespace App\Observers;
 
 use App\Models\ObjectRelation;
 use App\Models\DokSbp;
+use App\Traits\SwitcherTrait;
 
 class DokSbpObserver
 {
+	use SwitcherTrait;
+
 	/**
 	 * Handle events after all transactions are committed.
 	 *
@@ -44,6 +47,21 @@ class DokSbpObserver
 	 */
 	public function deleted(DokSbp $sbp)
 	{
+		// Get SBP type
+		switch (get_class($sbp)) {
+			case $this->switchObject('sbp', 'model'):
+				$sbp_type = 'sbp';
+				break;
+
+			case $this->switchObject('sbpn', 'model'):
+				$sbp_type = 'sbpn';
+				break;
+			
+			default:
+				$sbp_type = null;
+				break;
+		}
+
 		// Change status to 300
 		$sbp->update(['kode_status' => 300]);
 
@@ -54,11 +72,11 @@ class DokSbpObserver
 		}
 
 		// Delete any possible relations
-		ObjectRelation::where(function($query) use ($sbp) {
-			$query->where('object1_type', 'sbp')
+		ObjectRelation::where(function($query) use ($sbp, $sbp_type) {
+			$query->where('object1_type', $sbp_type)
 				->where('object1_id', $sbp->id);
-		})->orWhere(function($query) use ($sbp) {
-			$query->where('object2_type', 'sbp')
+		})->orWhere(function($query) use ($sbp, $sbp_type) {
+			$query->where('object2_type', $sbp_type)
 				->where('object2_id', $sbp->id);
 		})->delete();
 	}

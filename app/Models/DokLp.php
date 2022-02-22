@@ -44,10 +44,10 @@ class DokLp extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			$this->lphp
+			$this->tipe_lphp
 		)->where(
 			'object2_type',
-			$this->lp
+			$this->tipe_lp
 		);
 	}
 

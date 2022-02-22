@@ -4,9 +4,12 @@ namespace App\Observers;
 
 use App\Models\DokLphp;
 use App\Models\ObjectRelation;
+use App\Traits\SwitcherTrait;
 
 class DokLphpObserver
 {
+	use SwitcherTrait;
+
     /**
      * Handle the DokLphp "created" event.
      *
@@ -37,6 +40,21 @@ class DokLphpObserver
      */
     public function deleted(DokLphp $dokLphp)
     {
+		// Get LPHP type
+		switch (get_class($dokLphp)) {
+			case $this->switchObject('lphp', 'model'):
+				$lphp_type = 'lphp';
+				break;
+
+			case $this->switchObject('lphpn', 'model'):
+				$lphp_type = 'lphpn';
+				break;
+			
+			default:
+				$lphp_type = null;
+				break;
+		}
+
         // Change status to 300
 		$dokLphp->update(['kode_status' => 300]);
 
@@ -45,11 +63,11 @@ class DokLphpObserver
 		$sbp->update(['kode_status' => 200]);
 
 		// Delete any possible relations
-		ObjectRelation::where(function($query) use ($dokLphp) {
-			$query->where('object1_type', 'lphp')
+		ObjectRelation::where(function($query) use ($dokLphp, $lphp_type) {
+			$query->where('object1_type', $lphp_type)
 				->where('object1_id', $dokLphp->id);
-		})->orWhere(function($query) use ($dokLphp) {
-			$query->where('object2_type', 'lphp')
+		})->orWhere(function($query) use ($dokLphp, $lphp_type) {
+			$query->where('object2_type', $lphp_type)
 				->where('object2_id', $dokLphp->id);
 		})->delete();
     }
