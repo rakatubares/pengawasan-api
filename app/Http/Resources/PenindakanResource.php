@@ -79,8 +79,15 @@ class PenindakanResource extends JsonResource
 
 						$lp = $lphp->lp;
 						if ($lp != null) {
-							$tipe_lp = $jenis == 'sbpn' ? 'lpn' : 'lp';
-							$list_dokumen[$tipe_lp] = new DokLpResource($lp, 'pdf');
+							switch ($jenis) {
+								case 'sbp':
+									$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
+									break;
+
+								case 'sbpn':
+									$list_dokumen['lpn'] = new DokLpNResource($lp, 'pdf');
+									break;
+							}
 						} 
 					}
 

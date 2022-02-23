@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
+use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokTolakSbp1Controller;
@@ -36,6 +37,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Penindakan routes
+ |--------------------------------------------------------------------------
+ */
+
 /**
  * API for penindakan
  */
@@ -52,18 +59,6 @@ Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
 Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
 Route::post('/sbp/search', [DokSbpController::class, 'search']);
-
-/**
- * API for SBP-N
- */
-Route::apiResource('sbpn', DokSbpNController::class);
-Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
-Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
-Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
-Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
-Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
-Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
-Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
 
 /**
  * API for BA Penolakan SBP
@@ -92,7 +87,34 @@ Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
 Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 
 /**
- * API for LPHP
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
+Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | NPP routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for SBP-N
+ */
+Route::apiResource('sbpn', DokSbpNController::class);
+Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
+Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
+Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
+Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
+Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
+Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
+Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
+
+/**
+ * API for LPHP-N
  */
 Route::apiResource('lphpn', DokLphpNController::class);
 Route::get('/lphpn/{lphpn_id}/display', [DokLphpNController::class, 'display']);
@@ -101,13 +123,19 @@ Route::get('/lphpn/{lphpn_id}/objek', [DokLphpNController::class, 'objek']);
 Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
 
 /**
- * API for LP
+ * API for LP-N
  */
-Route::apiResource('lp', DokLpController::class);
-Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
-Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
-Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
-Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+Route::apiResource('lpn', DokLpNController::class);
+Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
+Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
+Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
+Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for Details
@@ -161,6 +189,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailDokumenController::class, 'destroy']);
 	});
 });
+
+/*
+ |--------------------------------------------------------------------------
+ | Reference routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for SPRINT

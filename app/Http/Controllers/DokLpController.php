@@ -20,8 +20,18 @@ class DokLpController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'lp';
+		$this->lphp_type = 'lphp';
+		$this->sbp_type = 'sbp';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
+		$this->resource = $this->switchObject($this->doc_type, 'resource');
+		$this->sbp_model = $this->switchObject($this->sbp_type, 'model');
 	}
 
 	/*
@@ -37,7 +47,7 @@ class DokLpController extends Controller
 	 */
 	public function index()
 	{
-		$all_lp = DokLp::orderBy('created_at', 'desc')
+		$all_lp = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$lp_list = DokLpTableResource::collection($all_lp);
@@ -52,7 +62,7 @@ class DokLpController extends Controller
 	 */
 	public function show($id)
 	{
-		$lphp = new DokLpResource(DokLp::findOrFail($id));
+		$lphp = new $this->resource($this->model::findOrFail($id));
 		return $lphp;
 	}
 
@@ -64,7 +74,7 @@ class DokLpController extends Controller
 	 */
 	public function display($id)
 	{
-		$lp = new DokLpResource(DokLp::findOrFail($id), 'display');
+		$lp = new $this->resource($this->model::findOrFail($id), 'display');
 		return $lp;
 	}
 
@@ -75,7 +85,7 @@ class DokLpController extends Controller
 	 */
 	public function form($id)
 	{
-		$lp = new DokLpResource(DokLp::find($id), 'form');
+		$lp = new $this->resource($this->model::find($id), 'form');
 		return $lp;
 	}
 
@@ -87,7 +97,7 @@ class DokLpController extends Controller
 	 */
 	public function objek($id)
 	{
-		$lp = new DokLpResource(DokLp::findOrFail($id), 'objek');
+		$lp = new $this->resource($this->model::findOrFail($id), 'objek');
 		return $lp;
 	}
 
@@ -102,7 +112,7 @@ class DokLpController extends Controller
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'tanggal_dokumen' => 'required|date',
@@ -119,7 +129,7 @@ class DokLpController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$thn_dok = date('Y', strtotime($request->tanggal_dokumen));
@@ -158,17 +168,17 @@ class DokLpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Cek LP
-			$sbp = DokSbp::find($request->id_sbp);
+			$sbp = $this->sbp_model::find($request->id_sbp);
 			$lphp = $sbp->lptp->lphp;
 			$lp = $lphp->lp;
 
 			if ($lp == null) {
 				// Save data LP
 				$data_lp = $this->prepareData($request, 'insert');
-				$lp = DokLp::create($data_lp);
+				$lp = $this->model::create($data_lp);
 				
 				// Create relation
-				$this->createRelation('lphp', $lphp->id, 'lp', $lp->id);
+				$this->createRelation($this->lphp_type, $lphp->id, $this->doc_type, $lp->id);
 
 				// Change SBP status
 				$sbp->update(['kode_status' => 103]);
@@ -177,7 +187,7 @@ class DokLpController extends Controller
 				DB::commit();
 
 				// Return LP
-				$lp_resource = new DokLpResource(DokLp::findOrFail($lp->id), 'form');
+				$lp_resource = new DokLpResource($this->model::findOrFail($lp->id), 'form');
 				return $lp_resource;
 			} else {
 				$result = response()->json(['error' => 'SBP telah dibuat LP.'], 422);
@@ -199,7 +209,7 @@ class DokLpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLp::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model, $id);
 
 		if ($is_unpublished) {
 			// Validate data buka segel
@@ -208,7 +218,7 @@ class DokLpController extends Controller
 			DB::beginTransaction();
 			try {
 				// Check existing id_sbp
-				$existing_lp = DokLp::find($id);
+				$existing_lp = $this->model::find($id);
 				$existing_sbp = $existing_lp->lphp->lptp->sbp;
 				$existing_sbp_id = $existing_sbp->id;
 
@@ -216,22 +226,22 @@ class DokLpController extends Controller
 					// Destroy existing relation
 					$existing_sbp->update(['kode_status' => 202]);
 					ObjectRelation::where([
-						'object2_type' => 'lp',
+						'object2_type' => $this->doc_type,
 						'object2_id' => $id
 					])->delete();
 
 					// Check if SBP already has LP
-					$sbp = DokSbp::find($request->id_sbp);
+					$sbp = $this->sbp_model::find($request->id_sbp);
 					$lphp = $sbp->lptp->lphp;
 					$lp = $lphp->lphp;
 
 					if ($lp == null) {
 						// Save data LPHP
 						$data_lp = $this->prepareData($request);
-						DokLp::find($id)->update($data_lp);
+						$this->model::find($id)->update($data_lp);
 						
 						// Create relation
-						$this->createRelation('lphp', $lphp->id, 'lp', $id);
+						$this->createRelation($this->lphp_type, $lphp->id, $this->doc_type, $id);
 
 						// Change SBP status
 						$sbp->update(['kode_status' => 102]);
@@ -240,7 +250,7 @@ class DokLpController extends Controller
 						DB::commit();
 
 						// Return LPHP
-						$lp_resource = new DokLpResource(DokLp::findOrFail($id), 'form');
+						$lp_resource = new DokLpResource($this->model::findOrFail($id), 'form');
 						return $lp_resource;
 					} else {
 						$result = response()->json(['error' => 'SBP telah dibuat LP.'], 422);
@@ -249,13 +259,13 @@ class DokLpController extends Controller
 				} else {
 					// Save data LP
 					$data_lp = $this->prepareData($request);
-					DokLp::find($id)->update($data_lp);
+					$this->model::find($id)->update($data_lp);
 
 					// Commit store query
 					DB::commit();
 
 					// Return LPHP
-					$lphp_resource = new DokLpResource(DokLp::findOrFail($id), 'form');
+					$lphp_resource = new DokLpResource($this->model::findOrFail($id), 'form');
 					return $lphp_resource;
 				}
 			} catch (\Throwable $th) {
@@ -279,11 +289,11 @@ class DokLpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Find doc
-			$lp = DokLp::find($id);
+			$lp = $this->model::find($id);
 			$sbp = $lp->lphp->lptp->sbp;
 			
 			// Publish doc and change SBP status
-			$this->publishDocument('lp', $lp->id, $lp->thn_dok);
+			$this->publishDocument($this->doc_type, $lp->id, $lp->thn_dok);
 			$sbp->update(['kode_status' => 203]);
 
 			// Commit query
@@ -310,9 +320,9 @@ class DokLpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokLp::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model, $id);
 			if ($is_unpublished) {
-				DokLp::find($id)->delete();
+				$this->model::find($id)->delete();
 			}
 
 			DB::commit();

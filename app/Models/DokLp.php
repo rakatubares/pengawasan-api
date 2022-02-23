@@ -12,8 +12,6 @@ class DokLp extends Model
 	use SoftDeletes;
 
 	protected $table = 'dok_lp';
-	protected $tipe_lphp = 'lphp';
-	protected $tipe_lp = 'lp';
 
 	protected $fillable = [
 		'no_dok',
@@ -44,10 +42,10 @@ class DokLp extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			$this->tipe_lphp
+			'lphp'
 		)->where(
 			'object2_type',
-			$this->tipe_lp
+			'lp'
 		);
 	}
 

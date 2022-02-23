@@ -8,6 +8,7 @@ use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
+use App\Models\DokLpN;
 use App\Models\DokRiksa;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
@@ -62,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DokLp::observe(DokLpObserver::class);
+		DokLpN::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokLphpN::observe(DokLphpObserver::class);
 		DokSbp::observe(DokSbpObserver::class);

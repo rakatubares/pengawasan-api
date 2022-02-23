@@ -8,6 +8,7 @@ use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLpNResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokRiksaResource;
@@ -52,7 +53,7 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLpN::class,
-			'resource' => DokLpResource::class,
+			'resource' => DokLpNResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
