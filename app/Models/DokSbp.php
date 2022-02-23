@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\SwitcherTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,8 +11,11 @@ class DokSbp extends Model
 {
     use HasFactory;
 	use SoftDeletes;
+	use SwitcherTrait;
 
 	protected $table = 'dok_sbp';
+	protected $tipe_sbp = 'sbp';
+	protected $tipe_lptp = 'lptp';
 
 	protected $fillable = [
 		'no_dok',
@@ -51,7 +55,7 @@ class DokSbp extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'sbp'
+			$this->tipe_sbp
 		);
 	}
 
@@ -66,7 +70,7 @@ class DokSbp extends Model
 			'id'
 		)->where(
 			'object1_type',
-			'sbp'
+			$this->tipe_sbp
 		);
 	}
 
@@ -75,8 +79,10 @@ class DokSbp extends Model
 	 */
 	public function lptp()
 	{
+		$lptp_model = $this->switchObject($this->tipe_lptp, 'model');
+
 		return $this->hasOneThrough(
-			DokLptp::class,
+			$lptp_model,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -84,10 +90,10 @@ class DokSbp extends Model
 			'object2_id'
 		)->where(
 			'object1_type',
-			'sbp'
+			$this->tipe_sbp
 		)->where(
 			'object2_type',
-			'lptp'
+			$this->tipe_lptp
 		);
 	}
 
@@ -105,7 +111,7 @@ class DokSbp extends Model
 			'object2_id'
 		)->where(
 			'object1_type',
-			'sbp'
+			$this->tipe_sbp
 		)->where(
 			'object2_type',
 			'tolak1'

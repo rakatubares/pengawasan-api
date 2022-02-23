@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokSbpTable extends Migration
 {
+	public function __construct()
+	{
+		$this->table_name = 'dok_sbp';
+	}
+
     /**
      * Run the migrations.
      *
@@ -13,7 +18,7 @@ class CreateDokSbpTable extends Migration
      */
     public function up()
     {
-        Schema::create('dok_sbp', function (Blueprint $table) {
+        Schema::create($this->table_name, function (Blueprint $table) {
             $table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -42,6 +47,6 @@ class CreateDokSbpTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dok_sbp');
+        Schema::dropIfExists($this->table_name);
     }
 }

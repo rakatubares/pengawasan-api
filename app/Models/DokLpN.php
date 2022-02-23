@@ -2,21 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\SwitcherTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DokLphp extends Model
+class DokLpN extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
-	use SwitcherTrait;
 
-	protected $table = 'dok_lphp';
-	protected $tipe_lptp = 'lptp';
-	protected $tipe_lphp = 'lphp';
-	protected $tipe_lp = 'lp';
+	protected $table = 'dok_lpn';
 
 	protected $fillable = [
 		'no_dok',
@@ -24,14 +19,14 @@ class DokLphp extends Model
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
-		'analisa',
-		'catatan',
+		'sprint_id',
+		'kesimpulan',
 		'kode_jabatan_penyusun',
 		'plh_penyusun',
 		'penyusun_id',
-		'kode_jabatan_atasan',
-		'plh_atasan',
-		'atasan_id',
+		'kode_jabatan_penerbit',
+		'plh_penerbit',
+		'penerbit_id',
 		'kode_status'
 	];
 
@@ -39,12 +34,10 @@ class DokLphp extends Model
 		'tanggal_dokumen' => 'date'
 	];
 
-	public function lptp()
+	public function lphp()
 	{
-		$lptp_model = $this->switchObject($this->tipe_lptp, 'model');
-
 		return $this->hasOneThrough(
-			$lptp_model,
+			DokLphpN::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
@@ -52,31 +45,19 @@ class DokLphp extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			$this->tipe_lptp
+			'lphpn'
 		)->where(
 			'object2_type',
-			$this->tipe_lphp
+			'lpn'
 		);
 	}
 
-	public function lp()
+	/**
+	 * Sprint
+	 */
+	public function sprint()
 	{
-		$lp_model = $this->switchObject($this->tipe_lp, 'model');
-
-		return $this->hasOneThrough(
-			$lp_model,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			$this->tipe_lphp
-		)->where(
-			'object2_type',
-			$this->tipe_lp
-		);
+		return $this->belongsTo(RefSprint::class, 'sprint_id');
 	}
 
 	/**
@@ -92,14 +73,14 @@ class DokLphp extends Model
 		return $this->belongsTo(RefJabatan::class, 'kode_jabatan_penyusun', 'kode');
 	}
 
-	public function atasan()
+	public function penerbit()
 	{
-		return $this->belongsTo(RefUserCache::class, 'atasan_id');
+		return $this->belongsTo(RefUserCache::class, 'penerbit_id');
 	}
 
-	public function jabatan_atasan()
+	public function jabatan_penerbit()
 	{
-		return $this->belongsTo(RefJabatan::class, 'kode_jabatan_atasan', 'kode');
+		return $this->belongsTo(RefJabatan::class, 'kode_jabatan_penerbit', 'kode');
 	}
 
 	/**

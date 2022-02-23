@@ -36,7 +36,10 @@ class DatabaseSeeder extends Seeder
 			DokBukaPengamanSeeder::class,
 			DokBastSeeder::class,
 			DokContohSeeder::class,
-			DokReeksporSeeder::class
+			DokReeksporSeeder::class,
+			DokSbpNSeeder::class,
+			DokLphpNSeeder::class,
+			DokLpNSeeder::class,
 		]);
 	}
 }

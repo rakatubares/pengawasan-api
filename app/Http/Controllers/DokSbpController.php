@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSbpTableResource;
-use App\Models\DokSbp;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Traits\DokumenTrait;
@@ -20,8 +19,16 @@ class DokSbpController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'sbp';
+		$this->lptp_type = 'lptp';
+		$this->lptp_controller = DokLptpController::class;
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
 	}
 
 	/*
@@ -37,7 +44,7 @@ class DokSbpController extends Controller
 	 */
 	public function index()
 	{
-		$all_sbp = DokSbp::orderBy('created_at', 'desc')
+		$all_sbp = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$sbp_list = DokSbpTableResource::collection($all_sbp);
@@ -52,7 +59,7 @@ class DokSbpController extends Controller
 	 */
 	public function show($id)
 	{
-		$sbp = new DokSbpResource(DokSbp::findOrFail($id));
+		$sbp = new DokSbpResource($this->model::findOrFail($id), null, $this->doc_type);
 		return $sbp;
 	}
 
@@ -61,9 +68,20 @@ class DokSbpController extends Controller
 	 * 
 	 * @param int $id
 	 */
-	public function basic($id)
+	public function display($id)
 	{
-		$sbp = new DokSbpResource(DokSbp::find($id), 'basic');
+		$sbp = new DokSbpResource($this->model::find($id), 'display');
+		return $sbp;
+	}
+
+	/**
+	 * Display object type
+	 * 
+	 * @param int $id
+	 */
+	public function form($id)
+	{
+		$sbp = new DokSbpResource($this->model::find($id), 'form');
 		return $sbp;
 	}
 
@@ -74,7 +92,7 @@ class DokSbpController extends Controller
 	 */
 	public function objek($id)
 	{
-		$objek = new DokSbpResource(DokSbp::find($id), 'objek');
+		$objek = new DokSbpResource($this->model::find($id), 'objek');
 		return $objek;
 	}
 
@@ -85,7 +103,7 @@ class DokSbpController extends Controller
 	 */
 	public function linked($id)
 	{
-		$objek = new DokSbpResource(DokSbp::find($id), 'linked');
+		$objek = new DokSbpResource($this->model::find($id), 'linked');
 		return $objek;
 	}
 
@@ -102,7 +120,7 @@ class DokSbpController extends Controller
 		$exc = $request->exc;
 		$search = '%' . $src . '%';
 
-		$search_result = DokSbp::where(function ($query) use ($search, $flt) 
+		$search_result = $this->model::where(function ($query) use ($search, $flt) 
 			{
 				$query->where('no_dok_lengkap', 'like', $search)
 					->when($flt != null, function ($query) use ($flt)
@@ -146,8 +164,8 @@ class DokSbpController extends Controller
 	private function validateSbp(Request $request)
 	{
 		$request->validate([
-			'main.data.wkt_mulai_penindakan' => 'required|date',
-			'main.data.wkt_selesai_penindakan' => 'required|date',
+			'wkt_mulai_penindakan' => 'required|date',
+			'wkt_selesai_penindakan' => 'required|date',
 		]);
 	}
 
@@ -161,17 +179,17 @@ class DokSbpController extends Controller
 	private function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
-		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_mulai_penindakan']));
-		$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->main['data']['wkt_selesai_penindakan']));
+		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
+		$wkt_selesai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_selesai_penindakan));
 
 		// Data SBP
 		$data_sbp = [
-			'uraian_penindakan' => $request->main['data']['uraian_penindakan'],
-			'alasan_penindakan' => $request->main['data']['alasan_penindakan'],
-			'jenis_pelanggaran' => $request->main['data']['jenis_pelanggaran'],
+			'uraian_penindakan' => $request->uraian_penindakan,
+			'alasan_penindakan' => $request->alasan_penindakan,
+			'jenis_pelanggaran' => $request->jenis_pelanggaran,
 			'wkt_mulai_penindakan' => $wkt_mulai_penindakan,
 			'wkt_selesai_penindakan' => $wkt_selesai_penindakan,
-			'hal_terjadi' => $request->main['data']['hal_terjadi'],
+			'hal_terjadi' => $request->hal_terjadi,
 		];
 
 		if ($state == 'insert') {
@@ -203,23 +221,23 @@ class DokSbpController extends Controller
 		try {
 			// Save data SBP
 			$data_sbp = $this->prepareData($request, 'insert');
-			$sbp = DokSbp::create($data_sbp);
+			$sbp = $this->model::create($data_sbp);
 
 			// Save data LPTP
-			$lptp_request = new Request($request->dokumen['lptp']);
-			$lptp = app(DokLptpController::class)->store($lptp_request);
-			$this->createRelation('sbp', $sbp->id, 'lptp', $lptp->id);
+			$lptp_request = new Request($request->lptp);
+			$lptp = app($this->lptp_controller)->store($lptp_request);
+			$this->createRelation($this->doc_type, $sbp->id, $this->lptp_type, $lptp->id);
 
 			// Save data penindakan and create object relation
 			if ($linked_doc == false) {
-				$this->storePenindakan($request, 'sbp', $sbp->id);
+				$this->storePenindakan($request, $this->doc_type, $sbp->id);
 			}
 
 			// Commit store query
 			DB::commit();
 
 			// Return created SBP
-			$sbp_resource = new DokSbpResource(DokSbp::findOrFail($sbp->id));
+			$sbp_resource = new DokSbpResource($this->model::findOrFail($sbp->id), 'form', $this->doc_type);
 			return $sbp_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -237,7 +255,7 @@ class DokSbpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is published
-		$is_unpublished = $this->checkUnpublished(DokSbp::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model, $id);
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -249,11 +267,11 @@ class DokSbpController extends Controller
 
 				// Update SBP
 				$data_sbp = $this->prepareData($request, 'update');
-				DokSbp::where('id', $id)->update($data_sbp);
+				$this->model::where('id', $id)->update($data_sbp);
 
 				// Update LPTP
-				$lptp_request = new Request($request->dokumen['lptp']);
-				app(DokLptpController::class)->update($lptp_request, $request->dokumen['lptp']['id']);
+				$lptp_request = new Request($request->lptp);
+				app($this->lptp_controller)->update($lptp_request, $request->lptp['id']);
 
 				// Update penindakan
 				$this->updatePenindakan($request);
@@ -262,7 +280,7 @@ class DokSbpController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$sbp_resource = new DokSbpResource(DokSbp::findOrFail($id));
+				$sbp_resource = new DokSbpResource($this->model::findOrFail($id));
 				return $sbp_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -283,11 +301,11 @@ class DokSbpController extends Controller
 	public function publish($id)
 	{
 		// Create array from SBP object
-		$sbp = new DokSbpResource(DokSbp::find($id));
+		$sbp = new DokSbpResource($this->model::find($id));
 		$arr = json_decode($sbp->toJson(), true);
 
 		// Check penindakan date
-		$year = $this->datePenindakan(DokSbp::class, $id);
+		$year = $this->datePenindakan($this->model, $id);
 	
 		// Publish each document
 		foreach ($arr['dokumen'] as $type => $data) {
@@ -313,7 +331,7 @@ class DokSbpController extends Controller
 
 		try {
 			// Get object penindakan
-			$sbp = DokSbp::findOrFail($id);
+			$sbp = $this->model::findOrFail($id);
 			$penindakan = $sbp->penindakan;
 
 			// Upsert segel
@@ -341,7 +359,7 @@ class DokSbpController extends Controller
 			DB::commit();
 
 			// Return linked doc
-			$dokumen = new DokSbpResource(DokSbp::findOrFail($id), 'linked');
+			$dokumen = new DokSbpResource($this->model::findOrFail($id), 'linked');
 			return $dokumen;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -453,9 +471,9 @@ class DokSbpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokSbp::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model, $id);
 			if ($is_unpublished) {
-				DokSbp::find($id)->delete();
+				$this->model::find($id)->delete();
 			}
 			
 			DB::commit();

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
-use App\Models\DokLphp;
-use App\Models\DokSbp;
 use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
@@ -20,8 +18,17 @@ class DokLphpController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'lphp';
+		$this->lptp_type = 'lptp';
+		$this->sbp_type = 'sbp';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
+		$this->sbp_model = $this->switchObject($this->sbp_type, 'model');
 	}
 
 	/*
@@ -37,7 +44,7 @@ class DokLphpController extends Controller
 	 */
 	public function index()
 	{
-		$all_lphp = DokLphp::orderBy('created_at', 'desc')
+		$all_lphp = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$lphp_list = DokLphpTableResource::collection($all_lphp);
@@ -52,7 +59,7 @@ class DokLphpController extends Controller
 	 */
 	public function show($id)
 	{
-		$lphp = new DokLphpResource(DokLphp::findOrFail($id));
+		$lphp = new DokLphpResource($this->model::findOrFail($id));
 		return $lphp;
 	}
 
@@ -63,7 +70,7 @@ class DokLphpController extends Controller
 	 */
 	public function display($id)
 	{
-		$lphp = new DokLphpResource(DokLphp::find($id), 'display');
+		$lphp = new DokLphpResource($this->model::find($id), 'display');
 		return $lphp;
 	}
 
@@ -74,7 +81,7 @@ class DokLphpController extends Controller
 	 */
 	public function form($id)
 	{
-		$lphp = new DokLphpResource(DokLphp::find($id), 'form');
+		$lphp = new DokLphpResource($this->model::find($id), 'form');
 		return $lphp;
 	}
 
@@ -85,7 +92,7 @@ class DokLphpController extends Controller
 	 */
 	public function objek($id)
 	{
-		$lphp = new DokLphpResource(DokLphp::find($id), 'objek');
+		$lphp = new DokLphpResource($this->model::find($id), 'objek');
 		return $lphp;
 	}
 
@@ -163,17 +170,17 @@ class DokLphpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Cek LPHP
-			$sbp = DokSbp::find($request->id_sbp);
+			$sbp = $this->sbp_model::find($request->id_sbp);
 			$lptp = $sbp->lptp;
 			$lphp = $lptp->lphp;
 
 			if ($lphp == null) {
 				// Save data LPHP
 				$data_lphp = $this->prepareData($request, 'insert');
-				$lphp = DokLphp::create($data_lphp);
+				$lphp = $this->model::create($data_lphp);
 				
 				// Create relation
-				$this->createRelation('lptp', $lptp->id, 'lphp', $lphp->id);
+				$this->createRelation($this->lptp_type, $lptp->id, $this->doc_type, $lphp->id);
 
 				// Change SBP status
 				$sbp->update(['kode_status' => 102]);
@@ -182,7 +189,7 @@ class DokLphpController extends Controller
 				DB::commit();
 
 				// Return LPHP
-				$lphp_resource = new DokLphpResource(DokLphp::findOrFail($lphp->id), 'form');
+				$lphp_resource = new DokLphpResource($this->model::findOrFail($lphp->id), 'form');
 				return $lphp_resource;
 			} else {
 				$result = response()->json(['error' => 'SBP telah dibuat LPHP.'], 422);
@@ -204,7 +211,7 @@ class DokLphpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLphp::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model, $id);
 
 		if ($is_unpublished) {
 			// Validate data buka segel
@@ -213,7 +220,7 @@ class DokLphpController extends Controller
 			DB::beginTransaction();
 			try {
 				// Check existing id_sbp
-				$existing_lphp = DokLphp::find($id);
+				$existing_lphp = $this->model::find($id);
 				$existing_sbp = $existing_lphp->lptp->sbp;
 				$existing_sbp_id = $existing_sbp->id;
 
@@ -221,22 +228,22 @@ class DokLphpController extends Controller
 					// Destroy existing relation
 					$existing_sbp->update(['kode_status' => 200]);
 					ObjectRelation::where([
-						'object2_type' => 'lphp',
+						'object2_type' => $this->doc_type,
 						'object2_id' => $id
 					])->delete();
 
 					// Create new relation
-					$sbp = DokSbp::find($request->id_sbp);
+					$sbp = $this->sbp_model::find($request->id_sbp);
 					$lptp = $sbp->lptp;
 					$lphp = $lptp->lphp;
 
 					if ($lphp == null) {
 						// Save data LPHP
 						$data_lphp = $this->prepareData($request);
-						DokLphp::find($id)->update($data_lphp);
+						$this->model::find($id)->update($data_lphp);
 						
 						// Create relation
-						$this->createRelation('lptp', $lptp->id, 'lphp', $id);
+						$this->createRelation($this->lptp_type, $lptp->id, $this->doc_type, $id);
 
 						// Change SBP status
 						$sbp->update(['kode_status' => 102]);
@@ -245,7 +252,7 @@ class DokLphpController extends Controller
 						DB::commit();
 
 						// Return LPHP
-						$lphp_resource = new DokLphpResource(DokLphp::findOrFail($id), 'form');
+						$lphp_resource = new DokLphpResource($this->model::findOrFail($id), 'form');
 						return $lphp_resource;
 					} else {
 						$result = response()->json(['error' => 'SBP telah dibuat LPHP.'], 422);
@@ -254,13 +261,13 @@ class DokLphpController extends Controller
 				} else {
 					// Save data LPHP
 					$data_lphp = $this->prepareData($request);
-					DokLphp::find($id)->update($data_lphp);
+					$this->model::find($id)->update($data_lphp);
 
 					// Commit store query
 					DB::commit();
 
 					// Return LPHP
-					$lphp_resource = new DokLphpResource(DokLphp::findOrFail($id), 'form');
+					$lphp_resource = new DokLphpResource($this->model::findOrFail($id), 'form');
 					return $lphp_resource;
 				}
 			} catch (\Throwable $th) {
@@ -284,11 +291,11 @@ class DokLphpController extends Controller
 		DB::beginTransaction();
 		try {
 			// Find LPHP
-			$lphp = DokLphp::find($id);
+			$lphp = $this->model::find($id);
 			$sbp = $lphp->lptp->sbp;
 			
 			// Publish LPHP and chang SBP status
-			$this->publishDocument('lphp', $lphp->id, $lphp->thn_dok);
+			$this->publishDocument($this->doc_type, $lphp->id, $lphp->thn_dok);
 			$sbp->update(['kode_status' => 202]);
 
 			// Commit query
@@ -314,9 +321,9 @@ class DokLphpController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokLphp::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model, $id);
 			if ($is_unpublished) {
-				DokLphp::find($id)->delete();
+				$this->model::find($id)->delete();
 			}
 
 			DB::commit();

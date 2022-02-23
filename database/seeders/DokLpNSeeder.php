@@ -2,29 +2,23 @@
 
 namespace Database\Seeders;
 
+use App\Models\DokLphpN;
+use App\Models\DokLpN;
 use App\Models\ObjectRelation;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class DokLpSeeder extends Seeder
+class DokLpNSeeder extends Seeder
 {
 	use SwitcherTrait;
 
 	public function __construct()
 	{
-		$this->tipe_dok = 'lp';
-		$this->tipe_lphp = 'lphp';
-		$this->prepareModel();
-	}
-
-	protected function prepareModel()
-	{
+		$this->tipe_dok = 'lpn';
 		$this->faker = Faker::create();
 		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
 		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
-		$this->model = $this->switchObject($this->tipe_dok, 'model');
-		$this->model_lphp = $this->switchObject($this->tipe_lphp, 'model');
 	}
 
 	/**
@@ -35,7 +29,7 @@ class DokLpSeeder extends Seeder
 	public function run()
 	{
 		// Get LPHP ids
-		$max_lphp_id = $this->model_lphp::max('id');
+		$max_lphp_id = DokLphpN::max('id');
 		$available_lphp_id = range(1, $max_lphp_id);
 
 		for ($i=1; $i < 6; $i++) { 
@@ -45,7 +39,7 @@ class DokLpSeeder extends Seeder
 			unset($available_lphp_id[$key]);
 
 			// Get current number for LP
-			$max_lp = $this->model::max('no_dok');
+			$max_lp = DokLpN::max('no_dok');
 			$no_current = $max_lp + 1;
 
 			// Pejabat
@@ -57,24 +51,27 @@ class DokLpSeeder extends Seeder
 			$pejabat_id = $pejabat[$jabatan];
 
 			// Create LP
-			$lp = $this->model::create([
+			$lp = DokLpN::create([
 				'no_dok' => $no_current,
 				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
 				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-				'pasal' => $this->faker->sentence($nbWOrds = 5),
-				'modus' => $this->faker->sentence($nbWOrds = 20),
-				'kode_jabatan' => $jabatan,
-				'plh' => false,
-				'pejabat_id' => $pejabat_id,
+				'sprint_id' => $this->faker->numberBetween(1,10),
+				'kesimpulan' => $this->faker->sentence($nbWOrds = 20),
+				'kode_jabatan_penyusun' => $jabatan,
+				'plh_penyusun' => false,
+				'penyusun_id' => $pejabat_id,
+				'kode_jabatan_penerbit' => 'bd.05',
+				'plh_penerbit' => false,
+				'penerbit_id' => 3,
 				'kode_status' => 200,
 			]);
 
 			ObjectRelation::create([
-				'object1_type' => $this->tipe_lphp,
+				'object1_type' => 'lphpn',
 				'object1_id' => $lphp_id,
-				'object2_type' => $this->tipe_dok,
+				'object2_type' => 'lpn',
 				'object2_id' => $lp->id,
 			]);
 

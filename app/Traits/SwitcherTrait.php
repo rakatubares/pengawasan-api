@@ -14,6 +14,7 @@ use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLpNResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
@@ -37,11 +38,15 @@ use App\Models\DokLap;
 use App\Models\DokLi;
 use App\Models\DokLp;
 use App\Models\DokLphp;
+use App\Models\DokLphpN;
+use App\Models\DokLpN;
 use App\Models\DokLptp;
+use App\Models\DokLptpN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
 use App\Models\DokSbp;
+use App\Models\DokSbpN;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
 use App\Models\DokTitip;
@@ -103,6 +108,13 @@ trait SwitcherTrait
 			'model' => DokLp::class,
 			'resource' => DokLpResource::class,
 		],
+		'lpn' => [
+			'tipe_dok' => 'LP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLpN::class,
+			'resource' => DokLpNResource::class,
+		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
 			'agenda' => '/KPU.305/',
@@ -110,11 +122,25 @@ trait SwitcherTrait
 			'model' => DokLphp::class,
 			'resource' => DokLphpResource::class,
 		],
+		'lphpn' => [
+			'tipe_dok' => 'LPHP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLphpN::class,
+			'resource' => DokLphpResource::class,
+		],
 		'lptp' => [
 			'tipe_dok' => 'LPTP',
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLptp::class,
+			'resource' => DokLptpResource::class,
+		],
+		'lptpn' => [
+			'tipe_dok' => 'LPTP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLptpN::class,
 			'resource' => DokLptpResource::class,
 		],
 		'pengaman' => [
@@ -143,6 +169,13 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSbp::class,
+			'resource' => DokSbpResource::class,
+		],
+		'sbpn' => [
+			'tipe_dok' => 'SBP-N',
+			'agenda' => '/TINDAK/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokSbpN::class,
 			'resource' => DokSbpResource::class,
 		],
 		'segel' => [

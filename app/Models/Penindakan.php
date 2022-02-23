@@ -107,6 +107,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * SBP-N
+	 */
+	public function sbpn()
+	{
+		return $this->hasOneThrough(
+			DokSbpN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'sbpn'
+		);
+	}
+
+	/**
 	 * BA Penyegelan
 	 */
 	public function segel()

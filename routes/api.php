@@ -13,11 +13,14 @@ use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLpController;
+use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLphpController;
+use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokSbpController;
+use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
@@ -47,6 +50,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Penindakan routes
+ |--------------------------------------------------------------------------
+ */
+
 /**
  * API for penindakan
  */
@@ -74,7 +83,8 @@ Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
  * API for SBP
  */
 Route::apiResource('sbp', DokSbpController::class);
-Route::get('/sbp/{sbp_id}/basic', [DokSbpController::class, 'basic']);
+Route::get('/sbp/{sbp_id}/display', [DokSbpController::class, 'display']);
+Route::get('/sbp/{sbp_id}/form', [DokSbpController::class, 'form']);
 Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
@@ -115,6 +125,48 @@ Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
 Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | NPP routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for SBP-N
+ */
+Route::apiResource('sbpn', DokSbpNController::class);
+Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
+Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
+Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
+Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
+Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
+Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
+Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
+
+/**
+ * API for LPHP-N
+ */
+Route::apiResource('lphpn', DokLphpNController::class);
+Route::get('/lphpn/{lphpn_id}/display', [DokLphpNController::class, 'display']);
+Route::get('/lphpn/{lphpn_id}/form', [DokLphpNController::class, 'form']);
+Route::get('/lphpn/{lphpn_id}/objek', [DokLphpNController::class, 'objek']);
+Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
+
+/**
+ * API for LP-N
+ */
+Route::apiResource('lpn', DokLpNController::class);
+Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
+Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
+Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
+Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for BA Pemeriksaan
@@ -249,6 +301,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailDokumenController::class, 'destroy']);
 	});
 });
+
+/*
+ |--------------------------------------------------------------------------
+ | Reference routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for SPRINT
