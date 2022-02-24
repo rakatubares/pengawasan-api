@@ -24,7 +24,8 @@ class CreateDokLptpTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->string('alasan_tidak_penindakan')->nullable();
+			$table->text('alasan_tidak_penindakan')->nullable();
+			$table->text('catatan')->nullable();
 			$table->string('jabatan_atasan')->index();
 			$table->boolean('plh')->nullable()->index();
 			$table->integer('atasan_id')->index();

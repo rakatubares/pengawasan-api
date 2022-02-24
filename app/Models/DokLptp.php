@@ -24,6 +24,7 @@ class DokLptp extends Model
 		'thn_dok',
 		'no_dok_lengkap',
 		'alasan_tidak_penindakan',
+		'catatan',
 		'jabatan_atasan',
 		'plh',
 		'atasan_id',

@@ -71,20 +71,31 @@ class DokSbpSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
-			$tipe_surat_lptp = $this->switchObject($this->tipe_lptp, 'tipe_dok');
-			$agenda_lptp = $this->switchObject($this->tipe_lptp, 'agenda');
-			$max_lptp = $this->model_lptp::max('no_dok');
-			$crn_lptp = $max_lptp + 1;
-			$lptp = $this->model_lptp::create([
-				'no_dok' => $crn_lptp,
-				'agenda_dok' => $agenda_lptp,
-				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
-				'jabatan_atasan' => 'bd.0503',
-				'plh' => false,
-				'atasan_id' => 4,
-				'kode_status' => 200,
-			]);
+			$lptp = $this->createLptp();
+			// $tipe_surat_lptp = $this->switchObject($this->tipe_lptp, 'tipe_dok');
+			// $agenda_lptp = $this->switchObject($this->tipe_lptp, 'agenda');
+			// $max_lptp = $this->model_lptp::max('no_dok');
+			// $crn_lptp = $max_lptp + 1;
+			// if ($this->tipe_dok == 'sbp') {
+			// 	$lptp = $this->model_lptp::create([
+			// 		'no_dok' => $crn_lptp,
+			// 		'agenda_dok' => $agenda_lptp,
+			// 		'thn_dok' => date("Y"),
+			// 		'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
+			// 		'jabatan_atasan' => 'bd.0503',
+			// 		'plh' => false,
+			// 		'atasan_id' => 4,
+			// 		'kode_status' => 200,
+			// 	]);
+			// } else {
+			// 	$lptp = $this->model_lptp::create([
+			// 		'no_dok' => $crn_lptp,
+			// 		'agenda_dok' => $agenda_lptp,
+			// 		'thn_dok' => date("Y"),
+			// 		'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
+			// 		'kode_status' => 200,
+			// 	]);
+			// }
 
 			// Create relation Penindakan - SBP
 			ObjectRelation::create([
@@ -206,6 +217,28 @@ class DokSbpSeeder extends Seeder
 		]);
 
 		return $bangunan;
+	}
+
+	protected function createLptp()
+	{
+		$tipe_surat_lptp = $this->switchObject($this->tipe_lptp, 'tipe_dok');
+		$agenda_lptp = $this->switchObject($this->tipe_lptp, 'agenda');
+		$max_lptp = $this->model_lptp::max('no_dok');
+		$crn_lptp = $max_lptp + 1;
+
+		$lptp = $this->model_lptp::create([
+			'no_dok' => $crn_lptp,
+			'agenda_dok' => $agenda_lptp,
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
+			'catatan' => $this->faker->sentence($nbWOrds = 10),
+			'jabatan_atasan' => 'bd.0503',
+			'plh' => false,
+			'atasan_id' => 4,
+			'kode_status' => 200,
+		]);
+
+		return $lptp;
 	}
 
 	private function createRiksa($penindakan_id)

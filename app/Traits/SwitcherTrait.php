@@ -16,6 +16,7 @@ use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpNResource;
 use App\Http\Resources\DokLpResource;
+use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
@@ -141,7 +142,7 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLptpN::class,
-			'resource' => DokLptpResource::class,
+			'resource' => DokLptpNResource::class,
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
