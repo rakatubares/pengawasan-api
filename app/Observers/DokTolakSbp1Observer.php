@@ -41,7 +41,8 @@ class DokTolakSbp1Observer
 		$dokTolakSbp1->update(['kode_status' => 300]);
 
 		// Change SBP status
-		$sbp = $dokTolakSbp1->sbp;
+		$sbp_type = $dokTolakSbp1->sbp_relation->object1_type;
+		$sbp = $dokTolakSbp1[$sbp_type];
 		$sbp->update(['status_tolak' => null]);
 
 		// Delete any possible relations

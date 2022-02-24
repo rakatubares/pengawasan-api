@@ -16,6 +16,7 @@ class DokTolakSbp2Resource extends JsonResource
 	{
 		$this->resource = $resource;
 		$this->type = $type;
+		$this->sbp_type = $this->tolak1->sbp_relation->object1_type;
 	}
 
 	/**
@@ -72,10 +73,10 @@ class DokTolakSbp2Resource extends JsonResource
 	private function default()
 	{
 		$tolak2 = $this->basic();
-		$penindakan = new PenindakanResource($this->tolak1->sbp->penindakan, 'basic');
+		$penindakan = new PenindakanResource($this->tolak1[$this->sbp_type]->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->tolak1->sbp->penindakan->objectable, $this->tolak1->sbp->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->tolak1->sbp->penindakan, 'dokumen');
+		$objek = new ObjectResource($this->tolak1[$this->sbp_type]->penindakan->objectable, $this->tolak1[$this->sbp_type]->penindakan->object_type);
+		$dokumen = new PenindakanResource($this->tolak1[$this->sbp_type]->penindakan, 'dokumen');
 
 		$array = [
 			'main' => [
@@ -102,7 +103,7 @@ class DokTolakSbp2Resource extends JsonResource
 	private function display()
 	{
 		$tolak1 = $this->tolak1;
-		$sbp = $tolak1->sbp;
+		$sbp = $tolak1[$this->sbp_type];
 		$array = $this->basic();
 		$array['nomor_tolak1'] = $tolak1->no_dok_lengkap;
 		$array['tanggal_tolak1'] = $tolak1->tanggal_dokumen->format('d-m-Y');

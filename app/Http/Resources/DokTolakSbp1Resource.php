@@ -16,6 +16,7 @@ class DokTolakSbp1Resource extends JsonResource
 	{
 		$this->resource = $resource;
 		$this->type = $type;
+		$this->sbp_type = $this->sbp_relation->object1_type;
 	}
 
 	/**
@@ -76,10 +77,10 @@ class DokTolakSbp1Resource extends JsonResource
 	private function default()
 	{
 		$tolak1 = $this->basic();
-		$penindakan = new PenindakanResource($this->sbp->penindakan, 'basic');
+		$penindakan = new PenindakanResource($this[$this->sbp_type]->penindakan, 'basic');
 		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->sbp->penindakan->objectable, $this->sbp->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->sbp->penindakan, 'dokumen');
+		$objek = new ObjectResource($this[$this->sbp_type]->penindakan->objectable, $this[$this->sbp_type]->penindakan->object_type);
+		$dokumen = new PenindakanResource($this[$this->sbp_type]->penindakan, 'dokumen');
 
 		$array = [
 			'main' => [
@@ -98,6 +99,7 @@ class DokTolakSbp1Resource extends JsonResource
 	private function pdf()
 	{
 		$array = $this->basic();
+		$array['sbp_type'] = $this->sbp_type;
 		$array['kode_status'] = $this->kode_status;
 
 		return $array;
@@ -105,7 +107,7 @@ class DokTolakSbp1Resource extends JsonResource
 
 	private function display()
 	{
-		$sbp = $this->sbp;
+		$sbp = $this[$this->sbp_type];
 		$array = $this->basic();
 		$array['nomor_sbp'] = $sbp->no_dok_lengkap;
 		$array['tanggal_sbp'] = $sbp->penindakan->tanggal_penindakan->format('d-m-Y');
@@ -116,7 +118,8 @@ class DokTolakSbp1Resource extends JsonResource
 	private function form()
 	{
 		$array = $this->basic();
-		$array['id_sbp'] = $this->sbp->id;
+		$array['sbp_type'] = $this->sbp_type;
+		$array['id_sbp'] = $this[$this->sbp_type]->id;
 		return $array;
 	}
 }

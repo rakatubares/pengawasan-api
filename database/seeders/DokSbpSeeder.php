@@ -299,7 +299,7 @@ class DokSbpSeeder extends Seeder
 		]);
 
 		ObjectRelation::create([
-			'object1_type' => 'sbp',
+			'object1_type' => $this->tipe_dok,
 			'object1_id' => $sbp_id,
 			'object2_type' => 'tolak1',
 			'object2_id' => $tolak->id,
