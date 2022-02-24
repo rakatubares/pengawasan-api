@@ -136,6 +136,7 @@ class DokTolakSbp1Controller extends Controller
 	{
 		$request->validate([
 			'sprint.id' => 'required|integer',
+			'sbp_type' => 'required',
 			'id_sbp' => 'required|integer',
 			'alasan' => 'required',
 			'petugas1.user_id' => 'required|integer',
@@ -177,7 +178,9 @@ class DokTolakSbp1Controller extends Controller
 		DB::beginTransaction();
 		try {
 			// Cek BA Penolakan
-			$sbp = DokSbp::find($request->id_sbp);
+			$sbp_type = $request->sbp_type;
+			$sbp_model = $this->switchObject($sbp_type, 'model');
+			$sbp = $sbp_model::find($request->id_sbp);
 			$tolak1 = $sbp->tolak1;
 
 			if ($tolak1 == null) {
@@ -186,7 +189,7 @@ class DokTolakSbp1Controller extends Controller
 				$tolak1 = DokTolakSbp1::create($data_tolak1);
 
 				// Create relation
-				$this->createRelation('sbp', $sbp->id, 'tolak1', $tolak1->id);
+				$this->createRelation($sbp_type, $sbp->id, $this->doc_type, $tolak1->id);
 				$sbp->update(['status_tolak' => 0]);
 
 				// Commit store query
@@ -225,31 +228,18 @@ class DokTolakSbp1Controller extends Controller
 			try {
 				// Check existing id_sbp
 				$existing_tolak1 = DokTolakSbp1::find($id);
-				$existing_sbp = $existing_tolak1->sbp;
+				$existing_sbp_type = $existing_tolak1->sbp_relation->object1_type;
+				$existing_sbp = $existing_tolak1[$existing_sbp_type];
 				$existing_sbp_id = $existing_sbp->id;
+				$sbp_model = $this->switchObject($request->sbp_type, 'model');
 
-				if ($existing_sbp_id != $request->id_sbp) {
-					// Destroy existing relation
-					$existing_sbp->update(['status_tolak' => null]);
-					ObjectRelation::where([
-						'object2_type' => 'tolak1',
-						'object2_id' => $id
-					])->delete();
-
-					// Check if SBP already has Penolakan
-					$sbp = DokSbp::find($request->id_sbp);
-					$tolak1 = $sbp->tolak1;
-
-					if ($tolak1 == null) {
-						// Save data
+				if ($existing_sbp_type == $request->sbp_type) {
+					if ($existing_sbp_id != $request->id_sbp) {
+						$this->changeRelation($existing_sbp, $id, $sbp_model, $request);
+					} else {
+						// Save data 
 						$data_tolak1 = $this->prepareData($request);
 						DokTolakSbp1::find($id)->update($data_tolak1);
-						
-						// Create relation
-						$this->createRelation('sbp', $sbp->id, 'tolak1', $id);
-
-						// Change SBP status
-						$sbp->update(['status_tolak' => 0]);
 
 						// Commit store query
 						DB::commit();
@@ -257,21 +247,9 @@ class DokTolakSbp1Controller extends Controller
 						// Return data
 						$tolak1_resource = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($id), 'form');
 						return $tolak1_resource;
-					} else {
-						$result = response()->json(['error' => 'SBP telah dibuat BA Penolakan.'], 422);
-						return $result;
 					}
 				} else {
-					// Save data 
-					$data_tolak1 = $this->prepareData($request);
-					DokTolakSbp1::find($id)->update($data_tolak1);
-
-					// Commit store query
-					DB::commit();
-
-					// Return data
-					$tolak1_resource = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($id), 'form');
-					return $tolak1_resource;
+					$this->changeRelation($existing_sbp, $id, $sbp_model, $request);
 				}
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -279,6 +257,41 @@ class DokTolakSbp1Controller extends Controller
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
+			return $result;
+		}
+	}
+
+	private function changeRelation($existing_sbp, $tolak1_id, $sbp_model, $request)
+	{
+		$existing_sbp->update(['status_tolak' => null]);
+		ObjectRelation::where([
+			'object2_type' => $this->doc_type,
+			'object2_id' => $tolak1_id
+		])->delete();
+
+		// Check if SBP already has Penolakan
+		$sbp = $sbp_model::find($request->id_sbp);
+		$tolak1 = $sbp->tolak1;
+
+		if ($tolak1 == null) {
+			// Save data
+			$data_tolak1 = $this->prepareData($request);
+			DokTolakSbp1::find($tolak1_id)->update($data_tolak1);
+			
+			// Create relation
+			$this->createRelation($request->sbp_type, $sbp->id, $this->doc_type, $tolak1_id);
+
+			// Change SBP status
+			$sbp->update(['status_tolak' => 0]);
+
+			// Commit store query
+			DB::commit();
+
+			// Return data
+			$tolak1_resource = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($tolak1_id), 'form');
+			return $tolak1_resource;
+		} else {
+			$result = response()->json(['error' => 'SBP telah dibuat BA Penolakan.'], 422);
 			return $result;
 		}
 	}
@@ -301,7 +314,8 @@ class DokTolakSbp1Controller extends Controller
 
 			// Find SBP
 			$tolak1 = DokTolakSbp1::find($id);
-			$sbp = $tolak1->sbp;
+			$sbp_type = $tolak1->sbp_relation->object1_type;
+			$sbp = $tolak1[$sbp_type];
 			
 			// Change SBP status
 			$sbp->update(['status_tolak' => 1]);

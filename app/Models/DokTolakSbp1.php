@@ -31,6 +31,11 @@ class DokTolakSbp1 extends Model
 		'tanggal_dokumen' => 'date'
 	];
 
+	public function sbp_relation()
+	{
+		return $this->hasOne(ObjectRelation::class, 'object2_id')->where('object2_type', 'tolak1');
+	}
+
 	public function sbp()
 	{
 		return $this->hasOneThrough(
@@ -43,6 +48,24 @@ class DokTolakSbp1 extends Model
 		)->where(
 			'object1_type',
 			'sbp'
+		)->where(
+			'object2_type',
+			'tolak1'
+		);
+	}
+
+	public function sbpn()
+	{
+		return $this->hasOneThrough(
+			DokSbpN::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'sbpn'
 		)->where(
 			'object2_type',
 			'tolak1'
