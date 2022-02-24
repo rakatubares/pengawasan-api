@@ -21,11 +21,13 @@ class DokLptpResource extends JsonResource
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'alasan_tidak_penindakan' => $this->alasan_tidak_penindakan,
-			'plh' => $this->plh,
-			'jabatan_atasan' => new JabatanResource($this->jabatan),
-			'atasan' => new RefUserResource($this->atasan),
+			'catatan' => $this->catatan,
+			'atasan' => [
+				'jabatan' => new JabatanResource($this->jabatan),
+				'plh' => $this->plh,
+				'user' => new RefUserResource($this->atasan),
+			],
 			'kode_status' => $this->kode_status,
-			'penindakan' => $this->penindakan
 		];
 
 		return $array;

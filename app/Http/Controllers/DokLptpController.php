@@ -38,10 +38,11 @@ class DokLptpController extends Controller
 		$lptp = $this->model::create([
 			'agenda_dok' => $this->agenda_dok,
 			'no_dok_lengkap' => $no_dok_lengkap,
-			'jabatan_atasan' => $request->jabatan_atasan['kode'],
-			'plh' => $request->plh,
-			'atasan_id' => $request->atasan['user_id'],
+			'jabatan_atasan' => $request->atasan['jabatan']['kode'],
+			'plh' => $request->atasan['plh'],
+			'atasan_id' => $request->atasan['user']['user_id'],
 			'alasan_tidak_penindakan' => $request->alasan_tidak_penindakan,
+			'catatan' => $request->catatan,
 			'kode_status' => 100,
 		]);
 
@@ -59,10 +60,11 @@ class DokLptpController extends Controller
 	public function update(Request $request, $id)
 	{
 		$this->model::where('id', $id)->update([
-			'jabatan_atasan' => $request->jabatan_atasan['kode'],
-			'plh' => $request->plh,
-			'atasan_id' => $request->atasan['user_id'],
+			'jabatan_atasan' => $request->atasan['jabatan']['kode'],
+			'plh' => $request->atasan['plh'],
+			'atasan_id' => $request->atasan['user']['user_id'],
 			'alasan_tidak_penindakan' => $request->alasan_tidak_penindakan,
+			'catatan' => $request->catatan,
 		]);
 	}
 }

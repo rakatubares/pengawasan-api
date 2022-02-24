@@ -2,10 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokSbpResource extends JsonResource
 {
+	use SwitcherTrait;
+
 	/**
 	 * Create a new resource instance.
 	 *
@@ -37,7 +40,7 @@ class DokSbpResource extends JsonResource
 				break;
 
 			case 'form':
-				$array = $this->form();
+				$array = $this->display();
 				break;
 
 			case 'objek':
@@ -106,16 +109,20 @@ class DokSbpResource extends JsonResource
 
 	private function display()
 	{
+		$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
+		$lptp_resource = $this->switchObject($lptp_type, 'resource');
+		
 		$array = $this->basic();
 		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
+		$array['lptp'] = new $lptp_resource($this[$lptp_type]);
 		return $array;
 	}
 
-	private function form()
-	{
-		$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
-		$array = $this->display();
-		$array['lptp'] = new DokLptpResource($this[$lptp_type]);
-		return $array;
-	}
+	// private function form()
+	// {
+	// 	$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
+	// 	$array = $this->display();
+	// 	$array['lptp'] = new DokLptpResource($this[$lptp_type]);
+	// 	return $array;
+	// }
 }
