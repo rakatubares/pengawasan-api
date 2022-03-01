@@ -72,30 +72,6 @@ class DokSbpSeeder extends Seeder
 			]);
 
 			$lptp = $this->createLptp();
-			// $tipe_surat_lptp = $this->switchObject($this->tipe_lptp, 'tipe_dok');
-			// $agenda_lptp = $this->switchObject($this->tipe_lptp, 'agenda');
-			// $max_lptp = $this->model_lptp::max('no_dok');
-			// $crn_lptp = $max_lptp + 1;
-			// if ($this->tipe_dok == 'sbp') {
-			// 	$lptp = $this->model_lptp::create([
-			// 		'no_dok' => $crn_lptp,
-			// 		'agenda_dok' => $agenda_lptp,
-			// 		'thn_dok' => date("Y"),
-			// 		'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
-			// 		'jabatan_atasan' => 'bd.0503',
-			// 		'plh' => false,
-			// 		'atasan_id' => 4,
-			// 		'kode_status' => 200,
-			// 	]);
-			// } else {
-			// 	$lptp = $this->model_lptp::create([
-			// 		'no_dok' => $crn_lptp,
-			// 		'agenda_dok' => $agenda_lptp,
-			// 		'thn_dok' => date("Y"),
-			// 		'no_dok_lengkap' => $tipe_surat_lptp . '-' . $crn_lptp . $agenda_lptp . date("Y"),
-			// 		'kode_status' => 200,
-			// 	]);
-			// }
 
 			// Create relation Penindakan - SBP
 			ObjectRelation::create([
@@ -150,6 +126,7 @@ class DokSbpSeeder extends Seeder
 				'object_id' => $object_id
 			]);
 
+			// Create penolakan
 			$is_tolak1 = $this->faker->boolean();
 			if ($is_tolak1) {
 				$tolak1 = $this->createTolak1($sbp->id);
@@ -157,6 +134,20 @@ class DokSbpSeeder extends Seeder
 				$is_tolak2 = $this->faker->boolean();
 				if ($is_tolak2) {
 					$this->createTolak2($tolak1->id, $sbp->id);
+				}
+			}
+
+			// Create penarikan
+			if ($this->tipe_dok == 'sbp') {
+				$is_tarik = $this->faker->boolean();
+				if ($is_tarik) {
+					$sbp->update([
+						'status_penarikan' => 1,
+						'tanggal_penarikan' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+						'petugas_penarikan_id' => 1,
+						'lokasi_penyimpanan' => $this->faker->address(),
+						'keterangan_penarikan' => $this->faker->sentence($nbWOrds = 20),
+					]);
 				}
 			}
 		}
