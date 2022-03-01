@@ -30,12 +30,18 @@ class DokSbp extends Model
 		'wkt_selesai_penindakan',
 		'hal_terjadi',
 		'kode_status',
-		'status_tolak'
+		'status_tolak',
+		'status_penarikan',
+		'tanggal_penarikan',
+		'petugas_penarikan_id',
+		'lokasi_penyimpanan',
+		'keterangan_penarikan',
 	];
 
 	protected $casts = [
 		'wkt_mulai_penindakan' => 'datetime',
 		'wkt_selesai_penindakan' => 'datetime',
+		'tanggal_penarikan' => 'date',
 	];
 
 	/**
@@ -121,5 +127,10 @@ class DokSbp extends Model
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
+	}
+
+	public function petugas_penarikan()
+	{
+		return $this->belongsTo(RefUserCache::class, 'petugas_penarikan_id');
 	}
 }

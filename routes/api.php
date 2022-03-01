@@ -25,6 +25,7 @@ use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
+use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -82,6 +83,11 @@ Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 /**
  * API for SBP
  */
+
+ // Monitoring penarikan
+Route::apiResource('sbp/tarik', MonTarikSbpController::class);
+
+// Dokumen
 Route::apiResource('sbp', DokSbpController::class);
 Route::get('/sbp/{sbp_id}/display', [DokSbpController::class, 'display']);
 Route::get('/sbp/{sbp_id}/form', [DokSbpController::class, 'form']);

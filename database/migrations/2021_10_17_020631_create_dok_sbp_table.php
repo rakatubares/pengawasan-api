@@ -32,6 +32,11 @@ class CreateDokSbpTable extends Migration
 			$table->text('hal_terjadi')->nullable();
 			$table->integer('kode_status')->index();
 			$table->integer('status_tolak')->nullable()->index();
+			$table->integer('status_penarikan')->nullable()->index();
+			$table->date('tanggal_penarikan')->nullable()->index();
+			$table->integer('petugas_penarikan_id')->nullable()->index();
+			$table->string('lokasi_penyimpanan')->nullable()->index();
+			$table->text('keterangan_penarikan')->nullable();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
