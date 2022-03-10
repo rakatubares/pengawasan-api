@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
@@ -18,6 +19,7 @@ use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokRiksaObserver;
@@ -57,11 +59,13 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
+			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
 		]);
 
+		DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokLp::observe(DokLpObserver::class);
 		DokLpN::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
