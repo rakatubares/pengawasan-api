@@ -25,4 +25,12 @@ class DetailBarangItem extends Model
 	{
 		return $this->belongsTo(DetailBarang::class, 'detail_barang_id');
 	}
+
+	/**
+	 * Foto barang
+	 */
+	public function images()
+	{
+		return $this->morphMany(Lampiran::class, 'attachable');
+	}
 }

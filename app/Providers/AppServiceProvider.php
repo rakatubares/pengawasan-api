@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailBarangItem;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
@@ -27,6 +28,7 @@ use App\Models\DokTolakSbp2;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
+use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLapObserver;
@@ -75,6 +77,7 @@ class AppServiceProvider extends ServiceProvider
 			'bast' => DokBast::class,
 			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
+			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
@@ -84,6 +87,7 @@ class AppServiceProvider extends ServiceProvider
 			'tegah' => DokTegah::class,
 		]);
 
+		DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLap::observe(DokLapObserver::class);
