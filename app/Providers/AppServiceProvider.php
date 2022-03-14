@@ -7,6 +7,8 @@ use App\Models\DetailBarang;
 use App\Models\DetailSarkut;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Models\DetailBarangItem;
+use App\Observers\DetailBarangItemObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -38,9 +40,12 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
+			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
 		]);
+
+		DetailBarangItem::observe((DetailBarangItemObserver::class));
     }
 }
