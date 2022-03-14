@@ -30,6 +30,7 @@ use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriPelanggaranController;
+use App\Http\Controllers\RefLokasiController;
 use App\Http\Controllers\RefSkemaPenindakanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
@@ -61,6 +62,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for LI-1
@@ -340,6 +346,11 @@ Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
  * API for Skema Penindakan
  */
 Route::apiResource('penindakan', RefSkemaPenindakanController::class);
+
+/**
+ * API for Grup Lokasi
+ */
+Route::get('lokasi', [RefLokasiController::class, 'index']);
 
 /**
  * API for User

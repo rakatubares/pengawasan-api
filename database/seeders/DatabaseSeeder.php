@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
 			RefSatuanSeeder::class,
 			RefKategoriPelanggaranSeeder::class,
 			RefSkemaPenindakanSeeder::class,
+			RefLokasiSeeder::class,
 			RefJabatanSeeder::class,
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,

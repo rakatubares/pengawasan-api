@@ -304,6 +304,7 @@ trait DokumenTrait
 	{
 		$data_penindakan = [
 			'sprint_id' => $request->penindakan['sprint']['id'],
+			'grup_lokasi_id' => $request->penindakan['grup_lokasi']['id'],
 			'lokasi_penindakan' => $request->penindakan['lokasi_penindakan'],
 			'saksi_id' => $request->penindakan['saksi']['id'],
 			'petugas1_id' => $request->penindakan['petugas1']['user_id'],

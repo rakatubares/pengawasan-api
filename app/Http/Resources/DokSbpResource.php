@@ -114,15 +114,7 @@ class DokSbpResource extends JsonResource
 		
 		$array = $this->basic();
 		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
-		$array['lptp'] = new $lptp_resource($this[$lptp_type]);
+		$array['lptp'] = new $lptp_resource($this->lptp);
 		return $array;
 	}
-
-	// private function form()
-	// {
-	// 	$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
-	// 	$array = $this->display();
-	// 	$array['lptp'] = new DokLptpResource($this[$lptp_type]);
-	// 	return $array;
-	// }
 }
