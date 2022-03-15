@@ -20,6 +20,7 @@ class Penindakan extends Model
 		'object_type',
 		'object_id',
 		'tanggal_penindakan',
+		'grup_lokasi_id',
 		'lokasi_penindakan',
 		'saksi_id',
 		'petugas1_id',
@@ -44,6 +45,14 @@ class Penindakan extends Model
 	public function sprint()
 	{
 		return $this->belongsTo(RefSprint::class, 'sprint_id');
+	}
+
+	/**
+	 * Grup lokasi
+	 */
+	public function grup_lokasi()
+	{
+		return $this->belongsTo(RefLokasi::class, 'grup_lokasi_id');
 	}
 
 	/**

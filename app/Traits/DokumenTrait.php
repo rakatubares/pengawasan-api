@@ -132,7 +132,7 @@ trait DokumenTrait
 	 * @param string $jenis_surat
 	 * @return Response
 	 */
-	private function updateDocNumberAndYear($number, $jenis_surat)
+	private function updateDocNumberAndYear($number, $jenis_surat, $update_date=false)
 	{
 		// Construct full document number
 		$no_dok_lengkap = $jenis_surat 
@@ -145,6 +145,9 @@ trait DokumenTrait
 		$this->doc->no_dok = $number;
 		$this->doc->thn_dok = $this->tahun;
 		$this->doc->no_dok_lengkap = $no_dok_lengkap;
+		if ($update_date == true) {
+			$this->doc->tanggal_dokumen = $this->tanggal;
+		}
 		$this->doc->kode_status = 200;
 		$update_result = $this->doc->save();
 
@@ -282,6 +285,7 @@ trait DokumenTrait
 	{
 		$data_penindakan = [
 			'sprint_id' => $request->penindakan['sprint']['id'],
+			'grup_lokasi_id' => $request->penindakan['grup_lokasi']['id'],
 			'lokasi_penindakan' => $request->penindakan['lokasi_penindakan'],
 			'saksi_id' => $request->penindakan['saksi']['id'],
 			'petugas1_id' => $request->penindakan['petugas1']['user_id'],
@@ -300,9 +304,13 @@ trait DokumenTrait
 	 * @param Array $data_dokumen
 	 * @param Array $data_penindakan
 	 */
-	public function storePenindakan($request, $doc_type, $doc_id)
+	public function storePenindakan($request, $doc_type, $doc_id, $empty=false)
 	{
-		$data_penindakan = $this->prepareDataPenindakan($request);
+		if (!$empty) {
+			$data_penindakan = $this->prepareDataPenindakan($request);
+		} else {
+			$data_penindakan = [];
+		}
 		$penindakan = Penindakan::create($data_penindakan);
 		$this->createRelation('penindakan', $penindakan->id, $doc_type, $doc_id);
 		return $penindakan;
@@ -329,7 +337,7 @@ trait DokumenTrait
 	 * @param String $doc2_type
 	 * @param Int $doc2_id
 	 */
-	private function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
+	public function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
 	{
 		ObjectRelation::create([
 			'object1_type' => $object1_type,
