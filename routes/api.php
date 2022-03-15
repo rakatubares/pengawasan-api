@@ -11,6 +11,7 @@ use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
+use App\Http\Controllers\RefLokasiController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
@@ -35,6 +36,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for BA Tanda Pengaman
@@ -108,6 +114,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	});
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Reference routes
+ |--------------------------------------------------------------------------
+ */
+
 /**
  * API for SPRINT
  */
@@ -124,6 +136,11 @@ Route::post('/entitas/search', [RefEntitasController::class, 'search']);
  * API for Jabatan
  */
 Route::apiResource('jabatan', RefJabatanController::class);
+
+/**
+ * API for Grup Lokasi
+ */
+Route::get('lokasi', [RefLokasiController::class, 'index']);
 
 /**
  * API for User

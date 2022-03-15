@@ -31,6 +31,7 @@ class PenindakanResource extends JsonResource
 			'tanggal_penindakan' => $this->tanggal_penindakan 
 				? $this->tanggal_penindakan->format('d-m-Y') 
 				: null,
+			'grup_lokasi' => new RefLokasiResource($this->grup_lokasi),
 			'lokasi_penindakan' => $this->lokasi_penindakan,
 			'sprint' => new RefSprintResource($this->sprint),
 			'saksi' => new RefEntitasResource($this->saksi),
