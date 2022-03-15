@@ -7,6 +7,7 @@ use App\Models\DetailSarkut;
 use App\Models\DokPengaman;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Models\RefLokasi;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 
@@ -33,10 +34,12 @@ class DokPengamanSeeder extends Seeder
     {
         for ($i=1; $i < 21; $i++) { 
 			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang']);
+			$max_lokasi_id = RefLokasi::max('id');
 
 			$penindakan = Penindakan::create([
 				'sprint_id' => $this->faker->numberBetween(1,10),
 				'tanggal_penindakan' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+				'grup_lokasi_id' => $this->faker->numberBetween(1,$max_lokasi_id),
 				'lokasi_penindakan' => $this->faker->address(),
 				'saksi_id' => $this->faker->numberBetween(1,100),
 				'petugas1_id' => 1,
