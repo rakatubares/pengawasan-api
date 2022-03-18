@@ -16,7 +16,7 @@ class CreateDetailBarangTable extends Migration
         Schema::create('detail_barang', function (Blueprint $table) {
             $table->id();
 			$table->integer('jumlah_kemasan')->nullable();
-			$table->string('satuan_kemasan')->nullable()->index();
+			$table->integer('kemasan_id')->nullable()->index();
 			$table->string('pemilik_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
