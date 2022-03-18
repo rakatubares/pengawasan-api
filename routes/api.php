@@ -177,12 +177,6 @@ Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
 
-/*
- |--------------------------------------------------------------------------
- | Details routes
- |--------------------------------------------------------------------------
- */
-
 /**
  * API for BA Pemeriksaan
  */
@@ -221,7 +215,7 @@ Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
 Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
 /** 
- * API for BA COntoh Barang
+ * API for BA Contoh Barang
  */
 Route::apiResource('contoh', DokContohController::class);
 Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
