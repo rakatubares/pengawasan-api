@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangWithSingleItemResource;
-// use App\Http\Resources\SbpResource;
 use App\Models\DetailBarang;
-// use App\Models\Sbp;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,23 +12,23 @@ class DetailBarangController extends DetailController
 {
 	use SwitcherTrait;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
 	 * @param  string $doc_type
 	 * @param  string $doc_id
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request, $doc_type, $doc_id)
-    {
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request, $doc_type, $doc_id)
+	{
 		DB::beginTransaction();
 
 		try {
 			// Insert detail barang
 			$data_barang = [
 				'jumlah_kemasan' => $request->jumlah_kemasan,
-				'satuan_kemasan' => $request->satuan_kemasan,
+				'kemasan_id' => $request->kemasan['id'],
 				'pemilik_id' => $request->pemilik['id']
 			];
 			$barang = $this->insertDetail($doc_type, $doc_id, 'barang', $data_barang);
@@ -58,7 +56,7 @@ class DetailBarangController extends DetailController
 		}
 		
 		return $result;
-    }
+	}
 
 	public function update(Request $request, $doc_type, $doc_id, $barang_id)
 	{
@@ -68,7 +66,7 @@ class DetailBarangController extends DetailController
 			// Insert detail barang
 			$data_barang = [
 				'jumlah_kemasan' => $request->jumlah_kemasan,
-				'satuan_kemasan' => $request->satuan_kemasan,
+				'kemasan_id' => $request->kemasan['id'],
 				'pemilik_id' => $request->pemilik['id']
 			];
 			$this->updateDetail('barang', $data_barang, $barang_id);
@@ -114,15 +112,15 @@ class DetailBarangController extends DetailController
 		return $insert_result;
 	}
 
-    /**
-     * Display the specified resource.
-     *
+	/**
+	 * Display the specified resource.
+	 *
 	 * @param  string  $doc_type
-     * @param  int  $doc_id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($doc_type, $doc_id, $how='one')
-    {
+	 * @param  int  $doc_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($doc_type, $doc_id, $how='one')
+	{
 		switch ($how) {
 			case 'all':
 				$result = $this->showDetails($doc_type, $doc_id, 'barang');
@@ -138,17 +136,17 @@ class DetailBarangController extends DetailController
 		}
 		
 		return $result;
-    }
+	}
 
 	/**
-     * Display all resources with items.
-     *
-     * @param  string  $doc_type
-     * @param  int  $doc_id
-     * @return \Illuminate\Http\Response
-     */
-    public function showAllItems($doc_type, $doc_id)
-    {
+	 * Display all resources with items.
+	 *
+	 * @param  string  $doc_type
+	 * @param  int  $doc_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function showAllItems($doc_type, $doc_id)
+	{
 		// Get model
 		$model = $this->getModel($doc_type);
 
@@ -164,18 +162,18 @@ class DetailBarangController extends DetailController
 		}
 
 		return $result;
-    }
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
+	/**
+	 * Remove the specified resource from storage.
+	 *
 	 * @param  string  $doc_type
-     * @param  int  $doc_id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($doc_type, $doc_id)
-    {
+	 * @param  int  $doc_id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($doc_type, $doc_id)
+	{
 		$result = $this->deleteDetail($doc_type, $doc_id, 'barang');
 		return $result;
-    }
+	}
 }
