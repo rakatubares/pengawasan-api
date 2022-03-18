@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
-use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
@@ -14,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class DokBastSeeder extends Seeder
 {
 	use SwitcherTrait;
+	use DetailSeederTrait;
 
 	public function __construct()
 	{
@@ -107,52 +106,6 @@ class DokBastSeeder extends Seeder
 		}
 		
     }
-
-	private function createSarkut()
-	{
-		$sarkut = DetailSarkut::create([
-			'nama_sarkut' => $this->faker->company(),
-			'jenis_sarkut' => 'Pesawat',
-			'no_flight_trayek' => $this->faker->regexify('[A-Z]{2}[0-9]{3}'),
-			'jumlah_kapasitas' => $this->faker->numberBetween(1, 100),
-			'satuan_kapasitas' => $this->faker->regexify('[A-Z]{3}'),
-			'pilot_id' => $this->faker->numberBetween(1, 100),
-			'bendera' => $this->faker->countryCode(),
-			'no_reg_polisi' => $this->faker->regexify('[A-Z]{5}'),
-		]);
-
-		return $sarkut;
-	}
-
-	public function createBarang()
-	{
-		$barang = DetailBarang::create([
-			'jumlah_kemasan' => $this->faker->numberBetween(1, 100),
-			'satuan_kemasan' => $this->faker->regexify('[a-z]{2}'),
-			'pemilik_id' => $this->faker->numberBetween(1, 100)
-		]);
-
-		DetailBarang::find($barang->id)
-			->dokumen()
-			->create([
-				'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
-				'no_dok' => $this->faker->numberBetween(1, 999999),
-				'tgl_dok' => $this->faker->date()
-			]);
-
-		$item_count = $this->faker->numberBetween(1, 10);
-		for ($i=0; $i < $item_count; $i++) { 
-			DetailBarang::find($barang->id)
-				->itemBarang()
-				->create([
-					'jumlah_barang' => $this->faker->numberBetween(1, 100),
-					'satuan_barang' => $this->faker->regexify('[a-z]{2}'),
-					'uraian_barang' => $this->faker->text()
-				]);
-		}
-
-		return $barang;
-	}
 
 	private function createDokumen($bast_id)
 	{
