@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailBarangResource extends JsonResource
+class DetailBarangItemWithImagesResource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -16,11 +16,11 @@ class DetailBarangResource extends JsonResource
 	{
 		$array = [
 			'id' => $this->id,
-			'jumlah_kemasan' => $this->jumlah_kemasan,
-			'kemasan' => new RefKemasanResource($this->kemasan),
-			'dokumen' => new DetailDokumenResource($this->dokumen),
-			'pemilik' => new PersonEntityResource($this->pemilik),
-			'item' => DetailBarangItemResource::collection($this->itemBarang)
+			'jumlah_barang' => $this->jumlah_barang,
+			'satuan' => new RefSatuanResource($this->satuan),
+			'uraian_barang' => $this->uraian_barang,
+			'kategori' => new RefKategoriBarangResource($this->kategori),
+			'image_list' => LampiranResource::collection($this->images)
 		];
 
 		return $array;

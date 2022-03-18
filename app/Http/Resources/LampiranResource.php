@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailBarangResource extends JsonResource
+class LampiranResource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -14,13 +14,16 @@ class DetailBarangResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$filepath = storage_path('app/'.$this->path.$this->filename);
+		$type = pathinfo($filepath, PATHINFO_EXTENSION);
+		$data = file_get_contents($filepath);
+		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
 		$array = [
 			'id' => $this->id,
-			'jumlah_kemasan' => $this->jumlah_kemasan,
-			'kemasan' => new RefKemasanResource($this->kemasan),
-			'dokumen' => new DetailDokumenResource($this->dokumen),
-			'pemilik' => new PersonEntityResource($this->pemilik),
-			'item' => DetailBarangItemResource::collection($this->itemBarang)
+			'mime_type' => $this->mime_type,
+			'filename' => $this->filename,
+			'content' => $base64
 		];
 
 		return $array;
