@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
+use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
 use App\Models\DokBukaSegel;
 use App\Models\DokSegel;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokSegelObserver;
 use App\Services\SSO;
@@ -43,12 +45,14 @@ class AppServiceProvider extends ServiceProvider
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
 			'bukasegel' => DokBukaSegel::class,
+			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
 		]);
 
+		DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
     }

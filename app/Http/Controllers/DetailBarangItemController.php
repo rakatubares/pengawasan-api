@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangItemResource;
+use App\Http\Resources\DetailBarangItemWithImagesResource;
+use App\Models\DetailBarangItem;
+use App\Models\Lampiran;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DetailBarangItemController extends Controller
 {
@@ -94,15 +99,31 @@ class DetailBarangItemController extends Controller
 						$parent_object = $header;
 					}
 
-					// Insert detail barang
-					$insert_result = $parent_object->objectable->itemBarang()
-						->create([
-							// 'detail_barang_id' => $detail_barang_id,
-							'uraian_barang' => $request->uraian_barang,
-							'jumlah_barang' => $request->jumlah_barang,
-							'satuan_barang' => $request->satuan_barang,
-						]);
-					$result = new DetailBarangItemResource($insert_result);
+					DB::beginTransaction();
+					try {
+						// Insert detail barang
+						$item_barang = $parent_object->objectable->itemBarang()
+							->create([
+								'uraian_barang' => $request->uraian_barang,
+								'jumlah_barang' => $request->jumlah_barang,
+								'satuan_id' => $request->satuan['id'],
+								'kategori_id' => $request->kategori['id'],
+							]);
+
+						// Save images
+						if (sizeof($request->image_list) > 0) {
+							foreach($request->image_list as $image) {
+								$this->saveFile($image, $item_barang);
+							}
+						}
+
+						DB::commit();
+						$result = new DetailBarangItemWithImagesResource(DetailBarangItem::find($item_barang->id));
+					} catch (\Throwable $th) {
+						DB::rollBack();
+						throw $th;
+					}
+					
 				} catch (\Throwable $th) {
 					$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
 				}
@@ -114,6 +135,37 @@ class DetailBarangItemController extends Controller
 		}
 
 		return $result;
+	}
+
+	private function saveFile($image, $item_barang)
+	{
+		// Get image from base64
+		@list($type, $file_data) = explode(';', $image['content']);
+		@list(, $file_data) = explode(',', $file_data); 
+		$decoded_image = base64_decode($file_data);
+
+		// Get file extension
+		$f = finfo_open();
+		$mime_type = finfo_buffer($f, $decoded_image, FILEINFO_MIME_TYPE);
+		@list($obj, $ext) = explode('/', $mime_type);
+
+		// Construct file name and path
+		$filename = uniqid('', true).'.'.$ext;
+		$y = date("Y");
+		$m = date("m");
+		$d = date("d");
+		$path = 'img/'.$y.'/'.$m.'/'.$d.'/';
+		$filepath = $path.$filename;
+
+		// Save image file
+		Storage::put($filepath, $decoded_image);
+
+		// Store image data
+		$item_barang->images()->create([
+			'mime_type' => $mime_type,
+			'path' => $path,
+			'filename' => $filename
+		]);
 	}
 
 	/**
@@ -145,7 +197,7 @@ class DetailBarangItemController extends Controller
 				->first();
 
 			if ($item_barang != null) {
-				$result = new DetailBarangItemResource($item_barang);
+				$result = new DetailBarangItemWithImagesResource($item_barang);
 			} else {
 				$result = response()->json(['error' => 'Item barang tidak ditemukan.'], 422);
 			}
@@ -186,19 +238,54 @@ class DetailBarangItemController extends Controller
 					$parent_object = $header;
 				}
 
-				// Update data item barang
-				$update_result = $parent_object->objectable->itemBarang()
-					->where('detail_barang_items.id', $item_id)
-					->update([
-						'uraian_barang' => $request->uraian_barang,
-						'jumlah_barang' => $request->jumlah_barang,
-						'satuan_barang' => $request->satuan_barang,
-					]);
+				DB::beginTransaction();
+				try {
+					// Update data item barang
+					$parent_object->objectable->itemBarang()
+						->where('detail_barang_items.id', $item_id)
+						->update([
+							'uraian_barang' => $request->uraian_barang,
+							'jumlah_barang' => $request->jumlah_barang,
+							'satuan_id' => $request->satuan['id'],
+							'kategori_id' => $request->kategori['id'],
+						]);
 
-				if ($update_result) {
-					$result = "Update item barang berhasil";
-				} else {
-					$result = response()->json(['error' => 'Update item barang gagal.'], 422);
+					// Get existing images
+					$item_barang = DetailBarangItem::find($item_id);
+					$existing_images = $item_barang->images->all();
+
+					// Delete image if not in request and save new image
+					if (sizeof($existing_images) > 0) {
+						$existing_ids = array_map(function($i) {return $i->id;}, $existing_images);
+						$delete_ids = $existing_ids;
+						
+						// Check each image request
+						foreach($request->image_list as $image) {
+							if (array_key_exists('id', $image)) {
+								if (($key = array_search($image['id'], $delete_ids)) !== false) {
+									unset($delete_ids[$key]);
+								}								
+							} else {
+								$this->saveFile($image, $item_barang);
+							}
+						}
+						
+						// Delete id
+						foreach($delete_ids as $id) {
+							Lampiran::find($id)->delete();
+						}
+					} else {
+						foreach ($request->image_list as $image) {
+							$this->saveFile($image, $item_barang);
+						}
+					}
+
+					DB::commit();
+
+					$result = new DetailBarangItemWithImagesResource(DetailBarangItem::find($item_id));
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
 				}
 			} else {
 				$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
@@ -238,11 +325,9 @@ class DetailBarangItemController extends Controller
 				$parent_object = $header;
 			}
 
-			$objek = $parent_object->objectable;
+			// Delete if object type is barang
 			if ($parent_object->object_type == 'barang') {
-				$result = $objek->itemBarang()
-					->where('detail_barang_items.id', $item_id)
-					->delete();
+				$result = DetailBarangItem::find($item_id)->delete();
 			} else {
 				$result = response()->json(['error' => 'Objek bukan barang, tidak dapat menghapus item barang.'], 422);
 			}

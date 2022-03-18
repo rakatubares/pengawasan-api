@@ -14,8 +14,9 @@ class DetailBarangItem extends Model
 	protected $fillable = [
 		'detail_barang_id',
 		'jumlah_barang',
-		'satuan_barang',
-		'uraian_barang'
+		'satuan_id',
+		'uraian_barang',
+		'kategori_id',
 	];
 
 	/**
@@ -24,5 +25,29 @@ class DetailBarangItem extends Model
 	public function detailBarang()
 	{
 		return $this->belongsTo(DetailBarang::class, 'detail_barang_id');
+	}
+
+	/**
+	 * Satuan barang
+	 */
+	public function satuan()
+	{
+		return $this->belongsTo(RefSatuan::class, 'satuan_id');
+	}
+
+	/**
+	 * Kategori barang
+	 */
+	public function kategori()
+	{
+		return $this->belongsTo(RefKategoriBarang::class, 'kategori_id');
+	}
+
+	/**
+	 * Foto barang
+	 */
+	public function images()
+	{
+		return $this->morphMany(Lampiran::class, 'attachable');
 	}
 }
