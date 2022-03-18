@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailBarang;
 use App\Models\DokContoh;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
@@ -10,6 +9,7 @@ use Illuminate\Database\Seeder;
 
 class DokContohSeeder extends Seeder
 {
+	use DetailSeederTrait;
 	use SwitcherTrait;
 
 	public function __construct()
@@ -45,34 +45,10 @@ class DokContohSeeder extends Seeder
 				'kode_status' => 200,
 			]);
 
-			$barang = DetailBarang::create([
-				'jumlah_kemasan' => $this->faker->numberBetween(1, 100),
-				'satuan_kemasan' => $this->faker->regexify('[a-z]{2}'),
-				'pemilik_id' => $this->faker->numberBetween(1, 100)
-			]);
-
-			DetailBarang::find($barang->id)
-				->dokumen()
-				->create([
-					'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
-					'no_dok' => $this->faker->numberBetween(1, 999999),
-					'tgl_dok' => $this->faker->date()
-				]);
-
-			$item_count = $this->faker->numberBetween(1, 10);
-			for ($i=0; $i < $item_count; $i++) { 
-				DetailBarang::find($barang->id)
-					->itemBarang()
-					->create([
-						'jumlah_barang' => $this->faker->numberBetween(1, 100),
-						'satuan_barang' => $this->faker->regexify('[a-z]{2}'),
-						'uraian_barang' => $this->faker->text()
-					]);
-			};
-
+			$barang = $this->createBarang();
 			$contoh->update([
 				'object_type' => 'barang',
-				'object_id' => $contoh->id
+				'object_id' => $barang->id
 			]);
 		}
     }
