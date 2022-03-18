@@ -106,7 +106,8 @@ class DetailBarangItemController extends Controller
 							->create([
 								'uraian_barang' => $request->uraian_barang,
 								'jumlah_barang' => $request->jumlah_barang,
-								'satuan_barang' => $request->satuan_barang,
+								'satuan_id' => $request->satuan['id'],
+								'kategori_id' => $request->kategori['id'],
 							]);
 
 						// Save images
@@ -245,7 +246,8 @@ class DetailBarangItemController extends Controller
 						->update([
 							'uraian_barang' => $request->uraian_barang,
 							'jumlah_barang' => $request->jumlah_barang,
-							'satuan_barang' => $request->satuan_barang,
+							'satuan_id' => $request->satuan['id'],
+							'kategori_id' => $request->kategori['id'],
 						]);
 
 					// Get existing images

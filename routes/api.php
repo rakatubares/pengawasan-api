@@ -30,7 +30,10 @@ use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriPelanggaranController;
+use App\Http\Controllers\RefKategoriBarangController;
+use App\Http\Controllers\RefKemasanController;
 use App\Http\Controllers\RefLokasiController;
+use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSkemaPenindakanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
@@ -351,6 +354,25 @@ Route::apiResource('penindakan', RefSkemaPenindakanController::class);
  * API for Grup Lokasi
  */
 Route::get('lokasi', [RefLokasiController::class, 'index']);
+
+/**
+ * API for Kemasan
+ */
+Route::get('kemasan/{id}', [RefKemasanController::class, 'show']);
+Route::post('kemasan/search', [RefKemasanController::class, 'search']);
+
+/**
+ * API for Satuan
+ */
+Route::get('satuan/{id}', [RefSatuanController::class, 'show']);
+Route::post('satuan/search', [RefSatuanController::class, 'search']);
+
+/**
+ * API for Kategori Barang
+ */
+Route::get('kategori', [RefKategoriBarangController::class, 'index']);
+Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
+Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
 
 /**
  * API for User
