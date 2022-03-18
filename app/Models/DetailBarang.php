@@ -17,8 +17,8 @@ class DetailBarang extends Model
 		'parent_type',
 		'parent_id',
 		'jumlah_kemasan',
-		'satuan_kemasan',
-		'pemilik_id'
+		'kemasan_id',
+		'pemilik_id',
 	];
 
 	/**
@@ -29,6 +29,14 @@ class DetailBarang extends Model
 		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
+	/**
+	 * Jenis kemasan
+	 */
+	public function kemasan()
+	{
+		return $this->belongsTo(RefKemasan::class, 'kemasan_id');
+	}
+	
 	/**
 	 * Detail entitas pemilik
 	 */

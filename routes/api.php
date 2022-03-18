@@ -4,19 +4,18 @@ use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
-use App\Http\Controllers\DetailController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
+use App\Http\Controllers\RefKategoriBarangController;
+use App\Http\Controllers\RefKemasanController;
+use App\Http\Controllers\RefLokasiController;
+use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
-use App\Http\Controllers\SbpController;
-use App\Http\Controllers\SegelController;
-use App\Http\Controllers\TegahController;
 use App\Http\Controllers\RefUserCacheController;
-use App\Http\Controllers\TitipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +46,12 @@ Route::apiResource('contoh', DokContohController::class);
 Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
 Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
 Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for Details
@@ -101,6 +106,12 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 	});
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Reference routes
+ |--------------------------------------------------------------------------
+ */
+
 /**
  * API for SPRINT
  */
@@ -117,6 +128,30 @@ Route::post('/entitas/search', [RefEntitasController::class, 'search']);
  * API for Jabatan
  */
 Route::apiResource('jabatan', RefJabatanController::class);
+
+/**
+ * API for Grup Lokasi
+ */
+Route::get('lokasi', [RefLokasiController::class, 'index']);
+
+/**
+ * API for Kemasan
+ */
+Route::get('kemasan/{id}', [RefKemasanController::class, 'show']);
+Route::post('kemasan/search', [RefKemasanController::class, 'search']);
+
+/**
+ * API for Satuan
+ */
+Route::get('satuan/{id}', [RefSatuanController::class, 'show']);
+Route::post('satuan/search', [RefSatuanController::class, 'search']);
+
+/**
+ * API for Kategori Barang
+ */
+Route::get('kategori', [RefKategoriBarangController::class, 'index']);
+Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
+Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
 
 /**
  * API for User
