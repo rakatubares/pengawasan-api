@@ -7,16 +7,27 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokLppiResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokLppi;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
 trait SwitcherTrait
 {
 	private $models = [
+		// Intelijen
+		'lppi' => [
+			'tipe_dok' => 'LPPI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+		],
+		
 		// Dokumen
 
 		// Objek

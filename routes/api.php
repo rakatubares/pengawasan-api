@@ -6,6 +6,8 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLppiController;
+use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
@@ -32,6 +34,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Intelijen routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for LPPI
+ */
+Route::apiResource('lppi', DokLppiController::class);
+Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
+
+/**
+ * API for penindakan
+ */
+Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /*
  |--------------------------------------------------------------------------
  | Details routes

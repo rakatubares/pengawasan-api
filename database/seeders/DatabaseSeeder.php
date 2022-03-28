@@ -20,10 +20,13 @@ class DatabaseSeeder extends Seeder
 			RefKemasanSeeder::class,
 			RefKategoriBarangSeeder::class,
 			RefLokasiSeeder::class,
+			RefKepercayaanSumberSeeder::class,
+			RefValiditasInformasiSeeder::class,
 			RefJabatanSeeder::class,
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
+			DokLppiSeeder::class,
 		]);
 	}
 }
