@@ -16,6 +16,7 @@ use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
+use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
@@ -57,19 +58,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*
  |--------------------------------------------------------------------------
- | Penindakan routes
+ | Intelijen routes
  |--------------------------------------------------------------------------
  */
+
+/**
+ * API for LPPI
+ */
+Route::apiResource('lppi', DokLppiController::class);
+Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
 
 /**
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
-/*
- |--------------------------------------------------------------------------
- | Details routes
- |--------------------------------------------------------------------------
- */
 
 /**
  * API for LI-1
@@ -256,6 +258,12 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 Route::apiResource('reekspor', DokReeksporController::class);
 Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
 Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Details routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for Details

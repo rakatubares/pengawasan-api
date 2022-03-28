@@ -15,6 +15,7 @@ use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLpNResource;
+use App\Http\Resources\DokLppiResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
@@ -41,6 +42,7 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
+use App\Models\DokLppi;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
 use App\Models\DokPengaman;
@@ -59,6 +61,15 @@ use Illuminate\Database\Eloquent\Model;
 trait SwitcherTrait
 {
 	private $models = [
+		// Intelijen
+		'lppi' => [
+			'tipe_dok' => 'LPPI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+		],
+		
 		// Dokumen
 		'bast' => [
 			'tipe_dok' => 'BAST',
