@@ -12,10 +12,12 @@ use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
 use App\Http\Controllers\RefKemasanController;
+use App\Http\Controllers\RefKepercayaanSumberController;
 use App\Http\Controllers\RefLokasiController;
 use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\RefValiditasInformasiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -155,6 +157,17 @@ Route::post('satuan/search', [RefSatuanController::class, 'search']);
 Route::get('kategori', [RefKategoriBarangController::class, 'index']);
 Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
 Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
+
+/**
+ * API for Klasifikasi Kepercayaan
+ */
+Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
+
+
+/**
+ * API for Klasifikasi Validitas
+ */
+Route::get('validitas', [RefValiditasInformasiController::class, 'index']);
 
 /**
  * API for User
