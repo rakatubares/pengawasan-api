@@ -22,6 +22,9 @@ class DokRiksaTableResource extends JsonResource
 				: null,
 			'nama_saksi' => $this->penindakan->saksi->nama,
 			'petugas1' => $this->penindakan->petugas1->name,
+			'petugas2' => $this->penindakan->petugas2
+				? $this->penindakan->petugas2->name
+				: null,
 			'status' => new RefStatusResource($this->status)
 		];
 
