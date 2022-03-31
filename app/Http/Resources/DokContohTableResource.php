@@ -22,6 +22,9 @@ class DokContohTableResource extends JsonResource
 				: null,
 			'nama_saksi' => $this->saksi->nama,
 			'petugas1' => $this->petugas1->name,
+			'petugas2' => $this->petugas2
+				? $this->petugas2->name
+				: null,
 			'status' => new RefStatusResource($this->status)
 		];
 
