@@ -22,8 +22,9 @@ class CreateDetailBarangItemsTable extends Migration
 				->onDelete('cascade')
 				->onUpdate('cascade');
 			$table->double('jumlah_barang');
-			$table->string('satuan_barang');
+			$table->integer('satuan_id')->index();
 			$table->text('uraian_barang');
+			$table->integer('kategori_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

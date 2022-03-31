@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefSatuanTable extends Migration
+class CreateRefLokasiTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,11 +13,10 @@ class CreateRefSatuanTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('ref_satuan', function (Blueprint $table) {
+		Schema::create('ref_lokasi', function (Blueprint $table) {
 			$table->id();
-			$table->string('kode_satuan')->unique()->index();
-			$table->string('uraian_satuan')->index();
-			$table->string('grup_satuan')->nullable()->index();
+			$table->string('lokasi')->unique();
+			$table->boolean('active')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
@@ -33,6 +32,6 @@ class CreateRefSatuanTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('ref_satuan');
+		Schema::dropIfExists('ref_lokasi');
 	}
 }

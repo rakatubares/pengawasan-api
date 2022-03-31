@@ -19,6 +19,7 @@ class CreatePenindakanTable extends Migration
 			$table->string('object_type')->nullable()->index();
 			$table->string('object_id')->nullable()->index();
 			$table->date('tanggal_penindakan')->nullable()->index();
+			$table->integer('grup_lokasi_id')->nullable()->index();
 			$table->string('lokasi_penindakan')->nullable()->index();
 			$table->integer('saksi_id')->nullable()->index();
 			$table->integer('petugas1_id')->nullable()->index();
