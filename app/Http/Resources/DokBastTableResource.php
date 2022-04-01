@@ -21,7 +21,9 @@ class DokBastTableResource extends JsonResource
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
 			'yang_menerima' => $this->getEntity($this->yang_menerima, $this->yang_menerima_type),
+			'an_yang_menerima' => $this->atas_nama_yang_menerima,
 			'yang_menyerahkan' => $this->getEntity($this->yang_menyerahkan, $this->yang_menyerahkan_type),
+			'an_yang_menyerahkan' => $this->atas_nama_yang_menyerahkan,
 			'dalam_rangka' => $this->dalam_rangka,
 			'status' => new RefStatusResource($this->status)
 		];

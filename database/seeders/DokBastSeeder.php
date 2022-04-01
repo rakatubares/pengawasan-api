@@ -36,15 +36,20 @@ class DokBastSeeder extends Seeder
 				$yang_menerima_type = $this->faker->randomElement(['orang', 'pegawai']);
 				if ($yang_menerima_type == 'orang') {
 					$yang_menerima_id = $this->faker->numberBetween(1,100);
+					$yang_menerima_an = $this->faker->company();
 					$yang_menyerahkan_type = 'pegawai';
 					$yang_menyerahkan_id = 1;
+					$yang_menyerahkan_an = 'KPU BC Soekarno Hatta';
 				} else {
 					$yang_menerima_id = 1;
+					$yang_menerima_an = 'KPU BC Soekarno Hatta';
 					$yang_menyerahkan_type = $this->faker->randomElement(['orang', 'pegawai']);
 					if ($yang_menyerahkan_type == 'orang') {
 						$yang_menyerahkan_id = $this->faker->numberBetween(1,100);
+						$yang_menyerahkan_an = $this->faker->company();
 					} else {
 						$yang_menyerahkan_id = 2;
+						$yang_menyerahkan_an = 'KPU BC Soekarno Hatta';
 					}
 				}
 
@@ -58,10 +63,10 @@ class DokBastSeeder extends Seeder
 					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 					'yang_menerima_type' => $yang_menerima_type,
 					'yang_menerima_id' => $yang_menerima_id,
-					'atas_nama_yang_menerima' => $this->faker->sentence($nbWOrds = 20),
+					'atas_nama_yang_menerima' => $yang_menerima_an,
 					'yang_menyerahkan_type' => $yang_menyerahkan_type,
 					'yang_menyerahkan_id' => $yang_menyerahkan_id,
-					'atas_nama_yang_menyerahkan' => $this->faker->sentence($nbWOrds = 20),
+					'atas_nama_yang_menyerahkan' => $yang_menyerahkan_an,
 					'dalam_rangka' => $this->faker->sentence($nbWOrds = 20),
 					'kode_status' => 200,
 				]);
