@@ -59,6 +59,7 @@ class DokLppiResource extends JsonResource
 	private function basic()
 	{
 		$array = [
+			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
@@ -66,7 +67,7 @@ class DokLppiResource extends JsonResource
 			'tanggal_dokumen' => $this->tanggal_dokumen
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
-			'flag_info_internal' => $this->flag_info_internal,
+			'flag_info_internal' => $this->flag_info_internal == 1 ? true : false,
 			'media_info_internal' => $this->media_info_internal,
 			'tgl_terima_info_internal' => $this->tgl_terima_info_internal
 				? $this->tgl_terima_info_internal->format('d-m-Y') 
@@ -75,7 +76,7 @@ class DokLppiResource extends JsonResource
 			'tgl_dok_info_internal' => $this->tgl_dok_info_internal
 				? $this->tgl_dok_info_internal->format('d-m-Y') 
 				: null,
-			'flag_info_eksternal' => $this->flag_info_eksternal,
+			'flag_info_eksternal' => $this->flag_info_eksternal == 1 ? true : false,
 			'media_info_eksternal' => $this->media_info_eksternal,
 			'tgl_terima_info_eksternal' => $this->tgl_terima_info_eksternal
 				? $this->tgl_terima_info_eksternal->format('d-m-Y') 
@@ -91,8 +92,8 @@ class DokLppiResource extends JsonResource
 			'tanggal_disposisi' => $this->tanggal_disposisi
 				? $this->tanggal_disposisi->format('d-m-Y') 
 				: null,
-			'flag_analisis' => $this->flag_analisis,
-			'flag_arsip' => $this->flag_arsip,
+			'flag_analisis' => $this->flag_analisis == 1 ? true : false,
+			'flag_arsip' => $this->flag_arsip == 1 ? true : false,
 			'catatan' => $this->catatan,
 			'pejabat' => [
 				'jabatan' => new JabatanResource($this->jabatan),
