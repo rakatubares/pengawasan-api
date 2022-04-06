@@ -141,6 +141,11 @@ class PenindakanResource extends JsonResource
 					$list_dokumen['riksa'] = $riksa;
 					break;
 
+				case 'riksabadan':
+					$riksabadan = new DokRiksaBadanResource($this->riksabadan, 'pdf');
+					$list_dokumen['riksabadan'] = $riksabadan;
+					break;
+
 				case 'bukasegel':
 					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'pdf');
 					$list_dokumen['bukasegel'] = $bukasegel;

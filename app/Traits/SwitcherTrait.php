@@ -22,6 +22,7 @@ use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokRiksaResource;
+use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokTegahResource;
@@ -48,6 +49,7 @@ use App\Models\DokLptpN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
+use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
@@ -175,6 +177,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokRiksa::class,
 			'resource' => DokRiksaResource::class,
+		],
+		'riksabadan' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/BADAN/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokRiksaBadan::class,
+			'resource' => DokRiksaBadanResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',

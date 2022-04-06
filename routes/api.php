@@ -20,6 +20,7 @@ use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
+use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
@@ -69,6 +70,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::apiResource('lppi', DokLppiController::class);
 Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Penindakan routes
+ |--------------------------------------------------------------------------
+ */
 
 /**
  * API for penindakan
@@ -145,42 +152,6 @@ Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
 
-/*
- |--------------------------------------------------------------------------
- | NPP routes
- |--------------------------------------------------------------------------
- */
-
-/**
- * API for SBP-N
- */
-Route::apiResource('sbpn', DokSbpNController::class);
-Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
-Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
-Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
-Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
-Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
-Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
-Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
-
-/**
- * API for LPHP-N
- */
-Route::apiResource('lphpn', DokLphpNController::class);
-Route::get('/lphpn/{lphpn_id}/display', [DokLphpNController::class, 'display']);
-Route::get('/lphpn/{lphpn_id}/form', [DokLphpNController::class, 'form']);
-Route::get('/lphpn/{lphpn_id}/objek', [DokLphpNController::class, 'objek']);
-Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
-
-/**
- * API for LP-N
- */
-Route::apiResource('lpn', DokLpNController::class);
-Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
-Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
-Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
-Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
-
 /**
  * API for BA Pemeriksaan
  */
@@ -189,6 +160,13 @@ Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
 Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
 Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
 Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
+
+
+/**
+ * API for BA Periksa Badan
+ */
+Route::apiResource('riksabadan', DokRiksaBadanController::class);
+Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
 
 /**
  * API for BA Segel
@@ -260,6 +238,42 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 Route::apiResource('reekspor', DokReeksporController::class);
 Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
 Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | NPP routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for SBP-N
+ */
+Route::apiResource('sbpn', DokSbpNController::class);
+Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
+Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
+Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
+Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
+Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
+Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
+Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
+
+/**
+ * API for LPHP-N
+ */
+Route::apiResource('lphpn', DokLphpNController::class);
+Route::get('/lphpn/{lphpn_id}/display', [DokLphpNController::class, 'display']);
+Route::get('/lphpn/{lphpn_id}/form', [DokLphpNController::class, 'form']);
+Route::get('/lphpn/{lphpn_id}/objek', [DokLphpNController::class, 'objek']);
+Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
+
+/**
+ * API for LP-N
+ */
+Route::apiResource('lpn', DokLpNController::class);
+Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
+Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
+Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
+Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

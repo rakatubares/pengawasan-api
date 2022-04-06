@@ -18,6 +18,7 @@ use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokPengaman;
 use App\Models\DokRiksa;
+use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
@@ -82,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
 			'riksa' => DokRiksa::class,
+			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
 			'tegah' => DokTegah::class,
