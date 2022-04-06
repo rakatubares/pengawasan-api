@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
@@ -32,10 +33,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Penindakan routes
+ |--------------------------------------------------------------------------
+ */
+
 /**
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for BA Periksa Badan
+ */
+Route::apiResource('riksabadan', DokRiksaBadanController::class);
+Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
+
 /*
  |--------------------------------------------------------------------------
  | Details routes
