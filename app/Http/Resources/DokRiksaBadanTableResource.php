@@ -21,12 +21,12 @@ class DokRiksaBadanTableResource extends JsonResource
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tanggal_penindakan' => $this->penindakan->tanggal_penindakan 
 				? $this->penindakan->tanggal_penindakan->format('d-m-Y') 
-				: null,
+				: '-',
 			'nama_orang' => $this->penindakan->objectable->nama,
 			'petugas1' => $this->penindakan->petugas1->name,
 			'petugas2' => $this->penindakan->petugas2
 				? $this->penindakan->petugas2->name
-				: null,
+				: '',
 			'status' => new RefStatusResource($this->status)
 		];
 

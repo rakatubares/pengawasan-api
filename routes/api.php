@@ -49,6 +49,8 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  */
 Route::apiResource('riksabadan', DokRiksaBadanController::class);
 Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
+Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
+Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------
