@@ -21,7 +21,7 @@ class CreatePenindakanTable extends Migration
 			$table->date('tanggal_penindakan')->nullable()->index();
 			$table->integer('grup_lokasi_id')->nullable()->index();
 			$table->string('lokasi_penindakan')->nullable()->index();
-			$table->integer('saksi_id')->index();
+			$table->integer('saksi_id')->nullable()->index();
 			$table->integer('petugas1_id')->index();
 			$table->integer('petugas2_id')->nullable()->index();
             $table->timestamps();
