@@ -30,6 +30,10 @@ class DokRiksaBadanResource extends JsonResource
 			case 'display':
 				$array = $this->display();
 				break;
+			
+			case 'form':
+				$array = $this->display();
+				break;
 
 			case 'pdf':
 				$array = $this->pdf();
@@ -51,6 +55,7 @@ class DokRiksaBadanResource extends JsonResource
 	private function basic()
 	{
 		$array = [
+			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,

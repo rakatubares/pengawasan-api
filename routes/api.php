@@ -167,6 +167,8 @@ Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
  */
 Route::apiResource('riksabadan', DokRiksaBadanController::class);
 Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
+Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
+Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
 
 /**
  * API for BA Segel

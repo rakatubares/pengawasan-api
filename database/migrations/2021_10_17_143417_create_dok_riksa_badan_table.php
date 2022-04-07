@@ -20,7 +20,7 @@ class CreateDokRiksaBadanTable extends Migration
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->string('asal');
-			$table->string('tujuan');
+			$table->string('tujuan')->nullable();
 			$table->integer('pendamping_id')->nullable()->index();
 			$table->integer('sarkut_id')->nullable()->index();
 			$table->text('uraian_pemeriksaan')->nullable();
