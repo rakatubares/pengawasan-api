@@ -103,34 +103,6 @@ class PenindakanResource extends JsonResource
 					}
 					break;
 
-				// case 'sbpn':
-						// $sbpn = new DokSbpResource($this->sbpn, 'pdf');
-						// $list_dokumen['sbpn'] = $sbpn;
-	
-						// $lptpn = new DokLptpResource($this->sbpn->lptpn);
-						// $list_dokumen['lptpn'] = $lptpn;
-	
-						// $lphp = $this->sbp->lptp->lphp;
-						// if ($lphp != null) {
-						// 	$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
-	
-						// 	$lp = $lphp->lp;
-						// 	if ($lp != null) {
-						// 		$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
-						// 	} 
-						// }
-	
-						// $tolak1 = $this->sbp->tolak1;
-						// if ($tolak1 != null) {
-						// 	$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
-	
-						// 	$tolak2 = $tolak1->tolak2;
-						// 	if ($tolak2 != null) {
-						// 		$list_dokumen['tolak2'] = new DokTolakSbp2Resource($tolak2, 'pdf');
-						// 	}
-						// }
-						// break;
-
 				case 'tegah':
 					$tegah = new DokTegahResource($this->tegah, 'basic');
 					$list_dokumen['tegah'] = $tegah;
@@ -139,6 +111,11 @@ class PenindakanResource extends JsonResource
 				case 'riksa':
 					$riksa = new DokRiksaResource($this->riksa, 'pdf');
 					$list_dokumen['riksa'] = $riksa;
+					break;
+
+				case 'riksabadan':
+					$riksabadan = new DokRiksaBadanResource($this->riksabadan, 'pdf');
+					$list_dokumen['riksabadan'] = $riksabadan;
 					break;
 
 				case 'segel':

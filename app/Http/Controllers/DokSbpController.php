@@ -334,7 +334,7 @@ class DokSbpController extends Controller
 			$sbp = $this->model::findOrFail($id);
 			$penindakan = $sbp->penindakan;
 
-			// Upsert segel
+			// Upsert Segel
 			if ($request->segel == true) {
 				$this->createSegel($request, $penindakan);
 			} else {
@@ -355,6 +355,13 @@ class DokSbpController extends Controller
 				$this->deleteLinkedDoc($penindakan, 'riksa');
 			};
 
+			// Upsert Riksa Badan
+			if ($request->riksa_badan == true) {
+				$this->createRiksaBadan($request, $penindakan);
+			} else {
+				$this->deleteLinkedDoc($penindakan, 'riksabadan');
+			};
+
 			// Commit transaction
 			DB::commit();
 
@@ -365,8 +372,6 @@ class DokSbpController extends Controller
 			DB::rollBack();
 			throw $th;
 		}
-
-		
 	}
 
 	/**
@@ -428,6 +433,40 @@ class DokSbpController extends Controller
 		if ($existing_riksa == null) {
 			$riksa = app(DokRiksaController::class)->store($request, true);
 			$this->createRelation('penindakan', $penindakan->id, 'riksa', $riksa->id);
+		}
+	}
+
+	/**
+	 * Create BA Periksa Badan
+	 * 
+	 * @param Request $request
+	 * @param Penindakan $penindakan
+	 */
+	private function createRiksaBadan(Request $request, Penindakan $penindakan)
+	{
+		$orang_id = Penindakan::find($penindakan->id)->object_id;
+		$riksa_badan_array = [
+			'orang' => ['id' => $orang_id],
+			'asal' => $request->data_riksa_badan['asal'],
+			'tujuan' => $request->data_riksa_badan['tujuan'],
+			'pendamping' => $request->data_riksa_badan['pendamping'],
+			'uraian_pemeriksaan' => $request->data_riksa_badan['uraian_pemeriksaan'],
+			'hasil_pemeriksaan' => $request->data_riksa_badan['hasil_pemeriksaan'],
+			'sarkut' => $request->data_riksa_badan['sarkut'],
+			'dokumen' => $request->data_riksa_badan['dokumen'],
+		];
+		$riksa_badan_array['dokumen']['tgl_dok'] = date('Y-m-d', strtotime($riksa_badan_array['dokumen']['tgl_dok']));
+
+		// Create new request object
+		$riksa_badan_request = new Request($riksa_badan_array);
+
+		// Check existing document
+		$existing_riksabadan = $penindakan->riksabadan;
+		if ($existing_riksabadan == null) {
+			$riksa_badan = app(DokRiksaBadanController::class)->store($riksa_badan_request, true);
+			$this->createRelation('penindakan', $penindakan->id, 'riksabadan', $riksa_badan->id);
+		} else {
+			$riksa_badan = app(DokRiksaBadanController::class)->update($riksa_badan_request, $existing_riksabadan->id, true);
 		}
 	}
 

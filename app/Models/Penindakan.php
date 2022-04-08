@@ -200,6 +200,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Pemeriksaan Badan
+	 */
+	public function riksabadan()
+	{
+		return $this->hasOneThrough(
+			DokRiksaBadan::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'riksabadan'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
@@ -224,6 +245,9 @@ class Penindakan extends Model
 			}
 			if ($penindakan->riksa != null) {
 				$penindakan->riksa->delete();
+			}
+			if ($penindakan->riksabadan != null) {
+				$penindakan->riksabadan->delete();
 			}
 		});
 	}

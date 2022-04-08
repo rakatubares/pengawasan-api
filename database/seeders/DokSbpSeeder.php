@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DokRiksa;
+use App\Models\DokRiksaBadan;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
 use App\Models\DokTolakSbp1;
@@ -116,6 +117,8 @@ class DokSbpSeeder extends Seeder
 
 				case 'orang':
 					$object_id = $this->faker->numberBetween(1,10);
+					$this->createRiksaBadan($penindakan->id);
+					break;
 				
 				default:
 					# code...
@@ -244,6 +247,43 @@ class DokSbpSeeder extends Seeder
 			'object1_id' => $penindakan_id,
 			'object2_type' => 'segel',
 			'object2_id' => $segel->id,
+		]);
+	}
+
+	private function createRiksaBadan($penindakan_id)
+	{
+		$sarkut_orang = $this->createSarkut();
+		$tipe_surat_riksa_badan = $this->switchObject('riksabadan', 'tipe_dok');
+		$agenda_riksa_badan = $this->switchObject('riksabadan', 'agenda');
+		$max_riksa_badan = DokRiksaBadan::max('no_dok');
+		$crn_riksa_badan = $max_riksa_badan + 1;
+		$riksa_badan = DokRiksaBadan::create([
+			'no_dok' => $crn_riksa_badan,
+			'agenda_dok' => $agenda_riksa_badan,
+			'thn_dok' => date("Y"),
+			'no_dok_lengkap' => $tipe_surat_riksa_badan . '-' . $crn_riksa_badan . $agenda_riksa_badan . date("Y"),
+			'asal' => $this->faker->country(),
+			'tujuan' => $this->faker->address(),
+			'pendamping_id' => $this->faker->numberBetween(1,100),
+			'sarkut_id' => $sarkut_orang->id,
+			'uraian_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
+			'hasil_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
+			'kode_status' => 200,
+		]);
+
+		DokRiksaBadan::find($riksa_badan->id)
+			->dokumen()
+			->create([
+				'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
+				'no_dok' => $this->faker->numberBetween(1, 999999),
+				'tgl_dok' => $this->faker->date()
+			]);
+
+		ObjectRelation::create([
+			'object1_type' => 'penindakan',
+			'object1_id' => $penindakan_id,
+			'object2_type' => 'riksabadan',
+			'object2_id' => $riksa_badan->id,
 		]);
 	}
 

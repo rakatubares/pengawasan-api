@@ -11,6 +11,7 @@ use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokRiksa;
+use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
@@ -22,6 +23,7 @@ use App\Models\RefEntitas;
 use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
+use App\Observers\DokRiksaBadanObserver;
 use App\Observers\DokRiksaObserver;
 use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
@@ -62,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
 			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
+			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
 		]);
 
@@ -77,5 +80,6 @@ class AppServiceProvider extends ServiceProvider
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
 		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
 		DokRiksa::observe(DokRiksaObserver::class);
+		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
     }
 }
