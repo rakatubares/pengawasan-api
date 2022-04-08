@@ -89,10 +89,15 @@ class DokRiksaBadanController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateData(Request $request)
+	private function validateData(Request $request, $linked_doc)
 	{
+		if (!$linked_doc) {
+			$request->validate([
+				'orang.id' => 'required|integer',
+			]);
+		}
+		
 		$request->validate([
-			'orang.id' => 'required|integer',
 			'pendamping.id' => 'nullable|integer',
 			'sarkut.pilot.id' => 'nullable|integer',
 			'dokumen.tgl_dok' => 'nullable|date',
@@ -133,7 +138,7 @@ class DokRiksaBadanController extends Controller
 	public function store(Request $request, $linked_doc=false)
 	{
 		// Validate data BA
-		$this->validateData($request);
+		$this->validateData($request, $linked_doc);
 
 		DB::beginTransaction();
 		try {
@@ -211,7 +216,7 @@ class DokRiksaBadanController extends Controller
 
 			try {
 				// Validate data
-				$this->validateData($request);
+				$this->validateData($request, $linked_doc);
 
 				// Update BA
 				$data_riksa_badan = $this->prepareData($request, 'update');

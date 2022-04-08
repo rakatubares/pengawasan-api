@@ -10,6 +10,7 @@ use App\Models\RefEntitas;
 use App\Models\DetailBarangItem;
 use App\Models\DokRiksaBadan;
 use App\Observers\DetailBarangItemObserver;
+use App\Observers\DokRiksaBadanObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -49,5 +50,6 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
     }
 }
