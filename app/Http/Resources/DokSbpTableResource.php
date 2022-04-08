@@ -19,12 +19,14 @@ class DokSbpTableResource extends JsonResource
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tanggal_dokumen' => $this->penindakan->tanggal_penindakan 
 				? $this->penindakan->tanggal_penindakan->format('d-m-Y') 
-				: null,
-			'nama_saksi' => $this->penindakan->saksi->nama,
+				: '-',
+			'nama_saksi' => $this->penindakan->object_type == 'orang'
+				? $this->penindakan->objectable->nama
+				: $this->penindakan->saksi->nama,
 			'petugas1' => $this->penindakan->petugas1->name,
 			'petugas2' => $this->penindakan->petugas2
 				? $this->penindakan->petugas2->name
-				: null,
+				: '',
 			'status' => new RefStatusResource($this->status)
 		];
 

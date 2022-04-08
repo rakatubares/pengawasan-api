@@ -103,34 +103,6 @@ class PenindakanResource extends JsonResource
 					}
 					break;
 
-				// case 'sbpn':
-						// $sbpn = new DokSbpResource($this->sbpn, 'pdf');
-						// $list_dokumen['sbpn'] = $sbpn;
-	
-						// $lptpn = new DokLptpResource($this->sbpn->lptpn);
-						// $list_dokumen['lptpn'] = $lptpn;
-	
-						// $lphp = $this->sbp->lptp->lphp;
-						// if ($lphp != null) {
-						// 	$list_dokumen['lphp'] = new DokLphpResource($lphp, 'pdf');
-	
-						// 	$lp = $lphp->lp;
-						// 	if ($lp != null) {
-						// 		$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
-						// 	} 
-						// }
-	
-						// $tolak1 = $this->sbp->tolak1;
-						// if ($tolak1 != null) {
-						// 	$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
-	
-						// 	$tolak2 = $tolak1->tolak2;
-						// 	if ($tolak2 != null) {
-						// 		$list_dokumen['tolak2'] = new DokTolakSbp2Resource($tolak2, 'pdf');
-						// 	}
-						// }
-						// break;
-
 				case 'tegah':
 					$tegah = new DokTegahResource($this->tegah, 'basic');
 					$list_dokumen['tegah'] = $tegah;
@@ -146,11 +118,6 @@ class PenindakanResource extends JsonResource
 					$list_dokumen['riksabadan'] = $riksabadan;
 					break;
 
-				case 'bukasegel':
-					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'pdf');
-					$list_dokumen['bukasegel'] = $bukasegel;
-					break;
-
 				case 'segel':
 					$segel = new DokSegelResource($this->segel, 'pdf');
 					$list_dokumen['segel'] = $segel;
@@ -159,6 +126,11 @@ class PenindakanResource extends JsonResource
 					if ($titip != null) {
 						$list_dokumen['titip'] = new DokTitipResource($titip, 'pdf');
 					}
+					break;
+
+				case 'bukasegel':
+					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'pdf');
+					$list_dokumen['bukasegel'] = $bukasegel;
 					break;
 				
 				case 'pengaman':

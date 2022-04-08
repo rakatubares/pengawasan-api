@@ -38,6 +38,7 @@ use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
 use App\Observers\DokRiksaObserver;
+use App\Observers\DokRiksaBadanObserver;
 use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
 use App\Observers\DokTegahObserver;
@@ -100,6 +101,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLphpN::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokRiksa::observe(DokRiksaObserver::class);
+		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
 		DokSbp::observe(DokSbpObserver::class);
 		DokSbpN::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
