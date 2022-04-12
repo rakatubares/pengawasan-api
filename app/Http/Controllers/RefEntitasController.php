@@ -52,15 +52,19 @@ class RefEntitasController extends Controller
 
 		$insert_result = RefEntitas::create([
 			'nama' => $request->nama,
+			'alias' => $request->alias,
 			'jenis_kelamin' => $request->jenis_kelamin,
 			'tempat_lahir' => $request->tempat_lahir,
 			'tanggal_lahir' => $request->tanggal_lahir,
 			'warga_negara' => $request->warga_negara,
 			'agama' => $request->agama,
 			'jenis_identitas' => $request->jenis_identitas,
+			'penerbit_identitas' => $request->penerbit_identitas,
+			'tempat_identitas_terbit' => $request->tempat_identitas_terbit,
+			'alamat' => $request->alamat,
+			'alamat_tinggal' => $request->alamat_tinggal,
 			'nomor_identitas' => $request->nomor_identitas,
 			'pekerjaan' => $request->pekerjaan,
-			'alamat' => $request->alamat,
 			'nomor_telepon' => $request->nomor_telepon,
 			'email' => $request->email
 		]);
