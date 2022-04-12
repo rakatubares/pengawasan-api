@@ -32,15 +32,16 @@ class DokRiksaBadanSeeder extends Seeder
 	{
 		for ($i=1; $i < 21; $i++) { 
 			$max_lokasi_id = RefLokasi::max('id');
+			$orang_id = $this->faker->numberBetween(1,100);
 
 			$penindakan = Penindakan::create([
 				'sprint_id' => $this->faker->numberBetween(1,10),
 				'object_type' => 'orang',
-				'object_id' => $this->faker->numberBetween(1,100),
+				'object_id' => $orang_id,
 				'tanggal_penindakan' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'grup_lokasi_id' => $this->faker->numberBetween(1,$max_lokasi_id),
 				'lokasi_penindakan' => $this->faker->address(),
-				'saksi_id' => $this->faker->numberBetween(1,100),
+				'saksi_id' => $orang_id,
 				'petugas1_id' => 1,
 				'petugas2_id' => 2,
 			]);
@@ -59,6 +60,7 @@ class DokRiksaBadanSeeder extends Seeder
 				'sarkut_id' => $sarkut->id,
 				'uraian_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
 				'hasil_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
+				'saksi_id' => $this->faker->numberBetween(1,100),
 				'kode_status' => 200,
 			]);
 

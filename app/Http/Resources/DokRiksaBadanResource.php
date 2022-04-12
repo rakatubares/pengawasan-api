@@ -68,6 +68,7 @@ class DokRiksaBadanResource extends JsonResource
 			'pendamping' => new RefEntitasResource($this->pendamping),
 			'sarkut' => new DetailSarkutResource($this->sarkut),
 			'dokumen' => new DetailDokumenResource($this->dokumen),
+			'saksi' => new RefEntitasResource($this->saksi),
 		];
 
 		return $array;

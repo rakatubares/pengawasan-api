@@ -25,6 +25,7 @@ class CreateDokRiksaBadanTable extends Migration
 			$table->integer('sarkut_id')->nullable()->index();
 			$table->text('uraian_pemeriksaan')->nullable();
 			$table->text('hasil_pemeriksaan')->nullable();
+			$table->integer('saksi_id')->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
