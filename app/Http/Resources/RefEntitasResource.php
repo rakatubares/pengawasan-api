@@ -17,6 +17,7 @@ class RefEntitasResource extends JsonResource
         $array = [
 			'id' => $this->id,
 			'nama' => $this->nama,
+			'alias' => $this->alias,
 			'jenis_kelamin' => $this->jenis_kelamin,
 			'tempat_lahir' => $this->tempat_lahir,
 			'tanggal_lahir' => $this->tanggal_lahir ? $this->tanggal_lahir->format('d-m-Y') : null,
@@ -24,8 +25,11 @@ class RefEntitasResource extends JsonResource
 			'agama' => $this->agama,
 			'jenis_identitas' => $this->jenis_identitas,
 			'nomor_identitas' => $this->nomor_identitas,
-			'pekerjaan' => $this->pekerjaan,
+			'penerbit_identitas' => $this->penerbit_identitas,
+			'tempat_identitas_terbit' => $this->tempat_identitas_terbit,
 			'alamat' => $this->alamat,
+			'alamat_tinggal' => $this->alamat_tinggal,
+			'pekerjaan' => $this->pekerjaan,
 			'nomor_telepon' => $this->nomor_telepon,
 			'email' => $this->email,
 		];
