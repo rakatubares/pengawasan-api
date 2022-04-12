@@ -16,6 +16,7 @@ class CreateRefEntitasTable extends Migration
         Schema::create('ref_entitas', function (Blueprint $table) {
             $table->id();
 			$table->string('nama')->index();
+			$table->string('alias')->nullable()->index();
 			$table->string('jenis_kelamin')->nullable()->index();
 			$table->string('tempat_lahir')->nullable()->index();
 			$table->date('tanggal_lahir')->nullable()->index();
@@ -23,10 +24,13 @@ class CreateRefEntitasTable extends Migration
 			$table->string('agama')->nullable()->index();
 			$table->string('jenis_identitas')->nullable()->index();
 			$table->string('nomor_identitas')->nullable()->index();
+			$table->string('penerbit_identitas')->nullable();
+			$table->string('tempat_identitas_terbit')->nullable()->index();
+			$table->text('alamat')->nullable();
+			$table->text('alamat_tinggal')->nullable();
 			$table->string('pekerjaan')->nullable()->index();
 			$table->string('nomor_telepon')->nullable()->index();
 			$table->string('email')->nullable()->index();
-			$table->string('alamat')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
