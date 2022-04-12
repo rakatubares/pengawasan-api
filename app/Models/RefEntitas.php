@@ -13,6 +13,7 @@ class RefEntitas extends Model
 
 	protected $fillable = [
 		'nama',
+		'alias',
 		'jenis_kelamin',
 		'tempat_lahir',
 		'tanggal_lahir',
@@ -20,8 +21,11 @@ class RefEntitas extends Model
 		'agama',
 		'jenis_identitas',
 		'nomor_identitas',
-		'pekerjaan',
+		'penerbit_identitas',
+		'tempat_identitas_terbit',
 		'alamat',
+		'alamat_tinggal',
+		'pekerjaan',
 		'nomor_telepon',
 		'email',
 	];
