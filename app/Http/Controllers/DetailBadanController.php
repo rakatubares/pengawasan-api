@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DetailBadanController extends DetailController
 {
+	use SwitcherTrait;
+
 	private function validateData(Request $request)
 	{
 		$request->validate([
@@ -27,15 +30,17 @@ class DetailBadanController extends DetailController
 
 		DB::beginTransaction();
 		try {
+			$model = $this->switchObject($doc_type, 'model');
+			$resource = $this->switchObject($doc_type, 'resource');
+
 			// Update object
 			$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
+			$model::find($doc_id)->penindakan->update(['saksi_id' => $request->orang_id]);
 
 			// Commit change
 			DB::commit();
 
 			// Get changed data
-			$model = $this->switchObject($doc_type, 'model');
-			$resource = $this->switchObject($doc_type, 'resource');
 			$result = new $resource($model::find($doc_id), 'objek');
 
 			// Return data
