@@ -237,6 +237,9 @@ class Penindakan extends Model
 			if ($penindakan->sbp != null) {
 				$penindakan->sbp->delete();
 			}
+			if ($penindakan->sbpn != null) {
+				$penindakan->sbpn->delete();
+			}
 			if ($penindakan->segel != null) {
 				$penindakan->segel->delete();
 			}
