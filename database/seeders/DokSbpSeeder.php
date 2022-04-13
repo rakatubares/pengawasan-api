@@ -116,8 +116,9 @@ class DokSbpSeeder extends Seeder
 					break;
 
 				case 'orang':
-					$object_id = $this->faker->numberBetween(1,10);
+					$object_id = $this->faker->numberBetween(1,100);
 					$this->createRiksaBadan($penindakan->id);
+					Penindakan::find($penindakan->id)->update(['saksi_id' => $object_id]);
 					break;
 				
 				default:
@@ -268,6 +269,7 @@ class DokSbpSeeder extends Seeder
 			'sarkut_id' => $sarkut_orang->id,
 			'uraian_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
 			'hasil_pemeriksaan' => $this->faker->sentence($nbWOrds = 20),
+			'saksi_id' => $this->faker->numberBetween(1,100),
 			'kode_status' => 200,
 		]);
 

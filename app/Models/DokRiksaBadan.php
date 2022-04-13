@@ -24,6 +24,7 @@ class DokRiksaBadan extends Model
 		'sarkut_id',
 		'uraian_pemeriksaan',
 		'hasil_pemeriksaan',
+		'saksi_id',
 		'kode_status',
 	];
 
@@ -67,6 +68,14 @@ class DokRiksaBadan extends Model
 	public function dokumen()
 	{
 		return $this->morphOne(DetailDokumen::class, 'parent');
+	}
+
+	/**
+	 * Saksi BA Periksa Badan
+	 */
+	public function saksi()
+	{
+		return $this->belongsTo(RefEntitas::class, 'saksi_id');
 	}
 
 	/**

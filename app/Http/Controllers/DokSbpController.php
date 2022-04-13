@@ -275,6 +275,11 @@ class DokSbpController extends Controller
 
 				// Update penindakan
 				$this->updatePenindakan($request);
+				$sbp = $this->model::find($id);
+				$penindakan = $sbp->penindakan;
+				if ($penindakan->object_type = 'orang') {
+					$penindakan->update(['object_id' => $request->penindakan['saksi']['id']]);
+				}
 
 				// Commit store query
 				DB::commit();
@@ -454,6 +459,7 @@ class DokSbpController extends Controller
 			'hasil_pemeriksaan' => $request->data_riksa_badan['hasil_pemeriksaan'],
 			'sarkut' => $request->data_riksa_badan['sarkut'],
 			'dokumen' => $request->data_riksa_badan['dokumen'],
+			'saksi' => $request->data_riksa_badan['saksi'],
 		];
 		$riksa_badan_array['dokumen']['tgl_dok'] = date('Y-m-d', strtotime($riksa_badan_array['dokumen']['tgl_dok']));
 

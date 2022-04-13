@@ -101,6 +101,7 @@ class DokRiksaBadanController extends Controller
 			'pendamping.id' => 'nullable|integer',
 			'sarkut.pilot.id' => 'nullable|integer',
 			'dokumen.tgl_dok' => 'nullable|date',
+			'saksi.id' => 'nullable|integer',
 		]);
 	}
 
@@ -117,6 +118,7 @@ class DokRiksaBadanController extends Controller
 			'pendamping_id' => $request->pendamping['id'],
 			'uraian_pemeriksaan' => $request->uraian_pemeriksaan,
 			'hasil_pemeriksaan' => $request->hasil_pemeriksaan,
+			'saksi_id' => $request->saksi['id'],
 		];
 
 		if ($state == 'insert') {
@@ -182,7 +184,8 @@ class DokRiksaBadanController extends Controller
 				Penindakan::where('id', $penindakan->id)
 					->update([
 						'object_type' => 'orang', 
-						'object_id' => $request->orang['id']
+						'object_id' => $request->orang['id'],
+						'saksi_id' => $request->orang['id'],
 					]);
 			}
 
@@ -286,7 +289,10 @@ class DokRiksaBadanController extends Controller
 
 				// Update orang
 				if ($request->orang['id'] != DokRiksaBadan::find($id)->penindakan->object_id) {
-					DokRiksaBadan::find($id)->penindakan()->update(['object_id' => $request->orang['id']]);
+					DokRiksaBadan::find($id)->penindakan()->update([
+						'object_id' => $request->orang['id'],
+						'saksi_id' => $request->orang['id'],
+					]);
 				}
 
 				// Commit store query
