@@ -56,4 +56,22 @@ class Intelijen extends Model
 			'lppi'
 		);
 	}
+
+	/**
+	 * The "booted" method of the model.
+	 *
+	 * @return void
+	 */
+	protected static function booted()
+	{
+		static::deleted(function ($intelijen) {
+			// Delete ikhtisar
+			$intelijen->ikhtisar()->delete();
+
+			// Delete linked docs
+			if ($intelijen->lppi != null) {
+				$intelijen->lppi->delete();
+			}
+		});
+	}
 }
