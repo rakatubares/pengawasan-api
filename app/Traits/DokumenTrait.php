@@ -151,6 +151,12 @@ trait DokumenTrait
 		return $update_result;
 	}
 
+	private function updateDocDate()
+	{
+		$this->doc->tanggal_dokumen = $this->tanggal;
+		$this->doc->save();
+	}
+
 	private function datePenindakan($model, $doc_id)
 	{
 		$doc = $model::find($doc_id);
