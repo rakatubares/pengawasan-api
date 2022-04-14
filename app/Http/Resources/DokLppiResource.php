@@ -35,13 +35,9 @@ class DokLppiResource extends JsonResource
 				$array = $this->pdf();
 				break;
 
-			// case 'objek':
-			// 	$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-			// 	break;
-
-			// case 'pdf':
-			// 	$array = $this->pdf();
-			// 	break;
+			case 'form':
+				$array = $this->display();
+				break;
 			
 			default:
 				$array = $this->default();
@@ -109,7 +105,6 @@ class DokLppiResource extends JsonResource
 	{
 		$array = $this->basic();
 		$array['ikhtisar'] = IkhtisarInformasiResource::collection($this->intelijen->ikhtisar);
-		// $array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		return $array;
 	}
 

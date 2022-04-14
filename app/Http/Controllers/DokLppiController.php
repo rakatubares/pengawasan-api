@@ -7,6 +7,7 @@ use App\Http\Resources\DokLppiTableResource;
 use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
+use App\Traits\ConverterTrait;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class DokLppiController extends Controller
 {
+	use ConverterTrait;
 	use DokumenTrait;
 	use SwitcherTrait;
 
@@ -68,6 +70,18 @@ class DokLppiController extends Controller
 		return $lppi;
 	}
 
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function form($id)
+	{
+		$lppi = new DokLppiResource(DokLppi::findOrFail($id), 'form');
+		return $lppi;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
@@ -92,7 +106,7 @@ class DokLppiController extends Controller
 			'flag_arsip' => 'nullable|boolean',
 			'penerima_info_id' => 'nullable|integer',
 			'penilai_info_id' => 'nullable|integer',
-			'disposisi_id' => 'nullable|integer',
+			'disposisi.user_id' => 'nullable|integer',
 			'tanggal_disposisi' => 'nullable|date',
 			'pejabat.user.user_id' => 'nullable|integer',
 			'ikhtisar' => 'required|array|min:1'
@@ -109,11 +123,11 @@ class DokLppiController extends Controller
 	private function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
-		$tgl_terima_info_internal = date('Y-m-d', strtotime($request->tgl_terima_info_internal));
-		$tgl_dok_info_internal = date('Y-m-d', strtotime($request->tgl_dok_info_internal));
-		$tgl_terima_info_eksternal = date('Y-m-d', strtotime($request->tgl_terima_info_eksternal));
-		$tgl_dok_info_eksternal = date('Y-m-d', strtotime($request->tgl_dok_info_eksternal));
-		$tanggal_disposisi = date('Y-m-d', strtotime($request->tanggal_disposisi));
+		$tgl_terima_info_internal = $this->dateFromText($request->tgl_terima_info_internal);
+		$tgl_dok_info_internal = $this->dateFromText($request->tgl_dok_info_internal);
+		$tgl_terima_info_eksternal = $this->dateFromText($request->tgl_terima_info_eksternal);
+		$tgl_dok_info_eksternal = $this->dateFromText($request->tgl_dok_info_eksternal);
+		$tanggal_disposisi = $this->dateFromText($request->tanggal_disposisi);
 
 		$data_lppi = [
 			'flag_info_internal' => $request->flag_info_internal,
@@ -129,7 +143,7 @@ class DokLppiController extends Controller
 			'penerima_info_id' => $request->penerima_info_id,
 			'penilai_info_id' => $request->penilai_info_id,
 			'kesimpulan' => $request->kesimpulan,
-			'disposisi_id' => $request->disposisi_id,
+			'disposisi_id' => $request->disposisi['user_id'],
 			'tanggal_disposisi' => $tanggal_disposisi,
 			'flag_analisis' => $request->flag_analisis,
 			'flag_arsip' => $request->flag_arsip,
@@ -191,17 +205,6 @@ class DokLppiController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
@@ -210,8 +213,98 @@ class DokLppiController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		//
+		// Check if document is not published yet
+		$is_unpublished = $this->checkUnpublished(DokLppi::class, $id);
+
+		if ($is_unpublished) {
+			DB::beginTransaction();
+
+			try {
+				// Validate data
+				$this->validateData($request);
+	
+				// Update data
+				$data_lppi = $this->prepareData($request, 'update');
+				DokLppi::where('id', $id)->update($data_lppi);
+
+				// Get existing ikhtisar
+				$intelijen = DokLppi::find($id)->intelijen;
+				$existing_ikhtisar = $intelijen->ikhtisar->toArray();
+				$existing_ikhtisar_ids = array_map(function($ikhtisar)
+				{
+					return $ikhtisar['id'];
+				}, $existing_ikhtisar);
+
+				// Map data ikhtisar
+				$update_ids = [];
+				foreach ($request->ikhtisar as $ikhtisar) {
+					// Delete index key
+					unset($ikhtisar['index']);
+
+					// Insert intelijen id
+					$ikhtisar['intelijen_id'] = $request->id;
+
+					// Map array to insert/update data
+					if (isset($ikhtisar['id'])) {
+						$intelijen->ikhtisar()->find($ikhtisar['id'])->update($ikhtisar);
+						array_push($update_ids, $ikhtisar['id']);
+					} else {
+						$intelijen->ikhtisar()->create($ikhtisar);
+					}
+				}
+				
+				// Delete ikhtisar
+				foreach ($existing_ikhtisar_ids as $ikhtisar_id) {
+					if (!in_array($ikhtisar_id, $update_ids)) {
+						$intelijen->ikhtisar()->find($ikhtisar_id)->delete();
+					}
+				}
+	
+				// Commit query
+				DB::commit();
+	
+				// Return data
+				$lppi_resource = new DokLppiResource(DokLppi::findOrFail($id), 'display');
+				return $lppi_resource;
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
+		}
+
+		return $result;
 	}
+
+	/**
+	 * Pablish document.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function publish($id)
+	{
+		DB::beginTransaction();
+		try {
+			$this->getDocument(DokLppi::class, $id);
+			$this->getCurrentDate();
+			$number = $this->getNewDocNumber(DokLppi::class);
+			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
+			$this->updateDocDate();
+			
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Destroy functions
+	 |--------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Remove the specified resource from storage.
@@ -221,6 +314,17 @@ class DokLppiController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		DB::beginTransaction();
+		try {
+			$is_unpublished = $this->checkUnpublished(DokLppi::class, $id);
+			if ($is_unpublished) {
+				DokLppi::find($id)->delete();
+			}
+			
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
 	}
 }

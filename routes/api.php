@@ -70,6 +70,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::apiResource('lppi', DokLppiController::class);
 Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
+Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
+Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

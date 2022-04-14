@@ -19,7 +19,7 @@ class DokLppiTableResource extends JsonResource
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tanggal_dokumen' => $this->tanggal_dokumen 
 				? $this->tanggal_dokumen->format('d-m-Y') 
-				: null,
+				: '-',
 			'disposisi' => $this->disposisi->name,
 			'status' => new RefStatusResource($this->status)
 		];
