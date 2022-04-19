@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -49,6 +50,12 @@ Route::apiResource('lppi', DokLppiController::class);
 Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
 Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
 Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
+
+/**
+ * API for LKAI
+ */
+Route::apiResource('lkai', DokLkaiController::class);
+Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
 
 /**
  * API for penindakan

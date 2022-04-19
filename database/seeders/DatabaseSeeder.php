@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			DokLppiSeeder::class,
+			DokLkaiSeeder::class,
 		]);
 	}
 }

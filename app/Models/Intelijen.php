@@ -58,6 +58,27 @@ class Intelijen extends Model
 	}
 
 	/**
+	 * LKAI
+	 */
+	public function lkai()
+	{
+		return $this->hasOneThrough(
+			DokLkai::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'intelijen'
+		)->where(
+			'object2_type',
+			'lkai'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void
@@ -71,6 +92,9 @@ class Intelijen extends Model
 			// Delete linked docs
 			if ($intelijen->lppi != null) {
 				$intelijen->lppi->delete();
+			}
+			if ($intelijen->lkai != null) {
+				$intelijen->lkai->delete();
 			}
 		});
 	}
