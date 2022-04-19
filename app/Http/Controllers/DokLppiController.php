@@ -242,7 +242,7 @@ class DokLppiController extends Controller
 					unset($ikhtisar['index']);
 
 					// Insert intelijen id
-					$ikhtisar['intelijen_id'] = $request->id;
+					$ikhtisar['intelijen_id'] = $intelijen->id;
 
 					// Map array to insert/update data
 					if (isset($ikhtisar['id'])) {
