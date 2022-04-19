@@ -19,6 +19,11 @@ class IntelijenResource extends JsonResource
 			$jenis = $dok->object2_type;
 
 			switch ($jenis) {
+				case 'lkai':
+					$lkai = new DokLkaiResource($this->lkai, 'pdf');
+					$list_dokumen['lkai'] = $lkai;
+					break;
+
 				case 'lppi':
 					$lppi = new DokLppiResource($this->lppi, 'pdf');
 					$list_dokumen['lppi'] = $lppi;

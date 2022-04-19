@@ -12,6 +12,7 @@ use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
+use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLphpController;
@@ -78,6 +79,12 @@ Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
  | Penindakan routes
  |--------------------------------------------------------------------------
  */
+
+/**
+ * API for LKAI
+ */
+Route::apiResource('lkai', DokLkaiController::class);
+Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
 
 /**
  * API for penindakan

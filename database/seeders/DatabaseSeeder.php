@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
 			DokLppiSeeder::class,
+			DokLkaiSeeder::class,
 			DokLiSeeder::class,
 			DokLapSeeder::class,
 			DokSbpSeeder::class,
