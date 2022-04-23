@@ -7,37 +7,37 @@ use App\Models\ObjectRelation;
 
 class DokLppiObserver
 {
-    /**
-     * Handle the DokLppi "created" event.
-     *
-     * @param  \App\Models\DokLppi  $dokLppi
-     * @return void
-     */
-    public function created(DokLppi $dokLppi)
-    {
-        //
-    }
+	/**
+	 * Handle the DokLppi "created" event.
+	 *
+	 * @param  \App\Models\DokLppi  $dokLppi
+	 * @return void
+	 */
+	public function created(DokLppi $dokLppi)
+	{
+		//
+	}
 
-    /**
-     * Handle the DokLppi "updated" event.
-     *
-     * @param  \App\Models\DokLppi  $dokLppi
-     * @return void
-     */
-    public function updated(DokLppi $dokLppi)
-    {
-        //
-    }
+	/**
+	 * Handle the DokLppi "updated" event.
+	 *
+	 * @param  \App\Models\DokLppi  $dokLppi
+	 * @return void
+	 */
+	public function updated(DokLppi $dokLppi)
+	{
+		//
+	}
 
-    /**
-     * Handle the DokLppi "deleted" event.
-     *
-     * @param  \App\Models\DokLppi  $dokLppi
-     * @return void
-     */
-    public function deleted(DokLppi $dokLppi)
-    {
-        // Change status to 300
+	/**
+	 * Handle the DokLppi "deleted" event.
+	 *
+	 * @param  \App\Models\DokLppi  $dokLppi
+	 * @return void
+	 */
+	public function deleted(DokLppi $dokLppi)
+	{
+		// Change status to 300
 		$dokLppi->update(['kode_status' => 300]);
 		
 		// Delete related model
@@ -53,27 +53,27 @@ class DokLppiObserver
 			$query->where('object2_type', 'lppi')
 				->where('object2_id', $dokLppi->id);
 		})->delete();
-    }
+	}
 
-    /**
-     * Handle the DokLppi "restored" event.
-     *
-     * @param  \App\Models\DokLppi  $dokLppi
-     * @return void
-     */
-    public function restored(DokLppi $dokLppi)
-    {
-        //
-    }
+	/**
+	 * Handle the DokLppi "restored" event.
+	 *
+	 * @param  \App\Models\DokLppi  $dokLppi
+	 * @return void
+	 */
+	public function restored(DokLppi $dokLppi)
+	{
+		//
+	}
 
-    /**
-     * Handle the DokLppi "force deleted" event.
-     *
-     * @param  \App\Models\DokLppi  $dokLppi
-     * @return void
-     */
-    public function forceDeleted(DokLppi $dokLppi)
-    {
-        //
-    }
+	/**
+	 * Handle the DokLppi "force deleted" event.
+	 *
+	 * @param  \App\Models\DokLppi  $dokLppi
+	 * @return void
+	 */
+	public function forceDeleted(DokLppi $dokLppi)
+	{
+		//
+	}
 }

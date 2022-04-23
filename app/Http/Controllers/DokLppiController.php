@@ -82,6 +82,37 @@ class DokLppiController extends Controller
 		return $lppi;
 	}
 
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+
+		$search = '%' . $src . '%';
+		$status = $sta != null ? $sta : [200];
+
+		$search_result = DokLppi::where(function ($query) use ($search, $status) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->whereIn('kode_status', $status);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokLppiTableResource::collection($search_result);
+		return $search_list;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
@@ -197,7 +228,6 @@ class DokLppiController extends Controller
 			// Return created data
 			$lppi_resource = new DokLppiResource(DokLppi::findOrFail($lppi->id), 'display');
 			return $lppi_resource;
-			// return $lppi;
 		} catch (\Throwable $th) {
 			DB::rollBack();
 			throw $th;

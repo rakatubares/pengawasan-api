@@ -63,12 +63,12 @@ class DokLkaiResource extends JsonResource
 			'tanggal_dokumen' => $this->tanggal_dokumen
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
-			'flag_lpti' => $this->flag_lpti,
+			'flag_lpti' => $this->flag_lpti == 1 ? true : false,
 			'nomor_lpti' => $this->nomor_lpti,
 			'tanggal_lpti' => $this->tanggal_lpti
 				? $this->tanggal_lpti->format('d-m-Y')
 				: null,
-			'flag_npi' => $this->flag_npi,
+			'flag_npi' => $this->flag_npi == 1 ? true : false,
 			'nomor_npi' => $this->nomor_npi,
 			'tanggal_npi' => $this->tanggal_npi
 				? $this->tanggal_npi->format('d-m-Y')
@@ -76,8 +76,8 @@ class DokLkaiResource extends JsonResource
 			'prosedur' => $this->prosedur,
 			'hasil' => $this->hasil,
 			'kesimpulan' => $this->kesimpulan,
-			'flag_rekom_nhi' => $this->flag_rekom_nhi,
-			'flag_rekom_ni' => $this->flag_rekom_ni,
+			'flag_rekom_nhi' => $this->flag_rekom_nhi == 1 ? true : false,
+			'flag_rekom_ni' => $this->flag_rekom_ni == 1 ? true : false,
 			'rekomendasi_lain' => $this->rekomendasi_lain,
 			'informasi_lain' => $this->informasi_lain,
 			'tujuan' => $this->tujuan,
@@ -86,7 +86,7 @@ class DokLkaiResource extends JsonResource
 				'jabatan' => new JabatanResource($this->jabatan_pejabat),
 				'plh' => $this->plh_pejabat,
 				'user' => new RefUserResource($this->pejabat),
-				'keputusan' => $this->keputusan_pejabat,
+				'keputusan' => $this->keputusan_pejabat == 1 ? true : false,
 				'catatan' => $this->catatan_pejabat,
 				'tanggal_terima' => $this->tanggal_terima_pejabat
 					? $this->tanggal_terima_pejabat->format('d-m-Y')
@@ -96,7 +96,7 @@ class DokLkaiResource extends JsonResource
 				'jabatan' => new JabatanResource($this->jabatan_atasan),
 				'plh' => $this->plh_atasan,
 				'user' => new RefUserResource($this->atasan),
-				'keputusan' => $this->keputusan_atasan,
+				'keputusan' => $this->keputusan_atasan == 1 ? true : false,
 				'catatan' => $this->catatan_atasan,
 				'tanggal_terima' => $this->tanggal_terima_atasan
 					? $this->tanggal_terima_atasan->format('d-m-Y')
@@ -112,6 +112,7 @@ class DokLkaiResource extends JsonResource
 		$lppi = $this->intelijen->lppi;
 
 		$array = $this->basic();
+		$array['lppi_id'] = $lppi != null ? $lppi->id : null;
 		$array['nomor_lppi'] = $lppi != null ? $lppi->no_dok_lengkap : null;
 		$array['tanggal_lppi'] = $lppi != null ? $lppi->tanggal_dokumen->format('d-m-Y') : null;
 		$array['ikhtisar'] = IkhtisarInformasiResource::collection($this->intelijen->ikhtisar);
