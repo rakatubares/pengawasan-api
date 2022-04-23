@@ -6,10 +6,12 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
+use App\Models\DokLkai;
 use App\Models\DokLppi;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Observers\DetailBarangItemObserver;
+use App\Observers\DokLkaiObserver;
 use App\Observers\DokLppiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -49,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		DokLkai::observe(DokLkaiObserver::class);
 		DokLppi::observe(DokLppiObserver::class);
     }
 }

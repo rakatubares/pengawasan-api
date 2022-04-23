@@ -50,17 +50,20 @@ Route::apiResource('lppi', DokLppiController::class);
 Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
 Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
 Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
+Route::post('/lppi/search', [DokLppiController::class, 'search']);
 
 /**
  * API for LKAI
  */
 Route::apiResource('lkai', DokLkaiController::class);
 Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
+Route::get('/lkai/{lkai_id}/form', [DokLkaiController::class, 'form']);
+Route::put('/lkai/{lkai_id}/publish', [DokLkaiController::class, 'publish']);
 
 /**
  * API for penindakan
  */
-Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+// Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 /*
  |--------------------------------------------------------------------------
  | Details routes
