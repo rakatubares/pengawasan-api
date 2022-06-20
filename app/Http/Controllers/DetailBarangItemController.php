@@ -61,8 +61,7 @@ class DetailBarangItemController extends Controller
 				
 				$result = DetailBarangItemResource::collection($item_barang_list);
 			} catch (\Throwable $th) {
-				// $result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
-				throw $th;
+				$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
@@ -145,8 +144,7 @@ class DetailBarangItemController extends Controller
 					}
 					
 				} catch (\Throwable $th) {
-					// $result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
-					throw $th;
+					$result = response()->json(['error' => 'Detail barang tidak ditemukan.'], 422);
 				}
 			} else {
 				$result = response()->json(['error' => 'Dokumen tidak ditemukan.'], 422);
