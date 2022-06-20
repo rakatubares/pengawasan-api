@@ -28,6 +28,11 @@ class IntelijenResource extends JsonResource
 					$lppi = new DokLppiResource($this->lppi, 'pdf');
 					$list_dokumen['lppi'] = $lppi;
 					break;
+
+				case 'nhi':
+					$nhi = new DokNhiResource($this->nhi, 'pdf');
+					$list_dokumen['nhi'] = $nhi;
+					break;
 				
 				default:
 					# code...

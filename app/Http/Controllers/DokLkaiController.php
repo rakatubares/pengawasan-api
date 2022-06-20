@@ -83,6 +83,49 @@ class DokLkaiController extends Controller
 		return $lppi;
 	}
 
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$flt = $request->flt;
+		$exc = $request->exc;
+		$search = '%' . $src . '%';
+
+		$search_result = DokLkai::where(function ($query) use ($search, $flt) 
+			{
+				$query->where('no_dok_lengkap', 'like', $search)
+					->when($flt != null, function ($query) use ($flt)
+					{
+						foreach ($flt as $column => $value) {
+							if (is_array($value)) {
+								$query->whereIn($column, $value);
+							} else if ($value == null) {
+								$query->where($column, $value);
+							} else {
+								$search_value = '%' . $value . '%';
+								$query->where($column, 'like', $search_value);
+							}
+						}
+						return $query;
+					});
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokLkaiTableResource::collection($search_result);
+		return $search_list;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
@@ -233,33 +276,19 @@ class DokLkaiController extends Controller
 				$intelijen = DokLkai::find($id)->intelijen;
 				$lppi = $intelijen->lppi;
 
-				echo 'TEST 1';
-
 				if ($request->lppi_id == null) {
-					echo 'TEST 2';
 					if ($lppi != null) {
-						echo 'TEST 3';
 						$this->rollbackLppi($id);
-						echo 'TEST 4';
 						$this->createIntel($request, $id);
-						echo 'TEST 5';
 					}
 				} else {
-					echo 'TEST 6';
 					if ($lppi == null) {
-						echo 'TEST 7';
 						$this->deleteIntel($id);
-						echo 'TEST 8';
 						$this->createLinkLppi($request->lppi_id, $id);
-						echo 'TEST 9';
 					} else {
-						echo 'TEST 10';
 						if ($lppi->id != $request->lppi_id) {
-							echo 'TEST 11';
 							$this->rollbackLppi($id);
-							echo 'TEST 12';
 							$this->createLinkLppi($request->lppi_id, $id);
-							echo 'TEST 13';
 						}
 					}
 				}
@@ -360,7 +389,7 @@ class DokLkaiController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			// Publihs LKAI
+			// Publish LKAI
 			$this->getDocument(DokLkai::class, $id);
 			$this->getCurrentDate();
 			$number = $this->getNewDocNumber(DokLkai::class);
