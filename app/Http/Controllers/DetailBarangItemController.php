@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangItemResource;
 use App\Http\Resources\DetailBarangItemWithImagesResource;
+use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
+use App\Models\DokNhi;
 use App\Models\Lampiran;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
@@ -68,6 +70,29 @@ class DetailBarangItemController extends Controller
 		return $result;
     }
 
+	private function getParentObject($header, $doc_type, $doc_id=null)
+	{
+		$parent_name = $this->switchObject($doc_type, 'parent');
+		if ($parent_name == 'penindakan') {
+			$parent_object = $header->penindakan;
+		} else if ($parent_name == 'bast') {
+			$parent_object = $header;
+		} else if ($parent_name == 'intelijen') {
+			if ($doc_type == 'nhi') {
+				if ($header->objectable == null) {
+					$barang = DetailBarang::create();
+					$header->update(['barang_id' => $barang->id]);
+					$parent_object = DokNhi::find($doc_id);
+				} else {
+					$parent_object = $header;
+				}
+				$parent_object->object_type = 'barang';
+			}
+		}
+
+		return $parent_object;
+	}
+
 	/**
      * Store a newly created resource in storage.
      *
@@ -92,12 +117,7 @@ class DetailBarangItemController extends Controller
 			if ($header) {
 				try {
 					// Get parent object
-					$parent_name = $this->switchObject($doc_type, 'parent');
-					if ($parent_name == 'penindakan') {
-						$parent_object = $header->penindakan;
-					} else if ($parent_name == 'bast') {
-						$parent_object = $header;
-					}
+					$parent_object = $this->getParentObject($header, $doc_type, $doc_id);
 
 					DB::beginTransaction();
 					try {
@@ -184,12 +204,7 @@ class DetailBarangItemController extends Controller
 
 		if ($header) {
 			// Get parent object
-			$parent_name = $this->switchObject($doc_type, 'parent');
-			if ($parent_name == 'penindakan') {
-				$parent_object = $header->penindakan;
-			} else if ($parent_name == 'bast') {
-				$parent_object = $header;
-			}
+			$parent_object = $this->getParentObject($header, $doc_type, $doc_id);
 
 			// Get data item barang
 			$item_barang = $parent_object->objectable->itemBarang()
@@ -231,12 +246,7 @@ class DetailBarangItemController extends Controller
 
 			if ($header) {
 				// Get parent object
-				$parent_name = $this->switchObject($doc_type, 'parent');
-				if ($parent_name == 'penindakan') {
-					$parent_object = $header->penindakan;
-				} else if ($parent_name == 'bast') {
-					$parent_object = $header;
-				}
+				$parent_object = $this->getParentObject($header, $doc_type, $doc_id);
 
 				DB::beginTransaction();
 				try {
@@ -318,16 +328,19 @@ class DetailBarangItemController extends Controller
 			$header = $model::find($doc_id);
 
 			// Get parent object
-			$parent_name = $this->switchObject($doc_type, 'parent');
-			if ($parent_name == 'penindakan') {
-				$parent_object = $header->penindakan;
-			} else if ($parent_name == 'bast') {
-				$parent_object = $header;
-			}
+			$parent_object = $this->getParentObject($header, $doc_type, $doc_id);
 
 			// Delete if object type is barang
 			if ($parent_object->object_type == 'barang') {
 				$result = DetailBarangItem::find($item_id)->delete();
+				
+				// Delete NHI object if no item
+				if ($doc_type == 'nhi') {
+					$item_count = DokNhi::find($doc_id)->objectable->itemBarang->count();
+					if ($item_count == 0) {
+						$parent_object->objectable->delete();
+					}
+				}
 			} else {
 				$result = response()->json(['error' => 'Objek bukan barang, tidak dapat menghapus item barang.'], 422);
 			}

@@ -19,7 +19,7 @@ class CreateDokLppiTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->string('tanggal_dokumen')->nullable()->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->boolean('flag_info_internal')->nullable()->index();
 			$table->string('media_info_internal')->nullable()->index();
 			$table->date('tgl_terima_info_internal')->nullable()->index();

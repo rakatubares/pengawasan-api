@@ -19,7 +19,7 @@ class CreateDokLkaiTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->string('tanggal_dokumen')->nullable()->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->boolean('flag_lpti')->index();
 			$table->string('nomor_lpti')->nullable()->index();
 			$table->date('tanggal_lpti')->nullable()->index();

@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLppiController;
+use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RefValiditasInformasiController;
+use App\Http\Controllers\TembusanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +61,16 @@ Route::apiResource('lkai', DokLkaiController::class);
 Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
 Route::get('/lkai/{lkai_id}/form', [DokLkaiController::class, 'form']);
 Route::put('/lkai/{lkai_id}/publish', [DokLkaiController::class, 'publish']);
+Route::post('/lkai/search', [DokLkaiController::class, 'search']);
+
+/**
+ * API for NHI
+ */
+Route::apiResource('nhi', DokNhiController::class);
+Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
+Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
+Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
+Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
 
 /**
  * API for penindakan
@@ -180,6 +192,11 @@ Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
  * API for Klasifikasi Validitas
  */
 Route::get('validitas', [RefValiditasInformasiController::class, 'index']);
+
+/**
+ * API for Tembusan
+ */
+Route::post('tembusan/search', [TembusanController::class, 'search']);
 
 /**
  * API for User
