@@ -15,6 +15,19 @@ class DokLppiSeeder extends Seeder
 {
 	use SwitcherTrait;
 
+	public function __construct()
+	{
+		$this->tipe_dok = 'lppi';
+		$this->prepareModel();
+	}
+
+	public function prepareModel()
+	{
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
+		$this->model = $this->switchObject($this->tipe_dok, 'model');
+	}
+
 	/**
 	 * Run the database seeds.
 	 *
@@ -23,8 +36,6 @@ class DokLppiSeeder extends Seeder
 	public function run()
 	{
 		$faker = Faker::create();
-		$tipe_surat = $this->switchObject('lppi', 'tipe_dok');
-		$agenda = $this->switchObject('lppi', 'agenda');
 
 		$ref_kepercayaan = RefKepercayaanSumber::all()->all();
 		$list_kode_kepercayaan = array_map(function ($k){ return $k->klasifikasi; }, $ref_kepercayaan);
@@ -32,7 +43,7 @@ class DokLppiSeeder extends Seeder
 		$list_kode_validitas = array_map(function ($v){ return $v->klasifikasi; }, $ref_validitas);
 
 		for ($d=1; $d < 21; $d++) { 
-			$max_lppi = DokLppi::max('no_dok');
+			$max_lppi = $this->model::max('no_dok');
 			$crn_lppi = $max_lppi + 1;
 
 			$info_internal = $faker->boolean();
@@ -61,11 +72,11 @@ class DokLppiSeeder extends Seeder
 				$tgl_dok_info_eksternal = null;
 			}
 
-			$lppi = DokLppi::create([
+			$lppi = $this->model::create([
 				'no_dok' => $crn_lppi,
-				'agenda_dok' => $agenda,
+				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => $tipe_surat . '-' . $crn_lppi . $agenda . date("Y"),
+				'no_dok_lengkap' => $this->tipe_surat . '-' . $crn_lppi . $this->agenda . date("Y"),
 				'tanggal_dokumen' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'flag_info_internal' => $info_internal,
 				'media_info_internal' => $media_info_internal,
@@ -96,7 +107,7 @@ class DokLppiSeeder extends Seeder
 			ObjectRelation::create([
 				'object1_type' => 'intelijen',
 				'object1_id' => $intelijen->id,
-				'object2_type' => 'lppi',
+				'object2_type' => $this->tipe_dok,
 				'object2_id' => $lppi->id,
 			]);
 

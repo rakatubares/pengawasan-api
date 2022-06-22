@@ -16,6 +16,7 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLkai;
 use App\Models\DokLppi;
+use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,13 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+		],
+		'lppin' => [
+			'tipe_dok' => 'LPPI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppiN::class,
 			'resource' => DokLppiResource::class,
 		],
 		'nhi' => [

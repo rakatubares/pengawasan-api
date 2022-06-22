@@ -58,6 +58,27 @@ class Intelijen extends Model
 	}
 
 	/**
+	 * LPPI-N
+	 */
+	public function lppin()
+	{
+		return $this->hasOneThrough(
+			DokLppiN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'intelijen'
+		)->where(
+			'object2_type',
+			'lppin'
+		);
+	}
+
+	/**
 	 * LKAI
 	 */
 	public function lkai()

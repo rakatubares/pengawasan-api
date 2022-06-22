@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLppiController;
+use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -71,6 +72,21 @@ Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
 Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
 Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
 Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | NPP routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for LPPI-N
+ */
+Route::apiResource('lppin', DokLppiNController::class);
+Route::get('/lppin/{lppin_id}/display', [DokLppiNController::class, 'display']);
+Route::get('/lppin/{lppin_id}/form', [DokLppiNController::class, 'form']);
+Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
+Route::post('/lppin/search', [DokLppiNController::class, 'search']);
 
 /**
  * API for penindakan

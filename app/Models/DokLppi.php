@@ -12,6 +12,7 @@ class DokLppi extends Model
 	use SoftDeletes;
 
 	protected $table = 'dok_lppi';
+	protected $tipe_lppi = 'lppi';
 
 	protected $fillable = [
 		'no_dok',
@@ -66,7 +67,7 @@ class DokLppi extends Model
 			'intelijen'
 		)->where(
 			'object2_type',
-			'lppi'
+			$this->tipe_lppi
 		);
 	}
 

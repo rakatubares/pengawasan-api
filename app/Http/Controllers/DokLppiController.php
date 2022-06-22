@@ -22,8 +22,14 @@ class DokLppiController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'lppi';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
 	}
 
 	/*
@@ -39,7 +45,7 @@ class DokLppiController extends Controller
 	 */
 	public function index()
 	{
-		$all_lppi = DokLppi::orderBy('created_at', 'desc')
+		$all_lppi = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$lppi_list = DokLppiTableResource::collection($all_lppi);
@@ -54,7 +60,7 @@ class DokLppiController extends Controller
 	 */
 	public function show($id)
 	{
-		$lppi = new DokLppiResource(DokLppi::findOrFail($id));
+		$lppi = new DokLppiResource($this->model::findOrFail($id), null, $this->doc_type);
 		return $lppi;
 	}
 
@@ -66,7 +72,7 @@ class DokLppiController extends Controller
 	 */
 	public function display($id)
 	{
-		$lppi = new DokLppiResource(DokLppi::findOrFail($id), 'display');
+		$lppi = new DokLppiResource($this->model::findOrFail($id), 'display');
 		return $lppi;
 	}
 
@@ -78,7 +84,7 @@ class DokLppiController extends Controller
 	 */
 	public function form($id)
 	{
-		$lppi = new DokLppiResource(DokLppi::findOrFail($id), 'form');
+		$lppi = new DokLppiResource($this->model::findOrFail($id), 'form');
 		return $lppi;
 	}
 
@@ -97,7 +103,7 @@ class DokLppiController extends Controller
 		$search = '%' . $src . '%';
 		$status = $sta != null ? $sta : [200];
 
-		$search_result = DokLppi::where(function ($query) use ($search, $status) {
+		$search_result = $this->model::where(function ($query) use ($search, $status) {
 				$query->where('no_dok_lengkap', 'like', $search)
 					->whereIn('kode_status', $status);
 			})
@@ -208,14 +214,14 @@ class DokLppiController extends Controller
 		try {
 			// Save data LPPI
 			$data_lppi = $this->prepareData($request, 'insert');
-			$lppi = DokLppi::create($data_lppi);
+			$lppi = $this->model::create($data_lppi);
 
 			// Save intelijen
 			$intelijen = Intelijen::create();
 			ObjectRelation::create([
 				'object1_type' => 'intelijen',
 				'object1_id' => $intelijen->id,
-				'object2_type' => 'lppi',
+				'object2_type' => $this->doc_type,
 				'object2_id' => $lppi->id,
 			]);
 
@@ -226,7 +232,7 @@ class DokLppiController extends Controller
 			DB::commit();
 
 			// Return created data
-			$lppi_resource = new DokLppiResource(DokLppi::findOrFail($lppi->id), 'display');
+			$lppi_resource = new DokLppiResource($this->model::findOrFail($lppi->id), 'display');
 			return $lppi_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -244,7 +250,7 @@ class DokLppiController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLppi::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model, $id);
 
 		if ($is_unpublished) {
 			DB::beginTransaction();
@@ -255,10 +261,10 @@ class DokLppiController extends Controller
 	
 				// Update data
 				$data_lppi = $this->prepareData($request, 'update');
-				DokLppi::where('id', $id)->update($data_lppi);
+				$this->model::where('id', $id)->update($data_lppi);
 
 				// Get existing ikhtisar
-				$intelijen = DokLppi::find($id)->intelijen;
+				$intelijen = $this->model::find($id)->intelijen;
 				$existing_ikhtisar = $intelijen->ikhtisar->toArray();
 				$existing_ikhtisar_ids = array_map(function($ikhtisar)
 				{
@@ -294,7 +300,7 @@ class DokLppiController extends Controller
 				DB::commit();
 	
 				// Return data
-				$lppi_resource = new DokLppiResource(DokLppi::findOrFail($id), 'display');
+				$lppi_resource = new DokLppiResource($this->model::findOrFail($id), 'display');
 				return $lppi_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -317,9 +323,9 @@ class DokLppiController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$this->getDocument(DokLppi::class, $id);
+			$this->getDocument($this->model, $id);
 			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokLppi::class);
+			$number = $this->getNewDocNumber($this->model);
 			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 			$this->updateDocDate();
 			
@@ -346,9 +352,9 @@ class DokLppiController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokLppi::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model, $id);
 			if ($is_unpublished) {
-				DokLppi::find($id)->delete();
+				$this->model::find($id)->delete();
 			}
 			
 			DB::commit();
