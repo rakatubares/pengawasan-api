@@ -15,6 +15,7 @@ use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLkai;
+use App\Models\DokLkaiN;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokNhi;
@@ -30,6 +31,13 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokLkai::class,
+			'resource' => DokLkaiResource::class,
+		],
+		'lkain' => [
+			'tipe_dok' => 'LKAI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLkaiN::class,
 			'resource' => DokLkaiResource::class,
 		],
 		'lppi' => [

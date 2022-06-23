@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLppiResource;
 use App\Http\Resources\DokLppiTableResource;
-use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
 use App\Traits\ConverterTrait;

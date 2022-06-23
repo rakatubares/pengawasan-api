@@ -7,6 +7,7 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLkaiController;
+use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
@@ -89,9 +90,19 @@ Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
 Route::post('/lppin/search', [DokLppiNController::class, 'search']);
 
 /**
+ * API for LKAI-N
+ */
+Route::apiResource('lkain', DokLkaiNController::class);
+Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
+Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
+Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
+Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
+
+/**
  * API for penindakan
  */
 // Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
 /*
  |--------------------------------------------------------------------------
  | Details routes

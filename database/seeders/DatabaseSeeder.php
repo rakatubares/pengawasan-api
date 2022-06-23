@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
 			DokLkaiSeeder::class,
 			DokNhiSeeder::class,
 			DokLppiNSeeder::class,
+			DokLkaiNSeeder::class,
 		]);
 	}
 }

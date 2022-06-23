@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DokLkai;
-use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
 use App\Models\RefKepercayaanSumber;
@@ -16,6 +14,21 @@ class DokLkaiSeeder extends Seeder
 {
 	use SwitcherTrait;
 
+	public function __construct()
+	{
+		$this->tipe_lkai = 'lkai';
+		$this->tipe_lppi = 'lppi';
+		$this->prepareModel();
+	}
+
+	public function prepareModel()
+	{
+		$this->tipe_surat = $this->switchObject($this->tipe_lkai, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_lkai, 'agenda');
+		$this->model_lkai = $this->switchObject($this->tipe_lkai, 'model');
+		$this->model_lppi = $this->switchObject($this->tipe_lppi, 'model');
+	}
+
 	/**
 	 * Run the database seeds.
 	 *
@@ -24,11 +37,11 @@ class DokLkaiSeeder extends Seeder
 	public function run()
 	{
 		$faker = Faker::create();
-		$tipe_surat = $this->switchObject('lkai', 'tipe_dok');
-		$agenda = $this->switchObject('lkai', 'agenda');
+		$tipe_surat = $this->switchObject($this->tipe_lkai, 'tipe_dok');
+		$agenda = $this->switchObject($this->tipe_lkai, 'agenda');
 
 		// Get LPPI ids
-		$max_lppi_id = DokLppi::max('id');
+		$max_lppi_id = $this->model_lppi::max('id');
 		$available_lppi_id = range(1, $max_lppi_id);
 
 		// Current year
@@ -45,7 +58,7 @@ class DokLkaiSeeder extends Seeder
 		$list_kode_validitas = array_map(function ($v){ return $v->klasifikasi; }, $ref_validitas);
 
 		for ($d=1; $d < 21; $d++) { 
-			$max_lkai = DokLkai::max('no_dok');
+			$max_lkai = $this->model_lkai::max('no_dok');
 			$crn_lkai = $max_lkai + 1;
 
 			// LPTI
@@ -62,7 +75,8 @@ class DokLkaiSeeder extends Seeder
 			// NPI
 			$flag_npi = $faker->boolean();
 			if ($flag_npi) {
-				$nomor_npi = "NPI-$crn_npi/KPU.305/$year";
+				$tipe_npi = $this->tipe_lkai == 'lkain' ? 'NPI-N' : 'NPI';
+				$nomor_npi = "$tipe_npi-$crn_npi/KPU.305/$year";
 				$tanggal_npi = $faker->dateTimeThisYear()->format('Y-m-d');
 				$crn_npi += 1;
 			} else {
@@ -92,7 +106,7 @@ class DokLkaiSeeder extends Seeder
 			}
 
 			// Create LKAI
-			$lkai = DokLkai::create([
+			$data_lkai = [
 				'no_dok' => $crn_lkai,
 				'agenda_dok' => $agenda,
 				'thn_dok' => $year,
@@ -126,7 +140,11 @@ class DokLkaiSeeder extends Seeder
 				'plh_atasan' => $plh_atasan,
 				'atasan_id' => $atasan_id,
 				'kode_status' => 200,
-			]);
+			];
+			if ($this->tipe_lkai == 'lkain') {
+				unset($data_lkai['informasi_lain']);
+			}
+			$lkai = $this->model_lkai::create($data_lkai);
 
 			// LPPI
 			$with_lppi = $faker->boolean();
@@ -135,14 +153,15 @@ class DokLkaiSeeder extends Seeder
 				$lppi_id = $faker->randomElement($available_lppi_id);
 				$key = array_search($lppi_id, $available_lppi_id);
 				unset($available_lppi_id[$key]);
-				$lppi = DokLppi::find($lppi_id);
-				$lppi->update(['kode_status' => 211]);
+				$lppi = $this->model_lppi::find($lppi_id);
+				$status_lppi = $this->tipe_lppi == 'lppin' ? 221 : 211;
+				$lppi->update(['kode_status' => $status_lppi]);
 
 				// Create relation Intelijen - LKAI
 				ObjectRelation::create([
 					'object1_type' => 'intelijen',
 					'object1_id' => $lppi->intelijen->id,
-					'object2_type' => 'lkai',
+					'object2_type' => $this->tipe_lkai,
 					'object2_id' => $lkai->id,
 				]);
 			} else {
@@ -153,7 +172,7 @@ class DokLkaiSeeder extends Seeder
 				ObjectRelation::create([
 					'object1_type' => 'intelijen',
 					'object1_id' => $intelijen->id,
-					'object2_type' => 'lkai',
+					'object2_type' => $this->tipe_lkai,
 					'object2_id' => $lkai->id,
 				]);
 

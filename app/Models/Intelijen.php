@@ -100,6 +100,27 @@ class Intelijen extends Model
 	}
 
 	/**
+	 * LKAI-N
+	 */
+	public function lkain()
+	{
+		return $this->hasOneThrough(
+			DokLkaiN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'intelijen'
+		)->where(
+			'object2_type',
+			'lkain'
+		);
+	}
+
+	/**
 	 * NHI
 	 */
 	public function nhi()

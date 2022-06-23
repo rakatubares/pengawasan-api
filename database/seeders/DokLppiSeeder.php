@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
 use App\Models\RefKepercayaanSumber;

@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLkaiTable extends Migration
 {
+	public function __construct()
+	{
+		$this->table_name = 'dok_lkai';
+	}
+
 	/**
 	 * Run the migrations.
 	 *
@@ -13,7 +18,7 @@ class CreateDokLkaiTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_lkai', function (Blueprint $table) {
+		Schema::create($this->table_name, function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -32,7 +37,9 @@ class CreateDokLkaiTable extends Migration
 			$table->boolean('flag_rekom_nhi')->index();
 			$table->boolean('flag_rekom_ni')->index();
 			$table->text('rekomendasi_lain')->nullable();
-			$table->text('informasi_lain')->nullable();
+			if ($this->table_name == 'dok_lkai') {
+				$table->text('informasi_lain')->nullable();
+			}
 			$table->string('tujuan')->nullable();
 			$table->integer('analis_id')->index();
 			$table->boolean('keputusan_pejabat');
@@ -63,6 +70,6 @@ class CreateDokLkaiTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('dok_lkai');
+		Schema::dropIfExists($this->table_name);
 	}
 }

@@ -7,7 +7,9 @@ use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
 use App\Models\DokLkai;
+use App\Models\DokLkaiN;
 use App\Models\DokLppi;
+use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
@@ -55,7 +57,9 @@ class AppServiceProvider extends ServiceProvider
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokLkai::observe(DokLkaiObserver::class);
+		DokLkaiN::observe(DokLkaiObserver::class);
 		DokLppi::observe(DokLppiObserver::class);
+		DokLppiN::observe(DokLppiObserver::class);
 		DokNhi::observe(DokNhiObserver::class);
     }
 }
