@@ -13,11 +13,13 @@ use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLkaiController;
+use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLppiController;
+use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
@@ -273,6 +275,24 @@ Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'pu
  */
 
 /**
+ * API for LPPI-N
+ */
+Route::apiResource('lppin', DokLppiNController::class);
+Route::get('/lppin/{lppin_id}/display', [DokLppiNController::class, 'display']);
+Route::get('/lppin/{lppin_id}/form', [DokLppiNController::class, 'form']);
+Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
+Route::post('/lppin/search', [DokLppiNController::class, 'search']);
+
+/**
+ * API for LKAI-N
+ */
+Route::apiResource('lkain', DokLkaiNController::class);
+Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
+Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
+Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
+Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
+
+/**
  * API for SBP-N
  */
 Route::apiResource('sbpn', DokSbpNController::class);
@@ -301,6 +321,11 @@ Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
 Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
+
+/**
+ * API for penindakan
+ */
+// Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 
 /*
  |--------------------------------------------------------------------------

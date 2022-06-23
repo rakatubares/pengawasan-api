@@ -12,6 +12,7 @@ class DokLkai extends Model
 	use SoftDeletes;
 
 	protected $table = 'dok_lkai';
+	protected $tipe_lkai = 'lkai';
 
 	protected $fillable = [
 		'no_dok',
@@ -71,7 +72,7 @@ class DokLkai extends Model
 			'intelijen'
 		)->where(
 			'object2_type',
-			'lkai'
+			$this->tipe_lkai
 		);
 	}
 

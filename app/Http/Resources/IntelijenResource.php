@@ -24,9 +24,19 @@ class IntelijenResource extends JsonResource
 					$list_dokumen['lkai'] = $lkai;
 					break;
 
+				case 'lkain':
+					$lkain = new DokLkaiResource($this->lkain, 'pdf');
+					$list_dokumen['lkain'] = $lkain;
+					break;
+
 				case 'lppi':
 					$lppi = new DokLppiResource($this->lppi, 'pdf');
 					$list_dokumen['lppi'] = $lppi;
+					break;
+
+				case 'lppin':
+					$lppin = new DokLppiResource($this->lppin, 'pdf');
+					$list_dokumen['lppin'] = $lppin;
 					break;
 
 				case 'nhi':

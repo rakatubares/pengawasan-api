@@ -42,11 +42,13 @@ use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLi;
 use App\Models\DokLkai;
+use App\Models\DokLkaiN;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokLppi;
+use App\Models\DokLppiN;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
 use App\Models\DokNhi;
@@ -75,11 +77,25 @@ trait SwitcherTrait
 			'model' => DokLkai::class,
 			'resource' => DokLkaiResource::class,
 		],
+		'lkain' => [
+			'tipe_dok' => 'LKAI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLkaiN::class,
+			'resource' => DokLkaiResource::class,
+		],
 		'lppi' => [
 			'tipe_dok' => 'LPPI',
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+		],
+		'lppin' => [
+			'tipe_dok' => 'LPPI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppiN::class,
 			'resource' => DokLppiResource::class,
 		],
 		'nhi' => [

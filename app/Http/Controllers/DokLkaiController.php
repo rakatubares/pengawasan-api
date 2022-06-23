@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLkaiResource;
 use App\Http\Resources\DokLkaiTableResource;
-use App\Models\DokLkai;
-use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
 use App\Traits\ConverterTrait;
@@ -23,8 +21,16 @@ class DokLkaiController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'lkai';
+		$this->lppi_type = 'lppi';
+		$this->prepareModel();
+	}
+
+	public function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model_lkai = $this->switchObject($this->doc_type, 'model');
+		$this->model_lppi = $this->switchObject($this->lppi_type, 'model');
 	}
 
 	/*
@@ -40,7 +46,7 @@ class DokLkaiController extends Controller
 	 */
 	public function index()
 	{
-		$all_lkai = DokLkai::orderBy('created_at', 'desc')
+		$all_lkai = $this->model_lkai::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$lkai_list = DokLkaiTableResource::collection($all_lkai);
@@ -55,7 +61,7 @@ class DokLkaiController extends Controller
 	 */
 	public function show($id)
 	{
-		$lkai = new DokLkaiResource(DokLkai::findOrFail($id));
+		$lkai = new DokLkaiResource($this->model_lkai::findOrFail($id));
 		return $lkai;
 	}
 
@@ -67,7 +73,7 @@ class DokLkaiController extends Controller
 	 */
 	public function display($id)
 	{
-		$lppi = new DokLkaiResource(DokLkai::findOrFail($id), 'display');
+		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'display');
 		return $lppi;
 	}
 
@@ -79,7 +85,7 @@ class DokLkaiController extends Controller
 	 */
 	public function form($id)
 	{
-		$lppi = new DokLkaiResource(DokLkai::findOrFail($id), 'form');
+		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'form');
 		return $lppi;
 	}
 
@@ -96,7 +102,7 @@ class DokLkaiController extends Controller
 		$exc = $request->exc;
 		$search = '%' . $src . '%';
 
-		$search_result = DokLkai::where(function ($query) use ($search, $flt) 
+		$search_result = $this->model_lkai::where(function ($query) use ($search, $flt) 
 			{
 				$query->where('no_dok_lengkap', 'like', $search)
 					->when($flt != null, function ($query) use ($flt)
@@ -204,6 +210,10 @@ class DokLkaiController extends Controller
 			'atasan_id' => $request->atasan['user']['user_id'],
 		];
 
+		if ($this->doc_type == 'lkain') {
+			unset($data_lkai['informasi_lain']);
+		}
+
 		if ($state == 'insert') {
 			$data_lkai['agenda_dok'] = $this->agenda_dok;
 			$data_lkai['no_dok_lengkap'] = $no_dok_lengkap;
@@ -228,7 +238,7 @@ class DokLkaiController extends Controller
 		try {
 			// Save data LKAI
 			$data_lkai = $this->prepareData($request, 'insert');
-			$lkai = DokLkai::create($data_lkai);
+			$lkai = $this->model_lkai::create($data_lkai);
 
 			// Create intelijen
 			if ($request->lppi_id == null) {
@@ -241,7 +251,7 @@ class DokLkaiController extends Controller
 			DB::commit();
 
 			// Return created data
-			$lkai_resource = new DokLkaiResource(DokLkai::findOrFail($lkai->id), 'display');
+			$lkai_resource = new DokLkaiResource($this->model_lkai::findOrFail($lkai->id), 'display');
 			return $lkai_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -259,7 +269,7 @@ class DokLkaiController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLkai::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model_lkai, $id);
 
 		if ($is_unpublished) {
 			DB::beginTransaction();
@@ -270,11 +280,11 @@ class DokLkaiController extends Controller
 	
 				// Update data
 				$data_lkai = $this->prepareData($request, 'update');
-				DokLkai::find($id)->update($data_lkai);
+				$this->model_lkai::find($id)->update($data_lkai);
 
 				// Check existing LPPI
-				$intelijen = DokLkai::find($id)->intelijen;
-				$lppi = $intelijen->lppi;
+				$intelijen = $this->model_lkai::find($id)->intelijen;
+				$lppi = $this->lppi_type == 'lppin' ? $intelijen->lppin : $intelijen->lppi;
 
 				if ($request->lppi_id == null) {
 					if ($lppi != null) {
@@ -297,7 +307,7 @@ class DokLkaiController extends Controller
 				DB::commit();
 	
 				// Return data
-				$lkai_resource = new DokLkaiResource(DokLkai::findOrFail($id), 'display');
+				$lkai_resource = new DokLkaiResource($this->model_lkai::findOrFail($id), 'display');
 				return $lkai_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -325,7 +335,7 @@ class DokLkaiController extends Controller
 	 */
 	private function deleteIntel($lkai_id)
 	{
-		$existing_lkai = DokLkai::where('id', $lkai_id);
+		$existing_lkai = $this->model_lkai::where('id', $lkai_id);
 		$existing_intel = $existing_lkai->intelijen;
 		$existing_intel->ikhtisar()->delete();
 		$this->deleteIntelRelation($existing_intel->id, $lkai_id);
@@ -339,7 +349,7 @@ class DokLkaiController extends Controller
 		ObjectRelation::create([
 			'object1_type' => 'intelijen',
 			'object1_id' => $intelijen_id,
-			'object2_type' => 'lkai',
+			'object2_type' => $this->doc_type,
 			'object2_id' => $lkai_id,
 		]);
 	}
@@ -352,7 +362,7 @@ class DokLkaiController extends Controller
 		ObjectRelation::where([
 			'object1_type' => 'intelijen',
 			'object1_id' => $intel_id,
-			'object2_type' => 'lkai',
+			'object2_type' => $this->doc_type,
 			'object2_id' => $lkai_id,
 		])->delete();
 	}
@@ -362,8 +372,9 @@ class DokLkaiController extends Controller
 	 */
 	private function createLinkLppi($lppi_id, $lkai_id)
 	{
-		$lppi = DokLppi::find($lppi_id);
-		$lppi->update(['kode_status' => 111]);
+		$lppi = $this->model_lppi::find($lppi_id);
+		$status_lppi = $this->lppi_type == 'lppin' ? 121 : 111;
+		$lppi->update(['kode_status' => $status_lppi]);
 		$intelijen = $lppi->intelijen;
 		$this->createIntelRelation($intelijen->id, $lkai_id);
 	}
@@ -373,7 +384,7 @@ class DokLkaiController extends Controller
 	 */
 	private function rollbackLppi($lkai_id)
 	{
-		$existing_intel = DokLkai::find($lkai_id)->intelijen; 
+		$existing_intel = $this->model_lkai::find($lkai_id)->intelijen; 
 		$existing_lppi = $existing_intel->lppi;
 		$existing_lppi->update(['kode_status' => 200]);
 		$this->deleteIntelRelation($existing_intel->id, $lkai_id);
@@ -390,16 +401,17 @@ class DokLkaiController extends Controller
 		DB::beginTransaction();
 		try {
 			// Publish LKAI
-			$this->getDocument(DokLkai::class, $id);
+			$this->getDocument($this->model_lkai, $id);
 			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokLkai::class);
+			$number = $this->getNewDocNumber($this->model_lkai);
 			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 			$this->updateDocDate();
 
 			// Change LPPI status
+			$status_lppi = $this->lppi_type == 'lppin' ? 221 : 211;
 			$lppi = $this->doc->intelijen->lppi;
 			if ($lppi != null) {
-				$lppi->update(['kode_status' => 211]);
+				$lppi->update(['kode_status' => $status_lppi]);
 			}
 			
 			DB::commit();
@@ -425,9 +437,9 @@ class DokLkaiController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokLkai::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model_lkai, $id);
 			if ($is_unpublished) {
-				DokLkai::find($id)->delete();
+				$this->model_lkai::find($id)->delete();
 			}
 			
 			DB::commit();

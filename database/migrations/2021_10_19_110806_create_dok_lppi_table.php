@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLppiTable extends Migration
 {
+	public function __construct()
+	{
+		$this->table_name = 'dok_lppi';
+	}
+
 	/**
 	 * Run the migrations.
 	 *
@@ -13,7 +18,7 @@ class CreateDokLppiTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_lppi', function (Blueprint $table) {
+		Schema::create($this->table_name, function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -57,6 +62,6 @@ class CreateDokLppiTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('dok_lppi');
+		Schema::dropIfExists($this->table_name);
 	}
 }

@@ -12,10 +12,11 @@ class DokLppiResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null)
+	public function __construct($resource, $type=null, $doc_type='lppi')
 	{
 		$this->resource = $resource;
 		$this->type = $type;
+		$this->doc_type = $doc_type;
 	}
 
 	/**
@@ -121,7 +122,7 @@ class DokLppiResource extends JsonResource
 		$dokumen = new IntelijenResource($this->intelijen, 'dokumen');
 		$array = [
 			'main' => [
-				'type' => 'lppi',
+				'type' => $this->doc_type,
 				'data' => $lppi
 			],
 			'dokumen' => $dokumen
