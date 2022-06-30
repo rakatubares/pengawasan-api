@@ -21,6 +21,7 @@ use App\Models\DokLkaiN;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokNhi;
+use App\Models\DokNhiN;
 use App\Models\DokPengaman;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
@@ -43,6 +44,7 @@ use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokLkaiObserver;
 use App\Observers\DokLppiObserver;
+use App\Observers\DokNhiNObserver;
 use App\Observers\DokNhiObserver;
 use App\Observers\DokPengamanObserver;
 use App\Observers\DokRiksaObserver;
@@ -89,6 +91,7 @@ class AppServiceProvider extends ServiceProvider
 			'dokumen' => DetailDokumen::class,
 			'item_barang' => DetailBarangItem::class,
 			'nhi' => DokNhi::class,
+			'nhin' => DokNhiN::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
@@ -113,6 +116,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLppi::observe(DokLppiObserver::class);
 		DokLppiN::observe(DokLppiObserver::class);
 		DokNhi::observe(DokNhiObserver::class);
+		DokNhiN::observe(DokNhiNObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokRiksa::observe(DokRiksaObserver::class);
 		DokRiksaBadan::observe(DokRiksaBadanObserver::class);

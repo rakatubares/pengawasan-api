@@ -21,6 +21,7 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokNhiResource;
+use App\Http\Resources\DokNhiNResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokRiksaResource;
@@ -52,6 +53,7 @@ use App\Models\DokLppiN;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
 use App\Models\DokNhi;
+use App\Models\DokNhiN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
@@ -104,6 +106,13 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokNhi::class,
 			'resource' => DokNhiResource::class,
+		],
+		'nhin' => [
+			'tipe_dok' => 'NHI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNhiN::class,
+			'resource' => DokNhiNResource::class,
 		],
 		
 		// Dokumen

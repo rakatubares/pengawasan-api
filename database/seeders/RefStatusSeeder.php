@@ -97,6 +97,14 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
+			[
+				'kode_status' => 122, 
+				'short_status' => 'draft nhin',
+				'uraian_status' => 'Pembuatan draft NHI-N',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
 			[ 
 				'kode_status' => 200, 
 				'short_status' => 'terbit',
@@ -173,6 +181,14 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 221, 
 				'short_status' => 'lkain',
 				'uraian_status' => 'Penerbitan LKAI-N',
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 222, 
+				'short_status' => 'nhin',
+				'uraian_status' => 'Penerbitan NHI-N',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now

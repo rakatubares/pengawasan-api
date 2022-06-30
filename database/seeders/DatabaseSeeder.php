@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
 		// \App\Models\User::factory(10)->create();
 		$this->call([
 			RefStatusSeeder::class,
+			RefNegaraSeeder::class,
+			RefBandaraSeeder::class,
 			RefSatuanSeeder::class,
 			RefKategoriPelanggaranSeeder::class,
 			RefSkemaPenindakanSeeder::class,
@@ -48,6 +50,7 @@ class DatabaseSeeder extends Seeder
 			DokReeksporSeeder::class,
 			DokLppiNSeeder::class,
 			DokLkaiNSeeder::class,
+			DokNhiNSeeder::class,
 			DokSbpNSeeder::class,
 			DokLphpNSeeder::class,
 			DokLpNSeeder::class,

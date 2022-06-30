@@ -7,6 +7,7 @@ use App\Http\Resources\DetailBarangItemWithImagesResource;
 use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DokNhi;
+use App\Models\DokNhiN;
 use App\Models\Lampiran;
 use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
@@ -87,6 +88,15 @@ class DetailBarangItemController extends Controller
 					$parent_object = $header;
 				}
 				$parent_object->object_type = 'barang';
+			} elseif ($doc_type == 'nhin') {
+				if ($header->barang_exim == null) {
+					$barang = DetailBarang::create();
+					$header->update(['id_barang_exim' => $barang->id]);
+					$parent_object = DokNhiN::find($doc_id);
+				} else {
+					$parent_object = $header;
+				}
+				$parent_object->object_type = 'barang';
 			}
 		}
 
@@ -121,7 +131,16 @@ class DetailBarangItemController extends Controller
 					DB::beginTransaction();
 					try {
 						// Insert detail barang
-						$item_barang = $parent_object->objectable->itemBarang()
+						switch ($doc_type) {
+							case 'nhin':
+								$object_barang = $parent_object->barang_exim;
+								break;
+							
+							default:
+								$object_barang = $parent_object->objectable;
+								break;
+						}
+						$item_barang = $object_barang->itemBarang()
 							->create([
 								'uraian_barang' => $request->uraian_barang,
 								'jumlah_barang' => $request->jumlah_barang,
@@ -206,7 +225,16 @@ class DetailBarangItemController extends Controller
 			$parent_object = $this->getParentObject($header, $doc_type, $doc_id);
 
 			// Get data item barang
-			$item_barang = $parent_object->objectable->itemBarang()
+			switch ($doc_type) {
+				case 'nhin':
+					$object_barang = $parent_object->barang_exim;
+					break;
+				
+				default:
+					$object_barang = $parent_object->objectable;
+					break;
+			}
+			$item_barang = $object_barang->itemBarang()
 				->where('detail_barang_items.id', $item_id)
 				->first();
 
@@ -250,7 +278,16 @@ class DetailBarangItemController extends Controller
 				DB::beginTransaction();
 				try {
 					// Update data item barang
-					$parent_object->objectable->itemBarang()
+					switch ($doc_type) {
+						case 'nhin':
+							$object_barang = $parent_object->barang_exim;
+							break;
+						
+						default:
+							$object_barang = $parent_object->objectable;
+							break;
+					}
+					$object_barang->itemBarang()
 						->where('detail_barang_items.id', $item_id)
 						->update([
 							'uraian_barang' => $request->uraian_barang,
@@ -334,8 +371,17 @@ class DetailBarangItemController extends Controller
 				$result = DetailBarangItem::find($item_id)->delete();
 				
 				// Delete NHI object if no item
-				if ($doc_type == 'nhi') {
-					$item_count = DokNhi::find($doc_id)->objectable->itemBarang->count();
+				if (in_array($doc_type, ['nhi', 'nhin'])) {
+					switch ($doc_type) {
+						case 'nhin':
+							$object_barang = $model::find($doc_id)->barang_exim;
+							break;
+						
+						default:
+							$object_barang = $model::find($doc_id)->objectable;
+							break;
+					}
+					$item_count = $object_barang->itemBarang->count();
 					if ($item_count == 0) {
 						$parent_object->objectable->delete();
 					}
