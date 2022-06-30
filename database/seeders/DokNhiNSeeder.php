@@ -2,37 +2,42 @@
 
 namespace Database\Seeders;
 
-use App\Models\DokLkai;
-use App\Models\DokNhi;
+use App\Models\DokLkaiN;
+use App\Models\DokNhiN;
 use App\Models\ObjectRelation;
+use App\Models\RefBandara;
 use App\Models\RefTembusan;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class DokNhiSeeder extends Seeder
+class DokNhiNSeeder extends Seeder
 {
 	use DetailSeederTrait;
 	use SwitcherTrait;
 
-	/**
-	 * Run the database seeds.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$faker = Faker::create();
-		$tipe_surat = $this->switchObject('nhi', 'tipe_dok');
-		$agenda = $this->switchObject('nhi', 'agenda');
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Faker::create();
+		$tipe_surat = $this->switchObject('nhin', 'tipe_dok');
+		$agenda = $this->switchObject('nhin', 'agenda');
 
 		// Get LKAI ids
-		$max_lkai_id = DokLkai::max('id');
-		$available_lkai_id = range(1, $max_lkai_id);
+		$max_lkain_id = DokLkaiN::max('id');
+		$available_lkain_id = range(1, $max_lkain_id);
+
+		// Get airport codes
+		$airports = RefBandara::select('iata_code')->where('iata_code', '!=', 'CGK')->get()->all();
+		$airports_code = array_map(function($d) {return $d['iata_code'];}, $airports);
 
 		for ($d=1; $d < 11; $d++) { 
-			$max_nhi = DokNhi::max('no_dok');
-			$crn_nhi = $max_nhi + 1;
+			$max_nhin = DokNhiN::max('no_dok');
+			$crn_nhin = $max_nhin + 1;
 
 			// Randomize Plh
 			$plh_pejabat = $faker->boolean();
@@ -42,12 +47,12 @@ class DokNhiSeeder extends Seeder
 				$pejabat_id = 3;
 			}
 
-			// Create NHI header data
-			$data_nhi = [
-				'no_dok' => $crn_nhi,
+			// Create NHI-N header data
+			$data_nhin = [
+				'no_dok' => $crn_nhin,
 				'agenda_dok' => $agenda,
 				'thn_dok' => date("Y"),
-				'no_dok_lengkap' => $tipe_surat . '-' . $crn_nhi . $agenda . date("Y"),
+				'no_dok_lengkap' => $tipe_surat . '-' . $crn_nhin . $agenda . date("Y"),
 				'tanggal_dokumen' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'sifat' => $faker->randomElement(['segera', 'sangat segera']),
 				'klasifikasi' => $faker->randomElement(['rahasia', 'sangat rahasia']),
@@ -67,8 +72,11 @@ class DokNhiSeeder extends Seeder
 			];
 
 			// Create kegiatan data
-			$kegiatan = $faker->randomElement(['exim', 'bkc', 'tertentu']);
+			$kegiatan = $faker->randomElement(['exim', 'sarkut', 'orang']);
 			if ($kegiatan == 'exim') {
+				// Create barang
+				$barang = $this->createBarang();
+
 				$data_exim = [
 					'flag_exim' => true,
 					'jenis_dok_exim' => $faker->randomElement(['PIB', 'PEB']),
@@ -81,62 +89,56 @@ class DokNhiSeeder extends Seeder
 					'merek_koli_exim' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
 					'importir_ppjk' => $faker->company(),
 					'npwp' => $faker->regexify('[0-9]{15}'),
+					'id_barang_exim' => $barang->id,
 					'data_lain_exim' => $faker->text(),
 				];
 
-				$data_nhi = array_merge($data_nhi, $data_exim);
-			} elseif ($kegiatan == 'bkc') {
-				$data_bkc = [
-					'flag_bkc' => true,
-					'tempat_penimbunan' => $faker->address(),
-					'penyalur' => $faker->company(),
-					'tempat_penjualan' => $faker->address(),
-					'nppbkc' => $faker->regexify('[0-9]{15}'),
-					'nama_sarkut_bkc' => $faker->company(),
-					'no_flight_trayek_bkc' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'data_lain_bkc' => $faker->text(),
+				$data_nhin = array_merge($data_nhin, $data_exim);
+			} elseif ($kegiatan == 'sarkut') {
+				$data_sarkut = [
+					'flag_sarkut' => true,
+					'nama_sarkut' => $this->faker->company(),
+					'jenis_sarkut' => 'Pesawat',
+					'no_flight_trayek_sarkut' => $this->faker->regexify('[A-Z]{2}[0-9]{3}'),
+					'pelabuhan_asal_sarkut' => $faker->randomElement($airports_code),
+					'pelabuhan_tujuan_sarkut' => 'CGK',
+					'imo_mmsi_sarkut' => null,
+					'data_lain_sarkut' => $faker->text(),
 				];
 
-				$data_nhi = array_merge($data_nhi, $data_bkc);
-			} elseif ($kegiatan == 'tertentu') {
-				$data_tertentu = [
-					'flag_tertentu' => true,
-					'jenis_dok_tertentu' => $faker->randomElement(['PIB', 'PEB']),
-					'nomor_dok_tertentu' => $faker->numberBetween(1, 999999),
-					'tanggal_dok_tertentu' => $faker->date(),
-					'nama_sarkut_tertentu' => $faker->company(),
-					'no_flight_trayek_tertentu' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'nomor_awb_tertentu' => $faker->regexify('[A-Z]{3}[0-9]{10}'),
-					'tanggal_awb_tertentu' => $faker->date(),
-					'merek_koli_tertentu' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'orang_badan_hukum' => $faker->company(),
-					'data_lain_tertentu' => $faker->text(),
+				$data_nhin = array_merge($data_nhin, $data_sarkut);
+			} elseif ($kegiatan == 'orang') {
+				$data_orang = [
+					'flag_orang' => true,
+					'entitas_id' => $this->faker->numberBetween(1, 100),
+					'flight_voyage_orang' => $this->faker->regexify('[A-Z]{2}[0-9]{3}'),
+					'pelabuhan_asal_orang' => $faker->randomElement($airports_code),
+					'pelabuhan_tujuan_orang' => 'CGK',
+					'waktu_berangkat_orang' => $faker->dateTime(),
+					'waktu_datang_orang' => $faker->dateTime(),
+					'data_lain_orang' => $faker->text()
 				];
 
-				$data_nhi = array_merge($data_nhi, $data_tertentu);
+				$data_nhin = array_merge($data_nhin, $data_orang);
 			}
-
+			
 			// Write NHI to database
-			$nhi = DokNhi::create($data_nhi);
+			$nhin = DokNhiN::create($data_nhin);
 
-			// Get data LKAI
-			$lkai_id = $faker->randomElement($available_lkai_id);
-			$key = array_search($lkai_id, $available_lkai_id);
-			unset($available_lkai_id[$key]);
-			$lkai = DokLkai::find($lkai_id);
-			$lkai->update(['kode_status' => 212]);
+			// Get data LKAI-N
+			$lkain_id = $faker->randomElement($available_lkain_id);
+			$key = array_search($lkain_id, $available_lkain_id);
+			unset($available_lkain_id[$key]);
+			$lkain = DokLkaiN::find($lkain_id);
+			$lkain->update(['kode_status' => 222]);
 
 			// Create relation Intelijen - NHI
 			ObjectRelation::create([
 				'object1_type' => 'intelijen',
-				'object1_id' => $lkai->intelijen->id,
-				'object2_type' => 'nhi',
-				'object2_id' => $nhi->id,
+				'object1_id' => $lkain->intelijen->id,
+				'object2_type' => 'nhin',
+				'object2_id' => $nhin->id,
 			]);
-
-			// Create barang
-			$barang = $this->createBarang();
-			$nhi->update(['barang_id' => $barang->id]);
 
 			// Create tembusan
 			$cc_sample = ['Direktur P2', 'Kasubdit Intelijen', 'Kepala Kantor', 'PDTA', 'Kabid PFPC'];
@@ -155,8 +157,8 @@ class DokNhiSeeder extends Seeder
 				}
 
 				// Write tembusan
-				$nhi->tembusan()->attach([$cc_data->id => ['no_urut' => $x]]);
+				$nhin->tembusan()->attach([$cc_data->id => ['no_urut' => $x]]);
 			} 
 		}
-	}
+    }
 }

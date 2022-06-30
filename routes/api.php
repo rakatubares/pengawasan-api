@@ -11,7 +11,9 @@ use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
+use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\PenindakanController;
+use App\Http\Controllers\RefBandaraController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
@@ -97,6 +99,15 @@ Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
 Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
 Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
 Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
+
+/**
+ * API for NHI-N
+ */
+Route::apiResource('nhin', DokNhiNController::class);
+Route::get('/nhin/{nhin_id}/display', [DokNhiNController::class, 'display']);
+Route::get('/nhin/{nhin_id}/form', [DokNhiNController::class, 'form']);
+Route::get('/nhin/{nhin_id}/objek', [DokNhiNController::class, 'objek']);
+Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
 
 /**
  * API for penindakan
@@ -208,6 +219,12 @@ Route::post('satuan/search', [RefSatuanController::class, 'search']);
 Route::get('kategori', [RefKategoriBarangController::class, 'index']);
 Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
 Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
+
+/**
+ * API for Bandara
+ */
+Route::get('bandara/{code}', [RefBandaraController::class, 'show']);
+Route::post('bandara/search', [RefBandaraController::class, 'search']);
 
 /**
  * API for Klasifikasi Kepercayaan

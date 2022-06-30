@@ -11,11 +11,13 @@ use App\Models\DokLkaiN;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokNhi;
+use App\Models\DokNhiN;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokLkaiObserver;
 use App\Observers\DokLppiObserver;
+use App\Observers\DokNhiNObserver;
 use App\Observers\DokNhiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
 			'barang' => DetailBarang::class,
 			'item_barang' => DetailBarangItem::class,
 			'nhi' => DokNhi::class,
+			'nhin' => DokNhiN::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
@@ -61,5 +64,6 @@ class AppServiceProvider extends ServiceProvider
 		DokLppi::observe(DokLppiObserver::class);
 		DokLppiN::observe(DokLppiObserver::class);
 		DokNhi::observe(DokNhiObserver::class);
+		DokNhiN::observe(DokNhiNObserver::class);
     }
 }

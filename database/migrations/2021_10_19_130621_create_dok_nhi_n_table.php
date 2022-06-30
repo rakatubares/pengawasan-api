@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDokNhiTable extends Migration
+class CreateDokNhiNTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDokNhiTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_nhi', function (Blueprint $table) {
+		Schema::create('dok_nhin', function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -38,27 +38,24 @@ class CreateDokNhiTable extends Migration
 			$table->string('merek_koli_exim')->nullable();
 			$table->string('importir_ppjk')->nullable();
 			$table->string('npwp')->nullable();
+			$table->integer('id_barang_exim')->nullable()->index();
 			$table->text('data_lain_exim')->nullable();
-			$table->boolean('flag_bkc')->default(false);
-			$table->string('tempat_penimbunan')->nullable();
-			$table->string('penyalur')->nullable();
-			$table->string('tempat_penjualan')->nullable();
-			$table->string('nppbkc')->nullable();
-			$table->string('nama_sarkut_bkc')->nullable();
-			$table->string('no_flight_trayek_bkc')->nullable();
-			$table->text('data_lain_bkc')->nullable();
-			$table->boolean('flag_tertentu')->default(false);
-			$table->string('jenis_dok_tertentu')->nullable();
-			$table->string('nomor_dok_tertentu')->nullable();
-			$table->date('tanggal_dok_tertentu')->nullable();
-			$table->string('nama_sarkut_tertentu')->nullable();
-			$table->string('no_flight_trayek_tertentu')->nullable();
-			$table->string('nomor_awb_tertentu')->nullable();
-			$table->date('tanggal_awb_tertentu')->nullable();
-			$table->string('merek_koli_tertentu')->nullable();
-			$table->string('orang_badan_hukum')->nullable();
-			$table->text('data_lain_tertentu')->nullable();
-			$table->integer('barang_id')->nullable()->index();
+			$table->boolean('flag_sarkut')->default(false);
+			$table->string('nama_sarkut')->nullable();
+			$table->string('jenis_sarkut')->nullable();
+			$table->string('no_flight_trayek_sarkut')->nullable();
+			$table->string('pelabuhan_asal_sarkut')->nullable();
+			$table->string('pelabuhan_tujuan_sarkut')->nullable();
+			$table->string('imo_mmsi_sarkut')->nullable();
+			$table->text('data_lain_sarkut')->nullable();
+			$table->boolean('flag_orang')->default(false);
+			$table->string('entitas_id')->nullable()->index();
+			$table->string('flight_voyage_orang')->nullable();
+			$table->string('pelabuhan_asal_orang')->nullable();
+			$table->string('pelabuhan_tujuan_orang')->nullable();
+			$table->dateTime('waktu_berangkat_orang')->nullable();
+			$table->dateTime('waktu_datang_orang')->nullable();
+			$table->text('data_lain_orang')->nullable();
 			$table->text('indikasi')->nullable();
 			$table->string('kode_jabatan')->index();
 			$table->boolean('plh_pejabat')->nullable()->index();
@@ -79,6 +76,6 @@ class CreateDokNhiTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('dok_nhi');
+		Schema::dropIfExists('dok_nhin');
 	}
 }

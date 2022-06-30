@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokNhiResource;
 use App\Http\Resources\DokNhiTableResource;
-use App\Models\DokLkai;
-use App\Models\DokNhi;
 use App\Models\ObjectRelation;
 use App\Traits\ConverterTrait;
 use App\Traits\DokumenTrait;
@@ -22,8 +19,17 @@ class DokNhiController extends Controller
 	public function __construct()
 	{
 		$this->doc_type = 'nhi';
+		$this->lkai_type = 'lkai';
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		$this->model = $this->switchObject($this->doc_type, 'model');
+		$this->resource = $this->switchObject($this->doc_type, 'resource');
+		$this->lkai_model = $this->switchObject($this->lkai_type, 'model');
 	}
 
 	/*
@@ -39,7 +45,7 @@ class DokNhiController extends Controller
 	 */
 	public function index()
 	{
-		$all_nhi = DokNhi::orderBy('created_at', 'desc')
+		$all_nhi = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
 		$nhi_list = DokNhiTableResource::collection($all_nhi);
@@ -54,8 +60,8 @@ class DokNhiController extends Controller
 	 */
 	public function show($id)
 	{
-		$lppi = new DokNhiResource(DokNhi::findOrFail($id));
-		return $lppi;
+		$nhi = new $this->resource($this->model::findOrFail($id));
+		return $nhi;
 	}
 
 	/**
@@ -66,8 +72,8 @@ class DokNhiController extends Controller
 	 */
 	public function display($id)
 	{
-		$lppi = new DokNhiResource(DokNhi::findOrFail($id), 'display');
-		return $lppi;
+		$nhi = new $this->resource($this->model::findOrFail($id), 'display');
+		return $nhi;
 	}
 
 	/**
@@ -78,7 +84,7 @@ class DokNhiController extends Controller
 	 */
 	public function form($id)
 	{
-		$nhi = new DokNhiResource(DokNhi::findOrFail($id), 'form');
+		$nhi = new $this->resource($this->model::findOrFail($id), 'form');
 		return $nhi;
 	}
 
@@ -89,7 +95,7 @@ class DokNhiController extends Controller
 	 */
 	public function objek($id)
 	{
-		$objek = new DokNhiResource(DokNhi::find($id), 'objek');
+		$objek = new $this->resource($this->model::find($id), 'objek');
 		return $objek;
 	}
 
@@ -104,7 +110,7 @@ class DokNhiController extends Controller
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'lkai_id' => 'integer',
@@ -131,7 +137,7 @@ class DokNhiController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 		$waktu_indikasi = $this->dateFromText($request->waktu_indikasi, 'Y-m-d H:i:s');
@@ -209,22 +215,23 @@ class DokNhiController extends Controller
 		try {
 			// Save data NHI
 			$data_nhi = $this->prepareData($request, 'insert');
-			$nhi = DokNhi::create($data_nhi);
+			$nhi = $this->model::create($data_nhi);
 
 			// Save CC
 			$cc_list = array_filter($request->tembusan, 'strlen');
 			if (sizeof($cc_list) > 0) {
-				app(TembusanController::class)->setCc(DokNhi::class, $nhi->id, $cc_list);
+				app(TembusanController::class)->setCc($this->model, $nhi->id, $cc_list);
 			}
 
 			// Link with intelijen
-			$this->createLinkLkai($request->lkai_id, $nhi->id);
+			$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
+			$this->createLinkLkai($lkai_id, $nhi->id);
 			
 			// Commit store query
 			DB::commit();
 
 			// Return created data
-			$nhi_resource = new DokNhiResource(DokNhi::find($nhi->id), 'display');
+			$nhi_resource = new $this->resource($this->model::find($nhi->id), 'display');
 			return $nhi_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -242,7 +249,7 @@ class DokNhiController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokNhi::class, $id);
+		$is_unpublished = $this->checkUnpublished($this->model, $id);
 
 		if ($is_unpublished) {
 			DB::beginTransaction();
@@ -253,26 +260,27 @@ class DokNhiController extends Controller
 	
 				// Update data
 				$data_nhi = $this->prepareData($request, 'update');
-				DokNhi::find($id)->update($data_nhi);
+				$this->model::find($id)->update($data_nhi);
 
 				// Update CC
 				$cc_list = array_filter($request->tembusan, 'strlen');
-				app(TembusanController::class)->setCc(DokNhi::class, $id, $cc_list);
+				app(TembusanController::class)->setCc($this->model, $id, $cc_list);
 
 				// Check existing LKAI
-				$intelijen = DokNhi::find($id)->intelijen;
-				$lkai = $intelijen->lkai;
+				$intelijen = $this->model::find($id)->intelijen;
+				$lkai = $this->lkai_type == 'lkain' ? $intelijen->lkain : $intelijen->lkai;
+				$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
 
-				if ($request->lkai_id != $lkai->id) {
+				if ($lkai_id != $lkai->id) {
 					$this->rollbackLkai($id);
-					$this->createLinkLkai($request->lkai_id, $id);
+					$this->createLinkLkai($lkai_id, $id);
 				}
 
 				// Commit query
 				DB::commit();
 	
 				// Return data
-				$nhi_resource = new DokNhiResource(DokNhi::findOrFail($id), 'display');
+				$nhi_resource = new $this->resource($this->model::findOrFail($id), 'display');
 				return $nhi_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -290,8 +298,9 @@ class DokNhiController extends Controller
 	 */
 	private function createLinkLkai($lkai_id, $nhi_id)
 	{
-		$lkai = DokLkai::find($lkai_id);
-		$lkai->update(['kode_status' => 112]);
+		$lkai = $this->lkai_model::find($lkai_id);
+		$status_lkai = $this->doc_type == 'nhin' ? 122 : 112;
+		$lkai->update(['kode_status' => $status_lkai]);
 		$intelijen = $lkai->intelijen;
 		$this->createIntelRelation($intelijen->id, $nhi_id);
 	}
@@ -301,7 +310,7 @@ class DokNhiController extends Controller
 	 */
 	private function rollbackLkai($nhi_id)
 	{
-		$existing_intel = DokNhi::find($nhi_id)->intelijen; 
+		$existing_intel = $this->model::find($nhi_id)->intelijen; 
 		$existing_lkai = $existing_intel->lkai;
 		$existing_lkai->update(['kode_status' => 200]);
 		$this->deleteIntelRelation($existing_intel->id, $nhi_id);
@@ -315,7 +324,7 @@ class DokNhiController extends Controller
 		ObjectRelation::create([
 			'object1_type' => 'intelijen',
 			'object1_id' => $intelijen_id,
-			'object2_type' => 'nhi',
+			'object2_type' => $this->doc_type,
 			'object2_id' => $lkai_id,
 		]);
 	}
@@ -328,7 +337,7 @@ class DokNhiController extends Controller
 		ObjectRelation::where([
 			'object1_type' => 'intelijen',
 			'object1_id' => $intelijen_id,
-			'object2_type' => 'nhi',
+			'object2_type' => $this->doc_type,
 			'object2_id' => $lkai_id,
 		])->delete();
 	}
@@ -344,16 +353,17 @@ class DokNhiController extends Controller
 		DB::beginTransaction();
 		try {
 			// Publish NHI
-			$this->getDocument(DokNhi::class, $id);
+			$this->getDocument($this->model, $id);
 			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokNhi::class);
+			$number = $this->getNewDocNumber($this->model);
 			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
 			$this->updateDocDate();
 
 			// Change LKAI status
-			$lkai = $this->doc->intelijen->lkai;
+			$lkai = $this->doc_type == 'nhin' ? $this->doc->intelijen->lkain : $this->doc->intelijen->lkai;
+			$status_lkai = $this->doc_type == 'nhin' ? 222 : 212;
 			if ($lkai != null) {
-				$lkai->update(['kode_status' => 212]);
+				$lkai->update(['kode_status' => $status_lkai]);
 			}
 			
 			DB::commit();
@@ -379,9 +389,9 @@ class DokNhiController extends Controller
 	{
 		DB::beginTransaction();
 		try {
-			$is_unpublished = $this->checkUnpublished(DokNhi::class, $id);
+			$is_unpublished = $this->checkUnpublished($this->model, $id);
 			if ($is_unpublished) {
-				DokNhi::find($id)->delete();
+				$this->model::find($id)->delete();
 			}
 			
 			DB::commit();

@@ -142,6 +142,27 @@ class Intelijen extends Model
 	}
 
 	/**
+	 * NHI-N
+	 */
+	public function nhin()
+	{
+		return $this->hasOneThrough(
+			DokNhiN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'intelijen'
+		)->where(
+			'object2_type',
+			'nhin'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

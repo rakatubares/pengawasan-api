@@ -37,6 +37,7 @@ class TembusanController extends Controller
 		$existing_cc = $this->getExistingCc($doc_model, $doc_id);
 
 		// Attach new CC
+		$cc_ids = [];
 		foreach ($cc_list as $key => $cc) {
 			try {
 				$id = $cc_refs[strtolower($cc)];
