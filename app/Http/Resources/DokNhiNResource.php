@@ -75,7 +75,7 @@ class DokNhiNResource extends JsonResource
 				? $this->waktu_indikasi->format('d-m-Y H:i:s') 
 				: null,
 			'zona_waktu' => $this->zona_waktu,
-			'kantor' => $this->kantor,
+			'kantor_bc' => new RefKantorBCResource($this->kantor_bc),
 			'flag_exim' => $this->flag_exim,
 			'jenis_dok_exim' => $this->jenis_dok_exim,
 			'nomor_dok_exim' => $this->nomor_dok_exim,

@@ -78,7 +78,7 @@ class DokNhiNController extends DokNhiController
 			'tempat_indikasi' => $request->tempat_indikasi,
 			'waktu_indikasi' => $waktu_indikasi,
 			'zona_waktu' => $request->zona_waktu,
-			'kantor' => $request->kantor,
+			'kd_kantor' => $request->kantor_bc['kd_kantor'],
 			'flag_exim' => $request->flag_exim,
 			'jenis_dok_exim' => $request->jenis_dok_exim,
 			'nomor_dok_exim' => $request->nomor_dok_exim,

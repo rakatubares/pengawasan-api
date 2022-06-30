@@ -26,7 +26,7 @@ class CreateDokNhiNTable extends Migration
 			$table->string('tempat_indikasi')->nullable();
 			$table->dateTime('waktu_indikasi')->nullable();
 			$table->enum('zona_waktu',['WIB', 'WITA', 'WIT']);
-			$table->string('kantor')->nullable();
+			$table->string('kd_kantor')->nullable();
 			$table->boolean('flag_exim')->default(false);
 			$table->string('jenis_dok_exim')->nullable();
 			$table->string('nomor_dok_exim')->nullable();
