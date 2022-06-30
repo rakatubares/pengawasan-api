@@ -16,7 +16,13 @@ class DatabaseSeeder extends Seeder
 		// \App\Models\User::factory(10)->create();
 		$this->call([
 			RefStatusSeeder::class,
+			RefNegaraSeeder::class,
+			RefBandaraSeeder::class,
 			RefSatuanSeeder::class,
+			RefKemasanSeeder::class,
+			RefKategoriBarangSeeder::class,
+			RefTipeKantorSeeder::class,
+			RefKantorBCSeeder::class,
 			RefLokasiSeeder::class,
 			RefJabatanSeeder::class,
 			RefUserCacheSeeder::class,
