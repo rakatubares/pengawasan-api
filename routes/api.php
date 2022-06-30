@@ -37,6 +37,7 @@ use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefBandaraController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
+use App\Http\Controllers\RefKantorBCController;
 use App\Http\Controllers\RefKategoriPelanggaranController;
 use App\Http\Controllers\RefKategoriBarangController;
 use App\Http\Controllers\RefKemasanController;
@@ -437,6 +438,12 @@ Route::apiResource('penindakan', RefSkemaPenindakanController::class);
 Route::get('lokasi', [RefLokasiController::class, 'index']);
 
 /**
+ * API for Kantor BC
+ */
+Route::get('kantor/kode/{kd_kantor}', [RefKantorBCController::class, 'getDataByCode']);
+Route::post('kantor/search', [RefKantorBCController::class, 'search']);
+
+/**
  * API for Kemasan
  */
 Route::get('kemasan/{id}', [RefKemasanController::class, 'show']);
@@ -465,7 +472,6 @@ Route::post('bandara/search', [RefBandaraController::class, 'search']);
  * API for Klasifikasi Kepercayaan
  */
 Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
-
 
 /**
  * API for Klasifikasi Validitas

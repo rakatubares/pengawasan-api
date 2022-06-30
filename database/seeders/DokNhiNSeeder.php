@@ -6,6 +6,7 @@ use App\Models\DokLkaiN;
 use App\Models\DokNhiN;
 use App\Models\ObjectRelation;
 use App\Models\RefBandara;
+use App\Models\RefKantorBC;
 use App\Models\RefTembusan;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
@@ -31,6 +32,10 @@ class DokNhiNSeeder extends Seeder
 		$max_lkain_id = DokLkaiN::max('id');
 		$available_lkain_id = range(1, $max_lkain_id);
 
+		// Get office codes
+		$offices = RefKantorBC::select('kd_kantor')->where('active', '!=', 0)->get()->all();
+		$offices_code = array_map(function($d) {return $d['kd_kantor'];}, $offices);
+
 		// Get airport codes
 		$airports = RefBandara::select('iata_code')->where('iata_code', '!=', 'CGK')->get()->all();
 		$airports_code = array_map(function($d) {return $d['iata_code'];}, $airports);
@@ -38,6 +43,10 @@ class DokNhiNSeeder extends Seeder
 		for ($d=1; $d < 11; $d++) { 
 			$max_nhin = DokNhiN::max('no_dok');
 			$crn_nhin = $max_nhin + 1;
+
+			// Randomize Office
+			$is_soetta = $faker->boolean();
+			$kd_kantor = $is_soetta ? '050100' : $faker->randomElement($offices_code);
 
 			// Randomize Plh
 			$plh_pejabat = $faker->boolean();
@@ -63,7 +72,7 @@ class DokNhiNSeeder extends Seeder
 				'tempat_indikasi' => $faker->address(),
 				'waktu_indikasi' => $faker->dateTime(),
 				'zona_waktu' => 'WIB',
-				'kantor' => 'KPU Bea dan Cukai Tipe C Soekarno Hatta',
+				'kd_kantor' => $kd_kantor,
 				'indikasi' => $faker->text(),
 				'kode_jabatan' => 'bd.05',
 				'plh_pejabat' => $plh_pejabat,

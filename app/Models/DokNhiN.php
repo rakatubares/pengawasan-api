@@ -25,7 +25,7 @@ class DokNhiN extends Model
 		'tempat_indikasi',
 		'waktu_indikasi',
 		'zona_waktu',
-		'kantor',
+		'kd_kantor',
 		'flag_exim',
 		'jenis_dok_exim',
 		'nomor_dok_exim',
@@ -87,6 +87,14 @@ class DokNhiN extends Model
 			'object2_type',
 			'nhin'
 		);
+	}
+
+	/**
+	 * Detail kantor
+	 */
+	public function kantor_bc()
+	{
+		return $this->belongsTo(RefKantorBC::class, 'kd_kantor', 'kd_kantor');
 	}
 
 	/**
