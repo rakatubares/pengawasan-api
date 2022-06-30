@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
 			RefSatuanSeeder::class,
 			RefKemasanSeeder::class,
 			RefKategoriBarangSeeder::class,
+			RefTipeKantorSeeder::class,
+			RefKantorBCSeeder::class,
 			RefLokasiSeeder::class,
 			RefKepercayaanSumberSeeder::class,
 			RefValiditasInformasiSeeder::class,
