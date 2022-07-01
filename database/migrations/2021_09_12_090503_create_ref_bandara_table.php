@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailBarangTable extends Migration
+class CreateRefBandaraTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateDetailBarangTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_barang', function (Blueprint $table) {
+        Schema::create('ref_bandara', function (Blueprint $table) {
             $table->id();
-			$table->integer('jumlah_kemasan')->nullable();
-			$table->integer('kemasan_id')->nullable()->index();
-			$table->string('pemilik_id')->nullable()->index();
+			$table->string('country')->index();
+			$table->string('iata_code')->unique();
+			$table->string('airport_name')->index();
+			$table->string('municipality');
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-            $table->index('created_at');
-			$table->index('updated_at');
 			$table->index('deleted_at');
         });
     }
@@ -33,6 +32,6 @@ class CreateDetailBarangTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_barang');
+        Schema::dropIfExists('ref_bandara');
     }
 }

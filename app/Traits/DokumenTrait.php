@@ -157,6 +157,12 @@ trait DokumenTrait
 		return $update_result;
 	}
 
+	private function updateDocDate()
+	{
+		$this->doc->tanggal_dokumen = $this->tanggal;
+		$this->doc->save();
+	}
+
 	private function datePenindakan($model, $doc_id)
 	{
 		$doc = $model::find($doc_id);
@@ -286,9 +292,13 @@ trait DokumenTrait
 	 */
 	private function prepareDataPenindakan(Request $request)
 	{
+		$grup_lokasi_id = array_key_exists('grup_lokasi', $request->penindakan) ? $request->penindakan['grup_lokasi']['id'] : null;
+		$lokasi_penindakan = array_key_exists('lokasi_penindakan', $request->penindakan) ? $request->penindakan['lokasi_penindakan'] : null;
+
 		$data_penindakan = [
 			'sprint_id' => $request->penindakan['sprint']['id'],
-			'lokasi_penindakan' => $request->penindakan['lokasi_penindakan'],
+			'grup_lokasi_id' => $grup_lokasi_id,
+			'lokasi_penindakan' => $lokasi_penindakan,
 			'saksi_id' => $request->penindakan['saksi']['id'],
 			'petugas1_id' => $request->penindakan['petugas1']['user_id'],
 			'petugas2_id' => $request->penindakan['petugas2']

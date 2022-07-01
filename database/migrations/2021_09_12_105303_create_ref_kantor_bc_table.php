@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefSatuanTable extends Migration
+class CreateRefKantorBCTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,15 +13,16 @@ class CreateRefSatuanTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('ref_satuan', function (Blueprint $table) {
+		Schema::create('ref_kantor_bc', function (Blueprint $table) {
 			$table->id();
-			$table->string('kode_satuan')->unique()->index();
-			$table->string('uraian_satuan')->index();
-			$table->string('grup_satuan')->nullable()->index();
+			$table->integer('tipe')->nullable()->index();
+			$table->integer('level')->nullable()->index();
+			$table->string('parent')->nullable()->index();
+			$table->string('kd_kantor')->index();
+			$table->string('nama_kantor')->index();
+			$table->boolean('active')->index()->default(true);
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('created_at');
-			$table->index('updated_at');
 			$table->index('deleted_at');
 		});
 	}
@@ -33,6 +34,6 @@ class CreateRefSatuanTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('ref_satuan');
+		Schema::dropIfExists('ref_kantor_bc');
 	}
 }
