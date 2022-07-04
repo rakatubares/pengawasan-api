@@ -277,7 +277,7 @@ class DokSbpController extends Controller
 				$this->updatePenindakan($request);
 				$sbp = $this->model::find($id);
 				$penindakan = $sbp->penindakan;
-				if ($penindakan->object_type = 'orang') {
+				if ($penindakan->object_type == 'orang') {
 					$penindakan->update(['object_id' => $request->penindakan['saksi']['id']]);
 				}
 
