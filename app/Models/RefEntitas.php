@@ -13,15 +13,19 @@ class RefEntitas extends Model
 
 	protected $fillable = [
 		'nama',
+		'alias',
 		'jenis_kelamin',
 		'tempat_lahir',
 		'tanggal_lahir',
-		'warga_negara',
+		'kd_warga_negara',
 		'agama',
 		'jenis_identitas',
 		'nomor_identitas',
+		'penerbit_identitas',
+		'tempat_identitas_terbit',
+		'alamat_identitas',
+		'alamat_tinggal',
 		'pekerjaan',
-		'alamat',
 		'nomor_telepon',
 		'email',
 	];
@@ -29,4 +33,12 @@ class RefEntitas extends Model
 	protected $casts = [
 		'tanggal_lahir' => 'date'
 	];
+
+	/**
+	 * Detail kewarganegaraan
+	 */
+	public function warga_negara()
+	{
+		return $this->belongsTo(RefNegara::class, 'kd_warga_negara', 'kode_2');
+	}
 }
