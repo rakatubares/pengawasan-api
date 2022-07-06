@@ -9,6 +9,7 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefLokasiController;
+use App\Http\Controllers\RefNegaraController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
@@ -115,6 +116,12 @@ Route::apiResource('jabatan', RefJabatanController::class);
  * API for Grup Lokasi
  */
 Route::get('lokasi', [RefLokasiController::class, 'index']);
+
+/**
+ * API for Negara
+ */
+Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
+Route::post('negara/search', [RefNegaraController::class, 'search']);
 
 /**
  * API for User

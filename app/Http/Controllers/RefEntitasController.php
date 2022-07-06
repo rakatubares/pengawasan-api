@@ -5,24 +5,33 @@ namespace App\Http\Controllers;
 use App\Http\Resources\RefEntitasResource;
 use App\Models\RefEntitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RefEntitasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$entitas = new RefEntitasResource(RefEntitas::find($id));
+		return $entitas;
+	}
 
 	/**
 	 * Display resource based on search query
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\Response
 	 */
 	public function search(Request $request)
 	{
@@ -36,78 +45,98 @@ class RefEntitasController extends Controller
 		return $search_list;
 	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
+	/*
+	 |--------------------------------------------------------------------------
+	 | Data modify functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Validate request
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	public function validateData(Request $request)
+	{
+		$request->validate([
 			'nama' => 'required',
 			'jenis_identitas' => 'required',
 			'nomor_identitas' => 'required'
 		]);
+	}
 
-		$insert_result = RefEntitas::create([
-			'jenis_entitas' => 'perorangan',
+	/**
+	 * Prepare data from request to array
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	public function prepareData(Request $request)
+	{
+		$data_entitas = [
 			'nama' => $request->nama,
+			'alias' => $request->alias,
 			'jenis_kelamin' => $request->jenis_kelamin,
+			'tempat_lahir' => $request->tempat_lahir,
 			'tanggal_lahir' => $request->tanggal_lahir,
-			'warga_negara' => $request->warga_negara,
+			'kd_warga_negara' => $request->warga_negara['kode_2'],
+			'agama' => $request->agama,
 			'jenis_identitas' => $request->jenis_identitas,
+			'penerbit_identitas' => $request->penerbit_identitas,
+			'tempat_identitas_terbit' => $request->tempat_identitas_terbit,
+			'alamat' => $request->alamat,
+			'alamat_tinggal' => $request->alamat_tinggal,
 			'nomor_identitas' => $request->nomor_identitas,
 			'pekerjaan' => $request->pekerjaan,
-			'alamat' => $request->alamat,
-		]);
+			'nomor_telepon' => $request->nomor_telepon,
+			'email' => $request->email
+		];
 
-		return $insert_result;
-    }
+		return $data_entitas;
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $entitas = new RefEntitasResource(RefEntitas::find($id));
-		return $entitas;
-    }
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		$this->validateData($request);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+		DB::beginTransaction();
+		try {
+			$data_entitas = $this->prepareData($request);
+			$insert_result = RefEntitas::create($data_entitas);
+			DB::commit();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+			return new RefEntitasResource(RefEntitas::find($insert_result->id));
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		$this->validateData($request);
+
+		DB::beginTransaction();
+		try {
+			$data_entitas = $this->prepareData($request);
+			RefEntitas::find($id)->update($data_entitas);
+			DB::commit();
+			
+			return new RefEntitasResource(RefEntitas::find($id));
+		} catch (\Throwable $th) {
+			DB::rollBack();
+		}
+	}
 }

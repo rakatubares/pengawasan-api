@@ -12,18 +12,33 @@ class RefEntitas extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'jenis_entitas',
 		'nama',
+		'alias',
 		'jenis_kelamin',
+		'tempat_lahir',
 		'tanggal_lahir',
-		'warga_negara',
+		'kd_warga_negara',
+		'agama',
 		'jenis_identitas',
 		'nomor_identitas',
+		'penerbit_identitas',
+		'tempat_identitas_terbit',
+		'alamat_identitas',
+		'alamat_tinggal',
 		'pekerjaan',
-		'alamat',
+		'nomor_telepon',
+		'email',
 	];
 
 	protected $casts = [
 		'tanggal_lahir' => 'date'
 	];
+
+	/**
+	 * Detail kewarganegaraan
+	 */
+	public function warga_negara()
+	{
+		return $this->belongsTo(RefNegara::class, 'kd_warga_negara', 'kode_2');
+	}
 }

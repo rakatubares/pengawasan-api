@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\RefEntitas;
+use App\Models\RefNegara;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -16,33 +17,30 @@ class RefEntitasSeeder extends Seeder
 	public function run()
 	{
 		$faker = Faker::create();
+		$data_countries = RefNegara::select('kode_2')->get()->toArray();
+		$available_countries = array_map(function($c) {return $c['kode_2'];}, $data_countries);
 
 		for ($i=0; $i < 100; $i++) { 
-			$jenis_entitas = $faker->randomElement(['perorangan', 'badan usaha']);
-
-			// if ($jenis_entitas == 'perorangan') {
 			$gender = $faker->randomElement(['male', 'female']);
+			$jk = $gender == 'male' ? 'M' : 'F';
 			RefEntitas::create([
-				'jenis_entitas' => 'perorangan',
 				'nama' => $faker->name($gender),
-				'jenis_kelamin' => $gender,
+				'alias' => $faker->firstName($gender),
+				'jenis_kelamin' => $jk,
+				'tempat_lahir' => $faker->city(),
 				'tanggal_lahir' => $faker->date(),
-				'warga_negara' => $faker->country(),
-				'jenis_identitas' => $faker->regexify('[A-Z]{3}'),
+				'kd_warga_negara' => $faker->randomElement($available_countries),
+				'agama' => $faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha', 'Kong Hu Cu']),
+				'jenis_identitas' => $faker->randomElement(['KTP', 'PASPOR', 'NPWP', $faker->regexify('[A-Z]{3}')]),
 				'nomor_identitas' => $faker->regexify('[0-9]{6,15}'),
+				'penerbit_identitas' => $faker->name(),
+				'tempat_identitas_terbit' => $faker->city(),
+				'alamat_identitas' => $faker->address(),
+				'alamat_tinggal' => $faker->address(),
 				'pekerjaan' => $faker->jobTitle(),
-				'alamat' => $faker->address()
+				'nomor_telepon' => $faker->phoneNumber(),
+				'email' => $faker->email(),
 			]);
-			// } else {
-			// 	RefEntitas::create([
-			// 		'jenis_entitas' => $jenis_entitas,
-			// 		'nama' => $faker->company(),
-			// 		'jenis_identitas' => $faker->regexify('[A-Z]{3}'),
-			// 		'nomor_identitas' => $faker->regexify('[0-9]{6,15}'),
-			// 		'alamat' => $faker->address()
-			// 	]);
-			// }
-			
 		}
 	}
 }
