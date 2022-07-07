@@ -41,7 +41,7 @@ class RefEntitasResource extends JsonResource
 			'nomor_identitas' => $this->nomor_identitas,
 			'penerbit_identitas' => $this->penerbit_identitas,
 			'tempat_identitas_terbit' => $this->tempat_identitas_terbit,
-			'alamat' => $this->alamat,
+			'alamat_identitas' => $this->alamat_identitas,
 			'alamat_tinggal' => $this->alamat_tinggal,
 			'pekerjaan' => $this->pekerjaan,
 			'nomor_telepon' => $this->nomor_telepon,
