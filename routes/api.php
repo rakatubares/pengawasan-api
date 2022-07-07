@@ -12,6 +12,7 @@ use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
 use App\Http\Controllers\RefKemasanController;
 use App\Http\Controllers\RefLokasiController;
+use App\Http\Controllers\RefNegaraController;
 use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
@@ -157,6 +158,12 @@ Route::post('satuan/search', [RefSatuanController::class, 'search']);
 Route::get('kategori', [RefKategoriBarangController::class, 'index']);
 Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
 Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
+
+/**
+ * API for Negara
+ */
+Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
+Route::post('negara/search', [RefNegaraController::class, 'search']);
 
 /**
  * API for User
