@@ -83,7 +83,7 @@ class RefEntitasController extends Controller
 			'jenis_identitas' => $request->jenis_identitas,
 			'penerbit_identitas' => $request->penerbit_identitas,
 			'tempat_identitas_terbit' => $request->tempat_identitas_terbit,
-			'alamat' => $request->alamat,
+			'alamat_identitas' => $request->alamat_identitas,
 			'alamat_tinggal' => $request->alamat_tinggal,
 			'nomor_identitas' => $request->nomor_identitas,
 			'pekerjaan' => $request->pekerjaan,

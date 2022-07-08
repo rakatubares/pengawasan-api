@@ -229,7 +229,7 @@ Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
 Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
 
 /**
- * API for Kategori Barang
+ * API for Negara
  */
 Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
