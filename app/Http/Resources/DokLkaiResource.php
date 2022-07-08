@@ -110,7 +110,7 @@ class DokLkaiResource extends JsonResource
 
 	private function display()
 	{
-		$lppi = $this->doc_type == 'lkain' ? $this->intelijen->lppi : $this->intelijen->lppin;
+		$lppi = $this->doc_type == 'lkain' ? $this->intelijen->lppin : $this->intelijen->lppi;
 
 		$array = $this->basic();
 		$array['lppi_id'] = $lppi != null ? $lppi->id : null;

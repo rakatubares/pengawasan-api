@@ -85,7 +85,7 @@ class DokLkaiController extends Controller
 	 */
 	public function form($id)
 	{
-		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'form');
+		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'form', $this->doc_type);
 		return $lppi;
 	}
 
