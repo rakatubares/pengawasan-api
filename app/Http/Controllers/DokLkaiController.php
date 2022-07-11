@@ -409,7 +409,7 @@ class DokLkaiController extends Controller
 
 			// Change LPPI status
 			$status_lppi = $this->lppi_type == 'lppin' ? 221 : 211;
-			$lppi = $this->doc->intelijen->lppi;
+			$lppi = $this->lppi_type = 'lppin' ? $this->doc->intelijen->lppin : $this->doc->intelijen->lppi;
 			if ($lppi != null) {
 				$lppi->update(['kode_status' => $status_lppi]);
 			}
