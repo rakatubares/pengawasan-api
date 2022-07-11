@@ -335,7 +335,7 @@ class DokLkaiController extends Controller
 	 */
 	private function deleteIntel($lkai_id)
 	{
-		$existing_lkai = $this->model_lkai::where('id', $lkai_id);
+		$existing_lkai = $this->model_lkai::find($lkai_id);
 		$existing_intel = $existing_lkai->intelijen;
 		$existing_intel->ikhtisar()->delete();
 		$this->deleteIntelRelation($existing_intel->id, $lkai_id);
@@ -385,7 +385,7 @@ class DokLkaiController extends Controller
 	private function rollbackLppi($lkai_id)
 	{
 		$existing_intel = $this->model_lkai::find($lkai_id)->intelijen; 
-		$existing_lppi = $existing_intel->lppi;
+		$existing_lppi = $this->lppi_type == 'lppin' ? $existing_intel->lppin : $existing_intel->lppi;
 		$existing_lppi->update(['kode_status' => 200]);
 		$this->deleteIntelRelation($existing_intel->id, $lkai_id);
 	}
