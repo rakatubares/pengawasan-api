@@ -11,6 +11,7 @@ use App\Http\Resources\DokLkaiResource;
 use App\Http\Resources\DokLppiResource;
 use App\Http\Resources\DokNhiNResource;
 use App\Http\Resources\DokNhiResource;
+use App\Http\Resources\DokNiResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -21,6 +22,7 @@ use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
+use App\Models\DokNi;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -69,6 +71,13 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokNhiN::class,
 			'resource' => DokNhiNResource::class,
+		],
+		'ni' => [
+			'tipe_dok' => 'NI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNi::class,
+			'resource' => DokNiResource::class,
 		],
 		
 		// Dokumen

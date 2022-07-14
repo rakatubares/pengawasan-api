@@ -48,6 +48,11 @@ class IntelijenResource extends JsonResource
 					$nhin = new DokNhiNResource($this->nhin, 'pdf');
 					$list_dokumen['nhin'] = $nhin;
 					break;
+
+				case 'ni':
+					$ni = new DokNiResource($this->ni, 'pdf');
+					$list_dokumen['ni'] = $ni;
+					break;
 				
 				default:
 					# code...
