@@ -163,6 +163,27 @@ class Intelijen extends Model
 	}
 
 	/**
+	 * NI
+	 */
+	public function ni()
+	{
+		return $this->hasOneThrough(
+			DokNi::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'intelijen'
+		)->where(
+			'object2_type',
+			'ni'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

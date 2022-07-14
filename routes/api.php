@@ -22,6 +22,7 @@ use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokNhiNController;
+use App\Http\Controllers\DokNiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
@@ -101,6 +102,14 @@ Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
 Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
 Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
 Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
+
+/**
+ * API for NI
+ */
+Route::apiResource('ni', DokNiController::class);
+Route::get('/ni/{ni_id}/display', [DokNiController::class, 'display']);
+Route::get('/ni/{ni_id}/form', [DokNiController::class, 'form']);
+Route::put('/ni/{ni_id}/publish', [DokNiController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

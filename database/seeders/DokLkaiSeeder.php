@@ -57,7 +57,7 @@ class DokLkaiSeeder extends Seeder
 		$ref_validitas = RefValiditasInformasi::all()->all();
 		$list_kode_validitas = array_map(function ($v){ return $v->klasifikasi; }, $ref_validitas);
 
-		for ($d=1; $d < 21; $d++) { 
+		for ($d=1; $d < 31; $d++) { 
 			$max_lkai = $this->model_lkai::max('no_dok');
 			$crn_lkai = $max_lkai + 1;
 

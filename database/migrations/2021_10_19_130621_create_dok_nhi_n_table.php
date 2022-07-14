@@ -63,8 +63,6 @@ class CreateDokNhiNTable extends Migration
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('created_at');
-			$table->index('updated_at');
 			$table->index('deleted_at');
 		});
 	}
