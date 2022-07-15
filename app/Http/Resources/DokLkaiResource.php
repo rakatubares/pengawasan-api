@@ -12,7 +12,7 @@ class DokLkaiResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null, $doc_type='lkai')
+	public function __construct($resource, $doc_type='lkai', $type=null)
 	{
 		$this->resource = $resource;
 		$this->type = $type;

@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokNiTable extends Migration
 {
+	public function __construct()
+	{
+		$this->table_name = 'dok_ni';
+	}
+
 	/**
 	 * Run the migrations.
 	 *
@@ -13,7 +18,7 @@ class CreateDokNiTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_ni', function (Blueprint $table) {
+		Schema::create($this->table_name, function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -41,6 +46,6 @@ class CreateDokNiTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('dok_ni');
+		Schema::dropIfExists($this->table_name);
 	}
 }

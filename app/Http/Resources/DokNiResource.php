@@ -12,10 +12,11 @@ class DokNiResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null)
+	public function __construct($resource, $ni_type='ni', $type=null)
 	{
 		$this->resource = $resource;
 		$this->type = $type;
+		$this->ni_type = $ni_type;
 	}
 
 	/**
@@ -80,7 +81,7 @@ class DokNiResource extends JsonResource
 
 	private function display()
 	{
-		$lkai = $this->intelijen->lkai;
+		$lkai = $this->ni_type == 'nin' ? $this->intelijen->lkain : $this->intelijen->lkai;
 
 		$array = $this->basic();
 		$array['lkai_id'] = $lkai != null ? $lkai->id : null;
@@ -102,7 +103,7 @@ class DokNiResource extends JsonResource
 		$dokumen = new IntelijenResource($this->intelijen, 'dokumen');
 		$array = [
 			'main' => [
-				'type' => 'ni',
+				'type' => $this->ni_type,
 				'data' => $ni
 			],
 			'dokumen' => $dokumen

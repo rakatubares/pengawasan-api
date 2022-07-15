@@ -12,6 +12,7 @@ class DokNi extends Model
 	use SoftDeletes;
 
 	protected $table = 'dok_ni';
+	protected $tipe_ni = 'ni';
 
 	protected $fillable = [
 		'no_dok',
@@ -47,7 +48,7 @@ class DokNi extends Model
 			'intelijen'
 		)->where(
 			'object2_type',
-			'ni'
+			$this->tipe_ni
 		);
 	}
 

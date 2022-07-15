@@ -61,7 +61,7 @@ class DokLkaiController extends Controller
 	 */
 	public function show($id)
 	{
-		$lkai = new DokLkaiResource($this->model_lkai::findOrFail($id));
+		$lkai = new DokLkaiResource($this->model_lkai::findOrFail($id), $this->doc_type);
 		return $lkai;
 	}
 
@@ -73,7 +73,7 @@ class DokLkaiController extends Controller
 	 */
 	public function display($id)
 	{
-		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'display');
+		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), $this->doc_type, 'display');
 		return $lppi;
 	}
 
@@ -85,7 +85,7 @@ class DokLkaiController extends Controller
 	 */
 	public function form($id)
 	{
-		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), 'form', $this->doc_type);
+		$lppi = new DokLkaiResource($this->model_lkai::findOrFail($id), $this->doc_type, 'form', $this->doc_type);
 		return $lppi;
 	}
 

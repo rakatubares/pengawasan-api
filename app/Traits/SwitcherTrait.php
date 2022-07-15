@@ -56,6 +56,7 @@ use App\Models\DokLptpN;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
+use App\Models\DokNiN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
@@ -121,6 +122,13 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokNi::class,
+			'resource' => DokNiResource::class,
+		],
+		'nin' => [
+			'tipe_dok' => 'NI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNiN::class,
 			'resource' => DokNiResource::class,
 		],
 		

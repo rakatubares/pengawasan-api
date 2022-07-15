@@ -23,6 +23,7 @@ use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
+use App\Models\DokNiN;
 use App\Models\DokPengaman;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
@@ -95,6 +96,7 @@ class AppServiceProvider extends ServiceProvider
 			'nhi' => DokNhi::class,
 			'nhin' => DokNhiN::class,
 			'ni' => DokNi::class,
+			'nin' => DokNiN::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
@@ -121,6 +123,7 @@ class AppServiceProvider extends ServiceProvider
 		DokNhi::observe(DokNhiObserver::class);
 		DokNhiN::observe(DokNhiNObserver::class);
 		DokNi::observe(DokNiObserver::class);
+		DokNiN::observe(DokNiObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokRiksa::observe(DokRiksaObserver::class);
 		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
