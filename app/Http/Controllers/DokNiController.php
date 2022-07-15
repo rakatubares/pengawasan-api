@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokNiResource;
 use App\Http\Resources\DokNiTableResource;
 use App\Models\ObjectRelation;
 use App\Traits\DokumenTrait;
@@ -18,6 +19,7 @@ class DokNiController extends Controller
 	{
 		$this->doc_type = 'ni';
 		$this->lkai_type = 'lkai';
+		$this->table_resource = DokNiTableResource::class;
 		$this->prepareModel();
 	}
 
@@ -26,7 +28,6 @@ class DokNiController extends Controller
 		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
 		$this->model = $this->switchObject($this->doc_type, 'model');
-		$this->resource = $this->switchObject($this->doc_type, 'resource');
 		$this->lkai_model = $this->switchObject($this->lkai_type, 'model');
 	}
 
@@ -46,7 +47,7 @@ class DokNiController extends Controller
 		$all_ni = $this->model::orderBy('created_at', 'desc')
 			->orderBy('no_dok', 'desc')
 			->get();
-		$ni_list = DokNiTableResource::collection($all_ni);
+		$ni_list = $this->table_resource::collection($all_ni);
 		return $ni_list;
 	}
 
@@ -58,7 +59,7 @@ class DokNiController extends Controller
 	 */
 	public function show($id)
 	{
-		$ni = new $this->resource($this->model::findOrFail($id));
+		$ni = new DokNiResource($this->model::findOrFail($id), $this->doc_type);
 		return $ni;
 	}
 
@@ -70,7 +71,7 @@ class DokNiController extends Controller
 	 */
 	public function display($id)
 	{
-		$ni = new $this->resource($this->model::findOrFail($id), 'display');
+		$ni = new DokNiResource($this->model::findOrFail($id), $this->doc_type, 'display');
 		return $ni;
 	}
 
@@ -82,7 +83,7 @@ class DokNiController extends Controller
 	 */
 	public function form($id)
 	{
-		$ni = new $this->resource($this->model::findOrFail($id), 'form');
+		$ni = new DokNiResource($this->model::findOrFail($id), $this->doc_type, 'form');
 		return $ni;
 	}
 
@@ -162,14 +163,14 @@ class DokNiController extends Controller
 			}
 
 			// Link with intelijen
-			$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
+			$lkai_id = $request->lkai_id;
 			$this->createLinkLkai($lkai_id, $ni->id);
 			
 			// Commit store query
 			DB::commit();
 
 			// Return created data
-			$ni_resource = new $this->resource($this->model::find($ni->id), 'display');
+			$ni_resource = new DokNiResource($this->model::find($ni->id), $this->doc_type, 'display');
 			return $ni_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -207,7 +208,7 @@ class DokNiController extends Controller
 				// Check existing LKAI
 				$intelijen = $this->model::find($id)->intelijen;
 				$lkai = $this->lkai_type == 'lkain' ? $intelijen->lkain : $intelijen->lkai;
-				$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
+				$lkai_id = $request->lkai_id;
 
 				if ($lkai_id != $lkai->id) {
 					$this->rollbackLkai($id);
@@ -218,7 +219,7 @@ class DokNiController extends Controller
 				DB::commit();
 	
 				// Return data
-				$ni_resource = new $this->resource($this->model::findOrFail($id), 'display');
+				$ni_resource = new DokNiResource($this->model::findOrFail($id), $this->doc_type, 'display');
 				return $ni_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -249,7 +250,7 @@ class DokNiController extends Controller
 	private function rollbackLkai($ni_id)
 	{
 		$existing_intel = $this->model::find($ni_id)->intelijen; 
-		$existing_lkai = $existing_intel->lkai;
+		$existing_lkai = $this->lkai_type == 'lkain' ? $existing_intel->lkain : $existing_intel->lkai;
 		$existing_lkai->update(['kode_status' => 200]);
 		$this->deleteIntelRelation($existing_intel->id, $ni_id);
 	}

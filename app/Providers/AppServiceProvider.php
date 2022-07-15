@@ -13,6 +13,7 @@ use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
+use App\Models\DokNiN;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Observers\DetailBarangItemObserver;
@@ -56,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
 			'nhi' => DokNhi::class,
 			'nhin' => DokNhiN::class,
 			'ni' => DokNi::class,
+			'nin' => DokNiN::class,
 			'orang' => RefEntitas::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
@@ -69,5 +71,6 @@ class AppServiceProvider extends ServiceProvider
 		DokNhi::observe(DokNhiObserver::class);
 		DokNhiN::observe(DokNhiNObserver::class);
 		DokNi::observe(DokNiObserver::class);
+		DokNiN::observe(DokNiObserver::class);
     }
 }

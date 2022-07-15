@@ -23,6 +23,7 @@ use App\Models\DokLppiN;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
+use App\Models\DokNiN;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -77,6 +78,13 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokNi::class,
+			'resource' => DokNiResource::class,
+		],
+		'nin' => [
+			'tipe_dok' => 'NI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNiN::class,
 			'resource' => DokNiResource::class,
 		],
 		

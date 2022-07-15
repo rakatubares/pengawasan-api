@@ -13,6 +13,7 @@ use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\DokNiController;
+use App\Http\Controllers\DokNiNController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefBandaraController;
 use App\Http\Controllers\RefEntitasController;
@@ -119,6 +120,14 @@ Route::get('/nhin/{nhin_id}/display', [DokNhiNController::class, 'display']);
 Route::get('/nhin/{nhin_id}/form', [DokNhiNController::class, 'form']);
 Route::get('/nhin/{nhin_id}/objek', [DokNhiNController::class, 'objek']);
 Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
+
+/**
+ * API for NI-N
+ */
+Route::apiResource('nin', DokNiNController::class);
+Route::get('/nin/{nin_id}/display', [DokNiNController::class, 'display']);
+Route::get('/nin/{nin_id}/form', [DokNiNController::class, 'form']);
+Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
 
 /**
  * API for penindakan
