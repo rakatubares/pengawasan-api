@@ -2,101 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokNhiTableResource;
-use App\Models\ObjectRelation;
 use App\Traits\ConverterTrait;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokNhiController extends Controller
+class DokNhiController extends DokIntelijenController
 {
 	use ConverterTrait;
-	use DokumenTrait;
-	use SwitcherTrait;
 	
-	public function __construct()
+	public function __construct($doc_type='nhi')
 	{
-		$this->doc_type = 'nhi';
+		parent::__construct($doc_type);
 		$this->lkai_type = 'lkai';
-		$this->prepareModel();
+		$this->lkai_draft_status = 112;
+		$this->lkai_published_status = 212;
+		$this->prepareLkai();
 	}
 
-	protected function prepareModel()
+	protected function prepareLkai()
 	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
-		$this->resource = $this->switchObject($this->doc_type, 'resource');
 		$this->lkai_model = $this->switchObject($this->lkai_type, 'model');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_nhi = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$nhi_list = DokNhiTableResource::collection($all_nhi);
-		return $nhi_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$nhi = new $this->resource($this->model::findOrFail($id));
-		return $nhi;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$nhi = new $this->resource($this->model::findOrFail($id), 'display');
-		return $nhi;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$nhi = new $this->resource($this->model::findOrFail($id), 'form');
-		return $nhi;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new $this->resource($this->model::find($id), 'objek');
-		return $objek;
 	}
 
 	/*
@@ -208,35 +132,16 @@ class DokNhiController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// validate data
-		$this->validateData($request);
+		$result = $this->storeIntelDocument($request, ['cc']);
+		return $result;
+	}
 
-		DB::beginTransaction();
-		try {
-			// Save data NHI
-			$data_nhi = $this->prepareData($request, 'insert');
-			$nhi = $this->model::create($data_nhi);
-
-			// Save CC
-			$cc_list = array_filter($request->tembusan, 'strlen');
-			if (sizeof($cc_list) > 0) {
-				app(TembusanController::class)->setCc($this->model, $nhi->id, $cc_list);
-			}
-
-			// Link with intelijen
-			$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
-			$this->createLinkLkai($lkai_id, $nhi->id);
-			
-			// Commit store query
-			DB::commit();
-
-			// Return created data
-			$nhi_resource = new $this->resource($this->model::find($nhi->id), 'display');
-			return $nhi_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+	// Handle store relation
+	protected function handleStoreIntel($request)
+	{
+		$lkai_id_key = $this->lkai_type . '_id';
+		$this->updateLinkedStatus($this->lkai_model, $request->$lkai_id_key, $this->lkai_draft_status);
+		$this->createIntelRelation($this->intelijen->id, $this->doc->id);
 	}
 
 	/**
@@ -248,98 +153,23 @@ class DokNhiController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished($this->model, $id);
-
-		if ($is_unpublished) {
-			DB::beginTransaction();
-
-			try {
-				// Validate data
-				$this->validateData($request);
-	
-				// Update data
-				$data_nhi = $this->prepareData($request, 'update');
-				$this->model::find($id)->update($data_nhi);
-
-				// Update CC
-				$cc_list = array_filter($request->tembusan, 'strlen');
-				app(TembusanController::class)->setCc($this->model, $id, $cc_list);
-
-				// Check existing LKAI
-				$intelijen = $this->model::find($id)->intelijen;
-				$lkai = $this->lkai_type == 'lkain' ? $intelijen->lkain : $intelijen->lkai;
-				$lkai_id = $this->lkai_type == 'lkain' ? $request->lkain_id : $request->lkai_id;
-
-				if ($lkai_id != $lkai->id) {
-					$this->rollbackLkai($id);
-					$this->createLinkLkai($lkai_id, $id);
-				}
-
-				// Commit query
-				DB::commit();
-	
-				// Return data
-				$nhi_resource = new $this->resource($this->model::findOrFail($id), 'display');
-				return $nhi_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->updateIntelDocument($request, $id, ['cc', 'linked_doc']);
 		return $result;
 	}
 
-	/**
-	 * Link LKAI
-	 */
-	private function createLinkLkai($lkai_id, $nhi_id)
+	// Handle linked document
+	protected function updateLinkedDoc($request, $id)
 	{
-		$lkai = $this->lkai_model::find($lkai_id);
-		$status_lkai = $this->doc_type == 'nhin' ? 122 : 112;
-		$lkai->update(['kode_status' => $status_lkai]);
-		$intelijen = $lkai->intelijen;
-		$this->createIntelRelation($intelijen->id, $nhi_id);
-	}
+		$this->getIntel($id);
+		$lkai_key = $this->lkai_type;
+		$lkai = $this->intelijen->$lkai_key;
 
-	/**
-	 * Rollback existing LKAI
-	 */
-	private function rollbackLkai($nhi_id)
-	{
-		$existing_intel = $this->model::find($nhi_id)->intelijen; 
-		$existing_lkai = $existing_intel->lkai;
-		$existing_lkai->update(['kode_status' => 200]);
-		$this->deleteIntelRelation($existing_intel->id, $nhi_id);
-	}
-
-	/**
-	 * Create new intel relation
-	 */
-	private function createIntelRelation($intelijen_id, $nhi_id)
-	{
-		ObjectRelation::create([
-			'object1_type' => 'intelijen',
-			'object1_id' => $intelijen_id,
-			'object2_type' => $this->doc_type,
-			'object2_id' => $nhi_id,
-		]);
-	}
-
-	/**
-	 * Delete relation
-	 */
-	private function deleteIntelRelation($intelijen_id, $nhi_id)
-	{
-		ObjectRelation::where([
-			'object1_type' => 'intelijen',
-			'object1_id' => $intelijen_id,
-			'object2_type' => $this->doc_type,
-			'object2_id' => $nhi_id,
-		])->delete();
+		if ($request->lkai_id != $lkai->id) {
+			$lkai_id_key = $this->lkai_type . '_id';
+			$this->rollbackLinkedStatus($id, $lkai);
+			$this->updateLinkedStatus($this->lkai_model, $request->$lkai_id_key, $this->lkai_draft_status);
+			$this->createIntelRelation($this->intelijen->id, $id);
+		}
 	}
 
 	/**
@@ -348,56 +178,19 @@ class DokNhiController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($id)
+	public function publish($id, $withAddition=true)
 	{
-		DB::beginTransaction();
-		try {
-			// Publish NHI
-			$this->getDocument($this->model, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber($this->model);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-			$this->updateDocDate();
-
-			// Change LKAI status
-			$lkai = $this->doc_type == 'nhin' ? $this->doc->intelijen->lkain : $this->doc->intelijen->lkai;
-			$status_lkai = $this->doc_type == 'nhin' ? 222 : 212;
-			if ($lkai != null) {
-				$lkai->update(['kode_status' => $status_lkai]);
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		parent::publish($id, $withAddition);
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy functions
-	 |--------------------------------------------------------------------------
-	 */
-	
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
+	// Additional function when publish
+	protected function publishAddition()
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished($this->model, $id);
-			if ($is_unpublished) {
-				$this->model::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		// Change LKAI status
+		$lkai_type = $this->lkai_type;
+		$lkai = $this->doc->intelijen->$lkai_type;
+		if ($lkai != null) {
+			$lkai->update(['kode_status' => $this->lkai_published_status]);
 		}
 	}
 }

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokNiNTableResource;
-
 class DokNiNController extends DokNiController
 {
 	public function __construct()
 	{
-		$this->doc_type = 'nin';
+		parent::__construct('nin');
 		$this->lkai_type = 'lkain';
-		$this->table_resource = DokNiNTableResource::class;
-		$this->prepareModel();
+		$this->status_draft_lkai = 123;
+		$this->status_published_lkai = 223;
+		$this->prepareLkai($this->lkai_type);
 	}
 }

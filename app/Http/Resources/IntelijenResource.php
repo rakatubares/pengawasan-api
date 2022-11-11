@@ -20,12 +20,12 @@ class IntelijenResource extends JsonResource
 
 			switch ($jenis) {
 				case 'lkai':
-					$lkai = new DokLkaiResource($this->lkai, 'lkai', 'pdf');
+					$lkai = new DokLkaiResource($this->lkai, 'pdf');
 					$list_dokumen['lkai'] = $lkai;
 					break;
 
 				case 'lkain':
-					$lkain = new DokLkaiResource($this->lkain, 'lkain', 'pdf');
+					$lkain = new DokLkaiNResource($this->lkain, 'pdf');
 					$list_dokumen['lkain'] = $lkain;
 					break;
 
@@ -50,12 +50,12 @@ class IntelijenResource extends JsonResource
 					break;
 
 				case 'ni':
-					$ni = new DokNiResource($this->ni, 'ni', 'pdf');
+					$ni = new DokNiResource($this->ni, 'pdf');
 					$list_dokumen['ni'] = $ni;
 					break;
 
 				case 'nin':
-					$nin = new DokNiResource($this->nin, 'nin', 'pdf');
+					$nin = new DokNiNResource($this->nin, 'pdf');
 					$list_dokumen['nin'] = $nin;
 					break;
 				

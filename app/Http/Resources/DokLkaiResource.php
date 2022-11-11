@@ -12,11 +12,11 @@ class DokLkaiResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $doc_type='lkai', $type=null)
+	public function __construct($resource, $type=null)
 	{
 		$this->resource = $resource;
 		$this->type = $type;
-		$this->doc_type = $doc_type;
+		$this->lppi_type = 'lppi';
 	}
 
 	/**
@@ -110,7 +110,8 @@ class DokLkaiResource extends JsonResource
 
 	private function display()
 	{
-		$lppi = $this->doc_type == 'lkain' ? $this->intelijen->lppin : $this->intelijen->lppi;
+		$lppi_type = $this->lppi_type;
+		$lppi = $this->intelijen->$lppi_type;
 
 		$array = $this->basic();
 		$array['lppi_id'] = $lppi != null ? $lppi->id : null;

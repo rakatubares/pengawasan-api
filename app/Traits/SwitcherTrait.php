@@ -7,11 +7,19 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokLkaiNResource;
 use App\Http\Resources\DokLkaiResource;
+use App\Http\Resources\DokLkaiTableResource;
 use App\Http\Resources\DokLppiResource;
-use App\Http\Resources\DokNhiNResource;
+use App\Http\Resources\DokLppiTableResource;
 use App\Http\Resources\DokNhiResource;
+use App\Http\Resources\DokNhiNResource;
+use App\Http\Resources\DokNhiNTableResource;
+use App\Http\Resources\DokNhiTableResource;
+use App\Http\Resources\DokNiNResource;
+use App\Http\Resources\DokNiNTableResource;
 use App\Http\Resources\DokNiResource;
+use App\Http\Resources\DokNiTableResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -37,13 +45,15 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokLkai::class,
 			'resource' => DokLkaiResource::class,
+			'table_resource' => DokLkaiTableResource::class,
 		],
 		'lkain' => [
 			'tipe_dok' => 'LKAI-N',
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokLkaiN::class,
-			'resource' => DokLkaiResource::class,
+			'resource' => DokLkaiNResource::class,
+			'table_resource' => DokLkaiTableResource::class,
 		],
 		'lppi' => [
 			'tipe_dok' => 'LPPI',
@@ -51,6 +61,7 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokLppi::class,
 			'resource' => DokLppiResource::class,
+			'table_resource' => DokLppiTableResource::class,
 		],
 		'lppin' => [
 			'tipe_dok' => 'LPPI-N',
@@ -58,6 +69,7 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokLppiN::class,
 			'resource' => DokLppiResource::class,
+			'table_resource' => DokLppiTableResource::class,
 		],
 		'nhi' => [
 			'tipe_dok' => 'NHI',
@@ -65,6 +77,7 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokNhi::class,
 			'resource' => DokNhiResource::class,
+			'table_resource' => DokNhiTableResource::class,
 		],
 		'nhin' => [
 			'tipe_dok' => 'NHI-N',
@@ -72,6 +85,7 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokNhiN::class,
 			'resource' => DokNhiNResource::class,
+			'table_resource' => DokNhiNTableResource::class,
 		],
 		'ni' => [
 			'tipe_dok' => 'NI',
@@ -79,16 +93,16 @@ trait SwitcherTrait
 			'parent' => 'intelijen',
 			'model' => DokNi::class,
 			'resource' => DokNiResource::class,
+			'table_resource' => DokNiTableResource::class,
 		],
 		'nin' => [
 			'tipe_dok' => 'NI-N',
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokNiN::class,
-			'resource' => DokNiResource::class,
+			'resource' => DokNiNResource::class,
+			'table_resource' => DokNiNTableResource::class,
 		],
-		
-		// Dokumen
 
 		// Objek
 		'bangunan' => [
