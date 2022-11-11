@@ -9,6 +9,7 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
+use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
@@ -16,6 +17,7 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
+use App\Models\DokContoh;
 use App\Models\DokPengaman;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +38,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
+		],
+		'contoh' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/CONTOH/KPU.305/',
+			'parent' => 'contoh',
+			'model' => DokContoh::class,
+			'resource' => DokContohResource::class,
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',

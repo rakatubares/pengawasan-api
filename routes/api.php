@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaPengamanController;
+use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
@@ -41,6 +42,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for penindakan
  */
 Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
 /*
  |--------------------------------------------------------------------------
  | Details routes
@@ -48,13 +50,12 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  */
 
 /**
- * API for BAST
+ * API for BA Contoh
  */
-Route::apiResource('bast', DokBastController::class);
-Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
-Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
-Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
-Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
+Route::apiResource('contoh', DokContohController::class);
+Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
+Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
+Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish']);
 
 /**
  * API for BA Tanda Pengaman
@@ -72,6 +73,15 @@ Route::apiResource('bukapengaman', DokBukaPengamanController::class);
 Route::get('/bukapengaman/{buka_pengaman_id}/basic', [DokBukaPengamanController::class, 'basic']);
 Route::get('/bukapengaman/{buka_pengaman_id}/objek', [DokBukaPengamanController::class, 'objek']);
 Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
+
+/**
+ * API for BAST
+ */
+Route::apiResource('bast', DokBastController::class);
+Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
+Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
+Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
+Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
 /**
  * API for Details
