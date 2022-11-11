@@ -10,6 +10,8 @@ use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
 use App\Http\Resources\DokContohResource;
+use App\Http\Resources\DokLapResource;
+use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
@@ -18,6 +20,8 @@ use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokContoh;
+use App\Models\DokLap;
+use App\Models\DokLi;
 use App\Models\DokPengaman;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +39,7 @@ trait SwitcherTrait
 		],
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TANDAPENGAMAN/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
@@ -46,8 +51,23 @@ trait SwitcherTrait
 			'model' => DokContoh::class,
 			'resource' => DokContohResource::class,
 		],
+		'lap' => [
+			'tipe_dok' => 'LAP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'lap',
+			'model' => DokLap::class,
+			'resource' => DokLapResource::class,
+		],
+		'li' => [
+			'tipe_dok' => 'LI-1',
+			'agenda' => '/KPU.305/',
+			'parent' => 'li',
+			'model' => DokLi::class,
+			'resource' => DokLiResource::class,
+		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
+			'agenda' => '/TANDAPENGAMAN/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,

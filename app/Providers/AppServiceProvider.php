@@ -9,12 +9,16 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
+use App\Models\DokLap;
+use App\Models\DokLi;
 use App\Models\DokPengaman;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
+use App\Observers\DokLapObserver;
+use App\Observers\DokLiObserver;
 use App\Observers\DokPengamanObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -58,6 +62,8 @@ class AppServiceProvider extends ServiceProvider
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
+		DokLap::observe(DokLapObserver::class);
+		DokLi::observe(DokLiObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
     }
 }

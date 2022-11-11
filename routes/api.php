@@ -9,15 +9,19 @@ use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokContohController;
+use App\Http\Controllers\DokLapController;
+use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
+use App\Http\Controllers\RefKategoriPelanggaranController;
 use App\Http\Controllers\RefKemasanController;
 use App\Http\Controllers\RefLokasiController;
 use App\Http\Controllers\RefNegaraController;
 use App\Http\Controllers\RefSatuanController;
+use App\Http\Controllers\RefSkemaPenindakanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use Illuminate\Http\Request;
@@ -35,7 +39,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
 
 /**
@@ -82,6 +86,24 @@ Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
 Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
+
+/**
+ * API for LPHP
+ */
+Route::resource('lap', DokLapController::class);
+Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
+Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
+Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
+
+/**
+ * API for LI-1
+ */
+Route::apiResource('li', DokLiController::class);
+Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
+Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
+Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
+Route::post('/li/search', [DokLiController::class, 'search']);
 
 /**
  * API for Details
@@ -189,6 +211,11 @@ Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
  */
 Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
+
+/**
+ * API for Kategori Pelanggaran
+ */
+Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
 
 /**
  * API for User
