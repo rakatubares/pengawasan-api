@@ -95,6 +95,48 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Pengaman
+	 */
+	public function pengaman()
+	{
+		return $this->hasOneThrough(
+			DokPengaman::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'pengaman'
+		);
+	}
+
+	/**
+	 * BA Buka Pengaman
+	 */
+	public function bukapengaman()
+	{
+		return $this->hasOneThrough(
+			DokBukaPengaman::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'bukapengaman'
+		);
+	}
+
+	/**
 	 * The "booted" method of the model.
 	 *
 	 * @return void

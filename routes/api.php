@@ -7,6 +7,8 @@ use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokBastController;
+use App\Http\Controllers\DokBukaPengamanController;
+use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -53,6 +55,23 @@ Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
 Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
+
+/**
+ * API for BA Tanda Pengaman
+ */
+Route::apiResource('pengaman', DokPengamanController::class);
+Route::get('/pengaman/{pengaman_id}/basic', [DokPengamanController::class, 'basic']);
+Route::get('/pengaman/{pengaman_id}/objek', [DokPengamanController::class, 'objek']);
+Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
+Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
+
+/**
+ * API for BA Buka Tanda Pengaman
+ */
+Route::apiResource('bukapengaman', DokBukaPengamanController::class);
+Route::get('/bukapengaman/{buka_pengaman_id}/basic', [DokBukaPengamanController::class, 'basic']);
+Route::get('/bukapengaman/{buka_pengaman_id}/objek', [DokBukaPengamanController::class, 'objek']);
+Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
 
 /**
  * API for Details

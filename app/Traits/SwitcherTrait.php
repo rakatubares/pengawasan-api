@@ -8,11 +8,15 @@ use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
+use App\Http\Resources\DokBukaPengamanResource;
+use App\Http\Resources\DokPengamanResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
+use App\Models\DokBukaPengaman;
+use App\Models\DokPengaman;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +30,18 @@ trait SwitcherTrait
 			'parent' => 'bast',
 			'model' => DokBast::class,
 			'resource' => DokBastResource::class,
+		],
+		'bukapengaman' => [
+			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
+			'model' => DokBukaPengaman::class,
+			'resource' => DokBukaPengamanResource::class,
+		],
+		'pengaman' => [
+			'tipe_dok' => 'BA',
+			'parent' => 'penindakan',
+			'model' => DokPengaman::class,
+			'resource' => DokPengamanResource::class,
 		],
 
 		// Objek

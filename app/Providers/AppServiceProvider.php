@@ -8,10 +8,14 @@ use App\Models\DetailBarangItem;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
+use App\Models\DokBukaPengaman;
+use App\Models\DokPengaman;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DetailBarangItemObserver;
+use App\Observers\DokBukaPengamanObserver;
+use App\Observers\DokPengamanObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -53,5 +57,7 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
+		DokPengaman::observe(DokPengamanObserver::class);
     }
 }

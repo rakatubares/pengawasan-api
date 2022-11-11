@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
+			DokPengamanSeeder::class,
+			DokBukaPengamanSeeder::class,
 			DokBastSeeder::class,
 		]);
 	}
