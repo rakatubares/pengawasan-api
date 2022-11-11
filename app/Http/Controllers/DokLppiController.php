@@ -2,33 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokLppiResource;
 use App\Http\Resources\DokLppiTableResource;
-use App\Models\Intelijen;
-use App\Models\ObjectRelation;
 use App\Traits\ConverterTrait;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokLppiController extends Controller
+class DokLppiController extends DokIntelijenController
 {
 	use ConverterTrait;
-	use DokumenTrait;
-	use SwitcherTrait;
 
-	public function __construct()
+	public function __construct($doc_type='lppi')
 	{
-		$this->doc_type = 'lppi';
-		$this->prepareModel();
-	}
-
-	protected function prepareModel()
-	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -36,56 +20,6 @@ class DokLppiController extends Controller
 	 | DISPLAY functions
 	 |--------------------------------------------------------------------------
 	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_lppi = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$lppi_list = DokLppiTableResource::collection($all_lppi);
-		return $lppi_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$lppi = new DokLppiResource($this->model::findOrFail($id), null, $this->doc_type);
-		return $lppi;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$lppi = new DokLppiResource($this->model::findOrFail($id), 'display');
-		return $lppi;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$lppi = new DokLppiResource($this->model::findOrFail($id), 'form');
-		return $lppi;
-	}
 
 	/**
 	 * Display resource based on search query
@@ -129,7 +63,7 @@ class DokLppiController extends Controller
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'flag_info_internal' => 'boolean',
@@ -156,7 +90,7 @@ class DokLppiController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 		$tgl_terima_info_internal = $this->dateFromText($request->tgl_terima_info_internal);
@@ -206,37 +140,15 @@ class DokLppiController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// Validate data LPPI
-		$this->validateData($request);
+		$result = $this->storeIntelDocument($request, ['ikhtisar']);
+		return $result;
+	}
 
-		DB::beginTransaction();
-		try {
-			// Save data LPPI
-			$data_lppi = $this->prepareData($request, 'insert');
-			$lppi = $this->model::create($data_lppi);
-
-			// Save intelijen
-			$intelijen = Intelijen::create();
-			ObjectRelation::create([
-				'object1_type' => 'intelijen',
-				'object1_id' => $intelijen->id,
-				'object2_type' => $this->doc_type,
-				'object2_id' => $lppi->id,
-			]);
-
-			// Save data ikhtisar
-			$intelijen->ikhtisar()->createMany($request->ikhtisar);
-
-			// Commit store query
-			DB::commit();
-
-			// Return created data
-			$lppi_resource = new DokLppiResource($this->model::findOrFail($lppi->id), 'display');
-			return $lppi_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+	// Handle store relation
+	protected function handleStoreIntel($request)
+	{
+		$this->createIntel();
+		$this->createIntelRelation($this->intelijen->id, $this->doc->id);
 	}
 
 	/**
@@ -248,118 +160,16 @@ class DokLppiController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished($this->model, $id);
-
-		if ($is_unpublished) {
-			DB::beginTransaction();
-
-			try {
-				// Validate data
-				$this->validateData($request);
-	
-				// Update data
-				$data_lppi = $this->prepareData($request, 'update');
-				$this->model::where('id', $id)->update($data_lppi);
-
-				// Get existing ikhtisar
-				$intelijen = $this->model::find($id)->intelijen;
-				$existing_ikhtisar = $intelijen->ikhtisar->toArray();
-				$existing_ikhtisar_ids = array_map(function($ikhtisar)
-				{
-					return $ikhtisar['id'];
-				}, $existing_ikhtisar);
-
-				// Map data ikhtisar
-				$update_ids = [];
-				foreach ($request->ikhtisar as $ikhtisar) {
-					// Delete index key
-					unset($ikhtisar['index']);
-
-					// Insert intelijen id
-					$ikhtisar['intelijen_id'] = $intelijen->id;
-
-					// Map array to insert/update data
-					if (isset($ikhtisar['id'])) {
-						$intelijen->ikhtisar()->find($ikhtisar['id'])->update($ikhtisar);
-						array_push($update_ids, $ikhtisar['id']);
-					} else {
-						$intelijen->ikhtisar()->create($ikhtisar);
-					}
-				}
-				
-				// Delete ikhtisar
-				foreach ($existing_ikhtisar_ids as $ikhtisar_id) {
-					if (!in_array($ikhtisar_id, $update_ids)) {
-						$intelijen->ikhtisar()->find($ikhtisar_id)->delete();
-					}
-				}
-	
-				// Commit query
-				DB::commit();
-	
-				// Return data
-				$lppi_resource = new DokLppiResource($this->model::findOrFail($id), 'display');
-				return $lppi_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-
+		$result = $this->updateIntelDocument($request, $id, ['ikhtisar']);
 		return $result;
 	}
 
-	/**
-	 * Pablish document.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
+	// Handle update ikhtisar
+	protected function updateIntelIkhtisar($request, $id)
 	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument($this->model, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber($this->model);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-			$this->updateDocDate();
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished($this->model, $id);
-			if ($is_unpublished) {
-				$this->model::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$this->getIntel($id);
+		$existing_ikhtisar_ids = $this->getIkhtisar();
+		$update_ikhtisar_ids = $this->updateIkhtisar($request);
+		$this->deleteIkhtisar($existing_ikhtisar_ids, $update_ikhtisar_ids);
 	}
 }

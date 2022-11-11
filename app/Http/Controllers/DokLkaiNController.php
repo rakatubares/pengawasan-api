@@ -6,8 +6,10 @@ class DokLkaiNController extends DokLkaiController
 {
 	public function __construct()
 	{
-		$this->doc_type = 'lkain';
+		parent::__construct('lkain');
 		$this->lppi_type = 'lppin';
-		$this->prepareModel();
+		$this->lppi_draft_status = 121;
+		$this->lppi_published_status = 221;
+		$this->prepareLppi();
 	}
 }

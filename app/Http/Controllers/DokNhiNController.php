@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokNhiNTableResource;
 use App\Models\DetailBarang;
 use App\Models\DokNhiN;
 use Illuminate\Http\Request;
@@ -11,23 +10,11 @@ class DokNhiNController extends DokNhiController
 {
     public function __construct()
 	{
-		$this->doc_type = 'nhin';
+		parent::__construct('nhin');
 		$this->lkai_type = 'lkain';
-		$this->prepareModel();
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_nhi = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$nhi_list = DokNhiNTableResource::collection($all_nhi);
-		return $nhi_list;
+		$this->lkai_draft_status = 122;
+		$this->lkai_published_status = 222;
+		$this->prepareLkai();
 	}
 
 	/**

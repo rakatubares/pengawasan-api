@@ -6,7 +6,6 @@ class DokLppiNController extends DokLppiController
 {
 	public function __construct()
 	{
-		$this->doc_type = 'lppin';
-		$this->prepareModel();
+		parent::__construct('lppin');
 	}
 }
