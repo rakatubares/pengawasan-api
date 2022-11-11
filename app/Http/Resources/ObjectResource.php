@@ -42,6 +42,10 @@ class ObjectResource extends JsonResource
 			case 'orang':
 				$object_array = new RefEntitasResource($this->resource);
 				break;
+
+			case 'dokumen':
+				$object_array = new DetailDokumenResource($this->resource);
+				break;
 			
 			default:
 				$object_array = null;
