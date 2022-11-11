@@ -183,6 +183,17 @@ Route::post('/entitas/search', [RefEntitasController::class, 'search']);
 Route::apiResource('jabatan', RefJabatanController::class);
 
 /**
+ * API for Kategori Pelanggaran
+ */
+Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
+
+/**
+ * API for Skema Penindakan
+ */
+Route::apiResource('penindakan', RefSkemaPenindakanController::class);
+
+
+/**
  * API for Grup Lokasi
  */
 Route::get('lokasi', [RefLokasiController::class, 'index']);
@@ -211,11 +222,6 @@ Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
  */
 Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
-
-/**
- * API for Kategori Pelanggaran
- */
-Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
 
 /**
  * API for User
