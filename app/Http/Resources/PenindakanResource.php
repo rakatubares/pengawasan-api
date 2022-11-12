@@ -65,12 +65,12 @@ class PenindakanResource extends JsonResource
 
 			switch ($jenis) {
 				case 'bukapengaman':
-					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'basic');
+					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'pdf');
 					$list_dokumen['bukapengaman'] = $bukapengaman;
 					break;
 				
 				case 'pengaman':
-					$pengaman = new DokPengamanResource($this->pengaman, 'basic');
+					$pengaman = new DokPengamanResource($this->pengaman, 'pdf');
 					$list_dokumen['pengaman'] = $pengaman;
 					break;
 
@@ -78,8 +78,6 @@ class PenindakanResource extends JsonResource
 					# code...
 					break;
 			}
-
-			// $list_dokumen[$jenis] = $data;
 		}
 
 		return $list_dokumen;

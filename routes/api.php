@@ -65,7 +65,8 @@ Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish'
  * API for BA Tanda Pengaman
  */
 Route::apiResource('pengaman', DokPengamanController::class);
-Route::get('/pengaman/{pengaman_id}/basic', [DokPengamanController::class, 'basic']);
+Route::get('/pengaman/{pengaman_id}/display', [DokPengamanController::class, 'display']);
+Route::get('/pengaman/{pengaman_id}/form', [DokPengamanController::class, 'form']);
 Route::get('/pengaman/{pengaman_id}/objek', [DokPengamanController::class, 'objek']);
 Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
 Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
@@ -74,7 +75,8 @@ Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'pu
  * API for BA Buka Tanda Pengaman
  */
 Route::apiResource('bukapengaman', DokBukaPengamanController::class);
-Route::get('/bukapengaman/{buka_pengaman_id}/basic', [DokBukaPengamanController::class, 'basic']);
+Route::get('/bukapengaman/{buka_pengaman_id}/display', [DokBukaPengamanController::class, 'display']);
+Route::get('/bukapengaman/{buka_pengaman_id}/form', [DokBukaPengamanController::class, 'form']);
 Route::get('/bukapengaman/{buka_pengaman_id}/objek', [DokBukaPengamanController::class, 'objek']);
 Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
 
