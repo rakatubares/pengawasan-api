@@ -137,6 +137,48 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Penyegelan
+	 */
+	public function segel()
+	{
+		return $this->hasOneThrough(
+			DokSegel::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'segel'
+		);
+	}
+
+	/**
+	 * BA Buka Segel
+	 */
+	public function bukasegel()
+	{
+		return $this->hasOneThrough(
+			DokBukaSegel::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'bukasegel'
+		);
+	}
+
+	/**
 	 * BA Pengaman
 	 */
 	public function pengaman()
@@ -189,7 +231,7 @@ class Penindakan extends Model
 			// Delete objek penindakan
 			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
-			};
+			}
 		});
 	}
 }

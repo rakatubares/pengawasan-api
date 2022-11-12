@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaPengamanController;
+use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokRiksaBadanController;
+use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -90,6 +92,25 @@ Route::apiResource('riksabadan', DokRiksaBadanController::class);
 Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
 Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
 Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
+
+/**
+ * API for BA Segel
+ */
+Route::apiResource('segel', DokSegelController::class);
+Route::post('/segel/search', [DokSegelController::class, 'search']);
+Route::get('/segel/{segel_id}/display', [DokSegelController::class, 'display']);
+Route::get('/segel/{segel_id}/form', [DokSegelController::class, 'form']);
+Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
+Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
+
+/**
+ * API for BA Buka Segel
+ */
+Route::apiResource('bukasegel', DokBukaSegelController::class);
+Route::get('/bukasegel/{buka_segel_id}/display', [DokBukaSegelController::class, 'display']);
+Route::get('/bukasegel/{buka_segel_id}/form', [DokBukaSegelController::class, 'form']);
+Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
+Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
 /**
  * API for BA Contoh Barang

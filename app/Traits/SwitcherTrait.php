@@ -9,6 +9,7 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
 use App\Http\Resources\DokBukaPengamanResource;
+use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLiResource;
@@ -16,12 +17,14 @@ use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaBadanResource;
+use App\Http\Resources\DokSegelResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
+use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLi;
@@ -29,6 +32,7 @@ use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
+use App\Models\DokSegel;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,6 +53,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
+		],
+		'bukasegel' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/BUKA SEGEL/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokBukaSegel::class,
+			'resource' => DokBukaSegelResource::class,
 		],
 		'contoh' => [
 			'tipe_dok' => 'BA',
@@ -98,6 +109,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokRiksaBadan::class,
 			'resource' => DokRiksaBadanResource::class,
+		],
+		'segel' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/SEGEL/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokSegel::class,
+			'resource' => DokSegelResource::class,
 		],
 
 		// Objek
