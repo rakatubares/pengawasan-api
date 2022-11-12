@@ -64,6 +64,50 @@ class PenindakanResource extends JsonResource
 			$jenis = $dok->object2_type;
 
 			switch ($jenis) {
+				case 'sbp':
+				case 'sbpn':
+					$sbp = new DokSbpResource($this[$jenis], 'pdf');
+					$list_dokumen[$jenis] = $sbp;
+
+					$tipe_lptp = $jenis == 'sbpn' ? 'lptpn' : 'lptp';
+					$lptp = new DokLptpResource($this[$jenis]->lptp);
+					$list_dokumen[$tipe_lptp] = $lptp;
+
+					$lphp = $lptp->lphp;
+					if ($lphp != null) {
+						$tipe_lphp = $jenis == 'sbpn' ? 'lphpn' : 'lphp';
+						$list_dokumen[$tipe_lphp] = new DokLphpResource($lphp, 'pdf');
+
+						$lp = $lphp->lp;
+						if ($lp != null) {
+							switch ($jenis) {
+								case 'sbp':
+									$list_dokumen['lp'] = new DokLpResource($lp, 'pdf');
+									break;
+
+								case 'sbpn':
+									$list_dokumen['lpn'] = new DokLpNResource($lp, 'pdf');
+									break;
+							}
+						} 
+					}
+
+					$tolak1 = $sbp->tolak1;
+					if ($tolak1 != null) {
+						$list_dokumen['tolak1'] = new DokTolakSbp1Resource($tolak1, 'pdf');
+
+						$tolak2 = $tolak1->tolak2;
+						if ($tolak2 != null) {
+							$list_dokumen['tolak2'] = new DokTolakSbp2Resource($tolak2, 'pdf');
+						}
+					}
+					break;
+
+				case 'tegah':
+					$tegah = new DokTegahResource($this->tegah, 'basic');
+					$list_dokumen['tegah'] = $tegah;
+					break;
+
 				case 'riksa':
 					$riksa = new DokRiksaResource($this->riksa, 'pdf');
 					$list_dokumen['riksa'] = $riksa;

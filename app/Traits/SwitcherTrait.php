@@ -13,12 +13,21 @@ use App\Http\Resources\DokBukaSegelResource;
 use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLiResource;
+use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLpNResource;
+use App\Http\Resources\DokLpResource;
+use App\Http\Resources\DokLptpNResource;
+use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaBadanResource;
+use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokTegahResource;
 use App\Http\Resources\DokTitipResource;
+use App\Http\Resources\DokTolakSbp1Resource;
+use App\Http\Resources\DokTolakSbp2Resource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -29,12 +38,23 @@ use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLi;
+use App\Models\DokLp;
+use App\Models\DokLphp;
+use App\Models\DokLphpN;
+use App\Models\DokLpN;
+use App\Models\DokLptp;
+use App\Models\DokLptpN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
+use App\Models\DokSbp;
+use App\Models\DokSbpN;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
+use App\Models\DokTegah;
+use App\Models\DokTolakSbp1;
+use App\Models\DokTolakSbp2;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -84,6 +104,48 @@ trait SwitcherTrait
 			'model' => DokLi::class,
 			'resource' => DokLiResource::class,
 		],
+		'lp' => [
+			'tipe_dok' => 'LP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLp::class,
+			'resource' => DokLpResource::class,
+		],
+		'lpn' => [
+			'tipe_dok' => 'LP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLpN::class,
+			'resource' => DokLpNResource::class,
+		],
+		'lphp' => [
+			'tipe_dok' => 'LPHP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLphp::class,
+			'resource' => DokLphpResource::class,
+		],
+		'lphpn' => [
+			'tipe_dok' => 'LPHP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLphpN::class,
+			'resource' => DokLphpResource::class,
+		],
+		'lptp' => [
+			'tipe_dok' => 'LPTP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLptp::class,
+			'resource' => DokLptpResource::class,
+		],
+		'lptpn' => [
+			'tipe_dok' => 'LPTP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLptpN::class,
+			'resource' => DokLptpNResource::class,
+		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TANDAPENGAMAN/KPU.305/',
@@ -112,6 +174,20 @@ trait SwitcherTrait
 			'model' => DokRiksaBadan::class,
 			'resource' => DokRiksaBadanResource::class,
 		],
+		'sbp' => [
+			'tipe_dok' => 'SBP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokSbp::class,
+			'resource' => DokSbpResource::class,
+		],
+		'sbpn' => [
+			'tipe_dok' => 'SBP-N',
+			'agenda' => '/TINDAK/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokSbpN::class,
+			'resource' => DokSbpResource::class,
+		],
 		'segel' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/SEGEL/KPU.305/',
@@ -119,12 +195,33 @@ trait SwitcherTrait
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,
 		],
+		'tegah' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TEGAH/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokTegah::class,
+			'resource' => DokTegahResource::class
+		],
 		'titip' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TITIP/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTitip::class,
 			'resource' => DokTitipResource::class,
+		],
+		'tolak1' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TOLAK 1/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokTolakSbp1::class,
+			'resource' => DokTolakSbp1Resource::class
+		],
+		'tolak2' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TOLAK 2/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokTolakSbp2::class,
+			'resource' => DokTolakSbp2Resource::class
 		],
 
 		// Objek

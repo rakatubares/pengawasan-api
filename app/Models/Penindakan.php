@@ -95,6 +95,48 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * SBP
+	 */
+	public function sbp()
+	{
+		return $this->hasOneThrough(
+			DokSbp::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'sbp'
+		);
+	}
+
+	/**
+	 * SBP-N
+	 */
+	public function sbpn()
+	{
+		return $this->hasOneThrough(
+			DokSbpN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'sbpn'
+		);
+	}
+
+	/**
 	 * BA Pemeriksaan
 	 */
 	public function riksa()
@@ -133,6 +175,27 @@ class Penindakan extends Model
 		)->where(
 			'object2_type',
 			'riksabadan'
+		);
+	}
+
+	/**
+	 * BA Penegahan
+	 */
+	public function tegah()
+	{
+		return $this->hasOneThrough(
+			DokTegah::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'tegah'
 		);
 	}
 
@@ -231,6 +294,26 @@ class Penindakan extends Model
 			// Delete objek penindakan
 			if (($penindakan->object_type != null) && ($penindakan->object_type != 'orang')) {
 				$penindakan->objectable->delete();
+			};
+
+			// Delete other linked documents
+			if ($penindakan->sbp != null) {
+				$penindakan->sbp->delete();
+			}
+			if ($penindakan->sbpn != null) {
+				$penindakan->sbpn->delete();
+			}
+			if ($penindakan->segel != null) {
+				$penindakan->segel->delete();
+			}
+			if ($penindakan->tegah != null) {
+				$penindakan->tegah->delete();
+			}
+			if ($penindakan->riksa != null) {
+				$penindakan->riksa->delete();
+			}
+			if ($penindakan->riksabadan != null) {
+				$penindakan->riksabadan->delete();
 			}
 		});
 	}
