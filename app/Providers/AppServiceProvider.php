@@ -12,6 +12,7 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokLap;
 use App\Models\DokLi;
 use App\Models\DokPengaman;
+use App\Models\DokRiksa;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
@@ -20,6 +21,7 @@ use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokLapObserver;
 use App\Observers\DokLiObserver;
 use App\Observers\DokPengamanObserver;
+use App\Observers\DokRiksaObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -57,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
+			'riksa' => DokRiksa::class,
 			'sarkut' => DetailSarkut::class,
 		]);
 
@@ -65,5 +68,6 @@ class AppServiceProvider extends ServiceProvider
 		DokLap::observe(DokLapObserver::class);
 		DokLi::observe(DokLiObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
+		DokRiksa::observe(DokRiksaObserver::class);
     }
 }

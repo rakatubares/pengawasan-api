@@ -32,11 +32,12 @@ class DatabaseSeeder extends Seeder
 			RefSprintSeeder::class,
 			DokLiSeeder::class,
 			DokLapSeeder::class,
+			DokRiksaSeeder::class,
 			DokPengamanSeeder::class,
 			DokBukaPengamanSeeder::class,
 			DokBastSeeder::class,
 			DokContohSeeder::class,
-			DokReeksporSeeder::class
+			DokReeksporSeeder::class,
 		]);
 	}
 }

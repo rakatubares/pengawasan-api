@@ -13,6 +13,7 @@ use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
+use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -73,7 +74,16 @@ Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
 /**
- * API for BA Contoh
+ * API for BA Pemeriksaan
+ */
+Route::apiResource('riksa', DokRiksaController::class);
+Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
+Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
+Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
+Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
+
+/**
+ * API for BA Contoh Barang
  */
 Route::apiResource('contoh', DokContohController::class);
 Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
