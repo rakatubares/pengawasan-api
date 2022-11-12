@@ -16,6 +16,7 @@ use App\Models\DokPengaman;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSegel;
+use App\Models\DokTitip;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
@@ -28,6 +29,7 @@ use App\Observers\DokPengamanObserver;
 use App\Observers\DokRiksaObserver;
 use App\Observers\DokRiksaBadanObserver;
 use App\Observers\DokSegelObserver;
+use App\Observers\DokTitipObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -81,5 +83,6 @@ class AppServiceProvider extends ServiceProvider
 		DokRiksa::observe(DokRiksaObserver::class);
 		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
+		DokTitip::observe(DokTitipObserver::class);
     }
 }

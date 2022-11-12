@@ -18,6 +18,7 @@ use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokTitipResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -33,6 +34,7 @@ use App\Models\DokReekspor;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSegel;
+use App\Models\DokTitip;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -116,6 +118,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,
+		],
+		'titip' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TITIP/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokTitip::class,
+			'resource' => DokTitipResource::class,
 		],
 
 		// Objek

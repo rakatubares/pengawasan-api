@@ -17,6 +17,7 @@ use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -111,6 +112,15 @@ Route::get('/bukasegel/{buka_segel_id}/display', [DokBukaSegelController::class,
 Route::get('/bukasegel/{buka_segel_id}/form', [DokBukaSegelController::class, 'form']);
 Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
 Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
+
+/**
+ * API for BA Titip
+ */
+Route::apiResource('titip', DokTitipController::class);
+Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
+Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
+Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
+Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
 /**
  * API for BA Contoh Barang
