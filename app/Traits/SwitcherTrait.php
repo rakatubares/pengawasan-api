@@ -13,6 +13,7 @@ use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokPengamanResource;
+use App\Http\Resources\DokReeksporResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -23,6 +24,7 @@ use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLi;
 use App\Models\DokPengaman;
+use App\Models\DokReekspor;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
 
@@ -71,6 +73,13 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,
+		],
+		'reekspor' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/KPU.305/',
+			'parent' => 'reekspor',
+			'model' => DokReekspor::class,
+			'resource' => DokReeksporResource::class,
 		],
 
 		// Objek

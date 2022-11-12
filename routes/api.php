@@ -12,6 +12,7 @@ use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokPengamanController;
+use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -42,16 +43,34 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
 
-/**
- * API for penindakan
- */
-Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
-
 /*
  |--------------------------------------------------------------------------
  | Details routes
  |--------------------------------------------------------------------------
  */
+
+/**
+ * API for penindakan
+ */
+Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
+
+/**
+ * API for LI-1
+ */
+Route::apiResource('li', DokLiController::class);
+Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
+Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
+Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
+Route::post('/li/search', [DokLiController::class, 'search']);
+
+/**
+ * API for LAP
+ */
+Route::resource('lap', DokLapController::class);
+Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
+Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
+Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
 /**
  * API for BA Contoh
@@ -90,22 +109,11 @@ Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
 /**
- * API for LPHP
+ * API for BA Reekspor
  */
-Route::resource('lap', DokLapController::class);
-Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
-Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
-Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
-Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
-
-/**
- * API for LI-1
- */
-Route::apiResource('li', DokLiController::class);
-Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
-Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
-Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
-Route::post('/li/search', [DokLiController::class, 'search']);
+Route::apiResource('reekspor', DokReeksporController::class);
+Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
+Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'publish']);
 
 /**
  * API for Details
@@ -193,7 +201,6 @@ Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
  * API for Skema Penindakan
  */
 Route::apiResource('penindakan', RefSkemaPenindakanController::class);
-
 
 /**
  * API for Grup Lokasi
