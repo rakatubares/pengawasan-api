@@ -116,6 +116,27 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * BA Pemeriksaan Badan
+	 */
+	public function riksabadan()
+	{
+		return $this->hasOneThrough(
+			DokRiksaBadan::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'riksabadan'
+		);
+	}
+
+	/**
 	 * BA Pengaman
 	 */
 	public function pengaman()

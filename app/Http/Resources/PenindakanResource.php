@@ -69,6 +69,11 @@ class PenindakanResource extends JsonResource
 					$list_dokumen['riksa'] = $riksa;
 					break;
 
+				case 'riksabadan':
+					$riksabadan = new DokRiksaBadanResource($this->riksabadan, 'pdf');
+					$list_dokumen['riksabadan'] = $riksabadan;
+					break;
+
 				case 'pengaman':
 					$pengaman = new DokPengamanResource($this->pengaman, 'pdf');
 					$list_dokumen['pengaman'] = $pengaman;
@@ -78,7 +83,7 @@ class PenindakanResource extends JsonResource
 					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'pdf');
 					$list_dokumen['bukapengaman'] = $bukapengaman;
 					break;
-				
+
 				default:
 					# code...
 					break;

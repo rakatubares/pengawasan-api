@@ -14,6 +14,7 @@ use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
+use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
@@ -46,7 +47,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*
  |--------------------------------------------------------------------------
- | Details routes
+ | Penindakan routes
  |--------------------------------------------------------------------------
  */
 
@@ -81,6 +82,14 @@ Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
 Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
 Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
 Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
+
+/**
+ * API for BA Periksa Badan
+ */
+Route::apiResource('riksabadan', DokRiksaBadanController::class);
+Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
+Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
+Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
 
 /**
  * API for BA Contoh Barang
