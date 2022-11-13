@@ -8,26 +8,44 @@ use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokBastResource;
+use App\Http\Resources\DokBastTableResource;
 use App\Http\Resources\DokBukaPengamanResource;
+use App\Http\Resources\DokBukaPengamanTableResource;
 use App\Http\Resources\DokBukaSegelResource;
+use App\Http\Resources\DokBukaSegelTableResource;
 use App\Http\Resources\DokContohResource;
+use App\Http\Resources\DokContohTableResource;
 use App\Http\Resources\DokLapResource;
+use App\Http\Resources\DokLapTableResource;
 use App\Http\Resources\DokLiResource;
+use App\Http\Resources\DokLiTableResource;
 use App\Http\Resources\DokLphpResource;
+use App\Http\Resources\DokLphpTableResource;
 use App\Http\Resources\DokLpNResource;
 use App\Http\Resources\DokLpResource;
+use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokPengamanResource;
+use App\Http\Resources\DokPengamanTableResource;
 use App\Http\Resources\DokReeksporResource;
+use App\Http\Resources\DokReeksporTableResource;
 use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaBadanResource;
+use App\Http\Resources\DokRiksaBadanTableResource;
+use App\Http\Resources\DokRiksaTableResource;
 use App\Http\Resources\DokSbpResource;
+use App\Http\Resources\DokSbpTableResource;
 use App\Http\Resources\DokSegelResource;
+use App\Http\Resources\DokSegelTableResource;
 use App\Http\Resources\DokTegahResource;
+use App\Http\Resources\DokTegahTableResource;
 use App\Http\Resources\DokTitipResource;
+use App\Http\Resources\DokTitipTableResource;
 use App\Http\Resources\DokTolakSbp1Resource;
+use App\Http\Resources\DokTolakSbp1TableResource;
 use App\Http\Resources\DokTolakSbp2Resource;
+use App\Http\Resources\DokTolakSbp2TableResource;
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
@@ -61,13 +79,14 @@ use Illuminate\Database\Eloquent\Model;
 trait SwitcherTrait
 {
 	private $models = [
-		// Dokumen
+		// Penindakan
 		'bast' => [
 			'tipe_dok' => 'BAST',
 			'agenda' => '/KPU.305/',
 			'parent' => 'bast',
 			'model' => DokBast::class,
 			'resource' => DokBastResource::class,
+			'table_resource' => DokBastTableResource::class,
 		],
 		'bukapengaman' => [
 			'tipe_dok' => 'BA',
@@ -75,6 +94,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokBukaPengaman::class,
 			'resource' => DokBukaPengamanResource::class,
+			'table_resource' => DokBukaPengamanTableResource::class,
 		],
 		'bukasegel' => [
 			'tipe_dok' => 'BA',
@@ -82,6 +102,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokBukaSegel::class,
 			'resource' => DokBukaSegelResource::class,
+			'table_resource' => DokBukaSegelTableResource::class,
 		],
 		'contoh' => [
 			'tipe_dok' => 'BA',
@@ -89,6 +110,7 @@ trait SwitcherTrait
 			'parent' => 'contoh',
 			'model' => DokContoh::class,
 			'resource' => DokContohResource::class,
+			'table_resource' => DokContohTableResource::class,
 		],
 		'lap' => [
 			'tipe_dok' => 'LAP',
@@ -96,6 +118,7 @@ trait SwitcherTrait
 			'parent' => 'lap',
 			'model' => DokLap::class,
 			'resource' => DokLapResource::class,
+			'table_resource' => DokLapTableResource::class,
 		],
 		'li' => [
 			'tipe_dok' => 'LI-1',
@@ -103,6 +126,7 @@ trait SwitcherTrait
 			'parent' => 'li',
 			'model' => DokLi::class,
 			'resource' => DokLiResource::class,
+			'table_resource' => DokLiTableResource::class,
 		],
 		'lp' => [
 			'tipe_dok' => 'LP',
@@ -110,6 +134,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLp::class,
 			'resource' => DokLpResource::class,
+			'table_resource' => DokLpTableResource::class,
 		],
 		'lpn' => [
 			'tipe_dok' => 'LP-N',
@@ -117,6 +142,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLpN::class,
 			'resource' => DokLpNResource::class,
+			'table_resource' => DokLpTableResource::class,
 		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
@@ -124,6 +150,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLphp::class,
 			'resource' => DokLphpResource::class,
+			'table_resource' => DokLphpTableResource::class,
 		],
 		'lphpn' => [
 			'tipe_dok' => 'LPHP-N',
@@ -131,6 +158,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLphpN::class,
 			'resource' => DokLphpResource::class,
+			'table_resource' => DokLphpTableResource::class,
 		],
 		'lptp' => [
 			'tipe_dok' => 'LPTP',
@@ -152,6 +180,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokPengaman::class,
 			'resource' => DokPengamanResource::class,
+			'table_resource' => DokPengamanTableResource::class,
 		],
 		'reekspor' => [
 			'tipe_dok' => 'BA',
@@ -159,6 +188,7 @@ trait SwitcherTrait
 			'parent' => 'reekspor',
 			'model' => DokReekspor::class,
 			'resource' => DokReeksporResource::class,
+			'table_resource' => DokReeksporTableResource::class,
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
@@ -166,6 +196,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokRiksa::class,
 			'resource' => DokRiksaResource::class,
+			'table_resource' => DokRiksaTableResource::class,
 		],
 		'riksabadan' => [
 			'tipe_dok' => 'BA',
@@ -173,6 +204,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokRiksaBadan::class,
 			'resource' => DokRiksaBadanResource::class,
+			'table_resource' => DokRiksaBadanTableResource::class,
 		],
 		'sbp' => [
 			'tipe_dok' => 'SBP',
@@ -180,6 +212,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokSbp::class,
 			'resource' => DokSbpResource::class,
+			'table_resource' => DokSbpTableResource::class,
 		],
 		'sbpn' => [
 			'tipe_dok' => 'SBP-N',
@@ -187,6 +220,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokSbpN::class,
 			'resource' => DokSbpResource::class,
+			'table_resource' => DokSbpTableResource::class,
 		],
 		'segel' => [
 			'tipe_dok' => 'BA',
@@ -194,13 +228,15 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokSegel::class,
 			'resource' => DokSegelResource::class,
+			'table_resource' => DokSegelTableResource::class,
 		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TEGAH/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTegah::class,
-			'resource' => DokTegahResource::class
+			'resource' => DokTegahResource::class,
+			'table_resource' => DokTegahTableResource::class,
 		],
 		'titip' => [
 			'tipe_dok' => 'BA',
@@ -208,20 +244,23 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokTitip::class,
 			'resource' => DokTitipResource::class,
+			'table_resource' => DokTitipTableResource::class,
 		],
 		'tolak1' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TOLAK 1/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp1::class,
-			'resource' => DokTolakSbp1Resource::class
+			'resource' => DokTolakSbp1Resource::class,
+			'table_resource' => DokTolakSbp1TableResource::class,
 		],
 		'tolak2' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TOLAK 2/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokTolakSbp2::class,
-			'resource' => DokTolakSbp2Resource::class
+			'resource' => DokTolakSbp2Resource::class,
+			'table_resource' => DokTolakSbp2TableResource::class,
 		],
 
 		// Objek
