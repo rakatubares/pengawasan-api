@@ -137,12 +137,12 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * BA Penyegelan
+	 * BA Pemeriksaan
 	 */
-	public function segel()
+	public function riksa()
 	{
 		return $this->hasOneThrough(
-			DokSegel::class,
+			DokRiksa::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -153,17 +153,17 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'segel'
+			'riksa'
 		);
 	}
 
 	/**
-	 * BA Penyegelan
+	 * BA Pemeriksaan Badan
 	 */
-	public function bukasegel()
+	public function riksabadan()
 	{
 		return $this->hasOneThrough(
-			DokBukaSegel::class,
+			DokRiksaBadan::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -174,7 +174,7 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'bukasegel'
+			'riksabadan'
 		);
 	}
 
@@ -200,12 +200,12 @@ class Penindakan extends Model
 	}
 
 	/**
-	 * BA Pemeriksaan
+	 * BA Penyegelan
 	 */
-	public function riksa()
+	public function segel()
 	{
 		return $this->hasOneThrough(
-			DokRiksa::class,
+			DokSegel::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -216,18 +216,18 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'riksa'
+			'segel'
 		);
 	}
 
 
 	/**
-	 * BA Pemeriksaan Badan
+	 * BA Buka Segel
 	 */
-	public function riksabadan()
+	public function bukasegel()
 	{
 		return $this->hasOneThrough(
-			DokRiksaBadan::class,
+			DokBukaSegel::class,
 			ObjectRelation::class,
 			'object1_id',
 			'id',
@@ -238,7 +238,7 @@ class Penindakan extends Model
 			'penindakan'
 		)->where(
 			'object2_type',
-			'riksabadan'
+			'bukasegel'
 		);
 	}
 

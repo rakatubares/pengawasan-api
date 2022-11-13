@@ -15,9 +15,9 @@ use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLpController;
-use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
+use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokNhiController;
@@ -31,17 +31,17 @@ use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
-use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefBandaraController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKantorBCController;
-use App\Http\Controllers\RefKategoriPelanggaranController;
 use App\Http\Controllers\RefKategoriBarangController;
+use App\Http\Controllers\RefKategoriPelanggaranController;
 use App\Http\Controllers\RefKemasanController;
 use App\Http\Controllers\RefKepercayaanSumberController;
 use App\Http\Controllers\RefLokasiController;
@@ -84,7 +84,6 @@ Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
 Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
 Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
 Route::post('/lppi/search', [DokLppiController::class, 'search']);
-
 
 /**
  * API for LKAI
@@ -145,7 +144,7 @@ Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
  * API for SBP
  */
 
- // Monitoring penarikan
+// Monitoring penarikan
 Route::apiResource('sbp/tarik', MonTarikSbpController::class);
 
 // Dokumen
@@ -202,7 +201,6 @@ Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
 Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
 Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
 
-
 /**
  * API for BA Periksa Badan
  */
@@ -239,7 +237,7 @@ Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
 Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
 Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
-/** 
+/**
  * API for BA Contoh Barang
  */
 Route::apiResource('contoh', DokContohController::class);
@@ -247,7 +245,7 @@ Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display'
 Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
 Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish']);
 
-/** 
+/**
  * API for BA Tanda Pengaman
  */
 Route::apiResource('pengaman', DokPengamanController::class);
@@ -352,11 +350,6 @@ Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
 Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
-
-/**
- * API for penindakan
- */
-// Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 
 /*
  |--------------------------------------------------------------------------

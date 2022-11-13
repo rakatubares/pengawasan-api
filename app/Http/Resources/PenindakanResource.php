@@ -46,6 +46,7 @@ class PenindakanResource extends JsonResource
 			$array = $penindakan;
 		} else if ($this->element == 'dokumen') {
 			$array = $dokumen;
+			// $array = $penindakan;
 		} else {
 			$array = [
 				'penindakan' => $penindakan,
@@ -132,12 +133,12 @@ class PenindakanResource extends JsonResource
 					$bukasegel = new DokBukaSegelResource($this->bukasegel, 'pdf');
 					$list_dokumen['bukasegel'] = $bukasegel;
 					break;
-				
+
 				case 'pengaman':
 					$pengaman = new DokPengamanResource($this->pengaman, 'pdf');
 					$list_dokumen['pengaman'] = $pengaman;
 					break;
-
+				
 				case 'bukapengaman':
 					$bukapengaman = new DokBukaPengamanResource($this->bukapengaman, 'pdf');
 					$list_dokumen['bukapengaman'] = $bukapengaman;

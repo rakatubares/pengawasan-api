@@ -166,7 +166,7 @@ trait SwitcherTrait
 			'table_resource' => DokNiNTableResource::class,
 		],
 		
-		// Dokumen
+		// Penindakan
 		'bast' => [
 			'tipe_dok' => 'BAST',
 			'agenda' => '/KPU.305/',
@@ -317,14 +317,6 @@ trait SwitcherTrait
 			'resource' => DokSegelResource::class,
 			'table_resource' => DokSegelTableResource::class,
 		],
-		'titip' => [
-			'tipe_dok' => 'BA',
-			'agenda' => '/TITIP/KPU.305/',
-			'parent' => 'penindakan',
-			'model' => DokTitip::class,
-			'resource' => DokTitipResource::class,
-			'table_resource' => DokTitipTableResource::class,
-		],
 		'tegah' => [
 			'tipe_dok' => 'BA',
 			'agenda' => '/TEGAH/KPU.305/',
@@ -332,6 +324,14 @@ trait SwitcherTrait
 			'model' => DokTegah::class,
 			'resource' => DokTegahResource::class,
 			'table_resource' => DokTegahTableResource::class,
+		],
+		'titip' => [
+			'tipe_dok' => 'BA',
+			'agenda' => '/TITIP/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokTitip::class,
+			'resource' => DokTitipResource::class,
+			'table_resource' => DokTitipTableResource::class,
 		],
 		'tolak1' => [
 			'tipe_dok' => 'BA',

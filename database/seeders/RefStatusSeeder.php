@@ -57,7 +57,7 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
-			[ 
+			[
 				'kode_status' => 105, 
 				'short_status' => 'draft titip',
 				'uraian_status' => 'Pembuatan draft BA Penitipan',
