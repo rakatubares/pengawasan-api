@@ -2,82 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokLapResource;
-use App\Http\Resources\DokLapTableResource;
-use App\Models\DokLap;
-use App\Models\DokLi;
-use App\Models\ObjectRelation;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokLapController extends Controller
+class DokLapController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
 
-	public function __construct()
+	public function __construct($doc_type='lap')
 	{
-		$this->doc_type = 'lap';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_doc = DokLap::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$doc_list = DokLapTableResource::collection($all_doc);
-		return $doc_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$doc = new DokLapResource(DokLap::findOrFail($id));
-		return $doc;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$doc = new DokLapResource(DokLap::findOrFail($id), 'display');
-		return $doc;
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$doc = new DokLapResource(DokLap::findOrFail($id), 'form');
-		return $doc;
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -89,7 +21,7 @@ class DokLapController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'tanggal_dokumen' => 'required|date',
@@ -124,7 +56,7 @@ class DokLapController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$thn_dok = date('Y', strtotime($request->tanggal_dokumen));
@@ -185,29 +117,15 @@ class DokLapController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// Validate data
-		$this->validateData($request);
+		$result = $this->storePenindakanDocument($request);
+		return $result;
+	}
 
-		DB::beginTransaction();
-		try {
-			// Save data
-			$data_lap = $this->prepareData($request, 'insert');
-			$lap = DokLap::create($data_lap);
-
-			// Create relation
-			if ($request->jenis_sumber == 'LI-1') {
-				$this->createLiRelation($request, $lap);
-			}
-
-			// Commit store query
-			DB::commit();
-
-			// Return data
-			$lap_resource = new DokLapResource(DokLap::findOrFail($lap->id), 'form');
-			return $lap_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+	// Handle store relation
+	protected function handleStorePenindakan($request)
+	{
+		if ($request->jenis_sumber == 'LI-1') {
+			$this->createDocRelation('li', $request->sumber_id, 106);
 		}
 	}
 
@@ -220,134 +138,48 @@ class DokLapController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLap::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			// Validate data
-			$this->validateData($request);
-
-			DB::beginTransaction();
-			try {
-				// Get existing data
-				$lap = DokLap::find($id);
-				$existing_sumber = $lap->jenis_sumber;
-
-				// Update relation if necessary
-				if ($existing_sumber == 'LI-1') {
-					if ($request->jenis_sumber == 'LI-1') {
-						if ($request->sumber_id != $lap->li->id) {
-							$this->deleteLiRelation($lap);
-							$this->createLiRelation($request, $lap);
-						}
-					} else {
-						$this->deleteLiRelation($lap);
-					}
-				} else {
-					if ($request->jenis_sumber == 'LI-1') {
-						$this->createLiRelation($request, $lap);
-					}
-				}
-
-				// Update data
-				$data_lap = $this->prepareData($request, 'update');
-				DokLap::where('id', $id)->update($data_lap);
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated data
-				$lap_resource = new DokLapResource(DokLap::findOrFail($id), 'form');
-				$result = $lap_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->updatePenindakanDocument($request, $id, ['relation']);
 		return $result;
 	}
 
-	/**
-	 * Create relation with LI-1
-	 * 
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  App\Models\DokLap;
-	 */
-	private function createLiRelation(Request $request, DokLap $lap)
+	// Handle update relation
+	protected function updateDocRelation($request)
 	{
-		$this->createRelation('li', $request->sumber_id, 'lap', $lap->id);
-		DokLi::find($request->sumber_id)->update(['kode_status' => 106]);
-	}
+		$existing_sumber = $this->doc->jenis_sumber;
 
-	/**
-	 * Delete relation with LI-1
-	 * 
-	 * @param  App\Models\DokLap;
-	 */
-	private function deleteLiRelation(DokLap $lap)
-	{
-		$lap->li->update(['kode_status' => 200]);
-		ObjectRelation::where([
-			'object1_type' => 'li',
-			'object1_id' => $lap->li->id,
-			'object2_type' => $this->doc_type,
-			'object2_id' => $lap->id
-		])->delete();
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
-	{
-		DB::beginTransaction();
-		try {
-			$lap = DokLap::find($id);
-			$this->publishDocument('lap', $lap->id, $lap->thn_dok);
-
-			if ($lap->li != null) {
-				$lap->li->update(['kode_status' => 206]);
+		// Update relation if necessary
+		if ($existing_sumber == 'LI-1') {
+			if ($request->jenis_sumber == 'LI-1') {
+				if ($request->sumber_id != $this->doc->li->id) {
+					$this->deleteDocRelation('li', 200);
+					$this->createDocRelation('li', $request->sumber_id, 106);
+				}
+			} else {
+				$this->deleteDocRelation('li', 200);
 			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		} else {
+			if ($request->jenis_sumber == 'LI-1') {
+				$this->createDocRelation('li', $request->sumber_id, 106);
+			}
 		}
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
 	/**
-	 * Remove the specified resource from storage.
+	 * Publish document.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id)
+	public function publish($id, $withAddition=true, $updateDate=false)
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokLap::class, $id);
-			if ($is_unpublished) {
-				DokLap::find($id)->delete();
-			}
+		parent::publish($id, $withAddition, $updateDate);
+	}
 
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+	// Additional function when publish
+	protected function publishAddition()
+	{
+		if ($this->doc->li != null) {
+			$this->doc->li->update(['kode_status' => 206]);
 		}
 	}
 }

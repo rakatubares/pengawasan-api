@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ObjectRelation;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,8 +43,8 @@ class DokController extends Controller
 	 */
 	private function getCurrentDate()
 	{
-		$this->tanggal = date('Y-m-d') ;
-		$this->tahun = date('Y') ;
+		$this->date = date('Y-m-d') ;
+		$this->year = date('Y') ;
 	}
 
 	/**
@@ -57,7 +58,7 @@ class DokController extends Controller
 		$agenda_dok = $this->doc->agenda_dok;
 		$latest_number = $this->model::select('no_dok')
 			->where('agenda_dok', $agenda_dok)
-			->where('thn_dok', $this->tahun)
+			->where('thn_dok', $this->year)
 			->orderByDesc('no_dok')
 			->first();
 
@@ -176,31 +177,44 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($id, $withAddition=false)
+	public function publish($id, $withAddition=false, $updateDate=true)
 	{
-		DB::beginTransaction();
-		try {
-			// Generate document's number and date
-			$this->getDocument($id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber($this->model);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
+		if ($is_unpublished) {
+			DB::beginTransaction();
+			try {
+				// Update document's date
+				if ($updateDate) {
+					$this->getCurrentDate();
+					$this->updateDocDate();
+				} else {
+					$this->year = $this->doc->thn_dok;
+				}
 
-			// Update data
-			// $this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-			$this->updateDocNumber($number);
-			$this->updateDocDate();
-			$this->doc->kode_status = 200;
-			$this->doc->save();
+				// Update document's number
+				$number = $this->getNewDocNumber();
+				$this->updateDocNumber($number);
+				
+				// Update status
+				$this->doc->kode_status = 200;
 
-			// Additional procedures
-			if ($withAddition) {
-				$this->publishAddition();
+				// Save changes
+				$this->doc->save();
+
+				// Additional procedures
+				if ($withAddition) {
+					$this->publishAddition();
+				}
+				
+				DB::commit();
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
 			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
+			return $result;
 		}
 	}
 
@@ -216,7 +230,7 @@ class DokController extends Controller
 			. '-' 
 			. $number 
 			. $this->doc->agenda_dok 
-			. $this->tahun;
+			. $this->year;
 
 		// Set new values then update
 		$this->doc->no_dok = $number;
@@ -228,8 +242,8 @@ class DokController extends Controller
 	 */
 	private function updateDocDate()
 	{
-		$this->doc->tanggal_dokumen = $this->tanggal;
-		$this->doc->thn_dok = $this->tahun;
+		$this->doc->tanggal_dokumen = $this->date;
+		$this->doc->thn_dok = $this->year;
 	}
 
 	/*
@@ -246,18 +260,71 @@ class DokController extends Controller
 	 */
 	public function destroy($id)
 	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument($id);
-			$is_unpublished = $this->checkUnpublished();
-			if ($is_unpublished) {
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
+		if ($is_unpublished) {
+			DB::beginTransaction();
+			try {
 				$this->model::find($id)->delete();
+				
+				DB::commit();
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
 			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
+			return $result;
 		}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Relation & status functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Update document's status
+	 */
+	protected function updateStatus($doc, $status)
+	{
+		$doc->update(['kode_status' => $status]);
+	}
+	
+	/**
+	 * Create document relation
+	 * 
+	 * @param String $doc1_type
+	 * @param Int $doc1_id
+	 * @param String $doc2_type
+	 * @param Int $doc2_id
+	 */
+	protected function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
+	{
+		ObjectRelation::create([
+			'object1_type' => $object1_type,
+			'object1_id' => $object1_id,
+			'object2_type' => $object2_type,
+			'object2_id' => $object2_id,
+		]);
+	}
+
+	/**
+	 * Delete document relation
+	 * 
+	 * @param String $doc1_type
+	 * @param Int $doc1_id
+	 * @param String $doc2_type
+	 * @param Int $doc2_id
+	 */
+	protected function deleteRelation($object1_type, $object1_id, $object2_type, $object2_id)
+	{
+		ObjectRelation::where([
+			'object1_type' => $object1_type,
+			'object1_id' => $object1_id,
+			'object2_type' => $object2_type,
+			'object2_id' => $object2_id
+		])->delete();
 	}
 }
