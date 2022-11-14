@@ -2,91 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokSegelTableResource;
 use App\Models\DokSegel;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokSegelController extends Controller
+class DokSegelController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='segel')
 	{
-		$this->doc_type = 'segel';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_segel = DokSegel::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$segel_list = DokSegelTableResource::collection($all_segel);
-		return $segel_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$segel = new DokSegelResource(DokSegel::findOrFail($id));
-		return $segel;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'display');
-		return $segel;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$segel = new DokSegelResource(DokSegel::findOrFail($id), 'form');
-		return $segel;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new DokSegelResource(DokSegel::find($id), 'objek');
-		return $objek;
+		parent::__construct($doc_type);
 	}
 
 	/**
@@ -129,7 +53,7 @@ class DokSegelController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateSegel(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'jenis_segel' => 'required',
@@ -140,7 +64,7 @@ class DokSegelController extends Controller
 	/**
 	 * Prepare data segel
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok; 
 
@@ -167,38 +91,22 @@ class DokSegelController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $linked_doc=false)
+	public function store(Request $request)
 	{
-		// Validate data penindakan if not from linked doc
-		if ($linked_doc == false) {
-			$this->validatePenindakan($request); 
-		}
+		$result = $this->storePenindakanDocument($request);
+		return $result;
+	}
 
-		// Validate data segel
-		$this->validateSegel($request);
+	protected function storing($request)
+	{
+		$this->validatePenindakan($request); 
+	}
 
-		DB::beginTransaction();
-		try {
-
-			// Save data segel
-			$data_segel = $this->prepareData($request, 'insert');
-			$segel = DokSegel::create($data_segel);
-
-			// Save data penindakan and create object relation
-			if ($linked_doc == false) {
-				$this->storePenindakan($request, 'segel', $segel->id);
-			}
-
-			// Commit store query
-			DB::commit();
-
-			// Return created segel
-			$segel_resource = new DokSegelResource(DokSegel::findOrFail($segel->id), 'form');
-			return $segel_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+	protected function stored($request)
+	{
+		// Create penindakan
+		$this->storePenindakan($request);
+		$this->createRelation('penindakan', $this->penindakan->id, $this->doc_type, $this->doc->id);
 	}
 
 	/**
@@ -208,103 +116,19 @@ class DokSegelController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, $id, $linked_doc=false)
+	public function update(Request $request, $id)
 	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokSegel::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			DB::beginTransaction();
-
-			try {
-				// Validate data segel
-				$this->validateSegel($request);
-
-				// Update BA Segel
-				$data_segel = $this->prepareData($request, 'update');
-				DokSegel::where('id', $id)->update($data_segel);
-
-				// Update data penindakan if not from linked doc
-				if ($linked_doc == false) {
-					$this->validatePenindakan($request); 
-					$this->updatePenindakan($request);
-				}
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated SBP
-				$segel_resource = new DokSegelResource(DokSegel::findOrFail($id), 'form');
-				$result = $segel_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
 	}
 
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
+	protected function updated($request)
 	{
-		DB::beginTransaction();
-
-		try {
-			// Create array from SBP object
-			$segel = new DokSegelResource(DokSegel::find($id));
-			$arr = json_decode($segel->toJson(), true);
-
-			// Check penindakan date
-			$year = $this->datePenindakan(DokSegel::class, $id);
-		
-			// Publish each document
-			foreach ($arr['dokumen'] as $type => $data) {
-				$this->publishDocument($type, $data['id'], $year);
-			}
-
-			// Commit transaction
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$this->updatePenindakan($request);
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy or publish functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
+	protected function publishing($id)
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokSegel::class, $id);
-			if ($is_unpublished) {
-				DokSegel::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$this->getPenindakanDate($id);
 	}
-
-	
 }

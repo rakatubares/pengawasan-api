@@ -22,6 +22,7 @@ class DokPenindakanController extends DokController
 		DB::beginTransaction();
 		try {
 			// Save to database
+			$this->storing($request);
 			$this->saveData($request);
 			$this->stored($request);
 			
@@ -35,6 +36,11 @@ class DokPenindakanController extends DokController
 			DB::rollBack();
 			throw $th;
 		}
+	}
+
+	protected function storing($request)
+	{
+		// 
 	}
 
 	protected function stored($request)
