@@ -130,12 +130,6 @@ class DokLiController extends DokPenindakanController
 		return $result;
 	}
 
-	// Handle store relation
-	protected function handleStorePenindakan($request)
-	{ 
-		// Dummy function 
-	}
-
 	/**
 	 * Update the specified resource in storage.
 	 *

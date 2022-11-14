@@ -122,7 +122,7 @@ class DokLapController extends DokPenindakanController
 	}
 
 	// Handle store relation
-	protected function handleStorePenindakan($request)
+	protected function stored($request)
 	{
 		if ($request->jenis_sumber == 'LI-1') {
 			$this->createDocRelation('li', $request->sumber_id, 106);
@@ -138,12 +138,12 @@ class DokLapController extends DokPenindakanController
 	 */
 	public function update(Request $request, $id)
 	{
-		$result = $this->updatePenindakanDocument($request, $id, ['relation']);
+		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
 	}
 
 	// Handle update relation
-	protected function updateDocRelation($request)
+	protected function updating($request)
 	{
 		$existing_sumber = $this->doc->jenis_sumber;
 

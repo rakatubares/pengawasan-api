@@ -41,7 +41,7 @@ class DokController extends Controller
 	/**
 	 * Get current date and year
 	 */
-	private function getCurrentDate()
+	protected function getCurrentDate()
 	{
 		$this->date = date('Y-m-d') ;
 		$this->year = date('Y') ;
@@ -52,11 +52,15 @@ class DokController extends Controller
 	 * 
 	 * @return int
 	 */
-	private function getNewDocNumber()
+	private function getNewDocNumber($doc=null, $model=null)
 	{
+		// If document and model objects are not specified, use default objects
+		if ($doc==null) {$doc = $this->doc;}
+		if ($model==null) {$model = $this->model;}
+
 		// Ambil nomor terakhir berdasarkan skema, agenda, dan tahun
-		$agenda_dok = $this->doc->agenda_dok;
-		$latest_number = $this->model::select('no_dok')
+		$agenda_dok = $doc->agenda_dok;
+		$latest_number = $model::select('no_dok')
 			->where('agenda_dok', $agenda_dok)
 			->where('thn_dok', $this->year)
 			->orderByDesc('no_dok')
@@ -77,10 +81,12 @@ class DokController extends Controller
 	 * 
 	 * @return boolean
 	 */
-	public function checkUnpublished()
+	public function checkUnpublished($doc=null)
 	{
+		if ($doc==null) {$doc = $this->doc;}
+
 		// Return TRUE if document is unpublished
-		$kode_status = $this->doc->kode_status;
+		$kode_status = $doc->kode_status;
 		$is_unpublished = (in_array($kode_status, $this->unpublished_status)) ? true : false;
 		return $is_unpublished;
 	}
@@ -177,36 +183,16 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($id, $withAddition=false, $updateDate=true)
+	public function publish($id)
 	{
 		$this->getDocument($id);
 		$is_unpublished = $this->checkUnpublished();
 		if ($is_unpublished) {
 			DB::beginTransaction();
 			try {
-				// Update document's date
-				if ($updateDate) {
-					$this->getCurrentDate();
-					$this->updateDocDate();
-				} else {
-					$this->year = $this->doc->thn_dok;
-				}
-
-				// Update document's number
-				$number = $this->getNewDocNumber();
-				$this->updateDocNumber($number);
-				
-				// Update status
-				$this->doc->kode_status = 200;
-
-				// Save changes
-				$this->doc->save();
-
-				// Additional procedures
-				if ($withAddition) {
-					$this->publishAddition();
-				}
-				
+				$this->publishing($id);
+				$this->publishDocument();
+				$this->published();
 				DB::commit();
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -216,6 +202,34 @@ class DokController extends Controller
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 			return $result;
 		}
+	}
+
+	/**
+	 * Update document's date before being published
+	 */
+	protected function publishing($id)
+	{
+		$this->getCurrentDate();
+		$this->updateDocDate();
+	}
+
+	/**
+	 * Update document's number and status
+	 */
+	protected function publishDocument($doc=null, $model=null)
+	{
+		$number = $this->getNewDocNumber($doc, $model);
+		$this->updateDocNumber($number);
+		$this->doc->kode_status = 200;
+		$this->doc->save();
+	}
+
+	/**
+	 * Perform any actions required after document is published.
+	 */
+	protected function published()
+	{
+		// 
 	}
 
 	/**

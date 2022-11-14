@@ -23,7 +23,7 @@ class DokPenindakanController extends DokController
 		try {
 			// Save to database
 			$this->saveData($request);
-			$this->handleStorePenindakan($request);
+			$this->stored($request);
 			
 			// Commit query
 			DB::commit();
@@ -37,10 +37,15 @@ class DokPenindakanController extends DokController
 		}
 	}
 
+	protected function stored($request)
+	{
+		// 
+	}
+
 	/**
 	 * Update penindakan document's data
 	 */
-	protected function updatePenindakanDocument($request, $doc_id, $withOptions=[])
+	protected function updatePenindakanDocument($request, $doc_id)
 	{
 		// Check if document is not published yet
 		$this->getDocument($doc_id);
@@ -53,11 +58,13 @@ class DokPenindakanController extends DokController
 				// Validate data
 				$this->validateData($request);
 
-				if (in_array('relation', $withOptions)) {$this->updateDocRelation($request);}
+				// if (in_array('relation', $withOptions)) {$this->updateDocRelation($request);}
 
 				// Update data
+				$this->updating($request);
 				$data = $this->prepareData($request, 'update');
 				$this->doc->update($data);
+				$this->updated($request);
 
 				// Commit query
 				DB::commit();
@@ -73,6 +80,16 @@ class DokPenindakanController extends DokController
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
 			return $result;
 		}
+	}
+
+	protected function updating($request)
+	{
+		// 
+	}
+
+	protected function updated($request)
+	{
+		// 
 	}
 
 	/*
