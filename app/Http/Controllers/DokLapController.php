@@ -170,13 +170,21 @@ class DokLapController extends DokPenindakanController
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($id, $withAddition=true, $updateDate=false)
+	public function publish($id, $withAddition=true)
 	{
-		parent::publish($id, $withAddition, $updateDate);
+		parent::publish($id, $withAddition);
+	}
+
+	/**
+	 * Get year before document is published
+	 */
+	protected function publishing($id)
+	{
+		$this->year = $this->doc->thn_dok;
 	}
 
 	// Additional function when publish
-	protected function publishAddition()
+	protected function published()
 	{
 		if ($this->doc->li != null) {
 			$this->doc->li->update(['kode_status' => 206]);
