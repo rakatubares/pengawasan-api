@@ -33,9 +33,15 @@ class DokController extends Controller
 	 * 
 	 * @param int $doc_id
 	 */
-	protected function getDocument($doc_id)
+	protected function getDocument($doc_id, $doc_type=null)
 	{
-		$this->doc = $this->model::findOrFail($doc_id);
+		if ($doc_type==null) {
+			$this->doc = $this->model::findOrFail($doc_id);
+		} else {
+			$model = $this->switchObject($doc_type, 'model');
+			$doc = $model::findOrFail($doc_id);
+			return $doc;
+		}
 	}
 
 	/**
@@ -211,6 +217,7 @@ class DokController extends Controller
 	{
 		$this->getCurrentDate();
 		$this->updateDocDate();
+		$this->updateDocYear();
 	}
 
 	/**
@@ -257,6 +264,10 @@ class DokController extends Controller
 	private function updateDocDate()
 	{
 		$this->doc->tanggal_dokumen = $this->date;
+	}
+
+	private function updateDocYear()
+	{
 		$this->doc->thn_dok = $this->year;
 	}
 

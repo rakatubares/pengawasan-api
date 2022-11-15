@@ -103,6 +103,27 @@ class DokPenindakanController extends DokController
 	 | Penindakan functions
 	 |--------------------------------------------------------------------------
 	 */
+	
+	protected function getPenindakan($doc_id)
+	{
+		$this->getDocument($doc_id);
+		$this->penindakan = $this->doc->penindakan;
+	}
+
+	protected function getPenindakanDate($doc_id)
+	{
+		$this->getPenindakan($doc_id);
+		$tanggal_penindakan = $this->doc->penindakan->tanggal_penindakan;
+
+		if ($tanggal_penindakan == null) {
+			$this->getCurrentDate();
+			$this->penindakan->tanggal_penindakan = $this->date;
+			$this->penindakan->save();
+		} else {
+			$this->date = $tanggal_penindakan->format('Y-m-d');
+			$this->year = $tanggal_penindakan->format('Y');
+		}
+	}
 
 	/**
 	 * Validate data penindakan
@@ -142,6 +163,12 @@ class DokPenindakanController extends DokController
 		return $data_penindakan;
 	}
 
+	protected function createPenindakan($request, $empty_penindakan=false)
+	{
+		$this->storePenindakan($request, $empty_penindakan);
+		$this->attachPenindakan();
+	}
+
 	/**
 	 * Create new data
 	 * 
@@ -172,25 +199,22 @@ class DokPenindakanController extends DokController
 		Penindakan::where('id', $request->penindakan['id'])->update($data_penindakan);
 	}
 
-	protected function getPenindakan($doc_id)
+	protected function deletePenindakan()
 	{
-		$this->getDocument($doc_id);
-		$this->penindakan = $this->doc->penindakan;
+		$this->getPenindakan($this->doc->id);
+		$this->deleteRelation('penindakan', $this->penindakan->id, $this->doc_type, $this->doc->id);
+		$this->penindakan->delete();
 	}
 
-	protected function getPenindakanDate($doc_id)
+	protected function attachPenindakan($penindakan_id=null)
 	{
-		$this->getPenindakan($doc_id);
-		$tanggal_penindakan = $this->doc->penindakan->tanggal_penindakan;
+		if ($penindakan_id == null) {$penindakan_id = $this->penindakan->id;}
+		$this->createRelation('penindakan', $penindakan_id, $this->doc_type, $this->doc->id);
+	}
 
-		if ($tanggal_penindakan == null) {
-			$this->getCurrentDate();
-			$this->penindakan->tanggal_penindakan = $this->date;
-			$this->penindakan->save();
-		} else {
-			$this->date = $tanggal_penindakan->format('Y-m-d');
-			$this->year = $tanggal_penindakan->format('Y');
-		}
+	protected function detachPenindakan()
+	{
+		$this->deleteRelation('penindakan', $this->doc->penindakan->id, $this->doc_type, $this->doc->id);
 	}
 
 	/**

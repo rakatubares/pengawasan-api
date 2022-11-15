@@ -161,5 +161,6 @@ class DokRiksaBadanController extends DokPenindakanController
 	protected function publishing($id)
 	{
 		$this->getPenindakanDate($id);
+		$this->updateDocYear();
 	}
 }

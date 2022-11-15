@@ -130,5 +130,12 @@ class DokSegelController extends DokPenindakanController
 	protected function publishing($id)
 	{
 		$this->getPenindakanDate($id);
+		$this->updateDocYear();
+	}
+
+	protected function published()
+	{
+		$this->getDocument($this->doc->id);
+		$this->doc->update(['nomor_segel' => $this->doc->no_dok_lengkap]);
 	}
 }

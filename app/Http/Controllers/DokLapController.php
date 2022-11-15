@@ -165,17 +165,6 @@ class DokLapController extends DokPenindakanController
 	}
 
 	/**
-	 * Publish document.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id, $withAddition=true)
-	{
-		parent::publish($id, $withAddition);
-	}
-
-	/**
 	 * Get year before document is published
 	 */
 	protected function publishing($id)
