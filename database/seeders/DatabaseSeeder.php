@@ -19,8 +19,6 @@ class DatabaseSeeder extends Seeder
 			RefNegaraSeeder::class,
 			RefBandaraSeeder::class,
 			RefSatuanSeeder::class,
-			RefKategoriPelanggaranSeeder::class,
-			RefSkemaPenindakanSeeder::class,
 			RefKemasanSeeder::class,
 			RefKategoriBarangSeeder::class,
 			RefKategoriPelanggaranSeeder::class,
