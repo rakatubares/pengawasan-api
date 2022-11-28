@@ -2,25 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLiTableResource;
 use App\Models\DokLi;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokLiController extends Controller
+class DokLiController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-
-	public function __construct()
+	public function __construct($doc_type='li')
 	{
-		$this->doc_type = 'li';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -28,55 +18,6 @@ class DokLiController extends Controller
 	 | DISPLAY functions
 	 |--------------------------------------------------------------------------
 	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_li = DokLi::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$li_list = DokLiTableResource::collection($all_li);
-		return $li_list;
-	}
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  \App\Models\DokLi  $dokLi
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$li = new DokLiResource(DokLi::findOrFail($id));
-		return $li;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$li = new DokLiResource(DokLi::findOrFail($id), 'display');
-		return $li;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$li = new DokLiResource(DokLi::findOrFail($id), 'form');
-		return $li;
-	}
 	
 	/**
 	 * Display resource based on search query
@@ -130,7 +71,7 @@ class DokLiController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'sumber' => 'required',
@@ -151,7 +92,7 @@ class DokLiController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 
@@ -185,25 +126,8 @@ class DokLiController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// Validate data
-		$this->validateData($request);
-
-		DB::beginTransaction();
-		try {
-			// Save data
-			$data_li = $this->prepareData($request, 'insert');
-			$li = DokLi::create($data_li);
-
-			// Commit store query
-			DB::commit();
-
-			// Return data
-			$li_resource = new DokLiResource(DokLi::findOrFail($li->id), 'form');
-			return $li_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$result = $this->storePenindakanDocument($request);
+		return $result;
 	}
 
 	/**
@@ -215,85 +139,7 @@ class DokLiController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokLi::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			DB::beginTransaction();
-
-			try {
-				// Validate data
-				$this->validateData($request);
-
-				// Update data
-				$data_li = $this->prepareData($request, 'update');
-				DokLi::where('id', $id)->update($data_li);
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated data
-				$li_resource = new DokLiResource(DokLi::findOrFail($id), 'form');
-				$result = $li_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
-	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument(DokLi::class, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokLi::class);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokLi::class, $id);
-			if ($is_unpublished) {
-				DokLi::find($id)->delete();
-			}
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
 	}
 }

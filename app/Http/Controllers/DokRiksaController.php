@@ -2,92 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokRiksaResource;
-use App\Http\Resources\DokRiksaTableResource;
 use App\Models\DokRiksa;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokRiksaController extends Controller
+class DokRiksaController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='riksa')
 	{
-		$this->doc_type = 'riksa';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_riksa = DokRiksa::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$riksa_list = DokRiksaTableResource::collection($all_riksa);
-		return $riksa_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id));
-		return $riksa;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'display');
-		return $riksa;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'form');
-		return $riksa;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function objek($id)
-	{
-		$riksa = new DokRiksaResource(DokRiksa::findOrFail($id), 'objek');
-		return $riksa;
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -113,7 +36,7 @@ class DokRiksaController extends Controller
 		try {
 			// Save data pemeriksaan
 			$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
-			$riksa = DokRiksa::create([
+			$this->doc = DokRiksa::create([
 				'agenda_dok' => $this->agenda_dok,
 				'no_dok_lengkap' => $no_dok_lengkap,
 				'kode_status' => 100,
@@ -121,14 +44,16 @@ class DokRiksaController extends Controller
 
 			// Save data penindakan and create object relation
 			if ($linked_doc == false) {
-				$this->storePenindakan($request, 'riksa', $riksa->id);
+				$this->storePenindakan($request);
+				$this->getDocument($this->doc->id);
+				$this->createRelation('penindakan', $this->penindakan->id, $this->doc_type, $this->doc->id);
 			}
 
 			// Commit store query
 			DB::commit();
 
 			// Return created document
-			$riksa_resource = new DokRiksaResource(DokRiksa::findOrFail($riksa->id), 'form');
+			$riksa_resource = $this->form($this->doc->id);
 			return $riksa_resource;
 		} catch (\Throwable $th) {
 			DB::rollBack();
@@ -146,7 +71,8 @@ class DokRiksaController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokRiksa::class, $id);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -161,7 +87,7 @@ class DokRiksaController extends Controller
 				DB::commit();
 
 				// Return updated SBP
-				$riksa_resource = new DokRiksaResource(DokRiksa::findOrFail($id), 'form');
+				$riksa_resource = $this->form($this->doc->id);
 				$result = $riksa_resource;
 			} catch (\Throwable $th) {
 				DB::rollBack();
@@ -174,37 +100,9 @@ class DokRiksaController extends Controller
 		return $result;
 	}
 
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
+	protected function publishing($id)
 	{
-		// Create array from SBP object
-		$riksa = new DokRiksaResource(DokRiksa::find($id));
-		$arr = json_decode($riksa->toJson(), true);
-
-		// Check penindakan date
-		$year = $this->datePenindakan(DokRiksa::class, $id);
-	
-		// Publish each document
-		foreach ($arr['dokumen'] as $type => $data) {
-			$this->publishDocument($type, $data['id'], $year);
-		}
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		$is_unpublished = $this->checkUnpublished(DokRiksa::class, $id);
-		if ($is_unpublished) {
-			DokRiksa::find($id)->delete();
-		}
+		$this->getPenindakanDate($id);
+		$this->updateDocYear();
 	}
 }

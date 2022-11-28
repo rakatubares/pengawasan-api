@@ -15,15 +15,15 @@ class CreateLampiranTable extends Migration
 	{
 		Schema::create('lampiran', function (Blueprint $table) {
 			$table->id();
-			$table->string('mime_type')->index();
+			$table->string('mime_type');
 			$table->string('path')->index();
 			$table->string('filename')->index();
-			$table->string('attachable_type')->index();
-			$table->integer('attachable_id')->index();
+			$table->string('description')->nullable();
+			$table->string('attachable_type');
+			$table->integer('attachable_id');
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index('created_at');
-			$table->index('updated_at');
+			$table->index(['attachable_type', 'attachable_id']);
 			$table->index('deleted_at');
 		});
 	}
