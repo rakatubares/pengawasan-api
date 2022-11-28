@@ -244,7 +244,7 @@ class DokController extends Controller
 	 * 
 	 * @param int $number
 	 */
-	private function updateDocNumber($number)
+	protected function updateDocNumber($number)
 	{
 		// Construct full document number
 		$no_dok_lengkap = $this->tipe_surat 
@@ -261,12 +261,12 @@ class DokController extends Controller
 	/**
 	 * Update doc date
 	 */
-	private function updateDocDate()
+	protected function updateDocDate()
 	{
 		$this->doc->tanggal_dokumen = $this->date;
 	}
 
-	private function updateDocYear()
+	protected function updateDocYear()
 	{
 		$this->doc->thn_dok = $this->year;
 	}
