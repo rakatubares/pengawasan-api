@@ -8,6 +8,8 @@ use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
+use App\Models\RefUserCache;
+use App\Models\TrackingSbp;
 use App\Observers\DetailBarangItemObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -42,8 +44,11 @@ class AppServiceProvider extends ServiceProvider
 			'barang' => DetailBarang::class,
 			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
+			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
 			'sarkut' => DetailSarkut::class,
+			'segel' => DokSegel::class,
+			'tracking_sbp' => TrackingSbp::class,
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));

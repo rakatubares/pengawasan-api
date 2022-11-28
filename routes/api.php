@@ -15,6 +15,7 @@ use App\Http\Controllers\RefNegaraController;
 use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\TrackingSbpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -153,6 +154,15 @@ Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
 Route::post('/user/role', [RefUserCacheController::class, 'role']);
 Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
 Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Tracking routes
+ |--------------------------------------------------------------------------
+ */
+Route::post('/tracking/sbp', [TrackingSbpController::class, 'tracking']);
+Route::get('/tracking/sbp/{id}/attachments', [TrackingSbpController::class, 'getAttachments']);
+Route::post('/tracking/sbp/{id}/attach', [TrackingSbpController::class, 'addAttachment']);
 
 Route::get('test', function() {
 	# code...
