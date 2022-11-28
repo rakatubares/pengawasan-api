@@ -16,7 +16,8 @@ class Lampiran extends Model
 	protected $fillable = [
 		'mime_type',
 		'path',
-		'filename'
+		'filename',
+		'description',
 	];
 
 	public function attachable()
