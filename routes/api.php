@@ -6,6 +6,12 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLpController;
+use App\Http\Controllers\DokLphpController;
+use App\Http\Controllers\DokRiksaBadanController;
+use App\Http\Controllers\DokRiksaController;
+use App\Http\Controllers\DokSbpController;
+use App\Http\Controllers\DokSegelController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
@@ -33,6 +39,69 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/*
+ |--------------------------------------------------------------------------
+ | Penindakan routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for SBP
+ */
+Route::apiResource('sbp', DokSbpController::class);
+Route::get('/sbp/{sbp_id}/display', [DokSbpController::class, 'display']);
+Route::get('/sbp/{sbp_id}/form', [DokSbpController::class, 'form']);
+Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
+Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
+Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
+Route::put('/sbp/{sbp_id}/publish', [DokSbpController::class, 'publish']);
+Route::post('/sbp/search', [DokSbpController::class, 'search']);
+
+/**
+ * API for LPHP
+ */
+Route::apiResource('lphp', DokLphpController::class);
+Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
+Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
+Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
+Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
+
+/**
+ * API for LP
+ */
+Route::apiResource('lp', DokLpController::class);
+Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
+Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
+Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
+Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+
+/**
+ * API for BA Pemeriksaan
+ */
+Route::apiResource('riksa', DokRiksaController::class);
+Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
+Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
+Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
+Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
+
+/**
+ * API for BA Periksa Badan
+ */
+Route::apiResource('riksabadan', DokRiksaBadanController::class);
+Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
+Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
+Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
+
+/**
+ * API for BA Segel
+ */
+Route::apiResource('segel', DokSegelController::class);
+Route::post('/segel/search', [DokSegelController::class, 'search']);
+Route::get('/segel/{segel_id}/display', [DokSegelController::class, 'display']);
+Route::get('/segel/{segel_id}/form', [DokSegelController::class, 'form']);
+Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
+Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

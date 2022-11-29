@@ -28,6 +28,12 @@ class DatabaseSeeder extends Seeder
 			RefUserCacheSeeder::class,
 			RefEntitasSeeder::class,
 			RefSprintSeeder::class,
+			DokSbpSeeder::class,
+			DokLphpSeeder::class,
+			DokLpSeeder::class,
+			DokRiksaSeeder::class,
+			DokRiksaBadanSeeder::class,
+			DokSegelSeeder::class,
 			TrackingSbpSeeder::class,
 		]);
 	}
