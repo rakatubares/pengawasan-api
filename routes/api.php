@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
+use App\Http\Controllers\DokLppController;
 use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokSbpController;
@@ -102,6 +103,21 @@ Route::get('/segel/{segel_id}/display', [DokSegelController::class, 'display']);
 Route::get('/segel/{segel_id}/form', [DokSegelController::class, 'form']);
 Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Penyidikan routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for LPP
+ */
+Route::apiResource('lpp', DokLppController::class);
+Route::get('/lpp/{lpp_id}/display', [DokLppController::class, 'display']);
+Route::get('/lpp/{lpp_id}/docs', [DokLppController::class, 'docs']);
+Route::get('/lpp/{lpp_id}/pdf', [DokLppController::class, 'pdf']);
+Route::get('/lpp/{lpp_id}/objek', [DokLppController::class, 'objek']);
 
 /*
  |--------------------------------------------------------------------------

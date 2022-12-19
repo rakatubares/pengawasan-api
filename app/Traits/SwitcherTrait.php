@@ -9,6 +9,8 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
+use App\Http\Resources\DokLppResource;
+use App\Http\Resources\DokLppTableResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpResource;
@@ -28,6 +30,7 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
+use App\Models\DokLpp;
 use App\Models\DokLptp;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
@@ -103,6 +106,16 @@ trait SwitcherTrait
 			'model' => DokTegah::class,
 			'resource' => DokTegahResource::class,
 			'table_resource' => DokTegahTableResource::class,
+		],
+
+		// Penyidikan
+		'lpp' => [
+			'tipe_dok' => 'LPP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpp::class,
+			'resource' => DokLppResource::class,
+			'table_resource' => DokLppTableResource::class,
 		],
 
 		// Objek

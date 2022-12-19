@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 			DokRiksaSeeder::class,
 			DokRiksaBadanSeeder::class,
 			DokSegelSeeder::class,
-			TrackingSbpSeeder::class,
+			DokLppSeeder::class,
 		]);
 	}
 }
