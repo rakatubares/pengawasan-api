@@ -142,6 +142,18 @@ class DokController extends Controller
 	}
 
 	/**
+	 * Display data for pdf.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function pdf($id)
+	{
+		$doc = new $this->resource($this->model::findOrFail($id), 'pdf');
+		return $doc;
+	}
+
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id
