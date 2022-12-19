@@ -103,27 +103,6 @@ class DokSbp extends Model
 		);
 	}
 
-	/**
-	 * Relation to Penolakan SBP through object relation model
-	 */
-	public function tolak1()
-	{
-		return $this->hasOneThrough(
-			DokTolakSbp1::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
-		)->where(
-			'object1_type',
-			$this->tipe_sbp
-		)->where(
-			'object2_type',
-			'tolak1'
-		);
-	}
-
 	public function status()
 	{
 		return $this->belongsTo(RefStatus::class, 'kode_status', 'kode_status');
