@@ -6,8 +6,6 @@ use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
-use App\Models\DokTolakSbp1;
-use App\Models\DokTolakSbp2;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use App\Models\RefLokasi;
@@ -43,7 +41,7 @@ class DokSbpSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1; $i < 21; $i++) { 
+        for ($i=1; $i < 51; $i++) { 
 			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan', 'orang']);
 			$max_lokasi_id = RefLokasi::max('id');
 

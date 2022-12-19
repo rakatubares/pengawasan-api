@@ -50,6 +50,10 @@ class DokSbpResource extends JsonResource
 			case 'linked':
 				$array = new PenindakanResource($this->penindakan, 'dokumen');
 				break;
+
+			case 'number':
+				$array = $this->number();
+				break;
 			
 			default:
 				$array = $this->default();
@@ -115,6 +119,17 @@ class DokSbpResource extends JsonResource
 		$array = $this->basic();
 		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		$array['lptp'] = new $lptp_resource($this->lptp);
+		return $array;
+	}
+
+	private function number()
+	{
+		$array = [
+			'id' => $this->id,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tanggal_dokumen' => $this->penindakan->tanggal_penindakan->format('d-m-Y'),
+		];
+
 		return $array;
 	}
 }
