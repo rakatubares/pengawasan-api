@@ -42,6 +42,10 @@ class DokLpResource extends JsonResource
 			case 'form':
 				$array = $this->form();
 				break;
+
+			case 'number':
+				$array = $this->number();
+				break;
 			
 			default:
 				$array = $this->default();
@@ -148,6 +152,17 @@ class DokLpResource extends JsonResource
 	{
 		$array = $this->basic();
 		$array['id_sbp'] = $this->lphp->lptp->sbp->id;
+
+		return $array;
+	}
+
+	private function number()
+	{
+		$array = [
+			'id' => $this->id,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tanggal_dokumen' => $this->tanggal_dokumen->format('d-m-Y'),
+		];
 
 		return $array;
 	}

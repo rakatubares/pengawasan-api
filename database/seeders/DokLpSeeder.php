@@ -38,7 +38,7 @@ class DokLpSeeder extends Seeder
 		$max_lphp_id = $this->model_lphp::max('id');
 		$available_lphp_id = range(1, $max_lphp_id);
 
-		for ($i=1; $i < 6; $i++) { 
+		for ($i=1; $i < 21; $i++) { 
 			// Get data LPHP
 			$lphp_id = $this->faker->randomElement($available_lphp_id);
 			$key = array_search($lphp_id, $available_lphp_id);

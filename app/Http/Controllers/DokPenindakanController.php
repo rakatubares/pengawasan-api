@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -246,5 +247,49 @@ class DokPenindakanController extends DokController
 	{
 		$this->updateStatus($this->doc->$source_type, $source_status);
 		$this->deleteRelation($source_type, $this->doc->$source_type->id, $this->doc_type, $this->doc->id);
+	}
+
+	/**
+	 * Get documents related to penindakan
+	 * 
+	 * @param Int $penindakan_id
+	 * @return Array
+	 */
+	public static function getRelatedDocuments($penindakan_id)
+	{
+		$array = [];
+
+		$docs = ObjectRelation::where('object1_type', 'penindakan')
+			->where('object1_id', $penindakan_id)
+			->where('object2_type', '<>', 'penyidikan')
+			->get();
+		foreach ($docs as $doc) {
+			$array[] = [
+				'doc_type' => $doc->object2_type,
+				'doc_id' => $doc->object2_id,
+			];
+		}
+
+		$penindakan = Penindakan::find($penindakan_id);
+		
+		// Relations from SBP
+		$sbp = $penindakan->sbp ?? $penindakan->sbpn;
+		if ($sbp != null) {
+			// Relations from LPTP
+			$lptp = $sbp->lptp;
+			if ($lptp != null) {
+				$array[] = ['doc_type' => 'lptp', 'doc_id' => $lptp->id];
+				$lphp = $lptp->lphp;
+				if ($lphp != null) {
+					$array[] = ['doc_type' => 'lphp', 'doc_id' => $lphp->id];
+					$lp = $lphp->lp;
+					if ($lp != null) {
+						$array[] = ['doc_type' => 'lp', 'doc_id' => $lp->id];
+					}
+				}
+			}
+		}
+
+		return $array;
 	}
 }
