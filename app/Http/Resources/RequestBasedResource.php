@@ -27,9 +27,13 @@ class RequestBasedResource extends JsonResource
 	public function toArray($request)
 	{
 		$request_type = $this->request_type;
-		try {
-			$array = $this->$request_type();
-		} catch (\BadMethodCallException $e) {
+		if (gettype($request_type) == 'string') {
+			try {
+				$array = $this->$request_type();
+			} catch (\BadMethodCallException $e) {
+				$array = $this->basic();
+			}
+		} else {
 			$array = $this->basic();
 		}
 		
