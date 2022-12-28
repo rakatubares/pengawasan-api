@@ -13,6 +13,17 @@ class DokBukaSegelController extends DokPenindakanController
 
 	/*
 	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	public function docs($id)
+	{
+		return $this->getRelatedDocuments($id);
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
 	 | Data modify functions
 	 |--------------------------------------------------------------------------
 	 */
@@ -77,7 +88,7 @@ class DokBukaSegelController extends DokPenindakanController
 		// Create object relation
 		$segel_id = $request->segel['id'];
 		if ($segel_id == null) {
-			$this->createPenindakan($request);
+			$this->createPenindakan($request, true);
 		} else {
 			$this->createSegelRelation($segel_id);
 		}
@@ -118,7 +129,7 @@ class DokBukaSegelController extends DokPenindakanController
 				// Remove relation from existing segel, 
 				// then create new penindakan
 				$this->deleteSegelRelation();
-				$this->createPenindakan($request);
+				$this->createPenindakan($request, true);
 				
 			} else if ($segel_id != $existing_segel->id) {
 
@@ -147,7 +158,7 @@ class DokBukaSegelController extends DokPenindakanController
 
 	protected function published()
 	{
-		// update segel status if eexists
+		// update segel status if exists
 		$segel = $this->doc->penindakan->segel;
 		if ($segel != null) {
 			$this->updateStatus($segel, 201);

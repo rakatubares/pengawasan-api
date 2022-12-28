@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Traits\SwitcherTrait;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class DokSbpResource extends JsonResource
+class DokSbpResource extends RequestBasedResource
 {
 	use SwitcherTrait;
 
@@ -15,55 +14,13 @@ class DokSbpResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null, $doc_type='sbp')
+	public function __construct($resource, $request_type='')
 	{
-		$this->resource = $resource;
-		$this->type = $type;
-		$this->doc_type = $doc_type;
+		parent::__construct($resource, $request_type);
+		$this->doc_type = 'sbp';
 	}
 
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'form':
-				$array = $this->display();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-				break;
-
-			case 'linked':
-				$array = new PenindakanResource($this->penindakan, 'dokumen');
-				break;
-
-			case 'number':
-				$array = $this->number();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -81,37 +38,7 @@ class DokSbpResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$sbp = $this->basic();
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
-
-		$array = [
-			'main' => [
-				'type' => $this->doc_type,
-				'data' => $sbp,
-				'tes_penindakan' => $this->penindakan
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
-		return $array;
-	}
-
-	private function pdf()
-	{
-		$array = $this->basic();
-		$array['kode_status'] = $this->kode_status;
-		return $array;
-	}
-
-	private function display()
+	protected function display()
 	{
 		$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
 		$lptp_resource = $this->switchObject($lptp_type, 'resource');
@@ -122,7 +49,21 @@ class DokSbpResource extends JsonResource
 		return $array;
 	}
 
-	private function number()
+	protected function form()
+	{
+		$array = $this->display();
+		return $array;
+	}
+
+	protected function pdf()
+	{
+		$array = $this->display();
+		$array['objek'] = $this->objek();
+		$array['kode_status'] = $this->kode_status;
+		return $array;
+	}
+
+	protected function number()
 	{
 		$array = [
 			'id' => $this->id,
@@ -131,5 +72,10 @@ class DokSbpResource extends JsonResource
 		];
 
 		return $array;
+	}
+
+	protected function objek()
+	{
+		return new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 	}
 }

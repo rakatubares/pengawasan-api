@@ -2,66 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokReeksporResource;
-use App\Http\Resources\DokReeksporTableResource;
-use App\Models\DokReekspor;
-use App\Traits\DokumenTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokReeksporController extends Controller
+class DokReeksporController extends DokPenindakanController
 {
-	use DokumenTrait;
-
-	public function __construct()
+	public function __construct($doc_type='reekspor')
 	{
-		$this->doc_type = 'reekspor';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_reekspor = DokReekspor::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$reekspor_list = DokReeksporTableResource::collection($all_reekspor);
-		return $reekspor_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$reekspor = new DokReeksporResource(DokReekspor::findOrFail($id));
-		return $reekspor;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$contoh = new DokReeksporResource(DokReekspor::findOrFail($id), 'display');
-		return $contoh;
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -73,7 +20,7 @@ class DokReeksporController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'jenis_dok_asal' => 'required',
@@ -91,7 +38,7 @@ class DokReeksporController extends Controller
 		]);
 	}
 
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$tanggal_dok_asal = date('Y-m-d', strtotime($request->tanggal_dok_asal));
@@ -130,124 +77,15 @@ class DokReeksporController extends Controller
 		return $data_reekspor;
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request)
 	{
-		// Validate data
-		$this->validateData($request);
-
-		DB::beginTransaction();
-		try {
-			// Save data
-			$data_reekspor = $this->prepareData($request, 'insert');
-			$reekspor = DokReekspor::create($data_reekspor);
-
-			// Commit store query
-			DB::commit();
-
-			// Return saved data
-			$reekspor_resource = new DokReeksporResource(DokReekspor::findOrFail($reekspor->id), 'display');
-			return $reekspor_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokReekspor::class, $id);
-
-		// Update if unpublished
-		if ($is_unpublished) {
-			DB::beginTransaction();
-
-			try {
-				// Validate data segel
-				$this->validateData($request);
-
-				// Update data
-				$data_reekspor = $this->prepareData($request, 'update');
-				DokReekspor::where('id', $id)->update($data_reekspor);
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated data
-				$titip_resource = new DokReeksporResource(DokReekspor::findOrFail($id), 'form');
-				$result = $titip_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->storePenindakanDocument($request);
 		return $result;
 	}
 
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
+	public function update(Request $request, $id)
 	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument(DokReekspor::class, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokReekspor::class);
-
-			$this->doc->update(['tanggal_dokumen' => $this->tanggal]);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokReekspor::class, $id);
-			if ($is_unpublished) {
-				DokReekspor::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$result = $this->updatePenindakanDocument($request, $id);
+		return $result;
 	}
 }

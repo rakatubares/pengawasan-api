@@ -2,65 +2,14 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokLpResource extends JsonResource
+class DokLpResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->lphp->lptp->sbp->penindakan->objectable, $this->lphp->lptp->sbp->penindakan->object_type);
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'form':
-				$array = $this->form();
-				break;
-
-			case 'number':
-				$array = $this->number();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -84,34 +33,12 @@ class DokLpResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$lp = $this->basic();
-		$penindakan = new PenindakanResource($this->lphp->lptp->sbp->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->lphp->lptp->sbp->penindakan->objectable, $this->lphp->lptp->sbp->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->lphp->lptp->sbp->penindakan, 'dokumen');
-
-		$array = [
-			'main' => [
-				'type' => 'lp',
-				'data' => $lp
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function display()
+	protected function display()
 	{
 		$lphp = $this->lphp;
 		$sbp = $lphp->lptp->sbp;
@@ -135,10 +62,20 @@ class DokLpResource extends JsonResource
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function pdf()
+	protected function pdf()
 	{
-		$array = $this->basic();
+		$array = $this->display();
+		$array['objek'] = $this->objek();
 		$array['kode_status'] = $this->kode_status;
+
+		if ($array['objek'] != null) {
+			if ($array['objek']->type == 'barang') {
+				$riksa = $this->lphp->lptp->sbp->penindakan->riksa;
+				if ($riksa != null) {
+					$array['riksa'] = $riksa->no_dok_lengkap;
+				}
+			}
+		}
 
 		return $array;
 	}
@@ -148,7 +85,7 @@ class DokLpResource extends JsonResource
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function form()
+	protected function form()
 	{
 		$array = $this->basic();
 		$array['id_sbp'] = $this->lphp->lptp->sbp->id;
@@ -156,7 +93,7 @@ class DokLpResource extends JsonResource
 		return $array;
 	}
 
-	private function number()
+	protected function number()
 	{
 		$array = [
 			'id' => $this->id,
@@ -165,5 +102,11 @@ class DokLpResource extends JsonResource
 		];
 
 		return $array;
+	}
+
+	protected function objek()
+	{
+		$penindakan = $this->lphp->lptp->sbp->penindakan;
+		return new ObjectResource($penindakan->objectable, $penindakan->object_type);
 	}
 }

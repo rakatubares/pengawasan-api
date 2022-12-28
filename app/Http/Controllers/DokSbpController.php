@@ -2,33 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokSbpResource;
+use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokSbpTableResource;
+use App\Http\Resources\DokSegelResource;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
-use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokSbpController extends Controller
+class DokSbpController extends DokPenindakanController
 {
-	use DokumenTrait;
 	use SwitcherTrait;
 	
-	public function __construct()
+	public function __construct($doc_type='sbp')
 	{
-		$this->doc_type = 'sbp';
+		parent::__construct($doc_type);
 		$this->lptp_type = 'lptp';
 		$this->lptp_controller = DokLptpController::class;
-		$this->prepareModel();
-	}
-
-	protected function prepareModel()
-	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
 	}
 
 	/*
@@ -37,63 +28,9 @@ class DokSbpController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	public function docs($id)
 	{
-		$all_sbp = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$sbp_list = DokSbpTableResource::collection($all_sbp);
-		return $sbp_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$sbp = new DokSbpResource($this->model::findOrFail($id), null, $this->doc_type);
-		return $sbp;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function display($id)
-	{
-		$sbp = new DokSbpResource($this->model::find($id), 'display');
-		return $sbp;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function form($id)
-	{
-		$sbp = new DokSbpResource($this->model::find($id), 'form');
-		return $sbp;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new DokSbpResource($this->model::find($id), 'objek');
-		return $objek;
+		return $this->getRelatedDocuments($id);
 	}
 
 	/**
@@ -103,8 +40,20 @@ class DokSbpController extends Controller
 	 */
 	public function linked($id)
 	{
-		$objek = new DokSbpResource($this->model::find($id), 'linked');
-		return $objek;
+		$linked_docs = [];
+		$related_docs = $this->getRelatedDocuments($id);
+		foreach ($related_docs as $doc) {
+			if ($doc['doc_type'] == 'segel') {
+				$segel = $this->getDocument($doc['doc_id'], 'segel');
+				$linked_docs[$doc['doc_type']] = new DokSegelResource($segel);
+			} elseif ($doc['doc_type'] == 'riksabadan') {
+				$riksabadan = $this->getDocument($doc['doc_id'], 'riksabadan');
+				$linked_docs[$doc['doc_type']] = new DokRiksaBadanResource($riksabadan);
+			} else {
+				$linked_docs[$doc['doc_type']] = $doc['doc_id'];
+			}
+		}
+		return $linked_docs;
 	}
 
 	/**
@@ -161,7 +110,7 @@ class DokSbpController extends Controller
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 */
-	private function validateSbp(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'wkt_mulai_penindakan' => 'required|date',
@@ -176,7 +125,7 @@ class DokSbpController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 		$wkt_mulai_penindakan = date('Y-m-d H:i:s', strtotime($request->wkt_mulai_penindakan));
@@ -207,42 +156,22 @@ class DokSbpController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request, $linked_doc=false)
+	public function store(Request $request)
 	{
-		// Validate data penindakan if not from linked doc
-		if ($linked_doc == false) {
-			$this->validatePenindakan($request); 
-		}
-		
-		// Validate data SBP
-		$this->validateSbp($request);
+		$result = $this->storePenindakanDocument($request);
+		return $result;
+	}
 
-		DB::beginTransaction();
-		try {
-			// Save data SBP
-			$data_sbp = $this->prepareData($request, 'insert');
-			$sbp = $this->model::create($data_sbp);
+	protected function stored($request)
+	{
+		// Save data LPTP
+		$lptp_request = new Request($request->lptp);
+		$lptp = app($this->lptp_controller)->store($lptp_request);
+		$this->createRelation($this->doc_type, $this->doc->id, $this->lptp_type, $lptp->id);
 
-			// Save data LPTP
-			$lptp_request = new Request($request->lptp);
-			$lptp = app($this->lptp_controller)->store($lptp_request);
-			$this->createRelation($this->doc_type, $sbp->id, $this->lptp_type, $lptp->id);
-
-			// Save data penindakan and create object relation
-			if ($linked_doc == false) {
-				$this->storePenindakan($request, $this->doc_type, $sbp->id);
-			}
-
-			// Commit store query
-			DB::commit();
-
-			// Return created SBP
-			$sbp_resource = new DokSbpResource($this->model::findOrFail($sbp->id), 'form', $this->doc_type);
-			return $sbp_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		// Save data penindakan and create object relation
+		$this->storePenindakan($request);
+		$this->attachPenindakan($this->penindakan->id);
 	}
 
 	/**
@@ -254,48 +183,22 @@ class DokSbpController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is published
-		$is_unpublished = $this->checkUnpublished($this->model, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			DB::beginTransaction();
-			try {
-				// Validate data
-				$this->validatePenindakan($request);
-				$this->validateSbp($request);
-
-				// Update SBP
-				$data_sbp = $this->prepareData($request, 'update');
-				$this->model::where('id', $id)->update($data_sbp);
-
-				// Update LPTP
-				$lptp_request = new Request($request->lptp);
-				app($this->lptp_controller)->update($lptp_request, $request->lptp['id']);
-
-				// Update penindakan
-				$this->updatePenindakan($request);
-				$sbp = $this->model::find($id);
-				$penindakan = $sbp->penindakan;
-				if ($penindakan->object_type == 'orang') {
-					$penindakan->update(['object_id' => $request->penindakan['saksi']['id']]);
-				}
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated SBP
-				$sbp_resource = new DokSbpResource($this->model::findOrFail($id));
-				return $sbp_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
+	}
+
+	protected function updated($request)
+	{
+		// Update LPTP
+		$lptp_request = new Request($request->lptp);
+		app($this->lptp_controller)->update($lptp_request, $request->lptp['id']);
+
+		// Update penindakan
+		$this->updatePenindakan($request);
+		$this->getPenindakan($this->doc->id);
+		if ($this->penindakan->object_type == 'orang') {
+			$this->penindakan->update(['object_id' => $request->penindakan['saksi']['id']]);
+		}
 	}
 
 	/**
@@ -306,15 +209,17 @@ class DokSbpController extends Controller
 	public function publish($id)
 	{
 		// Create array from SBP object
-		$sbp = new DokSbpResource($this->model::find($id));
-		$arr = json_decode($sbp->toJson(), true);
+		$docs = $this->docs($id);
 
-		// Check penindakan date
-		$year = $this->datePenindakan($this->model, $id);
+		// Get currrent date
+		$this->getPenindakanDate($id);
 	
 		// Publish each document
-		foreach ($arr['dokumen'] as $type => $data) {
-			$this->publishDocument($type, $data['id'], $year);
+		foreach ($docs as $doc) {
+			$doc_model = $this->switchObject($doc['doc_type'], 'model');
+			$doc_object = $doc_model::find($doc['doc_id']);
+			$doc_object->thn_dok = $this->year;
+			$this->publishDocument($doc['doc_type'], $doc['doc_id']);
 		}
 	}
 
@@ -335,44 +240,41 @@ class DokSbpController extends Controller
 		DB::beginTransaction();
 
 		try {
-			// Get object penindakan
-			$sbp = $this->model::findOrFail($id);
-			$penindakan = $sbp->penindakan;
+			$this->getPenindakan($id);
 
 			// Upsert Segel
 			if ($request->segel == true) {
-				$this->createSegel($request, $penindakan);
+				$this->createSegel($request);
 			} else {
-				$this->deleteLinkedDoc($penindakan, 'segel');
+				$this->deleteLinkedDoc($this->penindakan, 'segel');
 			};
 
 			// Upsert Tegah
 			if ($request->tegah == true) {
-				$this->createTegah($request, $penindakan);
+				$this->createTegah($request);
 			} else {
-				$this->deleteLinkedDoc($penindakan, 'tegah');
+				$this->deleteLinkedDoc($this->penindakan, 'tegah');
 			};
 
 			// Upsert Riksa
 			if ($request->riksa == true) {
-				$this->createRiksa($request, $penindakan);
+				$this->createRiksa($request);
 			} else {
-				$this->deleteLinkedDoc($penindakan, 'riksa');
+				$this->deleteLinkedDoc($this->penindakan, 'riksa');
 			};
 
 			// Upsert Riksa Badan
 			if ($request->riksa_badan == true) {
-				$this->createRiksaBadan($request, $penindakan);
+				$this->createRiksaBadan($request);
 			} else {
-				$this->deleteLinkedDoc($penindakan, 'riksabadan');
+				$this->deleteLinkedDoc($this->penindakan, 'riksabadan');
 			};
 
 			// Commit transaction
 			DB::commit();
 
 			// Return linked doc
-			$dokumen = new DokSbpResource($this->model::findOrFail($id), 'linked');
-			return $dokumen;
+			return $this->linked($id);
 		} catch (\Throwable $th) {
 			DB::rollBack();
 			throw $th;
@@ -385,23 +287,23 @@ class DokSbpController extends Controller
 	 * @param Request $request
 	 * @param Penindakan $penindakan
 	 */
-	private function createSegel(Request $request, Penindakan $penindakan)
+	private function createSegel(Request $request)
 	{
 		$segel_array = [
-			'jenis_segel' => $request->data_segel['jenis'],
-			'jumlah_segel' => $request->data_segel['jumlah'],
-			'satuan_segel' => $request->data_segel['satuan'],
-			'tempat_segel' => $request->data_segel['tempat'],
+			'jenis_segel' => $request->data_segel['jenis_segel'],
+			'jumlah_segel' => $request->data_segel['jumlah_segel'],
+			'satuan_segel' => $request->data_segel['satuan_segel'],
+			'tempat_segel' => $request->data_segel['tempat_segel'],
 		];
 
 		$segel_request = new Request($segel_array);
 
-		$existing_segel = $penindakan->segel;
+		$existing_segel = $this->penindakan->segel;
 		if ($existing_segel == null) {
-			$segel = app(DokSegelController::class)->store($segel_request, true);
-			$this->createRelation('penindakan', $penindakan->id, 'segel', $segel->id);
+			$segel = app(DokSegelController::class)->storeLinked($segel_request);
+			$this->createRelation('penindakan', $this->penindakan->id, 'segel', $segel->id);
 		} else {
-			$segel = app(DokSegelController::class)->update($segel_request, $existing_segel->id, true);
+			$segel = app(DokSegelController::class)->updateLinked($segel_request, $existing_segel->id);
 		}
 	}
 
@@ -411,15 +313,15 @@ class DokSbpController extends Controller
 	 * @param Request $request
 	 * @param Penindakan $penindakan_id
 	 */
-	private function createTegah(Request $request, Penindakan $penindakan)
+	private function createTegah(Request $request)
 	{
 		// Check existing document
-		$existing_tegah = $penindakan->tegah;
+		$existing_tegah = $this->penindakan->tegah;
 
 		// Save if document not exists
 		if ($existing_tegah == null) {
 			$tegah = app(DokTegahController::class)->store($request);
-			$this->createRelation('penindakan', $penindakan->id, 'tegah', $tegah->id);
+			$this->createRelation('penindakan', $this->penindakan->id, 'tegah', $tegah->id);
 		}
 	}
 
@@ -429,15 +331,15 @@ class DokSbpController extends Controller
 	 * @param Request $request
 	 * @param Penindakan $penindakan
 	 */
-	private function createRiksa(Request $request, Penindakan $penindakan)
+	private function createRiksa(Request $request)
 	{
 		// Check existing document
-		$existing_riksa = $penindakan->riksa;
+		$existing_riksa = $this->penindakan->riksa;
 
 		// Save if document not exists
 		if ($existing_riksa == null) {
 			$riksa = app(DokRiksaController::class)->store($request, true);
-			$this->createRelation('penindakan', $penindakan->id, 'riksa', $riksa->id);
+			$this->createRelation('penindakan', $this->penindakan->id, 'riksa', $riksa->id);
 		}
 	}
 
@@ -447,9 +349,9 @@ class DokSbpController extends Controller
 	 * @param Request $request
 	 * @param Penindakan $penindakan
 	 */
-	private function createRiksaBadan(Request $request, Penindakan $penindakan)
+	private function createRiksaBadan(Request $request)
 	{
-		$orang_id = Penindakan::find($penindakan->id)->object_id;
+		$orang_id = Penindakan::find($this->penindakan->id)->object_id;
 		$riksa_badan_array = [
 			'orang' => ['id' => $orang_id],
 			'asal' => $request->data_riksa_badan['asal'],
@@ -467,12 +369,12 @@ class DokSbpController extends Controller
 		$riksa_badan_request = new Request($riksa_badan_array);
 
 		// Check existing document
-		$existing_riksabadan = $penindakan->riksabadan;
+		$existing_riksabadan = $this->penindakan->riksabadan;
 		if ($existing_riksabadan == null) {
-			$riksa_badan = app(DokRiksaBadanController::class)->store($riksa_badan_request, true);
-			$this->createRelation('penindakan', $penindakan->id, 'riksabadan', $riksa_badan->id);
+			$riksa_badan = app(DokRiksaBadanController::class)->storeLinked($riksa_badan_request);
+			$this->createRelation('penindakan', $this->penindakan->id, 'riksabadan', $riksa_badan->id);
 		} else {
-			$riksa_badan = app(DokRiksaBadanController::class)->update($riksa_badan_request, $existing_riksabadan->id, true);
+			$riksa_badan = app(DokRiksaBadanController::class)->updateLinked($riksa_badan_request, $existing_riksabadan->id);
 		}
 	}
 
@@ -500,32 +402,4 @@ class DokSbpController extends Controller
 			$model::find($existing_doc->id)->delete();
 		}
 	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	 /**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished($this->model, $id);
-			if ($is_unpublished) {
-				$this->model::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-	
 }

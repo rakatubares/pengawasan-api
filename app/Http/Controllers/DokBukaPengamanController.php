@@ -2,26 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokBukaPengamanResource;
-use App\Http\Resources\DokBukaPengamanTableResource;
-use App\Models\DokBukaPengaman;
-use App\Models\DokPengaman;
-use App\Models\ObjectRelation;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokBukaPengamanController extends Controller
+class DokBukaPengamanController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='bukapengaman')
 	{
-		$this->doc_type = 'bukapengaman';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -30,65 +17,9 @@ class DokBukaPengamanController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	public function docs($id)
 	{
-		$all_buka_pengaman = DokBukaPengaman::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$buka_pengaman_list = DokBukaPengamanTableResource::collection($all_buka_pengaman);
-		return $buka_pengaman_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id));
-		return $segel;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'display');
-		return $segel;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$segel = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'form');
-		return $segel;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new DokBukaPengamanResource(DokBukaPengaman::find($id), 'objek');
-		return $objek;
+		return $this->getRelatedDocuments($id);
 	}
 
 	/*
@@ -100,7 +31,7 @@ class DokBukaPengamanController extends Controller
 	/**
 	 * Validate request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'sprint.id' => 'required|integer',
@@ -112,7 +43,7 @@ class DokBukaPengamanController extends Controller
 		]);
 	}
 
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
 		$tanggal_pengaman = date('Y-m-d', strtotime($request->tanggal_pengaman));
@@ -140,196 +71,84 @@ class DokBukaPengamanController extends Controller
 		return $data_buka_pengaman;
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request)
 	{
-		// Validate data buka tanda pengaman
-		$this->validateData($request);
-
-		DB::beginTransaction();
-		try {
-			// Save data buka tanda pengaman
-			$data_buka_pengaman = $this->prepareData($request, 'insert');
-			$buka_pengaman = DokBukaPengaman::create($data_buka_pengaman);
-
-			// Save data penindakan and create object relation
-			$pengaman_id = $request->pengaman['id'];
-			if ($pengaman_id == null) {
-				$this->storePenindakan($request, 'bukapengaman', $buka_pengaman->id, true);
-			} else {
-				$pengaman = DokPengaman::find($pengaman_id);
-				$penindakan_id = $pengaman->penindakan->id;
-				$this->createRelation('penindakan', $penindakan_id, 'bukapengaman', $buka_pengaman->id);
-				$pengaman->update(['kode_status' => 104]);
-			}
-
-			// Commit store query
-			DB::commit();
-
-			// Return created data
-			$buka_pengaman_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($buka_pengaman->id), 'form');
-			return $buka_pengaman_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokBukaPengaman::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			// Validate data buka tanda pengaman
-			$this->validateData($request);
-
-			DB::beginTransaction();
-			try {
-				// Get existing data
-				$buka_pengaman = DokBukaPengaman::find($id);
-				$existing_pengaman = $buka_pengaman->penindakan->pengaman;
-				$pengaman_id = $request->pengaman['id'];
-
-				// Change existing pengaman if new pengaman is different
-				if ($existing_pengaman == null) {
-					if ($pengaman_id != null) {
-
-						// Remove existing relation between buka pengaman and penindakan
-						$buka_pengaman->penindakan->delete();
-						ObjectRelation::where([
-							'object1_type' => 'penindakan',
-							'object1_id' => $buka_pengaman->penindakan->id,
-							'object2_type' => $this->doc_type,
-							'object2_id' => $id
-						])->delete();
-
-						// Create relation to new penindakan
-						$pengaman = DokPengaman::find($pengaman_id);
-						$this->createRelation('penindakan', $pengaman->penindakan->id, $this->doc_type, $id);
-						$pengaman->update(['kode_status' => 104]);
-
-					}
-				} else {
-					if ($pengaman_id == null) {
-
-						// Remove existing relation between buka pengaman and penindakan
-						$existing_pengaman->update(['kode_status' => 200]);
-						ObjectRelation::where([
-							'object1_type' => 'penindakan',
-							'object1_id' => $buka_pengaman->penindakan->id,
-							'object2_type' => $this->doc_type,
-							'object2_id' => $id
-						])->delete();
-
-						// Create new penindakan
-						$this->storePenindakan($request, $this->doc_type, $buka_pengaman->id, true);
-
-					} else if ($pengaman_id != $existing_pengaman->id) {
-
-						// Remove existing relation between buka pengaman and penindakan
-						$existing_pengaman->update(['kode_status' => 200]);
-						ObjectRelation::where([
-							'object1_type' => 'penindakan',
-							'object1_id' => $buka_pengaman->penindakan->id,
-							'object2_type' => $this->doc_type,
-							'object2_id' => $id
-						])->delete();
-
-						// Create relation to new penindakan
-						$pengaman = DokPengaman::find($pengaman_id);
-						$penindakan_id = $pengaman->penindakan->id;
-						$this->createRelation('penindakan', $penindakan_id, $this->doc_type, $buka_pengaman->id);
-						$pengaman->update(['kode_status' => 104]);
-
-					}
-				}
-
-				// Update BA Buka Tanda Pengaman
-				$data_buka_pengaman = $this->prepareData($request, 'update');
-				DokBukaPengaman::where('id', $id)->update($data_buka_pengaman);
-
-				// Commit store query
-				DB::commit();
-
-				// Return updated data
-				$buka_pengaman_resource = new DokBukaPengamanResource(DokBukaPengaman::findOrFail($id), 'form');
-				$result = $buka_pengaman_resource;
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-		
+		$result = $this->storePenindakanDocument($request);
 		return $result;
 	}
 
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
+	protected function stored($request)
 	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument(DokBukaPengaman::class, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokBukaPengaman::class);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-
-			$pengaman = $this->doc->penindakan->pengaman;
-			if ($pengaman != null) {
-				$pengaman->update(['kode_status' => 204]);
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		// Create object relation
+		$pengaman_id = $request->pengaman['id'];
+		if ($pengaman_id == null) {
+			$this->createPenindakan($request, true);
+		} else {
+			$this->createPengamanRelation($pengaman_id);
 		}
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
+	public function update(Request $request, $id)
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokBukaPengaman::class, $id);
-			if ($is_unpublished) {
-				DokBukaPengaman::find($id)->delete();
+		$result = $this->updatePenindakanDocument($request, $id);
+		return $result;
+	}
+
+	protected function updating($request)
+	{
+		// Get existing data
+		$existing_pengaman = $this->doc->penindakan->pengaman;
+		$pengaman_id = $request->pengaman['id'];
+
+		// Change existing pengaman if new pengaman is different
+		if ($existing_pengaman == null) {
+			if ($pengaman_id != null) {
+
+				// Remove relation from existing penindakan,
+				// ten create relation to the new pengaman
+				$this->deletePenindakan();
+				$this->createPengamanRelation($pengaman_id);
+
 			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		} else {
+			if ($pengaman_id == null) {
+
+				// Remove relation from existing pengaman, 
+				// then create new penindakan
+				$this->deletePengamanRelation();
+				$this->createPenindakan($request, true);
+				
+			} else if ($pengaman_id != $existing_pengaman->id) {
+
+				// Remove relation from existing pengaman, 
+				// then create relation to the new one
+				$this->deletePengamanRelation();
+				$this->createPengamanRelation($pengaman_id);
+				
+			}
+		}
+	}
+
+	private function createPengamanRelation($pengaman_id)
+	{
+		$pengaman = $this->getDocument($pengaman_id, 'pengaman');
+		$penindakan_id = $pengaman->penindakan->id;
+		$this->attachPenindakan($penindakan_id);
+		$this->updateStatus($pengaman, 104);
+	}
+
+	private function deletePengamanRelation()
+	{
+		$this->doc->penindakan->pengaman->update(['kode_status' => 200]);
+		$this->detachPenindakan();
+	}
+
+	protected function published()
+	{
+		// update pengaman status if exists
+		$pengaman = $this->doc->penindakan->pengaman;
+		if ($pengaman != null) {
+			$this->updateStatus($pengaman, 204);
 		}
 	}
 }

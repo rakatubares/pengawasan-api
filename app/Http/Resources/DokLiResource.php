@@ -2,52 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokLiResource extends JsonResource
+class DokLiResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->basic();
-				break;
-
-			case 'form':
-				$array = $this->basic();
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -77,19 +34,12 @@ class DokLiResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
+	protected function display()
 	{
-		$array = [];
-		$array['dokumen']['li'] = $this->pdf();
-
-		if ($this->lap != null) {
-			$array['dokumen']['lap'] = new DokLapResource($this->lap, 'pdf');
-		}
-
-		return $array;
+		return $this->basic();
 	}
 
-	private function pdf()
+	protected function pdf()
 	{
 		$array = $this->basic();
 		$array['kode_status'] = $this->kode_status;

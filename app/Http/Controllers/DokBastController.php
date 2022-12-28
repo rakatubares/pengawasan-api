@@ -2,92 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DokBastResource;
-use App\Http\Resources\DokBastTableResource;
-use App\Models\DokBast;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class DokBastController extends Controller
+class DokBastController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='bast')
 	{
-		$this->doc_type = 'bast';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | DISPLAY functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
-	{
-		$all_bast = DokBast::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$bast_list = DokBastTableResource::collection($all_bast);
-		return $bast_list;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		$bast = new DokBastResource(DokBast::findOrFail($id));
-		return $bast;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$bast = new DokBastResource(DokBast::findOrFail($id), 'display');
-		return $bast;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$bast = new DokBastResource(DokBast::findOrFail($id), 'form');
-		return $bast;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function objek($id)
-	{
-		$bast = new DokBastResource(DokBast::findOrFail($id), 'objek');
-		return $bast;
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -101,7 +22,7 @@ class DokBastController extends Controller
 	 * 
 	 * @param  \Illuminate\Http\Request  $request
 	 */
-	private function validateData(Request $request)
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'dalam_rangka' => 'required',
@@ -121,7 +42,7 @@ class DokBastController extends Controller
 	 * @param String $state
 	 * @return Array
 	 */
-	private function prepareData(Request $request, $state='insert')
+	protected function prepareData(Request $request, $state='insert')
 	{
 		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
 
@@ -153,25 +74,8 @@ class DokBastController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// Validate data BAST
-		$this->validateData($request);
-
-		DB::beginTransaction();
-		try {
-			// Save data BAST
-			$data_bast = $this->prepareData($request, 'insert');
-			$bast = DokBast::create($data_bast);
-
-			// Commit store query
-			DB::commit();
-
-			// Return created BAST
-			$bast_resource = new DokBastResource(DokBast::findOrFail($bast->id), 'form');
-			return $bast_resource;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$result = $this->storePenindakanDocument($request);
+		return $result;
 	}
 
 	/**
@@ -183,76 +87,7 @@ class DokBastController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		// Check if document is published
-		$is_unpublished = $this->checkUnpublished(DokBast::class, $id);
-
-		// Update if not published
-		if ($is_unpublished) {
-			// Validate data
-			$this->validateData($request);
-
-			DB::beginTransaction();
-			try {
-				// update BAST
-				$data_bast = $this->prepareData($request, 'update');
-				DokBast::where('id', $id)->update($data_bast);
-
-				// Commit query
-				DB::commit();
-
-				// Return updated BAST
-				$result = new DokBastResource(DokBast::find($id), 'form');
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
-			}
-		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-		}
-
+		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
-	}
-
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
-	{
-		DB::beginTransaction();
-
-		try {
-			$this->getCurrentDate();
-			$doc = $this->publishDocument($this->doc_type, $id, $this->tahun);
-
-			DB::commit();
-
-			return $doc;
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-		
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Data delete functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		$is_unpublished = $this->checkUnpublished(DokBast::class, $id);
-		if ($is_unpublished) {
-			DokBast::find($id)->delete();
-		}
 	}
 }

@@ -3,21 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLphpResource;
-use App\Http\Resources\DokLphpTableResource;
 use App\Models\ObjectRelation;
-use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokLphpController extends Controller
+class DokLphpController extends DokPenindakanController
 {
-	use DokumenTrait;
 	use SwitcherTrait;
 
-	public function __construct()
+	public function __construct($doc_type='lphp')
 	{
-		$this->doc_type = 'lphp';
+		parent::__construct($doc_type);
 		$this->lptp_type = 'lptp';
 		$this->sbp_type = 'sbp';
 		$this->prepareModel();
@@ -25,9 +22,6 @@ class DokLphpController extends Controller
 
 	protected function prepareModel()
 	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
 		$this->sbp_model = $this->switchObject($this->sbp_type, 'model');
 	}
 
@@ -37,63 +31,15 @@ class DokLphpController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	protected function getPenindakan($doc_id)
 	{
-		$all_lphp = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$lphp_list = DokLphpTableResource::collection($all_lphp);
-		return $lphp_list;
+		$this->getDocument($doc_id);
+		$this->penindakan = $this->doc->lptp->sbp->penindakan;
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
+	public function docs($id)
 	{
-		$lphp = new DokLphpResource($this->model::findOrFail($id));
-		return $lphp;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function display($id)
-	{
-		$lphp = new DokLphpResource($this->model::find($id), 'display');
-		return $lphp;
-	}
-
-	/**
-	 * Display data for input form
-	 * 
-	 * @param int $id
-	 */
-	public function form($id)
-	{
-		$lphp = new DokLphpResource($this->model::find($id), 'form');
-		return $lphp;
-	}
-
-	/**
-	 * Display document's object
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$lphp = new DokLphpResource($this->model::find($id), 'objek');
-		return $lphp;
+		return $this->getRelatedDocuments($id);
 	}
 
 	/*
@@ -211,7 +157,8 @@ class DokLphpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished($this->model, $id);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
 
 		if ($is_unpublished) {
 			// Validate data buka segel
@@ -280,56 +227,15 @@ class DokLphpController extends Controller
 		}
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
+	protected function publishing($id)
 	{
-		DB::beginTransaction();
-		try {
-			// Find LPHP
-			$lphp = $this->model::find($id);
-			$sbp = $lphp->lptp->sbp;
-			
-			// Publish LPHP and chang SBP status
-			$this->publishDocument($this->doc_type, $lphp->id, $lphp->thn_dok);
-			$sbp->update(['kode_status' => 202]);
-
-			// Commit query
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$this->getDocument($id);
+		$this->year = $this->doc->thn_dok;
 	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 */
-	public function destroy($id)
+	
+	protected function published()
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished($this->model, $id);
-			if ($is_unpublished) {
-				$this->model::find($id)->delete();
-			}
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$sbp = $this->doc->lptp->sbp;
+		$sbp->update(['kode_status' => 202]);
 	}
 }

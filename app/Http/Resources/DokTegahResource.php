@@ -2,31 +2,17 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokTegahResource extends JsonResource
-{
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $element=null)
-	{
-		$this->resource = $resource;
-		$this->element = $element;
-	}
-	
+class DokTegahResource extends RequestBasedResource
+{	
 	/**
 	 * Transform the resource into an array.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	public function toArray($request)
+	protected function basic()
 	{
-		$tegah = [
+		$array = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
@@ -34,27 +20,25 @@ class DokTegahResource extends JsonResource
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 		];
 
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
+		return $array;
+	}
 
-		if ($this->element == 'basic') {
-			$array = $tegah;
-			$array['kode_status'] = $this->kode_status;
-		} else {
-			$array = [
-				'main' => [
-					'type' => 'tegah',
-					'data' => $tegah
-				],
-				'penindakan' => $penindakan,
-				'status' => $status,
-				'objek' => $objek,
-				'dokumen' => $dokumen,
-			];
+	protected function pdf()
+	{
+		$array = $this->basic();
+		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
+		$array['objek'] = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
+		$array['kode_status'] = $this->kode_status;
+
+		if ($array['objek'] != null) {
+			if ($array['objek']->type == 'barang') {
+				$riksa = $this->penindakan->riksa;
+				if ($riksa != null) {
+					$array['riksa'] = $riksa->no_dok_lengkap;
+				}
+			}
 		}
-
+		
 		return $array;
 	}
 }

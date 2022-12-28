@@ -3,23 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLpResource;
-use App\Http\Resources\DokLpTableResource;
-use App\Models\DokLp;
-use App\Models\DokSbp;
 use App\Models\ObjectRelation;
-use App\Traits\DokumenTrait;
 use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokLpController extends Controller
+class DokLpController extends DokPenindakanController
 {
-	use DokumenTrait;
 	use SwitcherTrait;
 
-	public function __construct()
+	public function __construct($doc_type='lp')
 	{
-		$this->doc_type = 'lp';
+		parent::__construct($doc_type);
 		$this->lphp_type = 'lphp';
 		$this->sbp_type = 'sbp';
 		$this->prepareModel();
@@ -27,10 +22,6 @@ class DokLpController extends Controller
 
 	protected function prepareModel()
 	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
-		$this->resource = $this->switchObject($this->doc_type, 'resource');
 		$this->sbp_model = $this->switchObject($this->sbp_type, 'model');
 	}
 
@@ -40,65 +31,15 @@ class DokLpController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	protected function getPenindakan($doc_id)
 	{
-		$all_lp = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$lp_list = DokLpTableResource::collection($all_lp);
-		return $lp_list;
+		$this->getDocument($doc_id);
+		$this->penindakan = $this->doc->lphp->lptp->sbp->penindakan;
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
+	public function docs($id)
 	{
-		$lphp = new $this->resource($this->model::findOrFail($id));
-		return $lphp;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$lp = new $this->resource($this->model::findOrFail($id), 'display');
-		return $lp;
-	}
-
-	/**
-	 * Display data for input form
-	 * 
-	 * @param int $id
-	 */
-	public function form($id)
-	{
-		$lp = new $this->resource($this->model::find($id), 'form');
-		return $lp;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function objek($id)
-	{
-		$lp = new $this->resource($this->model::findOrFail($id), 'objek');
-		return $lp;
+		return $this->getRelatedDocuments($id);
 	}
 
 	/*
@@ -209,7 +150,8 @@ class DokLpController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished($this->model, $id);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
 
 		if ($is_unpublished) {
 			// Validate data buka segel
@@ -278,57 +220,15 @@ class DokLpController extends Controller
 		}
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
+	protected function publishing($id)
 	{
-		DB::beginTransaction();
-		try {
-			// Find doc
-			$lp = $this->model::find($id);
-			$sbp = $lp->lphp->lptp->sbp;
-			
-			// Publish doc and change SBP status
-			$this->publishDocument($this->doc_type, $lp->id, $lp->thn_dok);
-			$sbp->update(['kode_status' => 203]);
-
-			// Commit query
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$this->getDocument($id);
+		$this->year = $this->doc->thn_dok;
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
+	protected function published()
 	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished($this->model, $id);
-			if ($is_unpublished) {
-				$this->model::find($id)->delete();
-			}
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		$sbp = $this->doc->lphp->lptp->sbp;
+		$sbp->update(['kode_status' => 203]);
 	}
 }
