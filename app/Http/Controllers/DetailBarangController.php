@@ -23,6 +23,7 @@ class DetailBarangController extends DetailController
 	public function store(Request $request, $doc_type, $doc_id)
 	{
 		DB::beginTransaction();
+		$caught = false;
 
 		try {
 			// Insert detail barang
@@ -44,15 +45,18 @@ class DetailBarangController extends DetailController
 				$this->upsertDokumen($data_dokumen, $barang->id);
 			}
 
-			// Return doc detail
+			DB::commit();
+		} catch (\Throwable $th) {
+			$caught = true;
+			$result = $th;
+			DB::rollBack();
+		}
+
+		// Return doc detail if no exception detected
+		if (!$caught) {
 			$model = $this->switchObject($doc_type, 'model');
 			$resource = $this->switchObject($doc_type, 'resource');
 			$result = new $resource($model::find($doc_id), 'objek');
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			$result = $th;
 		}
 		
 		return $result;

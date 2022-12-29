@@ -6,22 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Lampiran extends Model
+class Status extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'lampiran';
+	protected $table = 'status';
 
 	protected $fillable = [
-		'mime_type',
-		'path',
-		'filename',
-		'description',
+		'statusable_type',
+		'statusable_id',
+		'kode_status',
+		'nip_pegawai',
 	];
-
-	public function attachable()
-	{
-		return $this->morphTo();
-	}
 }
