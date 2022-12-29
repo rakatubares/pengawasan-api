@@ -35,11 +35,6 @@ class DokTolakSbp2Controller extends DokPenindakanController
 		$this->penindakan = $this->sbp->penindakan;
 	}
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions

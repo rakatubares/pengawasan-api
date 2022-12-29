@@ -19,11 +19,6 @@ class DokSegelController extends DokPenindakanController
 	 |--------------------------------------------------------------------------
 	 */
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/**
 	 * Display resource based on search query
 	 * 

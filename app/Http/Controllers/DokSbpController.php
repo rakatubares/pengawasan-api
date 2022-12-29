@@ -28,11 +28,6 @@ class DokSbpController extends DokPenindakanController
 	 |--------------------------------------------------------------------------
 	 */
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/**
 	 * Display object type
 	 * 

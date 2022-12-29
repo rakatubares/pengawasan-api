@@ -37,11 +37,6 @@ class DokLpController extends DokPenindakanController
 		$this->penindakan = $this->doc->lphp->lptp->sbp->penindakan;
 	}
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions

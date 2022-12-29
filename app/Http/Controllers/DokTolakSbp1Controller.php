@@ -35,11 +35,6 @@ class DokTolakSbp1Controller extends DokPenindakanController
 		$this->penindakan = $this->sbp->penindakan;
 	}
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/**
 	 * Display resource based on search query
 	 * 

@@ -27,11 +27,6 @@ class DokTitipController extends DokPenindakanController
 		$this->penindakan = $this->doc->segel->penindakan;
 	}
 
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
-
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
