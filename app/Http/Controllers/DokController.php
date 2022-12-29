@@ -137,6 +137,18 @@ class DokController extends Controller
 		return $doc;
 	}
 
+
+	/**
+	 * List of related documents.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function docs($id)
+	{
+		return $this->getRelatedDocuments($id);
+	}
+
 	/**
 	 * Display data for pdf.
 	 *
