@@ -73,24 +73,33 @@ class DokRiksaBadanController extends DokPenindakanController
 
 	protected function stored($request)
 	{
-		// Save data sarkut
-		if (
-			($request->sarkut['nama_sarkut'] != null) ||
-			($request->sarkut['jenis_sarkut'] != null)
-		) {
-			$sarkut = $this->createSarkut($request->sarkut);
-			$this->doc->update(['sarkut_id' => $sarkut->id]);
-		}
-
-		// Save data dokumen barang
-		if ($request->dokumen['no_dok'] != null) {
-			$this->createDocument($this->doc, $request->dokumen);
-		}
+		$this->storeSarkut($request->sarkut);
+		$this->storeDokumen($request->dokumen);
 
 		// Create penindakan
 		$this->storePenindakan($request);
 		$this->penindakanOrang($request->orang);
 		$this->createRelation('penindakan', $this->penindakan->id, $this->doc_type, $this->doc->id);
+	}
+
+	private function storeSarkut($data_sarkut)
+	{
+		// Save data sarkut
+		if (
+			($data_sarkut['nama_sarkut'] != null) ||
+			($data_sarkut['jenis_sarkut'] != null)
+		) {
+			$sarkut = $this->createSarkut($data_sarkut);
+			$this->doc->update(['sarkut_id' => $sarkut->id]);
+		}
+	}
+
+	private function storeDokumen($data_dokumen)
+	{
+		// Save data dokumen barang
+		if ($data_dokumen['no_dok'] != null) {
+			$this->createDocument($data_dokumen);
+		}
 	}
 
 	/**
@@ -108,45 +117,8 @@ class DokRiksaBadanController extends DokPenindakanController
 
 	protected function updated($request)
 	{
-		// Update sarkut
-		if (
-			($request->sarkut['nama_sarkut'] != null) ||
-			($request->sarkut['jenis_sarkut'] != null)
-		) {
-			// Check existed sarkut
-			$existed_sarkut_id = $this->doc->sarkut_id;
-			if ($existed_sarkut_id != null) {
-				$this->updateSarkut($request->sarkut, $existed_sarkut_id);
-			} else {
-				$sarkut = $this->createSarkut($request->sarkut);
-				$this->doc->update(['sarkut_id' => $sarkut->id]);
-			}
-		} else {
-			// Check existed sarkut
-			$existed_sarkut_id = $this->doc->sarkut_id;
-			if ($existed_sarkut_id != null) {
-				$this->deleteSarkut($existed_sarkut_id);
-				$this->doc->update(['sarkut_id' => null]);
-			}
-		}
-
-		// Update dokumen barang
-		if ($request->dokumen['no_dok'] != null) {
-			// Check existed document
-			$existed_dokumen = $this->doc->dokumen;
-			if ($existed_dokumen != null) {
-				$this->createDocument($request->dokumen);
-			} else {
-				$this->updateDocument($request->dokumen);
-			}
-		} else {
-			// Check existed document
-			$existed_dokumen = $this->doc->dokumen;
-			if ($existed_dokumen != null) {
-				$this->deleteDocument();
-			}
-		}
-
+		$this->updateDataSarkut($request->sarkut);
+		$this->updateDataDokumen($request->dokumen);
 		$this->updatePenindakan($request);
 
 		// Update orang
@@ -158,9 +130,76 @@ class DokRiksaBadanController extends DokPenindakanController
 		}
 	}
 
+	private function updateDataSarkut($data_sarkut)
+	{
+		// Update sarkut
+		if (
+			($data_sarkut['nama_sarkut'] != null) ||
+			($data_sarkut['jenis_sarkut'] != null)
+		) {
+			// Check existed sarkut
+			$existed_sarkut_id = $this->doc->sarkut_id;
+			if ($existed_sarkut_id != null) {
+				$this->updateSarkut($data_sarkut, $existed_sarkut_id);
+			} else {
+				$sarkut = $this->createSarkut($data_sarkut);
+				$this->doc->update(['sarkut_id' => $sarkut->id]);
+			}
+		} else {
+			// Check existed sarkut
+			$existed_sarkut_id = $this->doc->sarkut_id;
+			if ($existed_sarkut_id != null) {
+				$this->deleteSarkut($existed_sarkut_id);
+				$this->doc->update(['sarkut_id' => null]);
+			}
+		}
+	}
+
+	private function updateDataDokumen($data_dokumen)
+	{
+		// Update dokumen barang
+		if ($data_dokumen['no_dok'] != null) {
+			// Check existed document
+			$existed_dokumen = $this->doc->dokumen;
+			if ($existed_dokumen == null) {
+				$this->createDocument($data_dokumen);
+			} else {
+				$this->updateDocument($data_dokumen);
+			}
+		} else {
+			// Check existed document
+			$existed_dokumen = $this->doc->dokumen;
+			if ($existed_dokumen != null) {
+				$this->deleteDocument();
+			}
+		}
+	}
+
 	protected function publishing($id)
 	{
 		$this->getPenindakanDate($id);
 		$this->updateDocYear();
+	}
+
+	/**
+	 * Linked document functions.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	public function storeLinked(Request $request)
+	{
+		$this->saveData($request);
+		$this->storeSarkut($request->sarkut);
+		$this->storeDokumen($request->dokumen);
+		return $this->doc;
+	}
+
+	public function updateLinked(Request $request, $id)
+	{
+		$data = $this->prepareData($request, 'update');
+		$this->getDocument($id);
+		$this->doc->update($data);
+		$this->updateDataSarkut($request->sarkut);
+		$this->updateDataDokumen($request->dokumen);
 	}
 }

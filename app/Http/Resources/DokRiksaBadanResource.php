@@ -2,57 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokRiksaBadanResource extends JsonResource
+class DokRiksaBadanResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-			
-			case 'form':
-				$array = $this->display();
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
-	/**
-	 * Transform the resource into an array for display.
-	 *
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -74,40 +26,25 @@ class DokRiksaBadanResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$riksa = $this->basic();
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
-
-		$array = [
-			'main' => [
-				'type' => 'riksa',
-				'data' => $riksa
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
-		return $array;
-	}
-
-	private function display()
+	protected function display()
 	{
 		$array = $this->basic();
 		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		return $array;
 	}
 
-	private function pdf()
+	protected function pdf()
 	{
-		$array = $this->basic();
+		$array = $this->display();
 		$array['kode_status'] = $this->kode_status;
 
+		return $array;
+	}
+
+	protected function form()
+	{
+		$array = $this->basic();
+		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		return $array;
 	}
 }

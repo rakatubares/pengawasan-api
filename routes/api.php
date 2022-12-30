@@ -20,6 +20,8 @@ use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
+use App\Http\Controllers\DokLptpController;
+use App\Http\Controllers\DokLptpNController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\DokNiController;
@@ -31,6 +33,7 @@ use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokTegahController;
 use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
@@ -128,6 +131,8 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
 Route::apiResource('li', DokLiController::class);
 Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
 Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
+Route::get('/li/{li_id}/docs', [DokLiController::class, 'docs']);
+Route::get('/li/{li_id}/pdf', [DokLiController::class, 'pdf']);
 Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
 Route::post('/li/search', [DokLiController::class, 'search']);
 
@@ -137,6 +142,8 @@ Route::post('/li/search', [DokLiController::class, 'search']);
 Route::resource('lap', DokLapController::class);
 Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
 Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
+Route::get('/lap/{lap_id}/docs', [DokLapController::class, 'docs']);
+Route::get('/lap/{lap_id}/pdf', [DokLapController::class, 'pdf']);
 Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
@@ -151,6 +158,8 @@ Route::apiResource('sbp/tarik', MonTarikSbpController::class);
 Route::apiResource('sbp', DokSbpController::class);
 Route::get('/sbp/{sbp_id}/display', [DokSbpController::class, 'display']);
 Route::get('/sbp/{sbp_id}/form', [DokSbpController::class, 'form']);
+Route::get('/sbp/{sbp_id}/docs', [DokSbpController::class, 'docs']);
+Route::get('/sbp/{sbp_id}/pdf', [DokSbpController::class, 'pdf']);
 Route::get('/sbp/{sbp_id}/objek', [DokSbpController::class, 'objek']);
 Route::get('/sbp/{sbp_id}/linked', [DokSbpController::class, 'linked']);
 Route::post('/sbp/{sbp_id}/storelinked', [DokSbpController::class, 'storeLinkedDoc']);
@@ -163,6 +172,8 @@ Route::post('/sbp/search', [DokSbpController::class, 'search']);
 Route::apiResource('tolak1', DokTolakSbp1Controller::class);
 Route::get('/tolak1/{tolak1_id}/display', [DokTolakSbp1Controller::class, 'display']);
 Route::get('/tolak1/{tolak1_id}/form', [DokTolakSbp1Controller::class, 'form']);
+Route::get('/tolak1/{tolak1_id}/docs', [DokTolakSbp1Controller::class, 'docs']);
+Route::get('/tolak1/{tolak1_id}/pdf', [DokTolakSbp1Controller::class, 'pdf']);
 Route::put('/tolak1/{tolak1_id}/publish', [DokTolakSbp1Controller::class, 'publish']);
 Route::post('/tolak1/search', [DokTolakSbp1Controller::class, 'search']);
 
@@ -172,7 +183,14 @@ Route::post('/tolak1/search', [DokTolakSbp1Controller::class, 'search']);
 Route::apiResource('tolak2', DokTolakSbp2Controller::class);
 Route::get('/tolak2/{tolak2_id}/display', [DokTolakSbp2Controller::class, 'display']);
 Route::get('/tolak2/{tolak2_id}/form', [DokTolakSbp2Controller::class, 'form']);
+Route::get('/tolak2/{tolak2_id}/docs', [DokTolakSbp2Controller::class, 'docs']);
+Route::get('/tolak2/{tolak2_id}/pdf', [DokTolakSbp2Controller::class, 'pdf']);
 Route::put('/tolak2/{tolak2_id}/publish', [DokTolakSbp2Controller::class, 'publish']);
+
+/**
+ * API for LPTP
+ */
+Route::get('/lptp/{lptp_id}/pdf', [DokLptpController::class, 'pdf']);
 
 /**
  * API for LPHP
@@ -180,6 +198,8 @@ Route::put('/tolak2/{tolak2_id}/publish', [DokTolakSbp2Controller::class, 'publi
 Route::apiResource('lphp', DokLphpController::class);
 Route::get('/lphp/{lphp_id}/display', [DokLphpController::class, 'display']);
 Route::get('/lphp/{lphp_id}/form', [DokLphpController::class, 'form']);
+Route::get('/lphp/{lphp_id}/docs', [DokLphpController::class, 'docs']);
+Route::get('/lphp/{lphp_id}/pdf', [DokLphpController::class, 'pdf']);
 Route::get('/lphp/{lphp_id}/objek', [DokLphpController::class, 'objek']);
 Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 
@@ -189,8 +209,15 @@ Route::put('/lphp/{lphp_id}/publish', [DokLphpController::class, 'publish']);
 Route::apiResource('lp', DokLpController::class);
 Route::get('/lp/{lp_id}/display', [DokLpController::class, 'display']);
 Route::get('/lp/{lp_id}/form', [DokLpController::class, 'form']);
+Route::get('/lp/{lp_id}/docs', [DokLpController::class, 'docs']);
+Route::get('/lp/{lp_id}/pdf', [DokLpController::class, 'pdf']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+
+/**
+ * API for BA Penegahan
+ */
+Route::get('/tegah/{tegah_id}/pdf', [DokTegahController::class, 'pdf']);
 
 /**
  * API for BA Pemeriksaan
@@ -198,6 +225,8 @@ Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
 Route::apiResource('riksa', DokRiksaController::class);
 Route::get('/riksa/{riksa_id}/display', [DokRiksaController::class, 'display']);
 Route::get('/riksa/{riksa_id}/form', [DokRiksaController::class, 'form']);
+Route::get('/riksa/{riksa_id}/docs', [DokRiksaController::class, 'docs']);
+Route::get('/riksa/{riksa_id}/pdf', [DokRiksaController::class, 'pdf']);
 Route::get('/riksa/{riksa_id}/objek', [DokRiksaController::class, 'objek']);
 Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
 
@@ -207,6 +236,8 @@ Route::put('/riksa/{riksa_id}/publish', [DokRiksaController::class, 'publish']);
 Route::apiResource('riksabadan', DokRiksaBadanController::class);
 Route::get('/riksabadan/{riksabadan_id}/display', [DokRiksaBadanController::class, 'display']);
 Route::get('/riksabadan/{riksabadan_id}/form', [DokRiksaBadanController::class, 'form']);
+Route::get('/riksabadan/{riksabadan_id}/docs', [DokRiksaBadanController::class, 'docs']);
+Route::get('/riksabadan/{riksabadan_id}/pdf', [DokRiksaBadanController::class, 'pdf']);
 Route::put('/riksabadan/{riksabadan_id}/publish', [DokRiksaBadanController::class, 'publish']);
 
 /**
@@ -216,6 +247,8 @@ Route::apiResource('segel', DokSegelController::class);
 Route::post('/segel/search', [DokSegelController::class, 'search']);
 Route::get('/segel/{segel_id}/display', [DokSegelController::class, 'display']);
 Route::get('/segel/{segel_id}/form', [DokSegelController::class, 'form']);
+Route::get('/segel/{segel_id}/docs', [DokSegelController::class, 'docs']);
+Route::get('/segel/{segel_id}/pdf', [DokSegelController::class, 'pdf']);
 Route::get('/segel/{segel_id}/objek', [DokSegelController::class, 'objek']);
 Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 
@@ -225,6 +258,8 @@ Route::put('/segel/{segel_id}/publish', [DokSegelController::class, 'publish']);
 Route::apiResource('bukasegel', DokBukaSegelController::class);
 Route::get('/bukasegel/{buka_segel_id}/display', [DokBukaSegelController::class, 'display']);
 Route::get('/bukasegel/{buka_segel_id}/form', [DokBukaSegelController::class, 'form']);
+Route::get('/bukasegel/{bukasegel_id}/docs', [DokBukaSegelController::class, 'docs']);
+Route::get('/bukasegel/{bukasegel_id}/pdf', [DokBukaSegelController::class, 'pdf']);
 Route::get('/bukasegel/{buka_segel_id}/objek', [DokBukaSegelController::class, 'objek']);
 Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class, 'publish']);
 
@@ -234,6 +269,8 @@ Route::put('/bukasegel/{buka_segel_id}/publish', [DokBukaSegelController::class,
 Route::apiResource('titip', DokTitipController::class);
 Route::get('/titip/{titip_id}/display', [DokTitipController::class, 'display']);
 Route::get('/titip/{titip_id}/form', [DokTitipController::class, 'form']);
+Route::get('/titip/{titip_id}/docs', [DokTitipController::class, 'docs']);
+Route::get('/titip/{titip_id}/pdf', [DokTitipController::class, 'pdf']);
 Route::get('/titip/{titip_id}/objek', [DokTitipController::class, 'objek']);
 Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
 
@@ -242,6 +279,7 @@ Route::put('/titip/{titip_id}/publish', [DokTitipController::class, 'publish']);
  */
 Route::apiResource('contoh', DokContohController::class);
 Route::get('/contoh/{contoh_id}/display', [DokContohController::class, 'display']);
+Route::get('/contoh/{contoh_id}/pdf', [DokContohController::class, 'pdf']);
 Route::get('/contoh/{contoh_id}/objek', [DokContohController::class, 'objek']);
 Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish']);
 
@@ -251,6 +289,8 @@ Route::put('/contoh/{contoh_id}/publish', [DokContohController::class, 'publish'
 Route::apiResource('pengaman', DokPengamanController::class);
 Route::get('/pengaman/{pengaman_id}/display', [DokPengamanController::class, 'display']);
 Route::get('/pengaman/{pengaman_id}/form', [DokPengamanController::class, 'form']);
+Route::get('/pengaman/{pengaman_id}/docs', [DokPengamanController::class, 'docs']);
+Route::get('/pengaman/{pengaman_id}/pdf', [DokPengamanController::class, 'pdf']);
 Route::get('/pengaman/{pengaman_id}/objek', [DokPengamanController::class, 'objek']);
 Route::post('/pengaman/search', [DokPengamanController::class, 'search']);
 Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'publish']);
@@ -261,6 +301,8 @@ Route::put('/pengaman/{pengaman_id}/publish', [DokPengamanController::class, 'pu
 Route::apiResource('bukapengaman', DokBukaPengamanController::class);
 Route::get('/bukapengaman/{buka_pengaman_id}/display', [DokBukaPengamanController::class, 'display']);
 Route::get('/bukapengaman/{buka_pengaman_id}/form', [DokBukaPengamanController::class, 'form']);
+Route::get('/bukapengaman/{bukapengaman_id}/docs', [DokBukaPengamanController::class, 'docs']);
+Route::get('/bukapengaman/{bukapengaman_id}/pdf', [DokBukaPengamanController::class, 'pdf']);
 Route::get('/bukapengaman/{buka_pengaman_id}/objek', [DokBukaPengamanController::class, 'objek']);
 Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanController::class, 'publish']);
 
@@ -270,6 +312,7 @@ Route::put('/bukapengaman/{buka_pengaman_id}/publish', [DokBukaPengamanControlle
 Route::apiResource('bast', DokBastController::class);
 Route::get('/bast/{bast_id}/display', [DokBastController::class, 'display']);
 Route::get('/bast/{bast_id}/form', [DokBastController::class, 'form']);
+Route::get('/bast/{bast_id}/pdf', [DokBastController::class, 'pdf']);
 Route::get('/bast/{bast_id}/objek', [DokBastController::class, 'objek']);
 Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
 
@@ -278,6 +321,7 @@ Route::put('/bast/{bast_id}/publish', [DokBastController::class, 'publish']);
  */
 Route::apiResource('reekspor', DokReeksporController::class);
 Route::get('/reekspor/{reekspor_id}/display', [DokReeksporController::class, 'display']);
+Route::get('/reekspor/{reekspor_id}/pdf', [DokReeksporController::class, 'pdf']);
 Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'publish']);
 
 /*
@@ -327,6 +371,8 @@ Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
 Route::apiResource('sbpn', DokSbpNController::class);
 Route::get('/sbpn/{sbpn_id}/display', [DokSbpNController::class, 'display']);
 Route::get('/sbpn/{sbpn_id}/form', [DokSbpNController::class, 'form']);
+Route::get('/sbpn/{sbpn_id}/docs', [DokSbpNController::class, 'docs']);
+Route::get('/sbpn/{sbpn_id}/pdf', [DokSbpNController::class, 'pdf']);
 Route::get('/sbpn/{sbpn_id}/objek', [DokSbpNController::class, 'objek']);
 Route::get('/sbpn/{sbpn_id}/linked', [DokSbpNController::class, 'linked']);
 Route::post('/sbpn/{sbpn_id}/storelinked', [DokSbpNController::class, 'storeLinkedDoc']);
@@ -334,11 +380,18 @@ Route::put('/sbpn/{sbpn_id}/publish', [DokSbpNController::class, 'publish']);
 Route::post('/sbpn/search', [DokSbpNController::class, 'search']);
 
 /**
+ * API for LPTP-N
+ */
+Route::get('/lptpn/{lptpn_id}/pdf', [DokLptpNController::class, 'pdf']);
+
+/**
  * API for LPHP-N
  */
 Route::apiResource('lphpn', DokLphpNController::class);
 Route::get('/lphpn/{lphpn_id}/display', [DokLphpNController::class, 'display']);
 Route::get('/lphpn/{lphpn_id}/form', [DokLphpNController::class, 'form']);
+Route::get('/lphpn/{lphpn_id}/docs', [DokLphpNController::class, 'docs']);
+Route::get('/lphpn/{lphpn_id}/pdf', [DokLphpNController::class, 'pdf']);
 Route::get('/lphpn/{lphpn_id}/objek', [DokLphpNController::class, 'objek']);
 Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
 
@@ -348,6 +401,8 @@ Route::put('/lphpn/{lphpn_id}/publish', [DokLphpNController::class, 'publish']);
 Route::apiResource('lpn', DokLpNController::class);
 Route::get('/lpn/{lpn_id}/display', [DokLpNController::class, 'display']);
 Route::get('/lpn/{lpn_id}/form', [DokLpNController::class, 'form']);
+Route::get('/lpn/{lpn_id}/docs', [DokLpNController::class, 'docs']);
+Route::get('/lpn/{lpn_id}/pdf', [DokLpNController::class, 'pdf']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
 

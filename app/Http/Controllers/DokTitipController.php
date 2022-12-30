@@ -3,24 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokTitipResource;
-use App\Http\Resources\DokTitipTableResource;
 use App\Models\DokSegel;
 use App\Models\DokTitip;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokTitipController extends Controller
+class DokTitipController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='titip')
 	{
-		$this->doc_type = 'titip';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -29,64 +21,10 @@ class DokTitipController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	protected function getPenindakan($doc_id)
 	{
-		$all_titip = DokTitip::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$titip_list = DokTitipTableResource::collection($all_titip);
-		return $titip_list;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function show($id)
-	{
-		$titip = new DokTitipResource(DokTitip::find($id));
-		return $titip;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$titip = new DokTitipResource(DokTitip::findOrFail($id), 'display');
-		return $titip;
-	}
-
-	/**
-	 * Display the specified resource form input form.
-	 *
-	 * @param  int $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$titip = new DokTitipResource(DokTitip::findOrFail($id), 'form');
-		return $titip;
-	}
-
-	/**
-	 * Display object type
-	 * 
-	 * @param int $id
-	 */
-	public function objek($id)
-	{
-		$objek = new DokTitipResource(DokTitip::find($id), 'objek');
-		return $objek;
+		$this->getDocument($doc_id);
+		$this->penindakan = $this->doc->segel->penindakan;
 	}
 
 	/*
@@ -167,7 +105,7 @@ class DokTitipController extends Controller
 				// Commit store query
 				DB::commit();
 
-				// Return LPHP
+				// Return BA Titip
 				$titip_resource = new DokTitipResource(DokTitip::findOrFail($titip->id), 'form');
 				return $titip_resource;
 			} else {
@@ -190,7 +128,8 @@ class DokTitipController extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokTitip::class, $id);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
 
 		// Update if not published
 		if ($is_unpublished) {
@@ -207,7 +146,7 @@ class DokTitipController extends Controller
 				// Commit store query
 				DB::commit();
 
-				// Return updated SBP
+				// Return updated BA Titip
 				$titip_resource = new DokTitipResource(DokTitip::findOrFail($id), 'form');
 				$result = $titip_resource;
 			} catch (\Throwable $th) {
@@ -221,59 +160,11 @@ class DokTitipController extends Controller
 		return $result;
 	}
 
-	/**
-	 * Terbitkan penomoran dokumen
-	 * 
-	 * @param  int  $id
-	 */
-	public function publish($id)
+	protected function published()
 	{
-		DB::beginTransaction();
-		try {
-			$this->getDocument(DokTitip::class, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokTitip::class);
-
-			$this->doc->update(['tanggal_dokumen' => $this->tanggal]);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-
-			$segel = $this->doc->segel;
-			if ($segel != null) {
-				$segel->update(['kode_status' => 205]);
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy functions
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokTitip::class, $id);
-			if ($is_unpublished) {
-				DokTitip::find($id)->delete();
-			}
-			
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
+		$segel = $this->doc->segel;
+		if ($segel != null) {
+			$segel->update(['kode_status' => 205]);
 		}
 	}
 }

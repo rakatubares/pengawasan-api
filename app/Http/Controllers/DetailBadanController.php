@@ -35,7 +35,9 @@ class DetailBadanController extends DetailController
 
 			// Update object
 			$this->updateObjectType($doc_type, $doc_id, 'orang', $request->orang_id);
-			$model::find($doc_id)->penindakan->update(['saksi_id' => $request->orang_id]);
+			if ($doc_type != 'bast') {
+				$model::find($doc_id)->penindakan->update(['saksi_id' => $request->orang_id]);
+			}
 
 			// Commit change
 			DB::commit();

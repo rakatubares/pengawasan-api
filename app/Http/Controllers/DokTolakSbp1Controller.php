@@ -4,24 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DokTolakSbp1Resource;
 use App\Http\Resources\DokTolakSbp1TableResource;
-use App\Models\DokSbp;
 use App\Models\DokTolakSbp1;
 use App\Models\ObjectRelation;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DokTolakSbp1Controller extends Controller
+class DokTolakSbp1Controller extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='tolak1')
 	{
-		$this->doc_type = 'tolak1';
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
+		parent::__construct($doc_type);
 	}
 
 	/*
@@ -30,54 +22,17 @@ class DokTolakSbp1Controller extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function index()
+	private function getSbp($doc_id)
 	{
-		$all_doc = DokTolakSbp1::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$doc_list = DokTolakSbp1TableResource::collection($all_doc);
-		return $doc_list;
+		$this->getDocument($doc_id);
+		$sbp_type = $this->doc->sbp_relation->object1_type;
+		$this->sbp = $this->doc->$sbp_type;
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
+	protected function getPenindakan($doc_id)
 	{
-		$tolak1 = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($id));
-		return $tolak1;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function display($id)
-	{
-		$tolak1 = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($id), 'display');
-		return $tolak1;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$tolak1 = new DokTolakSbp1Resource(DokTolakSbp1::findOrFail($id), 'form');
-		return $tolak1;
+		$this->getSbp($doc_id);
+		$this->penindakan = $this->sbp->penindakan;
 	}
 
 	/**
@@ -218,7 +173,8 @@ class DokTolakSbp1Controller extends Controller
 	public function update(Request $request, $id)
 	{
 		// Check if document is not published yet
-		$is_unpublished = $this->checkUnpublished(DokTolakSbp1::class, $id);
+		$this->getDocument($id);
+		$is_unpublished = $this->checkUnpublished();
 
 		if ($is_unpublished) {
 			// Validate data
@@ -296,63 +252,13 @@ class DokTolakSbp1Controller extends Controller
 		}
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id)
+	protected function published()
 	{
-		DB::beginTransaction();
-		try {
-			// Update doc
-			$this->getDocument(DokTolakSbp1::class, $id);
-			$this->getCurrentDate();
-			$number = $this->getNewDocNumber(DokTolakSbp1::class);
-			$this->updateDocNumberAndYear($number, $this->tipe_surat, true);
-
-			// Find SBP
-			$tolak1 = DokTolakSbp1::find($id);
-			$sbp_type = $tolak1->sbp_relation->object1_type;
-			$sbp = $tolak1[$sbp_type];
-			
-			// Change SBP status
-			$sbp->update(['status_tolak' => 1]);
-
-			// Commit query
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Destroy function
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		DB::beginTransaction();
-		try {
-			$is_unpublished = $this->checkUnpublished(DokTolakSbp1::class, $id);
-			if ($is_unpublished) {
-				DokTolakSbp1::find($id)->delete();
-			}
-
-			DB::commit();
-		} catch (\Throwable $th) {
-			DB::rollBack();
-			throw $th;
-		}
+		// Find SBP
+		$doc_id = $this->doc->id;
+		$this->getSbp($doc_id);
+		
+		// Change SBP status
+		$this->sbp->update(['status_tolak' => 1]);
 	}
 }

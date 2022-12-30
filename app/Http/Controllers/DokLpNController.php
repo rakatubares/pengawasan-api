@@ -8,7 +8,7 @@ class DokLpNController extends DokLpController
 {
     public function __construct()
 	{
-		$this->doc_type = 'lpn';
+		parent::__construct('lpn');
 		$this->lphp_type = 'lphpn';
 		$this->sbp_type = 'sbpn';
 		$this->prepareModel();

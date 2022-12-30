@@ -38,7 +38,7 @@ class DokLphpSeeder extends Seeder
 		$max_lptp_id = $this->model_lptp::max('id');
 		$available_lptp_id = range(1, $max_lptp_id);
 
-		for ($i=1; $i < 11; $i++) { 
+		for ($i=1; $i < 31; $i++) { 
 			// Get data lptp
 			$lptp_id = $this->faker->randomElement($available_lptp_id);
 			$key = array_search($lptp_id, $available_lptp_id);

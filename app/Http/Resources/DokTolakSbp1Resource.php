@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokTolakSbp1Resource extends JsonResource
+class DokTolakSbp1Resource extends RequestBasedResource
 {
 	/**
 	 * Create a new resource instance.
@@ -12,41 +10,10 @@ class DokTolakSbp1Resource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type='basic')
+	public function __construct($resource, $request_type='')
 	{
-		$this->resource = $resource;
-		$this->type = $type;
+		parent::__construct($resource, $request_type);
 		$this->sbp_type = $this->sbp_relation->object1_type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		// return parent::toArray($request);
-		switch ($this->type) {
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'form':
-				$array = $this->form();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
 	}
 
 	/**
@@ -54,7 +21,7 @@ class DokTolakSbp1Resource extends JsonResource
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -74,38 +41,7 @@ class DokTolakSbp1Resource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$tolak1 = $this->basic();
-		$penindakan = new PenindakanResource($this[$this->sbp_type]->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this[$this->sbp_type]->penindakan->objectable, $this[$this->sbp_type]->penindakan->object_type);
-		$dokumen = new PenindakanResource($this[$this->sbp_type]->penindakan, 'dokumen');
-
-		$array = [
-			'main' => [
-				'type' => 'tolak1',
-				'data' => $tolak1
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
-		return $array;
-	}
-
-	private function pdf()
-	{
-		$array = $this->basic();
-		$array['sbp_type'] = $this->sbp_type;
-		$array['kode_status'] = $this->kode_status;
-
-		return $array;
-	}
-
-	private function display()
+	protected function display()
 	{
 		$sbp = $this[$this->sbp_type];
 		$array = $this->basic();
@@ -115,7 +51,16 @@ class DokTolakSbp1Resource extends JsonResource
 		return $array;
 	}
 
-	private function form()
+	protected function pdf()
+	{
+		$array = $this->display();
+		$array['sbp_type'] = $this->sbp_type;
+		$array['kode_status'] = $this->kode_status;
+
+		return $array;
+	}
+
+	protected function form()
 	{
 		$array = $this->basic();
 		$array['sbp_type'] = $this->sbp_type;

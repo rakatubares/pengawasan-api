@@ -2,57 +2,14 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokContohResource extends JsonResource
+class DokContohResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type='basic')
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-	
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->basic();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->objectable, 'barang');
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -73,17 +30,26 @@ class DokContohResource extends JsonResource
 		return $array;
 	}
 
-	/**
-	 * Transform the resource into an array for pdf print.
-	 *
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	private function default()
+	protected function display()
+	{
+		return $this->basic();
+	}
+
+	protected function form()
+	{
+		return $this->basic();
+	}
+
+	protected function pdf()
 	{
 		$array = $this->basic();
-		$array['dokumen']['contoh']['kode_status'] = $this->kode_status;
-		$array['objek'] = new ObjectResource($this->objectable, 'barang');
-
+		$array['objek'] = $this->objek();
+		$array['kode_status'] = $this->kode_status;
 		return $array;
+	}
+
+	protected function objek()
+	{
+		return new ObjectResource($this->objectable, 'barang');
 	}
 }

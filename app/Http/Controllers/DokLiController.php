@@ -18,6 +18,31 @@ class DokLiController extends DokPenindakanController
 	 | DISPLAY functions
 	 |--------------------------------------------------------------------------
 	 */
+
+	/**
+	 * Get related documents' id
+	 * 
+	 * @param int $id
+	 * @return array
+	 */
+	public function docs($id)
+	{
+		$array = [[
+			'doc_type' => 'li',
+			'doc_id' => (int)$id,
+		]];
+
+		$li = $this->model::find($id);
+		$lap = $li->lap;
+		if ($lap != null) {
+			$array[] = [
+				'doc_type' => 'lap',
+				'doc_id' => (int)$lap->id,
+			];
+		}
+		
+		return $array;
+	}
 	
 	/**
 	 * Display resource based on search query

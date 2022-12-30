@@ -14,6 +14,37 @@ class DokLapController extends DokPenindakanController
 
 	/*
 	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Get related documents' id
+	 * 
+	 * @param int $id
+	 * @return array
+	 */
+	public function docs($id)
+	{
+		$array = [[
+			'doc_type' => 'lap',
+			'doc_id' => (int)$id,
+		]];
+
+		$lap = $this->model::find($id);
+		$li = $lap->li;
+		if ($li != null) {
+			$array[] = [
+				'doc_type' => 'li',
+				'doc_id' => (int)$li->id,
+			];
+		}
+		
+		return $array;
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
 	 | Data modify functions
 	 |--------------------------------------------------------------------------
 	 */

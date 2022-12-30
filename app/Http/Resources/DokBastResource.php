@@ -2,55 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokBastResource extends JsonResource
+class DokBastResource extends RequestBasedResource
 {
-	/**
-     * Create a new resource instance.
-     *
-     * @param  mixed  $resource
-     * @return void
-     */
-    public function __construct($resource, $type=null)
-    {
-        $this->resource = $resource;
-		$this->type = $type;
-    }
-
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
-    {
-		switch ($this->type) {
-			case 'display':
-				$array = $this->basic();
-				break;
-
-			case 'form':
-				$array = $this->basic();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->objectable, $this->object_type);
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-    }
-
 	private function getEntity($entity_object, $entity_type, $atas_nama)
 	{
 		switch ($entity_type) {
@@ -76,7 +29,7 @@ class DokBastResource extends JsonResource
 		return $array;
 	}
 
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -93,32 +46,16 @@ class DokBastResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
+	protected function pdf()
 	{
-		$bast = $this->basic();
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->objectable, $this->object_type);
-		$dok_bast = $bast;
-		$dok_bast['kode_status'] = $this->kode_status;
-		$dokumen = ['bast' => $dok_bast];
-
-		$array = [
-			'main' => [
-				'type' => 'bast',
-				'data' => $bast
-			],
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
+		$array = $this->basic();
+		$array['objek'] = $this->objek();
+		$array['kode_status'] = $this->kode_status;
 		return $array;
 	}
 
-	private function pdf()
+	protected function objek()
 	{
-		$array = $this->basic();
-		$array['kode_status'] = $this->kode_status;
-		return $array;
+		return new ObjectResource($this->objectable, $this->object_type);
 	}
 }

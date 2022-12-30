@@ -43,7 +43,7 @@ class DokSbpSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1; $i < 21; $i++) { 
+        for ($i=1; $i < 51; $i++) { 
 			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan', 'orang']);
 			$max_lokasi_id = RefLokasi::max('id');
 

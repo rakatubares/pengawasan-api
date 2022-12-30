@@ -2,52 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokLapResource extends JsonResource
+class DokLapResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'display':
-				$array = $this->basic();
-				break;
-
-			case 'form':
-				$array = $this->form();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -99,19 +56,7 @@ class DokLapResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$array = [];
-		$array['dokumen']['lap'] = $this->pdf();
-
-		if ($this->li != null) {
-			$array['dokumen']['li'] = new DokLiResource($this->li, 'pdf');
-		}
-
-		return $array;
-	}
-
-	private function form()
+	protected function form()
 	{
 		$array = $this->basic();
 		if ($this->jenis_sumber == 'LI-1') {
@@ -122,7 +67,7 @@ class DokLapResource extends JsonResource
 		return $array;
 	}
 
-	private function pdf()
+	protected function pdf()
 	{
 		$array = $this->basic();
 		$array['kode_status'] = $this->kode_status;

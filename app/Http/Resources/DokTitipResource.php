@@ -2,55 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokTitipResource extends JsonResource
+class DokTitipResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->segel->penindakan->objectable, $this->segel->penindakan->object_type);
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'form':
-				$array = $this->form();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
 	private function basic()
 	{
 		$array = [
@@ -71,47 +24,12 @@ class DokTitipResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
-	{
-		$titip = $this->basic();
-		$penindakan = new PenindakanResource($this->segel->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		$objek = new ObjectResource($this->segel->penindakan->objectable, $this->segel->penindakan->object_type);
-		$dokumen = new PenindakanResource($this->segel->penindakan, 'dokumen');
-
-		$array = [
-			'main' => [
-				'type' => 'titip',
-				'data' => $titip
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function pdf()
-	{
-		$array = $this->basic();
-		$array['kode_status'] = $this->kode_status;
-
-		return $array;
-	}
-
-	/**
-	 * Transform the resource into an array for display.
-	 *
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	private function display()
+	protected function display()
 	{
 		$segel = $this->segel;
 
@@ -127,7 +45,30 @@ class DokTitipResource extends JsonResource
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function form()
+	protected function pdf()
+	{
+		$array = $this->display();
+		$array['objek'] = $this->objek();
+		$array['kode_status'] = $this->kode_status;
+
+		if ($array['objek'] != null) {
+			if ($array['objek']->type == 'barang') {
+				$riksa = $this->segel->penindakan->riksa;
+				if ($riksa != null) {
+					$array['riksa'] = $riksa->no_dok_lengkap;
+				}
+			}
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Transform the resource into an array for display.
+	 *
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	protected function form()
 	{
 		$array = $this->basic();
 		$array['segel']['id'] = $this->segel->id;
@@ -135,5 +76,10 @@ class DokTitipResource extends JsonResource
 		$array['segel']['tanggal'] = $this->segel->penindakan->tanggal_penindakan->format('d-m-Y');
 
 		return $array;
+	}
+
+	protected function objek()
+	{
+		return new ObjectResource($this->segel->penindakan->objectable, $this->segel->penindakan->object_type);
 	}
 }

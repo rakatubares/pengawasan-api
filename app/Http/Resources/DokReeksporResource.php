@@ -2,49 +2,14 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokReeksporResource extends JsonResource
+class DokReeksporResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-	
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function display()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -88,13 +53,10 @@ class DokReeksporResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
+	protected function pdf()
 	{
-		$array = [];
-		$reekspor = $this->display();
-		$array['dokumen']['reekspor'] = $reekspor;
-		$array['dokumen']['reekspor']['kode_status'] = $this->kode_status;
-
+		$array = $this->basic();
+		$array['kode_status'] = $this->kode_status;
 		return $array;
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,8 +64,6 @@ class DokPenindakanController extends DokController
 			try {
 				// Validate data
 				$this->validateData($request);
-
-				// if (in_array('relation', $withOptions)) {$this->updateDocRelation($request);}
 
 				// Update data
 				$this->updating($request);
@@ -246,5 +245,99 @@ class DokPenindakanController extends DokController
 	{
 		$this->updateStatus($this->doc->$source_type, $source_status);
 		$this->deleteRelation($source_type, $this->doc->$source_type->id, $this->doc_type, $this->doc->id);
+	}
+
+	protected function getRelatedDocuments($id)
+	{
+		$array = [[
+			'doc_type' => $this->doc_type,
+			'doc_id' => (int)$id,
+		]];
+
+		$this->getPenindakan($id);
+		$penindakan_id = $this->penindakan->id;
+		$docs_penindakan = $this->getPenindakanDocuments($penindakan_id);
+		foreach ($docs_penindakan as $doc) {
+			if ($doc['doc_type'] != $this->doc_type) {
+				$array[] = $doc;
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * Get documents related to penindakan
+	 * 
+	 * @param Int $penindakan_id
+	 * @return Array
+	 */
+	public static function getPenindakanDocuments($penindakan_id)
+	{
+		$array = [];
+
+		$docs = ObjectRelation::where('object1_type', 'penindakan')
+			->where('object1_id', $penindakan_id)
+			->where('object2_type', '<>', 'penyidikan')
+			->get();
+		foreach ($docs as $doc) {
+			$array[] = [
+				'doc_type' => $doc->object2_type,
+				'doc_id' => $doc->object2_id,
+			];
+		}
+
+		$penindakan = Penindakan::find($penindakan_id);
+
+		// Relations from BA Segel
+		$segel = $penindakan->segel;
+		if ($segel != null) {
+			$titip = $segel->titip;
+			if ($titip != null) {
+				$array[] = ['doc_type' => 'titip', 'doc_id' => $titip->id];
+			}
+		}
+		
+		// Relations from SBP
+		$sbp_type = (($penindakan->sbp != null) ? 'sbp' : 
+			(($penindakan->sbpn != null) ? 'sbpn' : null)
+		);
+		if ($sbp_type != null) {
+			$sbp = $penindakan->$sbp_type;
+			if ($sbp_type == 'sbp') {
+				$lptp_type = 'lptp';
+				$lphp_type = 'lphp';
+				$lp_type = 'lp';
+			} else {
+				$lptp_type = 'lptpn';
+				$lphp_type = 'lphpn';
+				$lp_type = 'lpn';
+			}
+			
+			// Relations from LPTP
+			$lptp = $sbp->lptp;
+			if ($lptp != null) {
+				$array[] = ['doc_type' => $lptp_type, 'doc_id' => $lptp->id];
+				$lphp = $lptp->lphp;
+				if ($lphp != null) {
+					$array[] = ['doc_type' => $lphp_type, 'doc_id' => $lphp->id];
+					$lp = $lphp->lp;
+					if ($lp != null) {
+						$array[] = ['doc_type' => $lp_type, 'doc_id' => $lp->id];
+					}
+				}
+			}
+
+			// Relations from BA Tolak
+			$tolak1 = $sbp->tolak1;
+			if ($tolak1 != null) {
+				$array[] = ['doc_type' => 'tolak1', 'doc_id' => $tolak1->id];
+				$tolak2 = $tolak1->tolak2;
+				if ($tolak2 != null) {
+					$array[] = ['doc_type' => 'tolak2', 'doc_id' => $tolak2->id];
+				}
+			}
+		}
+
+		return $array;
 	}
 }

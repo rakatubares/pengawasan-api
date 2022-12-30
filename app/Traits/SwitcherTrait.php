@@ -253,6 +253,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLptp::class,
 			'resource' => DokLptpResource::class,
+			'table_resource' => null,
 		],
 		'lptpn' => [
 			'tipe_dok' => 'LPTP-N',
@@ -260,6 +261,7 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLptpN::class,
 			'resource' => DokLptpNResource::class,
+			'table_resource' => null,
 		],
 		'pengaman' => [
 			'tipe_dok' => 'BA',

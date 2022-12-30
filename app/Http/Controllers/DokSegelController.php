@@ -13,6 +13,12 @@ class DokSegelController extends DokPenindakanController
 		parent::__construct($doc_type);
 	}
 
+	/*
+	 |--------------------------------------------------------------------------
+	 | DISPLAY functions
+	 |--------------------------------------------------------------------------
+	 */
+
 	/**
 	 * Display resource based on search query
 	 * 
@@ -137,5 +143,23 @@ class DokSegelController extends DokPenindakanController
 	{
 		$this->getDocument($this->doc->id);
 		$this->doc->update(['nomor_segel' => $this->doc->no_dok_lengkap]);
+	}
+
+	/**
+	 * Linked document functions.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	public function storeLinked(Request $request)
+	{
+		$this->saveData($request);
+		return $this->doc;
+	}
+
+	public function updateLinked(Request $request, $id)
+	{
+		$data = $this->prepareData($request, 'update');
+		$this->getDocument($id);
+		$this->doc->update($data);
 	}
 }

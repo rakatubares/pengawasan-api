@@ -2,56 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokBukaPengamanResource extends JsonResource
+class DokBukaPengamanResource extends RequestBasedResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-	
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->basic();
-				break;
-
-			case 'form':
-				$array = $this->form();
-				break;
-
-			case 'objek':
-				$array = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -76,33 +29,22 @@ class DokBukaPengamanResource extends JsonResource
 		return $array;
 	}
 
-	private function default()
+	protected function display()
 	{
-		$buka_pengaman = $this->basic();
-		$penindakan = new PenindakanResource($this->penindakan, 'basic');
-		$status = new RefStatusResource($this->status);
-		if ($this->penindakan != null) {
-			$objek = new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
-		} else {
-			$objek = null;
-		}
-		$dokumen = new PenindakanResource($this->penindakan, 'dokumen');
+		$array = $this->basic();
+		return $array;
+	}
 
-		$array = [
-			'main' => [
-				'type' => 'bukapengaman',
-				'data' => $buka_pengaman
-			],
-			'penindakan' => $penindakan,
-			'status' => $status,
-			'objek' => $objek,
-			'dokumen' => $dokumen,
-		];
+	protected function pdf()
+	{
+		$array = $this->display();
+		$array['objek'] = $this->objek();
+		$array['kode_status'] = $this->kode_status;
 
 		return $array;
 	}
 
-	private function form()
+	protected function form()
 	{
 		$array = $this->basic();
 		if ($this->penindakan->pengaman != null) {
@@ -113,11 +55,8 @@ class DokBukaPengamanResource extends JsonResource
 		return $array;
 	}
 
-	private function pdf()
+	protected function objek()
 	{
-		$array = $this->basic();
-		$array['kode_status'] = $this->kode_status;
-
-		return $array;
+		return new ObjectResource($this->penindakan->objectable, $this->penindakan->object_type);
 	}
 }

@@ -3,26 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokLptpResource;
-use App\Traits\DokumenTrait;
-use App\Traits\SwitcherTrait;
 use Illuminate\Http\Request;
 
-class DokLptpNController extends Controller
+class DokLptpNController extends DokPenindakanController
 {
-	use DokumenTrait;
-	use SwitcherTrait;
-
-	public function __construct()
+	public function __construct($doc_type='lptpn')
 	{
-		$this->doc_type = 'lptpn';
-		$this->prepareModel();
-	}
-
-	protected function prepareModel()
-	{
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->model = $this->switchObject($this->doc_type, 'model');
+		parent::__construct($doc_type);
 	}
 
 	/**
