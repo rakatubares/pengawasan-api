@@ -240,4 +240,46 @@ class DokIntelijenController extends DokController
 			'object2_id' => $doc_id,
 		])->delete();
 	}
+
+	protected function getRelatedDocuments($id)
+	{
+		$array = [[
+			'doc_type' => $this->doc_type,
+			'doc_id' => (int)$id,
+		]];
+
+		$this->getIntel($id);
+		$intelijen_id = $this->intelijen->id;
+		$docs_intelijen = $this->getIntelijenDocuments($intelijen_id);
+		foreach ($docs_intelijen as $doc) {
+			if ($doc['doc_type'] != $this->doc_type) {
+				$array[] = $doc;
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * Get documents related to intelijen
+	 * 
+	 * @param Int $intelijen_id
+	 * @return Array
+	 */
+
+	public static function getIntelijenDocuments($intelijen_id)
+	{
+		$array = [];
+
+		$docs = ObjectRelation::where('object1_type', 'intelijen')
+			->where('object1_id', $intelijen_id)
+			->get();
+		foreach ($docs as $doc) {
+			$array[] = [
+				'doc_type' => $doc->object2_type,
+				'doc_id' => $doc->object2_id,
+			];
+		}
+
+		return $array;
+	}
 }
