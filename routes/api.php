@@ -85,6 +85,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('lppi', DokLppiController::class);
 Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
 Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
+Route::get('/lppi/{lppi_id}/docs', [DokLppiController::class, 'docs']);
+Route::get('/lppi/{lppi_id}/pdf', [DokLppiController::class, 'pdf']);
 Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
 Route::post('/lppi/search', [DokLppiController::class, 'search']);
 
@@ -94,6 +96,8 @@ Route::post('/lppi/search', [DokLppiController::class, 'search']);
 Route::apiResource('lkai', DokLkaiController::class);
 Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
 Route::get('/lkai/{lkai_id}/form', [DokLkaiController::class, 'form']);
+Route::get('/lkai/{lkai_id}/docs', [DokLkaiController::class, 'docs']);
+Route::get('/lkai/{lkai_id}/pdf', [DokLkaiController::class, 'pdf']);
 Route::put('/lkai/{lkai_id}/publish', [DokLkaiController::class, 'publish']);
 Route::post('/lkai/search', [DokLkaiController::class, 'search']);
 
@@ -103,6 +107,8 @@ Route::post('/lkai/search', [DokLkaiController::class, 'search']);
 Route::apiResource('nhi', DokNhiController::class);
 Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
 Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
+Route::get('/nhi/{nhi_id}/docs', [DokNhiController::class, 'docs']);
+Route::get('/nhi/{nhi_id}/pdf', [DokNhiController::class, 'pdf']);
 Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
 Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
 
@@ -112,6 +118,8 @@ Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
 Route::apiResource('ni', DokNiController::class);
 Route::get('/ni/{ni_id}/display', [DokNiController::class, 'display']);
 Route::get('/ni/{ni_id}/form', [DokNiController::class, 'form']);
+Route::get('/ni/{ni_id}/docs', [DokNiController::class, 'docs']);
+Route::get('/ni/{ni_id}/pdf', [DokNiController::class, 'pdf']);
 Route::put('/ni/{ni_id}/publish', [DokNiController::class, 'publish']);
 
 /*
@@ -336,6 +344,8 @@ Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'pu
 Route::apiResource('lppin', DokLppiNController::class);
 Route::get('/lppin/{lppin_id}/display', [DokLppiNController::class, 'display']);
 Route::get('/lppin/{lppin_id}/form', [DokLppiNController::class, 'form']);
+Route::get('/lppin/{lppin_id}/docs', [DokLppiNController::class, 'docs']);
+Route::get('/lppin/{lppin_id}/pdf', [DokLppiNController::class, 'pdf']);
 Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
 Route::post('/lppin/search', [DokLppiNController::class, 'search']);
 
@@ -345,6 +355,8 @@ Route::post('/lppin/search', [DokLppiNController::class, 'search']);
 Route::apiResource('lkain', DokLkaiNController::class);
 Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
 Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
+Route::get('/lkain/{lkain_id}/docs', [DokLkaiNController::class, 'docs']);
+Route::get('/lkain/{lkain_id}/pdf', [DokLkaiNController::class, 'pdf']);
 Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
 Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
 
@@ -354,6 +366,8 @@ Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
 Route::apiResource('nhin', DokNhiNController::class);
 Route::get('/nhin/{nhin_id}/display', [DokNhiNController::class, 'display']);
 Route::get('/nhin/{nhin_id}/form', [DokNhiNController::class, 'form']);
+Route::get('/nhin/{nhin_id}/docs', [DokNhiNController::class, 'docs']);
+Route::get('/nhin/{nhin_id}/pdf', [DokNhiNController::class, 'pdf']);
 Route::get('/nhin/{nhin_id}/objek', [DokNhiNController::class, 'objek']);
 Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
 
@@ -363,6 +377,8 @@ Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
 Route::apiResource('nin', DokNiNController::class);
 Route::get('/nin/{nin_id}/display', [DokNiNController::class, 'display']);
 Route::get('/nin/{nin_id}/form', [DokNiNController::class, 'form']);
+Route::get('/nin/{nin_id}/docs', [DokNiNController::class, 'docs']);
+Route::get('/nin/{nin_id}/pdf', [DokNiNController::class, 'pdf']);
 Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
 
 /**

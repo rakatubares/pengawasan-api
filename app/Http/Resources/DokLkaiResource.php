@@ -2,9 +2,7 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokLkaiResource extends JsonResource
+class DokLkaiResource extends RequestBasedResource
 {
 	/**
 	 * Create a new resource instance.
@@ -12,40 +10,10 @@ class DokLkaiResource extends JsonResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null)
+	public function __construct($resource, $request_type='')
 	{
-		$this->resource = $resource;
-		$this->type = $type;
+		parent::__construct($resource, $request_type);
 		$this->lppi_type = 'lppi';
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'form':
-				$array = $this->display();
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
 	}
 
 	/**
@@ -53,7 +21,7 @@ class DokLkaiResource extends JsonResource
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -108,7 +76,7 @@ class DokLkaiResource extends JsonResource
 		return $array;
 	}
 
-	private function display()
+	protected function display()
 	{
 		$lppi_type = $this->lppi_type;
 		$lppi = $this->intelijen->$lppi_type;
@@ -121,24 +89,15 @@ class DokLkaiResource extends JsonResource
 		return $array;
 	}
 
-	private function pdf()
+	protected function pdf()
 	{
 		$array = $this->display();
 		$array['kode_status'] = $this->kode_status;
 		return $array;
 	}
 
-	private function default()
+	protected function form()
 	{
-		$lkai = $this->display();
-		$dokumen = new IntelijenResource($this->intelijen, 'dokumen');
-		$array = [
-			'main' => [
-				'type' => $this->doc_type,
-				'data' => $lkai
-			],
-			'dokumen' => $dokumen
-		];
-		return $array;
+		return $this->display();
 	}
 }

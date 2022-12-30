@@ -2,61 +2,14 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class DokNhiNResource extends JsonResource
+class DokNhiNResource extends DokNhiResource
 {
-	/**
-	 * Create a new resource instance.
-	 *
-	 * @param  mixed  $resource
-	 * @return void
-	 */
-	public function __construct($resource, $type=null)
-	{
-		$this->resource = $resource;
-		$this->type = $type;
-	}
-
-	/**
-	 * Transform the resource into an array.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-	 */
-	public function toArray($request)
-	{
-		switch ($this->type) {
-			case 'display':
-				$array = $this->display();
-				break;
-
-			case 'pdf':
-				$array = $this->pdf();
-				break;
-
-			case 'form':
-				$array = $this->display();
-				break;
-			
-			case 'objek':
-				$array = new ObjectResource($this->barang_exim, 'barang');
-				break;
-			
-			default:
-				$array = $this->default();
-				break;
-		}
-
-		return $array;
-	}
-
 	/**
 	 * Transform the resource into an array for display.
 	 *
 	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
 	 */
-	private function basic()
+	protected function basic()
 	{
 		$array = [
 			'id' => $this->id,
@@ -125,7 +78,7 @@ class DokNhiNResource extends JsonResource
 		return $array;
 	}
 
-	private function display()
+	protected function display()
 	{
 		$lkain = $this->intelijen->lkain;
 
@@ -134,35 +87,5 @@ class DokNhiNResource extends JsonResource
 		$array['nomor_lkain'] = $lkain != null ? $lkain->no_dok_lengkap : null;
 		$array['tanggal_lkain'] = $lkain != null ? $lkain->tanggal_dokumen->format('d-m-Y') : null;
 		return $array;
-	}
-
-	private function pdf()
-	{
-		$array = $this->display();
-		$array['kode_status'] = $this->kode_status;
-		return $array;
-	}
-
-	private function default()
-	{
-		$nhin = $this->display();
-		$dokumen = new IntelijenResource($this->intelijen, 'dokumen');
-		$array = [
-			'main' => [
-				'type' => 'nhin',
-				'data' => $nhin
-			],
-			'dokumen' => $dokumen
-		];
-		return $array;
-	}
-
-	private function tembusan()
-	{
-		$cc_list = $this->tembusan->toArray();
-		
-		return array_map(function ($data) {
-			return $data['uraian'];
-		}, $cc_list);
 	}
 }

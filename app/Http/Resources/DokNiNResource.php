@@ -10,10 +10,9 @@ class DokNiNResource extends DokNiResource
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	public function __construct($resource, $type=null)
+	public function __construct($resource, $request_type='')
 	{
-		$this->resource = $resource;
-		$this->type = $type;
+		parent::__construct($resource, $request_type);
 		$this->ni_type = 'nin';
 		$this->lkai_type = 'lkain';
 	}

@@ -229,19 +229,8 @@ class DokLkaiController extends DokIntelijenController
 		}
 	}
 
-	/**
-	 * Publish document.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function publish($id, $withAddition=true)
-	{
-		parent::publish($id, $withAddition);
-	}
-
 	// Additional function when publish
-	protected function publishAddition()
+	protected function published()
 	{
 		// Change LPPI status
 		$lppi_type = $this->lppi_type;
