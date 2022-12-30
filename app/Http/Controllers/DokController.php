@@ -58,12 +58,8 @@ class DokController extends Controller
 	 * 
 	 * @return int
 	 */
-	private function getNewDocNumber($doc=null, $model=null)
+	private function getNewDocNumber($doc, $model)
 	{
-		// If document and model objects are not specified, use default objects
-		if ($doc==null) {$doc = $this->doc;}
-		if ($model==null) {$model = $this->model;}
-
 		// Ambil nomor terakhir berdasarkan skema, agenda, dan tahun
 		$agenda_dok = $doc->agenda_dok;
 		$latest_number = $model::select('no_dok')
@@ -139,6 +135,18 @@ class DokController extends Controller
 	{
 		$doc = new $this->resource($this->model::findOrFail($id), 'display');
 		return $doc;
+	}
+
+
+	/**
+	 * List of related documents.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function docs($id)
+	{
+		return $this->getRelatedDocuments($id);
 	}
 
 	/**
@@ -235,12 +243,23 @@ class DokController extends Controller
 	/**
 	 * Update document's number and status
 	 */
-	protected function publishDocument($doc=null, $model=null)
+	protected function publishDocument($doc_type=null, $doc_id=null)
 	{
+		// If document and model objects are not specified, use default objects
+		if ($doc_type==null) {
+			$model = $this->model;
+			$doc = $this->doc;
+			$tipe_surat = $this->tipe_surat;
+		} else {
+			$model = $this->switchObject($doc_type, 'model');
+			$doc = $model::find($doc_id);
+			$tipe_surat = $this->switchObject($doc_type, 'tipe_dok');
+		}
+
 		$number = $this->getNewDocNumber($doc, $model);
-		$this->updateDocNumber($number);
-		$this->doc->kode_status = 200;
-		$this->doc->save();
+		$this->updateDocNumber($number, $doc, $tipe_surat);
+		$doc->kode_status = 200;
+		$doc->save();
 	}
 
 	/**
@@ -256,18 +275,18 @@ class DokController extends Controller
 	 * 
 	 * @param int $number
 	 */
-	protected function updateDocNumber($number)
+	protected function updateDocNumber($number, $doc, $tipe_surat)
 	{
 		// Construct full document number
-		$no_dok_lengkap = $this->tipe_surat 
+		$no_dok_lengkap = $tipe_surat 
 			. '-' 
 			. $number 
-			. $this->doc->agenda_dok 
+			. $doc->agenda_dok 
 			. $this->year;
 
 		// Set new values then update
-		$this->doc->no_dok = $number;
-		$this->doc->no_dok_lengkap = $no_dok_lengkap;
+		$doc->no_dok = $number;
+		$doc->no_dok_lengkap = $no_dok_lengkap;
 	}
 
 	/**

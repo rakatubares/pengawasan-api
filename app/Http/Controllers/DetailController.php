@@ -43,7 +43,7 @@ class DetailController extends Controller
 		$doc_penindakan = $this->getModelsListByParent('penindakan');
 		if (in_array($doc_type, $doc_penindakan)) {
 			$parent = $doc->penindakan;
-		} else if ($doc_type == 'bast') {
+		} else if (in_array($doc_type, ['bast', 'contoh'])) {
 			$parent = $doc;
 		}
 
