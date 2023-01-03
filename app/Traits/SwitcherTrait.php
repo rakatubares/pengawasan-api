@@ -9,10 +9,12 @@ use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
+use App\Http\Resources\DokLpNResource;
 use App\Http\Resources\DokLppResource;
 use App\Http\Resources\DokLppTableResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
+use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
 use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokRiksaBadanTableResource;
@@ -30,11 +32,15 @@ use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
 use App\Models\DokLphp;
+use App\Models\DokLphpN;
+use App\Models\DokLpN;
 use App\Models\DokLpp;
 use App\Models\DokLptp;
+use App\Models\DokLptpN;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
+use App\Models\DokSbpN;
 use App\Models\DokSegel;
 use App\Models\DokTegah;
 use App\Models\RefEntitas;
@@ -52,11 +58,27 @@ trait SwitcherTrait
 			'resource' => DokLpResource::class,
 			'table_resource' => DokLpTableResource::class,
 		],
+		'lpn' => [
+			'tipe_dok' => 'LP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLpN::class,
+			'resource' => DokLpNResource::class,
+			'table_resource' => DokLpTableResource::class,
+		],
 		'lphp' => [
 			'tipe_dok' => 'LPHP',
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokLphp::class,
+			'resource' => DokLphpResource::class,
+			'table_resource' => DokLphpTableResource::class,
+		],
+		'lphpn' => [
+			'tipe_dok' => 'LPHP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLphpN::class,
 			'resource' => DokLphpResource::class,
 			'table_resource' => DokLphpTableResource::class,
 		],
@@ -66,6 +88,15 @@ trait SwitcherTrait
 			'parent' => 'penindakan',
 			'model' => DokLptp::class,
 			'resource' => DokLptpResource::class,
+			'table_resource' => null,
+		],
+		'lptpn' => [
+			'tipe_dok' => 'LPTP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokLptpN::class,
+			'resource' => DokLptpNResource::class,
+			'table_resource' => null,
 		],
 		'riksa' => [
 			'tipe_dok' => 'BA',
@@ -88,6 +119,14 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penindakan',
 			'model' => DokSbp::class,
+			'resource' => DokSbpResource::class,
+			'table_resource' => DokSbpTableResource::class,
+		],
+		'sbpn' => [
+			'tipe_dok' => 'SBP-N',
+			'agenda' => '/TINDAK/KPU.305/',
+			'parent' => 'penindakan',
+			'model' => DokSbpN::class,
 			'resource' => DokSbpResource::class,
 			'table_resource' => DokSbpTableResource::class,
 		],
