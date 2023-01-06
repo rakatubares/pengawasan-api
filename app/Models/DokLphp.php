@@ -39,6 +39,20 @@ class DokLphp extends Model
 		'tanggal_dokumen' => 'date'
 	];
 
+	public function lp_relation()
+	{
+		return $this->hasOne(
+			ObjectRelation::class, 
+			'object1_id'
+		)->where(
+			'object1_type',
+			$this->tipe_lphp
+		)->where(
+			'object2_type', 
+			$this->tipe_lp
+		);
+	}
+
 	public function lptp()
 	{
 		$lptp_model = $this->switchObject($this->tipe_lptp, 'model');
