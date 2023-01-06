@@ -20,11 +20,11 @@ class CreateDokLppTable extends Migration
 			$table->integer('thn_dok')->nullable();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
-			$table->string('asal_perkara');
+			$table->string('asal_perkara')->nullable();
 			$table->string('jenis_penindakan');
 			$table->string('jenis_perkara');
 			$table->string('status_pelanggaran');
-			$table->text('catatan');
+			$table->text('catatan')->nullable();
 			$table->integer('petugas_id')->index();
 			$table->string('kode_jabatan1');
 			$table->boolean('plh1')->nullable();

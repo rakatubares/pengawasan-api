@@ -31,6 +31,7 @@ class DokLpp extends Model
 		'kode_jabatan2',
 		'plh2',
 		'pejabat2_id',
+		'kode_status',
 	];
 
 	protected $casts = [

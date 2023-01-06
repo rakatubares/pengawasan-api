@@ -15,7 +15,8 @@ class DokLppTableResource extends JsonResource
 	public function toArray($request)
 	{
 		$penindakan = $this->penyidikan->penindakan;
-		$sbp = $penindakan->sbp;
+		$sbp_type = $penindakan->sbp_relation->object2_type;
+		$sbp = $penindakan->$sbp_type;
 		$lp = $sbp->lptp->lphp->lp;
 
 		$array = [
