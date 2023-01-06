@@ -11,16 +11,16 @@ class DokController extends Controller
 {
 	use SwitcherTrait;
 
-	public $doc = null;
-	public $doc_type = null;
-	public $model = null;
-	public $tipe_surat = null;
-	public $agenda_dok = null;
-	public $resource = null;
-	public $table_resource = null;
-	public $date = null;
-	public $year = null;
-	public $unpublished_status = [100, 101];
+	protected $doc = null;
+	protected $doc_type = null;
+	protected $model = null;
+	protected $tipe_surat = null;
+	protected $agenda_dok = null;
+	protected $resource = null;
+	protected $table_resource = null;
+	protected $date = null;
+	protected $year = null;
+	protected $unpublished_status = [100, 101];
 
 	public function __construct($doc_type)
 	{
