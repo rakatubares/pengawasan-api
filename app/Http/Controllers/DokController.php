@@ -11,6 +11,17 @@ class DokController extends Controller
 {
 	use SwitcherTrait;
 
+	protected $doc = null;
+	protected $doc_type = null;
+	protected $model = null;
+	protected $tipe_surat = null;
+	protected $agenda_dok = null;
+	protected $resource = null;
+	protected $table_resource = null;
+	protected $date = null;
+	protected $year = null;
+	protected $unpublished_status = [100, 101];
+
 	public function __construct($doc_type)
 	{
 		$this->doc_type = $doc_type;
@@ -19,7 +30,6 @@ class DokController extends Controller
 		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
 		$this->resource = $this->switchObject($this->doc_type, 'resource');
 		$this->table_resource = $this->switchObject($this->doc_type, 'table_resource');
-		$this->unpublished_status = [100, 101];
 	}
 
 	/*
