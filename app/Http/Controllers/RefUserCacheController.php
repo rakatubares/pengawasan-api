@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class RefUserCacheController extends Controller
 {
+	private $sso;
+	
 	/**
 	 * Initiate SSO
 	 * 
