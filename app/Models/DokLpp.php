@@ -22,7 +22,6 @@ class DokLpp extends Model
 		'asal_perkara',
 		'jenis_penindakan',
 		'jenis_perkara',
-		'status_pelanggaran',
 		'catatan',
 		'petugas_id',
 		'kode_jabatan1',

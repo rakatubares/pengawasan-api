@@ -20,6 +20,7 @@ class Penyidikan extends Model
 		'waktu_pelanggaran',
 		'modus',
 		'pelaku_id',
+		'status_penangkapan',
 	];
 
 	protected $casts = [

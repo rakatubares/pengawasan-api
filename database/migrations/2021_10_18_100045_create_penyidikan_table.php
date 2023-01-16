@@ -17,10 +17,11 @@ class CreatePenyidikanTable extends Migration
 			$table->id();
 			$table->string('jenis_pelanggaran');
 			$table->string('pasal');
-			$table->string('tempat_pelanggaran');
-			$table->dateTime('waktu_pelanggaran');
-			$table->text('modus');
+			$table->string('tempat_pelanggaran')->nullable();
+			$table->dateTime('waktu_pelanggaran')->nullable();
+			$table->text('modus')->nullable();
 			$table->integer('pelaku_id')->index();
+			$table->string('status_penangkapan')->nullable();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

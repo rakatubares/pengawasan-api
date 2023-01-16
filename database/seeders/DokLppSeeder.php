@@ -92,6 +92,7 @@ class DokLppSeeder extends Seeder
 				'waktu_pelanggaran' => $tempus,
 				'modus' => $this->faker->sentence($nbWOrds = 40),
 				'pelaku_id' => $pelaku_id,
+				'status_penangkapan' => $this->faker->randomElement($list_status_pelanggaran),
 			]);
 
 			ObjectRelation::create([
@@ -113,7 +114,6 @@ class DokLppSeeder extends Seeder
 				'asal_perkara' => $this->faker->sentence($nbWOrds = 5),
 				'jenis_penindakan' => $this->faker->randomElement($list_jenis_penindakan),
 				'jenis_perkara' => $this->faker->randomElement($list_jenis_perkara),
-				'status_pelanggaran' => $this->faker->randomElement($list_status_pelanggaran),
 				'catatan' => $this->faker->sentence($nbWOrds = 40),
 				'petugas_id' => 1,
 				'kode_jabatan1' => 'bd.0505',

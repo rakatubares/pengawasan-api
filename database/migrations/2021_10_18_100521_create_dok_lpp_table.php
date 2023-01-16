@@ -23,7 +23,6 @@ class CreateDokLppTable extends Migration
 			$table->string('asal_perkara')->nullable();
 			$table->string('jenis_penindakan');
 			$table->string('jenis_perkara');
-			$table->string('status_pelanggaran');
 			$table->text('catatan')->nullable();
 			$table->integer('petugas_id')->index();
 			$table->string('kode_jabatan1');

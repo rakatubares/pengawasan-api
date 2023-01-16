@@ -116,6 +116,7 @@ class DokPenyidikanController extends DokController
 			'waktu_pelanggaran' => $waktu_pelanggaran,
 			'modus' => $request->modus,
 			'pelaku_id' => $request->pelaku['id'],
+			'status_penangkapan' => $request->status_penangkapan,
 		];
 
 		return $data_penyidikan;

@@ -18,7 +18,6 @@ class DokLppResource extends RequestBasedResource
 			'asal_perkara' => $this->asal_perkara,
 			'jenis_penindakan' => $this->jenis_penindakan,
 			'jenis_perkara' => $this->jenis_perkara,
-			'status_pelanggaran' => $this->status_pelanggaran,
 			'catatan' => $this->catatan,
 			'petugas' => new RefUserResource($this->petugas),
 			'atasan1' => [
@@ -67,6 +66,7 @@ class DokLppResource extends RequestBasedResource
 		$array['waktu_pelanggaran'] = $penyidikan->waktu_pelanggaran->format('d-m-Y H:i:s');
 		$array['modus'] = $penyidikan->modus;
 		$array['pelaku'] = new RefEntitasResource($penyidikan->pelaku);
+		$array['status_penangkapan'] = $penyidikan->status_penangkapan;
 		$array['lp_type'] = $lp_type;
 		$array['id_lp'] = $id_lp;
 		return $array;
