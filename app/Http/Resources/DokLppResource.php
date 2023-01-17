@@ -75,13 +75,7 @@ class DokLppResource extends RequestBasedResource
 	protected function pdf()
 	{
 		$array = $this->display();
-		$penindakan = $this->penyidikan->penindakan;
-		if ($penindakan->object_type == 'barang') {
-			$barang = new DetailBarangResource($penindakan->objectable);
-		} else {
-			$barang = null;
-		}
-		$array['barang'] = $barang;
+		$array['barang'] = new DetailBarangResource($this->penyidikan->bhp);
 		return $array;
 	}
 }

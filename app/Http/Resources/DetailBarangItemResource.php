@@ -19,6 +19,10 @@ class DetailBarangItemResource extends JsonResource
 			'jumlah_barang' => $this->jumlah_barang,
 			'satuan' => new RefSatuanResource($this->satuan),
 			'uraian_barang' => $this->uraian_barang,
+			'merk' => $this->merk,
+			'kondisi' => $this->kondisi,
+			'tipe' => $this->tipe,
+			'spesifikasi_lain' => $this->spesifikasi_lain,
 			'kategori' => new RefKategoriBarangResource($this->kategori),
 		];
 

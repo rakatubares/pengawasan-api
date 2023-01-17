@@ -12,6 +12,7 @@ use Illuminate\Database\Seeder;
 
 class DokLppSeeder extends Seeder
 {
+	use DetailSeederTrait;
 	use SwitcherTrait;
 
 	public function __construct()
@@ -101,6 +102,42 @@ class DokLppSeeder extends Seeder
 				'object2_type' => 'penyidikan',
 				'object2_id' => $penyidikan->id,
 			]);
+
+			// Create BHP
+			$object_type_penindakan = $penindakan->object_type;
+			if ($object_type_penindakan == 'barang') {
+				$remove = ['id', 'created_at', 'updated_at', 'deleted_at'];
+				
+				// Create BHP
+				$barang_penindakan = $penindakan->objectable->toArray();
+				$barang_penyidikan = array_diff_key($barang_penindakan, array_flip($remove));
+				$barang_penyidikan = $penyidikan->bhp()->create($barang_penyidikan);
+				$penyidikan->update(['bhp_id' => $barang_penyidikan->id]);
+
+				// Create dokumen
+				$dokumen_penindakan = $penindakan->objectable->dokumen->toArray();
+				$dokumen_penyidikan = array_diff_key($dokumen_penindakan, array_flip($remove));
+				$barang_penyidikan->dokumen()->create($dokumen_penyidikan);
+
+				// Create BHP items
+				$item_penindakan = $penindakan->objectable->itemBarang->toArray();
+				$item_penyidikan = [];
+				foreach ($item_penindakan as $item) {
+					$item = array_diff_key($item, array_flip($remove));
+					$item_penyidikan[] = $item;
+				}
+				$penyidikan->bhp->itemBarang()->createMany($item_penyidikan);
+			} else {
+				$object = $this->createBarang(true);
+				$penyidikan->update(['bhp_id' => $object->id]);
+			}
+
+			// Create sarkut
+			$with_sarkut = $this->faker->boolean();
+			if ($with_sarkut) {
+				$sarkut = $this->createSarkut();
+				$penyidikan->update(['sarkut_id' => $sarkut->id]);
+			}
 
 			// Create LPP
 			$max_lpp = DokLpp::max('no_dok');

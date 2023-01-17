@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\ObjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +14,11 @@ class DokLppController extends DokPenyidikanController
 		parent::__construct($doc_type);
 	}
 
-	public function objek($id)
+	public function bhp($id)
 	{
-		$lpp = $this->getDocument($id, $this->doc_type);
-		$penindakan = $lpp->penyidikan->penindakan;
-		$object_resource = new ObjectResource($penindakan->objectable, $penindakan->object_type);
-		return $object_resource;
+		$this->getDocument($id);
+		$bhp_resource = new DetailBarangResource($this->doc->penyidikan->bhp);
+		return $bhp_resource;
 	}
 
 	/*
@@ -101,6 +101,7 @@ class DokLppController extends DokPenyidikanController
 		$this->storePenyidikan($request);
 		$this->attachPenyidikan();
 		$this->attachPenindakan();
+		$object_penindakan = $this->penindakan->objectable();
 		$lp = $this->getLpByPenindakan();
 		$lp->update(['kode_status' => 131]);
 	}

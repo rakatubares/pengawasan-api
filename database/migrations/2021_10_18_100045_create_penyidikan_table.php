@@ -20,7 +20,9 @@ class CreatePenyidikanTable extends Migration
 			$table->string('tempat_pelanggaran')->nullable();
 			$table->dateTime('waktu_pelanggaran')->nullable();
 			$table->text('modus')->nullable();
+			$table->integer('bhp_id')->nullable()->index();
 			$table->integer('pelaku_id')->index();
+			$table->integer('sarkut_id')->nullable()->index();
 			$table->string('status_penangkapan')->nullable();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

@@ -19,7 +19,9 @@ class Penyidikan extends Model
 		'tempat_pelanggaran',
 		'waktu_pelanggaran',
 		'modus',
+		'bhp_id',
 		'pelaku_id',
+		'sarkut_id',
 		'status_penangkapan',
 	];
 
@@ -28,11 +30,27 @@ class Penyidikan extends Model
 	];
 
 	/**
+	 * Detail BHP
+	 */
+	public function bhp()
+	{
+		return $this->belongsTo(DetailBarang::class, 'bhp_id');
+	}
+
+	/**
 	 * Detail orang pelaku
 	 */
 	public function pelaku()
 	{
 		return $this->belongsTo(RefEntitas::class, 'pelaku_id');
+	}
+
+	/**
+	 * Detail sarana pengangkut
+	 */
+	public function sarkut()
+	{
+		return $this->belongsTo(DetailSarkut::class, 'sarkut_id');
 	}
 
 	/**

@@ -24,6 +24,10 @@ class CreateDetailBarangItemsTable extends Migration
 			$table->double('jumlah_barang');
 			$table->integer('satuan_id')->index();
 			$table->text('uraian_barang');
+			$table->text('merk')->nullable();
+			$table->text('kondisi')->nullable();
+			$table->text('tipe')->nullable();
+			$table->text('spesifikasi_lain')->nullable();
 			$table->integer('kategori_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

@@ -189,7 +189,7 @@ Route::get('/lpp/{lpp_id}/display', [DokLppController::class, 'display']);
 Route::get('/lpp/{lpp_id}/form', [DokLppController::class, 'form']);
 Route::get('/lpp/{lpp_id}/docs', [DokLppController::class, 'docs']);
 Route::get('/lpp/{lpp_id}/pdf', [DokLppController::class, 'pdf']);
-Route::get('/lpp/{lpp_id}/objek', [DokLppController::class, 'objek']);
+Route::get('/lpp/{lpp_id}/bhp', [DokLppController::class, 'bhp']);
 Route::put('/lpp/{lpp_id}/publish', [DokLppController::class, 'publish']);
 
 /*

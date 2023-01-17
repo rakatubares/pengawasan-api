@@ -20,6 +20,7 @@ class PenyidikanResource extends RequestBasedResource
 			'waktu_pelanggaran' => $this->waktu_pelanggaran->format('d-m-Y H:i:s'),
 			'modus' => $this->modus,
 			'pelaku' => new RefEntitasResource($this->pelaku),
+			'sarkut' => new DetailSarkutResource($this->sarkut),
 			'status_penangkapan' => $this->status_penangkapan,
 		];
 		return $array;

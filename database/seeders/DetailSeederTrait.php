@@ -36,7 +36,7 @@ trait DetailSeederTrait
 		return $sarkut;
 	}
 
-	public function createBarang()
+	public function createBarang($penyidikan=false)
 	{
 		$max_kemasan_id = RefKemasan::max('id');
 		$max_satuan_id = RefSatuan::max('id');
@@ -58,14 +58,23 @@ trait DetailSeederTrait
 
 		$item_count = $this->faker->numberBetween(1, 10);
 		for ($i=0; $i < $item_count; $i++) { 
+			$data = [
+				'jumlah_barang' => $this->faker->numberBetween(1, 100),
+				'satuan_id' => $this->faker->numberBetween(1,$max_satuan_id),
+				'uraian_barang' => $this->faker->text(),
+				'kategori_id' => $this->faker->numberBetween(1,$max_kategori_id),
+			];
+
+			if ($penyidikan) {
+				$data['merk'] = $this->faker->sentence($nbwords=3);
+				$data['kondisi'] = $this->faker->sentence($nbwords=2);
+				$data['tipe'] = $this->faker->sentence($nbwords=5);
+				$data['spesifikasi_lain'] = $this->faker->sentence($nbwords=5);
+			}
+
 			DetailBarang::find($barang->id)
 				->itemBarang()
-				->create([
-					'jumlah_barang' => $this->faker->numberBetween(1, 100),
-					'satuan_id' => $this->faker->numberBetween(1,$max_satuan_id),
-					'uraian_barang' => $this->faker->text(),
-					'kategori_id' => $this->faker->numberBetween(1,$max_kategori_id),
-				]);
+				->create($data);
 		}
 
 		return $barang;
