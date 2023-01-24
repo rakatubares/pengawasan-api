@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailBarangItemWithImagesResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\ObjectResource;
+use App\Models\DetailBarang;
+use App\Models\DetailBarangItem;
+use App\Models\Lampiran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,8 +21,210 @@ class DokLppController extends DokPenyidikanController
 	public function bhp($id)
 	{
 		$this->getDocument($id);
-		$bhp_resource = new DetailBarangResource($this->doc->penyidikan->bhp);
+		$bhp = $this->doc->penyidikan->bhp;
+		if ($bhp != null) {
+			$bhp_resource = new DetailBarangResource($bhp);
+		} else {
+			$bhp_resource = null;
+		}
+		
 		return $bhp_resource;
+	}
+
+	public function insertBhp(Request $request, $id)
+	{
+		DB::beginTransaction();
+		$caught = false;
+
+		try {
+			$this->getDocument($id);
+			$data_barang = [
+				'jumlah_kemasan' => $request->jumlah_kemasan,
+				'kemasan_id' => $request->kemasan['id'],
+				'pemilik_id' => $request->pemilik['id']
+			];
+			$bhp = $this->doc->penyidikan->bhp()->create($data_barang);
+
+			if ($request->dokumen['no_dok'] != null) {
+				$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
+				$data_dokumen = [
+					'parent_type' => 'barang',
+					'parent_id' => $bhp->id,
+					'jns_dok' => $request->dokumen['jns_dok'],
+					'no_dok' => $request->dokumen['no_dok'],
+					'tgl_dok' => $tgl_dok,
+				];
+				$bhp->dokumen()->create($data_dokumen);
+			}
+
+			$this->doc->penyidikan->update(['bhp_id' => $bhp->id]);
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			$result = $th;
+			DB::rollBack();
+		}
+
+		// Return doc detail if no exception detected
+		if (!$caught) {
+			$this->getDocument($id);
+			$result = new DetailBarangResource($this->doc->penyidikan->bhp);
+		}
+		
+		return $result;
+	}
+
+	public function updateBhp(Request $request, $id)
+	{
+		DB::beginTransaction();
+
+		try {
+			$this->getDocument($id);
+			// Insert detail barang
+			$data_barang = [
+				'jumlah_kemasan' => $request->jumlah_kemasan,
+				'kemasan_id' => $request->kemasan['id'],
+				'pemilik_id' => $request->pemilik['id']
+			];
+			$this->doc->penyidikan->bhp()->update($data_barang);
+	
+			// Insert dokumen barang
+			if ($request->dokumen['no_dok'] != null) {
+				$tgl_dok = $request->dokumen['tgl_dok'] != null ? strtotime($request->dokumen['tgl_dok']) : $request->dokumen['tgl_dok'];
+				$data_dokumen = [
+					'jns_dok' => $request->dokumen['jns_dok'],
+					'no_dok' => $request->dokumen['no_dok'],
+					'tgl_dok' => $tgl_dok,
+				];
+				$this->doc->penyidikan->bhp->dokumen()->updateOrCreate($data_dokumen);
+			}
+
+			// Return doc detail
+			$result = new DetailBarangResource($this->doc->penyidikan->bhp);
+
+			DB::commit();
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			$result = $th;
+		}
+		
+		return $result;
+	}
+
+	public function insertBhpItem(Request $request, $id)
+	{
+		$this->getDocument($id);
+		DB::beginTransaction();
+		try {
+			// Insert detail barang
+			$item_barang = $this->doc->penyidikan->bhp->itemBarang()
+				->create([
+					'uraian_barang' => $request->uraian_barang,
+					'jumlah_barang' => $request->jumlah_barang,
+					'merk' => $request->merk,
+					'kondisi' => $request->kondisi,
+					'tipe' => $request->tipe,
+					'spesifikasi_lain' => $request->spesifikasi_lain,
+					'satuan_id' => $request->satuan['id'],
+					'kategori_id' => $request->kategori['id'],
+				]);
+
+			// Save images
+			if (sizeof($request->image_list) > 0) {
+				foreach($request->image_list as $image) {
+					$this->saveFile($image, $item_barang);
+				}
+			}
+
+			DB::commit();
+			$result = new DetailBarangItemWithImagesResource(DetailBarangItem::find($item_barang->id));
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+
+		return $result;
+	}
+
+	public function getBhpItem($id, $item_id)
+	{
+		$this->getDocument($id);
+		$item_barang = $this->doc->penyidikan->bhp->itemBarang()
+			->where('detail_barang_items.id', $item_id)
+			->first();
+		
+		if ($item_barang != null) {
+			$result = new DetailBarangItemWithImagesResource($item_barang);
+		} else {
+			$result = response()->json(['error' => 'Item barang tidak ditemukan.'], 422);
+		}
+
+		return $result;
+	}
+
+	public function updateBhpItem(Request $request, $id, $item_id)
+	{
+		$this->getDocument($id);
+		DB::beginTransaction();
+		try {
+			// Update data item barang
+			$this->doc->penyidikan->bhp->itemBarang()
+				->where('detail_barang_items.id', $item_id)
+				->update([
+					'uraian_barang' => $request->uraian_barang,
+					'jumlah_barang' => $request->jumlah_barang,
+					'merk' => $request->merk,
+					'kondisi' => $request->kondisi,
+					'tipe' => $request->tipe,
+					'spesifikasi_lain' => $request->spesifikasi_lain,
+					'satuan_id' => $request->satuan['id'],
+					'kategori_id' => $request->kategori['id'],
+				]);
+
+			// Get existing images
+			$item_barang = DetailBarangItem::find($item_id);
+			$existing_images = $item_barang->images->all();
+
+			// Delete image if not in request and save new image
+			if (sizeof($existing_images) > 0) {
+				$existing_ids = array_map(function($i) {return $i->id;}, $existing_images);
+				$delete_ids = $existing_ids;
+				
+				// Check each image request
+				foreach($request->image_list as $image) {
+					if (array_key_exists('id', $image)) {
+						if (($key = array_search($image['id'], $delete_ids)) !== false) {
+							unset($delete_ids[$key]);
+						}								
+					} else {
+						$this->saveFile($image, $item_barang);
+					}
+				}
+				
+				// Delete id
+				foreach($delete_ids as $id) {
+					Lampiran::find($id)->delete();
+				}
+			} else {
+				foreach ($request->image_list as $image) {
+					$this->saveFile($image, $item_barang);
+				}
+			}
+
+			DB::commit();
+
+			$result = new DetailBarangItemWithImagesResource(DetailBarangItem::find($item_id));
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			throw $th;
+		}
+		
+		return $result;
+	}
+
+	public function deleteBhpItem($doc_id, $item_id)
+	{
+		DetailBarangItem::find($item_id)->delete();
 	}
 
 	/*

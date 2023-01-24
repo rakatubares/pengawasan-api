@@ -19,6 +19,9 @@ class DetailBarangItemWithImagesResource extends JsonResource
 			'jumlah_barang' => $this->jumlah_barang,
 			'satuan' => new RefSatuanResource($this->satuan),
 			'uraian_barang' => $this->uraian_barang,
+			'merk' => $this->merk,
+			'tipe' => $this->tipe,
+			'spesifikasi_lain' => $this->spesifikasi_lain,
 			'kategori' => new RefKategoriBarangResource($this->kategori),
 			'image_list' => LampiranResource::collection($this->images)
 		];

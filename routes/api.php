@@ -190,6 +190,12 @@ Route::get('/lpp/{lpp_id}/form', [DokLppController::class, 'form']);
 Route::get('/lpp/{lpp_id}/docs', [DokLppController::class, 'docs']);
 Route::get('/lpp/{lpp_id}/pdf', [DokLppController::class, 'pdf']);
 Route::get('/lpp/{lpp_id}/bhp', [DokLppController::class, 'bhp']);
+Route::post('/lpp/{lpp_id}/bhp', [DokLppController::class, 'insertBhp']);
+Route::put('/lpp/{lpp_id}/bhp/{bhp_id}', [DokLppController::class, 'updateBhp']);
+Route::post('/lpp/{lpp_id}/bhp/item', [DokLppController::class, 'insertBhpItem']);
+Route::get('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'getBhpItem']);
+Route::put('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'updateBhpItem']);
+Route::delete('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'deleteBhpItem']);
 Route::put('/lpp/{lpp_id}/publish', [DokLppController::class, 'publish']);
 
 /*
