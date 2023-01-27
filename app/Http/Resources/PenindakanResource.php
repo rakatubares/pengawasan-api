@@ -46,7 +46,6 @@ class PenindakanResource extends JsonResource
 			$array = $penindakan;
 		} else if ($this->element == 'dokumen') {
 			$array = $dokumen;
-			// $array = $penindakan;
 		} else {
 			$array = [
 				'penindakan' => $penindakan,

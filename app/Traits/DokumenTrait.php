@@ -2,11 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\ObjectRelation;
-use App\Models\Penindakan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Response;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 trait DokumenTrait
@@ -46,15 +43,6 @@ trait DokumenTrait
 		$is_unpublished = (in_array($kode_status, $this->unpublished_status)) ? true : false;
 		return $is_unpublished;
 	}
-
-	/**
-	 * Get current date and year
-	 */
-	// private function getCurrentDate()
-	// {
-	// 	$this->tanggal = date('Y-m-d') ;
-	// 	$this->tahun = date('Y') ;
-	// }
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -115,87 +103,6 @@ trait DokumenTrait
 		
 		return $result;
 	}
-
-	/**
-	 * Get new number
-	 * 
-	 * @param Model @model
-	 * @return int
-	 */
-	// private function getNewDocNumber($model)
-	// {
-	// 	// Ambil nomor terakhir berdasarkan skema, agenda, dan tahun
-	// 	$agenda_dok = $this->doc->agenda_dok;
-	// 	$latest_number = $model::select('no_dok')
-	// 		->where('agenda_dok', $agenda_dok)
-	// 		->where('thn_dok', $this->tahun)
-	// 		->orderByDesc('no_dok')
-	// 		->first();
-
-	// 	// Buat nomor baru
-	// 	try {
-	// 		$number = ($latest_number->no_dok) + 1;
-	// 	} catch (\Throwable $th) {
-	// 		$number = 1;
-	// 	}
-		
-	// 	return $number;
-	// }
-
-	/**
-	 * Update penomoran dokumen
-	 * 
-	 * @param Model $model
-	 * @param int $doc_id
-	 * @param int $number
-	 * @param string $jenis_surat
-	 * @return Response
-	 */
-	// private function updateDocNumberAndYear($number, $jenis_surat, $update_date=false)
-	// {
-	// 	// Construct full document number
-	// 	$no_dok_lengkap = $jenis_surat 
-	// 		. '-' 
-	// 		. $number 
-	// 		. $this->doc->agenda_dok 
-	// 		. $this->tahun;
-
-	// 	// Set new values then update
-	// 	$this->doc->no_dok = $number;
-	// 	$this->doc->thn_dok = $this->tahun;
-	// 	$this->doc->no_dok_lengkap = $no_dok_lengkap;
-	// 	if ($update_date == true) {
-	// 		$this->doc->tanggal_dokumen = $this->tanggal;
-	// 	}
-	// 	$this->doc->kode_status = 200;
-	// 	$update_result = $this->doc->save();
-
-	// 	return $update_result;
-	// }
-
-	// private function updateDocDate()
-	// {
-	// 	$this->doc->tanggal_dokumen = $this->tanggal;
-	// 	$this->doc->save();
-	// }
-
-	// private function datePenindakan($model, $doc_id)
-	// {
-	// 	$doc = $model::find($doc_id);
-	// 	$penindakan = $doc->penindakan;
-	// 	$tanggal_penindakan = $penindakan->tanggal_penindakan;
-
-	// 	if ($tanggal_penindakan == null) {
-	// 		$this->getCurrentDate();
-	// 		$penindakan->tanggal_penindakan = $this->tanggal;
-	// 		$penindakan->save();
-	// 	} else {
-	// 		$this->tanggal = $tanggal_penindakan->format('Y-m-d');
-	// 		$this->tahun = $tanggal_penindakan->format('Y');
-	// 	}
-
-	// 	return $this->tahun;
-	// }
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -280,98 +187,4 @@ trait DokumenTrait
 
 		return $objek;
 	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | STORE DOKUMEN PENINDAKAN
-	 |--------------------------------------------------------------------------
-	 */
-
-	/**
-	 * Validate data penindakan
-	 * 
-	 * @param Request $request
-	 */
-	// public function validatePenindakan(Request $request)
-	// {
-	// 	$request->validate([
-	// 		'penindakan.sprint.id' => 'required|integer',
-	// 		'penindakan.saksi.id' => 'required|integer',
-	// 		'penindakan.petugas1.user_id' => 'required'
-	// 	]);
-	// }
-
-	/**
-	 * Prepare/transform data penindakan
-	 * 
-	 * @param Request $request
-	 */
-	// private function prepareDataPenindakan(Request $request)
-	// {
-	// 	$grup_lokasi_id = array_key_exists('grup_lokasi', $request->penindakan) ? $request->penindakan['grup_lokasi']['id'] : null;
-	// 	$lokasi_penindakan = array_key_exists('lokasi_penindakan', $request->penindakan) ? $request->penindakan['lokasi_penindakan'] : null;
-
-	// 	$data_penindakan = [
-	// 		'sprint_id' => $request->penindakan['sprint']['id'],
-	// 		'grup_lokasi_id' => $grup_lokasi_id,
-	// 		'lokasi_penindakan' => $lokasi_penindakan,
-	// 		'saksi_id' => $request->penindakan['saksi']['id'],
-	// 		'petugas1_id' => $request->penindakan['petugas1']['user_id'],
-	// 		'petugas2_id' => $request->penindakan['petugas2']
-	// 			? $request->penindakan['petugas2']['user_id']
-	// 			: null
-	// 	];
-
-	// 	return $data_penindakan;
-	// }
-
-	/**
-	 * Create new data
-	 * 
-	 * @param String $doc_type
-	 * @param Array $data_dokumen
-	 * @param Array $data_penindakan
-	 */
-	// public function storePenindakan($request, $doc_type, $doc_id, $empty=false)
-	// {
-	// 	if (!$empty) {
-	// 		$data_penindakan = $this->prepareDataPenindakan($request);
-	// 	} else {
-	// 		$data_penindakan = [];
-	// 	}
-	// 	$penindakan = Penindakan::create($data_penindakan);
-	// 	$this->createRelation('penindakan', $penindakan->id, $doc_type, $doc_id);
-	// 	return $penindakan;
-	// }
-
-	/**
-	 * Update data
-	 * 
-	 * @param String $doc_type
-	 * @param Array $data_dokumen
-	 * @param Array $data_penindakan
-	 */
-	// public function updatePenindakan($request)
-	// {
-	// 	$data_penindakan = $this->prepareDataPenindakan($request);
-	// 	Penindakan::where('id', $request->penindakan['id'])->update($data_penindakan);
-	// }
-
-	/**
-	 * Create document relation
-	 * 
-	 * @param String $doc1_type
-	 * @param Int $doc1_id
-	 * @param String $doc2_type
-	 * @param Int $doc2_id
-	 */
-	// public function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
-	// {
-	// 	ObjectRelation::create([
-	// 		'object1_type' => $object1_type,
-	// 		'object1_id' => $object1_id,
-	// 		'object2_type' => $object2_type,
-	// 		'object2_id' => $object2_id,
-	// 	]);
-	// }
 }

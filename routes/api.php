@@ -18,6 +18,7 @@ use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
+use App\Http\Controllers\DokLppController;
 use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokLptpController;
@@ -55,6 +56,7 @@ use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
 use App\Http\Controllers\RefValiditasInformasiController;
 use App\Http\Controllers\TembusanController;
+use App\Http\Controllers\TrackingSbpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -221,6 +223,7 @@ Route::get('/lp/{lp_id}/docs', [DokLpController::class, 'docs']);
 Route::get('/lp/{lp_id}/pdf', [DokLpController::class, 'pdf']);
 Route::get('/lp/{lp_id}/objek', [DokLpController::class, 'objek']);
 Route::put('/lp/{lp_id}/publish', [DokLpController::class, 'publish']);
+Route::post('/lp/search', [DokLpController::class, 'search']);
 
 /**
  * API for BA Penegahan
@@ -421,6 +424,30 @@ Route::get('/lpn/{lpn_id}/docs', [DokLpNController::class, 'docs']);
 Route::get('/lpn/{lpn_id}/pdf', [DokLpNController::class, 'pdf']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
+Route::post('/lpn/search', [DokLpNController::class, 'search']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Penyidikan routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for LPP
+ */
+Route::apiResource('lpp', DokLppController::class);
+Route::get('/lpp/{lpp_id}/display', [DokLppController::class, 'display']);
+Route::get('/lpp/{lpp_id}/form', [DokLppController::class, 'form']);
+Route::get('/lpp/{lpp_id}/docs', [DokLppController::class, 'docs']);
+Route::get('/lpp/{lpp_id}/pdf', [DokLppController::class, 'pdf']);
+Route::get('/lpp/{lpp_id}/bhp', [DokLppController::class, 'bhp']);
+Route::post('/lpp/{lpp_id}/bhp', [DokLppController::class, 'insertBhp']);
+Route::put('/lpp/{lpp_id}/bhp/{bhp_id}', [DokLppController::class, 'updateBhp']);
+Route::post('/lpp/{lpp_id}/bhp/item', [DokLppController::class, 'insertBhpItem']);
+Route::get('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'getBhpItem']);
+Route::put('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'updateBhpItem']);
+Route::delete('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'deleteBhpItem']);
+Route::put('/lpp/{lpp_id}/publish', [DokLppController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------
@@ -580,6 +607,15 @@ Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
 Route::post('/user/role', [RefUserCacheController::class, 'role']);
 Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
 Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);
+
+/*
+ |--------------------------------------------------------------------------
+ | Tracking routes
+ |--------------------------------------------------------------------------
+ */
+Route::post('/tracking/sbp', [TrackingSbpController::class, 'tracking']);
+Route::get('/tracking/sbp/{id}/attachments', [TrackingSbpController::class, 'getAttachments']);
+Route::post('/tracking/sbp/{id}/attach', [TrackingSbpController::class, 'addAttachment']);
 
 Route::get('test', function() {
 	# code...

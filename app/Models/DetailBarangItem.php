@@ -16,6 +16,10 @@ class DetailBarangItem extends Model
 		'jumlah_barang',
 		'satuan_id',
 		'uraian_barang',
+		'merk',
+		'kondisi',
+		'tipe',
+		'spesifikasi_lain',
 		'kategori_id',
 	];
 

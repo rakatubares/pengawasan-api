@@ -94,6 +94,13 @@ class Penindakan extends Model
 		);
 	}
 
+	public function sbp_relation()
+	{
+		return $this->hasOne(
+			ObjectRelation::class, 'object1_id'
+		)->whereIn('object2_type', ['sbp', 'sbpn']);
+	}
+
 	/**
 	 * SBP
 	 */
@@ -220,7 +227,6 @@ class Penindakan extends Model
 		);
 	}
 
-
 	/**
 	 * BA Buka Segel
 	 */
@@ -281,6 +287,27 @@ class Penindakan extends Model
 		)->where(
 			'object2_type',
 			'bukapengaman'
+		);
+	}
+
+	/**
+	 * Penyidikan
+	 */
+	public function penyidikan()
+	{
+		return $this->hasOneThrough(
+			Penyidikan::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'penindakan'
+		)->where(
+			'object2_type',
+			'penyidikan'
 		);
 	}
 

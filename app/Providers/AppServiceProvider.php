@@ -18,6 +18,7 @@ use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokLkai;
 use App\Models\DokLkaiN;
+use App\Models\DokLpp;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokNhi;
@@ -37,6 +38,7 @@ use App\Models\DokTolakSbp2;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
+use App\Models\TrackingSbp;
 use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
@@ -44,6 +46,7 @@ use App\Observers\DokLapObserver;
 use App\Observers\DokLiObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
+use App\Observers\DokLppObserver;
 use App\Observers\DokLkaiObserver;
 use App\Observers\DokLppiObserver;
 use App\Observers\DokNhiNObserver;
@@ -105,6 +108,7 @@ class AppServiceProvider extends ServiceProvider
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
 			'tegah' => DokTegah::class,
+			'tracking_sbp' => TrackingSbp::class,
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
@@ -116,6 +120,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLpN::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokLphpN::observe(DokLphpObserver::class);
+		DokLpp::observe(DokLppObserver::class);
 		DokLkai::observe(DokLkaiObserver::class);
 		DokLkaiN::observe(DokLkaiObserver::class);
 		DokLppi::observe(DokLppiObserver::class);

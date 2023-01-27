@@ -17,12 +17,14 @@ class DokTegah extends Model
 		'no_dok',
 		'agenda_dok',
 		'thn_dok',
+		'tanggal_dokumen',
 		'no_dok_lengkap',
 		'kode_status'
 	];
 
 	protected $casts = [
-		'tgl_dok' => 'date',
+		'tanggal_dokumen' => 'date',
+		'tanggal_segel' => 'date'
 	];
 
 	public function penindakan()

@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
 			DokSbpNSeeder::class,
 			DokLphpNSeeder::class,
 			DokLpNSeeder::class,
+			DokLppSeeder::class,
 		]);
 	}
 }

@@ -101,6 +101,18 @@ class RefUserCacheSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
+			[
+				'user_id' => 8,
+				'username' => 'kasipenyidikan',
+				'name' => 'Pejabat Penyidikan',
+				'nip' => '123123',
+				'pangkat' => 'IV/b',
+				'penempatan' => 'bd.0505',
+				'pejabat' => 'Y',
+				'status' => 1,
+				'created_at' => $now,
+				'updated_at' => $now
+			],
 		];
 
 		RefUserCache::insert($data);

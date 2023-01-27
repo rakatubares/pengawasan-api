@@ -254,14 +254,26 @@ class DokPenindakanController extends DokController
 			'doc_id' => (int)$id,
 		]];
 
+		// Penindakan
 		$this->getPenindakan($id);
 		$penindakan_id = $this->penindakan->id;
 		$docs_penindakan = $this->getPenindakanDocuments($penindakan_id);
-		foreach ($docs_penindakan as $doc) {
-			if ($doc['doc_type'] != $this->doc_type) {
-				$array[] = $doc;
+		foreach ($docs_penindakan as $key => $doc) {
+			if ($doc['doc_type'] == $this->doc_type) {
+				unset($docs_penindakan[$key]);
 			}
 		}
+
+		// Penyidikan
+		if ($this->penindakan->penyidikan != null) {
+			$penyidikan_id = $this->penindakan->penyidikan->id;
+			$docs_penyidikan = DokPenyidikanController::getPenyidikanDocuments($penyidikan_id);
+		} else {
+			$docs_penyidikan = [];
+		}
+
+		// Merge array
+		$array = array_merge($array, $docs_penindakan, $docs_penyidikan);
 		return $array;
 	}
 

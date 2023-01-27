@@ -25,8 +25,10 @@ use App\Http\Resources\DokLkaiTableResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
 use App\Http\Resources\DokLpNResource;
+use App\Http\Resources\DokLppResource;
 use App\Http\Resources\DokLppiResource;
 use App\Http\Resources\DokLppiTableResource;
+use App\Http\Resources\DokLppTableResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
@@ -43,9 +45,9 @@ use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokPengamanTableResource;
 use App\Http\Resources\DokReeksporResource;
 use App\Http\Resources\DokReeksporTableResource;
-use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokRiksaBadanTableResource;
+use App\Http\Resources\DokRiksaResource;
 use App\Http\Resources\DokRiksaTableResource;
 use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSbpTableResource;
@@ -75,6 +77,7 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
+use App\Models\DokLpp;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokLptp;
@@ -215,6 +218,7 @@ trait SwitcherTrait
 			'resource' => DokLiResource::class,
 			'table_resource' => DokLiTableResource::class,
 		],
+		// Penindakan
 		'lp' => [
 			'tipe_dok' => 'LP',
 			'agenda' => '/KPU.305/',
@@ -350,6 +354,16 @@ trait SwitcherTrait
 			'model' => DokTolakSbp2::class,
 			'resource' => DokTolakSbp2Resource::class,
 			'table_resource' => DokTolakSbp2TableResource::class,
+		],
+
+		// Penyidikan
+		'lpp' => [
+			'tipe_dok' => 'LPP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpp::class,
+			'resource' => DokLppResource::class,
+			'table_resource' => DokLppTableResource::class,
 		],
 
 		// Objek

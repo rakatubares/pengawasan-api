@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailBarangItemResource extends JsonResource
+class TrackingSbpResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,16 +16,12 @@ class DetailBarangItemResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
-			'jumlah_barang' => $this->jumlah_barang,
-			'satuan' => new RefSatuanResource($this->satuan),
-			'uraian_barang' => $this->uraian_barang,
-			'merk' => $this->merk,
-			'kondisi' => $this->kondisi,
-			'tipe' => $this->tipe,
-			'spesifikasi_lain' => $this->spesifikasi_lain,
-			'kategori' => new RefKategoriBarangResource($this->kategori),
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tgl_dok' => $this->tgl_dok->format('d-m-Y'),
+			'pemilik' => $this->nama_pemilik,
+			'identitas' => $this->no_identitas,
+			'catatan' => $this->catatan,
 		];
-
 		return $array;
     }
 }
