@@ -7,6 +7,8 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokLpfResource;
+use App\Http\Resources\DokLpfTableResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
 use App\Http\Resources\DokLpNResource;
@@ -31,6 +33,7 @@ use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
 use App\Models\DokLp;
+use App\Models\DokLpf;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
@@ -155,6 +158,14 @@ trait SwitcherTrait
 			'model' => DokLpp::class,
 			'resource' => DokLppResource::class,
 			'table_resource' => DokLppTableResource::class,
+		],
+		'lpf' => [
+			'tipe_dok' => 'LPF',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpf::class,
+			'resource' => DokLpfResource::class,
+			'table_resource' => DokLpfTableResource::class,
 		],
 
 		// Objek

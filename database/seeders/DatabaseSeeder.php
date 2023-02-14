@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
 			DokLphpNSeeder::class,
 			DokLpNSeeder::class,
 			DokLppSeeder::class,
+			DokLpfSeeder::class,
 		]);
 	}
 }

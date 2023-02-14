@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangItemWithImagesResource;
 use App\Http\Resources\DetailBarangResource;
-use App\Http\Resources\ObjectResource;
-use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\Lampiran;
 use Illuminate\Http\Request;
@@ -18,15 +16,16 @@ class DokLppController extends DokPenyidikanController
 		parent::__construct($doc_type);
 	}
 
-	public function bhp($id)
+	protected function getPenyidikan($id)
 	{
 		$this->getDocument($id);
-		$bhp = $this->doc->penyidikan->bhp;
-		if ($bhp != null) {
-			$bhp_resource = new DetailBarangResource($bhp);
-		} else {
-			$bhp_resource = null;
-		}
+		$this->penyidikan = $this->doc->penyidikan;
+	}
+
+	public function bhp($id)
+	{
+		$this->getPenyidikan($id);
+		$bhp_resource = $this->getBhpData();
 		
 		return $bhp_resource;
 	}
