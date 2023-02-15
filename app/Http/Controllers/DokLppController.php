@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DetailBarangItemWithImagesResource;
 use App\Http\Resources\DetailBarangResource;
+use App\Http\Resources\DokLppTableResource;
 use App\Models\DetailBarangItem;
+use App\Models\DokLpp;
 use App\Models\Lampiran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,11 +18,48 @@ class DokLppController extends DokPenyidikanController
 		parent::__construct($doc_type);
 	}
 
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+
+		$search = '%' . $src . '%';
+		$status = $sta != null ? $sta : [200];
+
+		$search_result = DokLpp::where(function ($query) use ($search, $status) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->whereIn('kode_status', $status);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokLppTableResource::collection($search_result);
+		return $search_list;
+	}
+
 	protected function getPenyidikan($id)
 	{
 		$this->getDocument($id);
 		$this->penyidikan = $this->doc->penyidikan;
 	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | BHP Functions
+	 |--------------------------------------------------------------------------
+	 */
 
 	public function bhp($id)
 	{
@@ -254,7 +293,7 @@ class DokLppController extends DokPenyidikanController
 	 */
 	protected function prepareData(Request $request, $state='insert')
 	{
-		$no_dok_lengkap = $this->tipe_surat . '-' . '      ' . $this->agenda_dok;
+		$no_dok_lengkap = $this->tipe_surat . '-      ' . $this->agenda_dok;
 
 		$data_lpp = [
 			'asal_perkara' => $request->asal_perkara,
@@ -306,7 +345,7 @@ class DokLppController extends DokPenyidikanController
 		$this->storePenyidikan($request);
 		$this->attachPenyidikan();
 		$this->attachPenindakan();
-		$object_penindakan = $this->penindakan->objectable();
+		// $object_penindakan = $this->penindakan->objectable();
 		$lp = $this->getLpByPenindakan();
 		$lp->update(['kode_status' => 131]);
 	}
@@ -393,6 +432,12 @@ class DokLppController extends DokPenyidikanController
 		$lp = $this->getLpByPenindakan();
 		$lp->update(['kode_status' => 231]);
 	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | LP functions
+	 |--------------------------------------------------------------------------
+	 */
 
 	private function getLp($lp_type, $id_lp)
 	{

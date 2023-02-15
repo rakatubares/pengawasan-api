@@ -69,6 +69,13 @@ class DokLpfResource extends RequestBasedResource
 		return $array;
 	}
 
+	protected function form()
+	{
+		$array = $this->basic();
+		$array['id_lpp'] = $this->lpp->id;
+		return $array;
+	}
+
 	protected function pdf()
 	{
 		$array = $this->display();
