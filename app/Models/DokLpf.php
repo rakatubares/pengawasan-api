@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DokLpp extends Model
+class DokLpf extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'dok_lpp';
+	protected $table = 'dok_lpf';
 
 	protected $fillable = [
 		'no_dok',
@@ -19,11 +19,19 @@ class DokLpp extends Model
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
-		'asal_perkara',
-		'jenis_penindakan',
-		'jenis_perkara',
+		'saksi_id',
+		'tanggal_bap_saksi',
+		'tersangka_id',
+		'tanggal_bap_tersangka',
+		'resume_perkara',
+		'tanggal_resume_perkara',
+		'jenis_dokumen_lain',
+		'nomor_dokumen_lain',
+		'tanggal_dokumen_lain',
+		'kesimpulan',
+		'usulan',
 		'catatan',
-		'petugas_id',
+		'peneliti_id',
 		'kode_jabatan1',
 		'plh1',
 		'pejabat1_id',
@@ -35,41 +43,24 @@ class DokLpp extends Model
 
 	protected $casts = [
 		'tanggal_dokumen' => 'date',
+		'tanggal_bap_saksi' => 'date',
+		'tanggal_bap_tersangka' => 'date',
+		'tanggal_resume_perkara' => 'date',
+		'tanggal_dokumen_lain' => 'date',
 	];
 
 	/**
-	 * Relation to main penyidikan object
+	 * Relation to LPP
 	 */
-	public function penyidikan()
+	public function lpp()
 	{
 		return $this->hasOneThrough(
-			Penyidikan::class,
+			DokLpp::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
 			'id',
 			'object1_id'
-		)->where(
-			'object1_type',
-			'penyidikan'
-		)->where(
-			'object2_type',
-			'lpp'
-		);
-	}
-
-	/**
-	 * Relation to LPF
-	 */
-	public function lpf()
-	{
-		return $this->hasOneThrough(
-			DokLpf::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
 		)->where(
 			'object1_type',
 			'lpp'
@@ -80,11 +71,27 @@ class DokLpp extends Model
 	}
 
 	/**
+	 * Detail orang saksi
+	 */
+	public function saksi()
+	{
+		return $this->belongsTo(RefEntitas::class, 'saksi_id');
+	}
+
+	/**
+	 * Detail orang tersangka
+	 */
+	public function tersangka()
+	{
+		return $this->belongsTo(RefEntitas::class, 'tersangka_id');
+	}
+
+	/**
 	 * Detail petugas
 	 */
-	public function petugas()
+	public function peneliti()
 	{
-		return $this->belongsTo(RefUserCache::class, 'petugas_id');
+		return $this->belongsTo(RefUserCache::class, 'peneliti_id');
 	}
 
 	public function pejabat1()

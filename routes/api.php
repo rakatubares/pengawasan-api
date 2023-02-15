@@ -15,6 +15,7 @@ use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLpController;
+use App\Http\Controllers\DokLpfController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
@@ -448,6 +449,18 @@ Route::get('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'getBhp
 Route::put('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'updateBhpItem']);
 Route::delete('/lpp/{lpp_id}/bhp/item/{item_id}', [DokLppController::class, 'deleteBhpItem']);
 Route::put('/lpp/{lpp_id}/publish', [DokLppController::class, 'publish']);
+Route::post('/lpp/search', [DokLppController::class, 'search']);
+
+/**
+ * API for LPF
+ */
+Route::apiResource('lpf', DokLpfController::class);
+Route::get('/lpf/{lpf_id}/display', [DokLpfController::class, 'display']);
+Route::get('/lpf/{lpf_id}/form', [DokLpfController::class, 'form']);
+Route::get('/lpf/{lpf_id}/docs', [DokLpfController::class, 'docs']);
+Route::get('/lpf/{lpf_id}/pdf', [DokLpfController::class, 'pdf']);
+Route::get('/lpf/{lpf_id}/bhp', [DokLpfController::class, 'bhp']);
+Route::put('/lpf/{lpf_id}/publish', [DokLpfController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

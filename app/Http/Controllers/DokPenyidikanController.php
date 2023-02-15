@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailBarangResource;
 use App\Models\ObjectRelation;
 use App\Models\Penyidikan;
 use Illuminate\Support\Facades\DB;
 
 class DokPenyidikanController extends DokController
 {
+	protected function getBhpData()
+	{
+		$bhp = $this->penyidikan->bhp;
+		if ($bhp != null) {
+			$bhp_resource = new DetailBarangResource($bhp);
+		} else {
+			$bhp_resource = null;
+		}
+		return $bhp_resource;
+	}
+
     protected function storePenyidikanDocument($request)
 	{
 		DB::beginTransaction();

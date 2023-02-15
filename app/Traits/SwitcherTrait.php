@@ -22,6 +22,8 @@ use App\Http\Resources\DokLiTableResource;
 use App\Http\Resources\DokLkaiNResource;
 use App\Http\Resources\DokLkaiResource;
 use App\Http\Resources\DokLkaiTableResource;
+use App\Http\Resources\DokLpfResource;
+use App\Http\Resources\DokLpfTableResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
 use App\Http\Resources\DokLpNResource;
@@ -74,6 +76,7 @@ use App\Models\DokLi;
 use App\Models\DokLkai;
 use App\Models\DokLkaiN;
 use App\Models\DokLp;
+use App\Models\DokLpf;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
@@ -364,6 +367,14 @@ trait SwitcherTrait
 			'model' => DokLpp::class,
 			'resource' => DokLppResource::class,
 			'table_resource' => DokLppTableResource::class,
+		],
+		'lpf' => [
+			'tipe_dok' => 'LPF',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpf::class,
+			'resource' => DokLpfResource::class,
+			'table_resource' => DokLpfTableResource::class,
 		],
 
 		// Objek

@@ -129,6 +129,14 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
+			[
+				'kode_status' => 132, 
+				'short_status' => 'draft lpf',
+				'uraian_status' => 'Pembuatan draft LPF',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
 			[ 
 				'kode_status' => 200, 
 				'short_status' => 'terbit',
@@ -237,6 +245,14 @@ class RefStatusSeeder extends Seeder
 				'kode_status' => 231,
 				'short_status' => 'lpp',
 				'uraian_status' => 'Penerbitan LPP',
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[
+				'kode_status' => 232,
+				'short_status' => 'lpf',
+				'uraian_status' => 'Penerbitan LPF',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now

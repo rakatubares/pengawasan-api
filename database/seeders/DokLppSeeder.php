@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DokLp;
+use App\Models\DokLpN;
 use App\Models\DokLpp;
 use App\Models\ObjectRelation;
 use App\Models\Penyidikan;
@@ -54,15 +55,21 @@ class DokLppSeeder extends Seeder
 		];
 
 		// Get lp ids
+		$available_lp = [];
 		$max_lp_id = DokLp::max('id');
-		$available_lp_id = range(1, $max_lp_id);
+		$available_lp['lp'] = range(1, $max_lp_id);
 
-		for ($i=1; $i < 11; $i++) {
+		// Get lpn ids
+		$max_lpn_id = DokLpN::max('id');
+		$available_lp['lpn'] = range(1, $max_lpn_id);
+
+		for ($i=1; $i < 15; $i++) {
 			// Get data LP
-			$lp_id = $this->faker->randomElement($available_lp_id);
-			$key = array_search($lp_id, $available_lp_id);
-			unset($available_lp_id[$key]);
-			$lp = DokLp::find($lp_id);
+			$lp_type = $this->faker->randomElement(['lp', 'lpn']);
+			$lp_id = $this->faker->randomElement($available_lp[$lp_type]);
+			$key = array_search($lp_id, $available_lp[$lp_type]);
+			unset($available_lp[$lp_type][$key]);
+			$lp = $lp_type == 'lp' ? DokLp::find($lp_id) : DokLpN::find($lp_id);
 
 			// Prepare data
 			$pasal = $this->faker->numberBetween(1, 100);
@@ -169,7 +176,7 @@ class DokLppSeeder extends Seeder
 				'object2_id' => $lpp->id,
 			]);
 
-			// Change SBP status
+			// Change LP status
 			$lp->update(['kode_status' => 231]);
 		}
 	}
