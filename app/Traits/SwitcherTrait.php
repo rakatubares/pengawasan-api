@@ -45,6 +45,7 @@ use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
+use App\Models\DokSplit;
 use App\Models\DokTegah;
 use App\Models\RefEntitas;
 use Illuminate\Database\Eloquent\Model;
@@ -166,6 +167,14 @@ trait SwitcherTrait
 			'model' => DokLpf::class,
 			'resource' => DokLpfResource::class,
 			'table_resource' => DokLpfTableResource::class,
+		],
+		'split' => [
+			'tipe_dok' => 'SPLIT',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokSplit::class,
+			'resource' => null,
+			'table_resource' => null,
 		],
 
 		// Objek

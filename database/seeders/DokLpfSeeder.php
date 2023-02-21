@@ -28,12 +28,12 @@ class DokLpfSeeder extends Seeder
 	 */
 	public function run()
 	{
-		// Get lp ids
+		// Get lpp ids
 		$max_lpp_id = DokLpp::max('id');
 		$available_lpp_id = range(1, $max_lpp_id);
 
 		for ($i=1; $i < 11; $i++) { 
-			// Get data LP
+			// Get data LPP
 			$lpp_id = $this->faker->randomElement($available_lpp_id);
 			$key = array_search($lpp_id, $available_lpp_id);
 			unset($available_lpp_id[$key]);
@@ -52,7 +52,7 @@ class DokLpfSeeder extends Seeder
 				'tanggal_bap_saksi' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'tersangka_id' => $lpp->penyidikan->pelaku_id,
 				'tanggal_bap_tersangka' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-				'resume_perkara' => $this->faker->text(),
+				'resume_perkara' => $this->faker->regexify('[A-Z0-9]{5,10}'),
 				'tanggal_resume_perkara' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'jenis_dokumen_lain' => $this->faker->regexify('[A-Z]{3,5}'),
 				'nomor_dokumen_lain' => $this->faker->regexify('[A-Z0-9]{5,10}'),

@@ -71,6 +71,27 @@ class DokLpf extends Model
 	}
 
 	/**
+	 * Relation to SPLIT
+	 */
+	public function split()
+	{
+		return $this->hasOneThrough(
+			DokSplit::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'lpf'
+		)->where(
+			'object2_type',
+			'split'
+		);
+	}
+
+	/**
 	 * Detail orang saksi
 	 */
 	public function saksi()

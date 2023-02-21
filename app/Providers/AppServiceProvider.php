@@ -14,6 +14,7 @@ use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSegel;
+use App\Models\DokSplit;
 use App\Models\DokTegah;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
@@ -68,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
 			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
+			'split' => DokSplit::class,
 			'tegah' => DokTegah::class,
 			'tracking_sbp' => TrackingSbp::class,
 		]);
