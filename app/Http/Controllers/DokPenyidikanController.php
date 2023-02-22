@@ -227,6 +227,20 @@ class DokPenyidikanController extends DokController
 			];
 		}
 
+		$penyidikan = Penyidikan::find($penyidikan_id);
+
+		$lpp = $penyidikan->lpp;
+		if ($lpp != null) {
+			$lpf = $lpp->lpf;
+			if ($lpf != null) {
+				$array[] = ['doc_type' => 'lpf', 'doc_id' => $lpf->id];
+				$split = $lpf->split;
+				if ($split != null) {
+					$array[] = ['doc_type' => 'split', 'doc_id' => $split->id];
+				}	
+			}
+		}
+
 		return $array;
 	}
 }

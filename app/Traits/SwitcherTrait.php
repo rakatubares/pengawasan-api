@@ -26,6 +26,8 @@ use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSbpTableResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokSegelTableResource;
+use App\Http\Resources\DokSplitResource;
+use App\Http\Resources\DokSplitTableResource;
 use App\Http\Resources\DokTegahResource;
 use App\Http\Resources\DokTegahTableResource;
 use App\Models\DetailBangunan;
@@ -173,8 +175,8 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penyidikan',
 			'model' => DokSplit::class,
-			'resource' => null,
-			'table_resource' => null,
+			'resource' => DokSplitResource::class,
+			'table_resource' => DokSplitTableResource::class,
 		],
 
 		// Objek

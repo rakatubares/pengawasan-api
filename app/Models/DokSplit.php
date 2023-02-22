@@ -59,7 +59,7 @@ class DokSplit extends Model
 		return $this->morphToMany(RefUserCache::class, 'officerable', 'detail_petugas', 'officerable_id', 'petugas_id')
 			->wherePivot('position', 'petugas')
 			->wherePivotNull('deleted_at')
-			->orderByPivot('no_urut')
+			// ->orderByPivot('no_urut')
 			->withTimestamps();
 	}
 

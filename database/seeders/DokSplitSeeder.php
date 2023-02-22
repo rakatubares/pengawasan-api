@@ -46,7 +46,7 @@ class DokSplitSeeder extends Seeder
 				'thn_dok' => date("Y"),
 				'no_dok_lengkap' => $tipe_surat . '-' . $crn_split . $agenda . date("Y"),
 				'tanggal_dokumen' => $faker->dateTimeThisYear()->format('Y-m-d'),
-				'dugaan_pelanggaran' => $faker->text(),
+				'dugaan_pelanggaran' => $faker->text(rand(100,300)),
 				'kode_jabatan' => 'bd.0505',
 				'plh' => false,
 				'pejabat_id' => 6,
@@ -56,8 +56,8 @@ class DokSplitSeeder extends Seeder
 			// Add oficer
 			$max_user_id = RefUserCache::max('user_id');
 			$available_user_id = range(1, $max_user_id);
-			$officer_count = rand(1,3);
-			for ($o=1; $o < $officer_count; $o++) { 
+			$officer_count = rand(1,4);
+			for ($o=1; $o <= $officer_count; $o++) { 
 				$user_id = $faker->randomElement($available_user_id);
 				$key = array_search($user_id, $available_user_id);
 				unset($available_user_id[$key]);

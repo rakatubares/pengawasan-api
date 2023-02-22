@@ -78,10 +78,10 @@ class DokLpf extends Model
 		return $this->hasOneThrough(
 			DokSplit::class,
 			ObjectRelation::class,
-			'object2_id',
+			'object1_id',
 			'id',
 			'id',
-			'object1_id'
+			'object2_id'
 		)->where(
 			'object1_type',
 			'lpf'

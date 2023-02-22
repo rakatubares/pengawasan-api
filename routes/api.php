@@ -19,6 +19,7 @@ use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokSplitController;
 use App\Http\Controllers\RefEntitasController;
 use App\Http\Controllers\RefJabatanController;
 use App\Http\Controllers\RefKategoriBarangController;
@@ -210,6 +211,14 @@ Route::get('/lpf/{lpf_id}/docs', [DokLpfController::class, 'docs']);
 Route::get('/lpf/{lpf_id}/pdf', [DokLpfController::class, 'pdf']);
 Route::get('/lpf/{lpf_id}/bhp', [DokLpfController::class, 'bhp']);
 Route::put('/lpf/{lpf_id}/publish', [DokLpfController::class, 'publish']);
+
+/**
+ * API for SPLIT
+ */
+Route::apiResource('split', DokSplitController::class);
+Route::get('/split/{split_id}/display', [DokSplitController::class, 'display']);
+Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
+Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
 
 /*
  |--------------------------------------------------------------------------
