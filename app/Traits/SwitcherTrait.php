@@ -55,6 +55,8 @@ use App\Http\Resources\DokSbpResource;
 use App\Http\Resources\DokSbpTableResource;
 use App\Http\Resources\DokSegelResource;
 use App\Http\Resources\DokSegelTableResource;
+use App\Http\Resources\DokSplitResource;
+use App\Http\Resources\DokSplitTableResource;
 use App\Http\Resources\DokTegahResource;
 use App\Http\Resources\DokTegahTableResource;
 use App\Http\Resources\DokTitipResource;
@@ -96,6 +98,7 @@ use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
+use App\Models\DokSplit;
 use App\Models\DokTegah;
 use App\Models\DokTitip;
 use App\Models\DokTolakSbp1;
@@ -375,6 +378,14 @@ trait SwitcherTrait
 			'model' => DokLpf::class,
 			'resource' => DokLpfResource::class,
 			'table_resource' => DokLpfTableResource::class,
+		],
+		'split' => [
+			'tipe_dok' => 'SPLIT',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokSplit::class,
+			'resource' => DokSplitResource::class,
+			'table_resource' => DokSplitTableResource::class,
 		],
 
 		// Objek

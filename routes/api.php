@@ -35,11 +35,12 @@ use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokSbpController;
 use App\Http\Controllers\DokSbpNController;
 use App\Http\Controllers\DokSegelController;
+use App\Http\Controllers\DokSplitController;
 use App\Http\Controllers\DokTegahController;
-use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
+use App\Http\Controllers\MonTarikSbpController;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefBandaraController;
 use App\Http\Controllers\RefEntitasController;
@@ -461,6 +462,17 @@ Route::get('/lpf/{lpf_id}/docs', [DokLpfController::class, 'docs']);
 Route::get('/lpf/{lpf_id}/pdf', [DokLpfController::class, 'pdf']);
 Route::get('/lpf/{lpf_id}/bhp', [DokLpfController::class, 'bhp']);
 Route::put('/lpf/{lpf_id}/publish', [DokLpfController::class, 'publish']);
+Route::post('/lpf/search', [DokLpfController::class, 'search']);
+
+/**
+ * API for SPLIT
+ */
+Route::apiResource('split', DokSplitController::class);
+Route::get('/split/{split_id}/display', [DokSplitController::class, 'display']);
+Route::get('/split/{split_id}/form', [DokSplitController::class, 'form']);
+Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
+Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
+Route::put('/split/{split_id}/publish', [DokSplitController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

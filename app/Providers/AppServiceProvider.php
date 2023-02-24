@@ -32,6 +32,7 @@ use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
 use App\Models\DokSbpN;
 use App\Models\DokSegel;
+use App\Models\DokSplit;
 use App\Models\DokTegah;
 use App\Models\DokTitip;
 use App\Models\DokTolakSbp1;
@@ -59,6 +60,7 @@ use App\Observers\DokRiksaBadanObserver;
 use App\Observers\DokRiksaObserver;
 use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
+use App\Observers\DokSplitObserver;
 use App\Observers\DokTegahObserver;
 use App\Observers\DokTitipObserver;
 use App\Observers\DokTolakSbp1Observer;
@@ -109,6 +111,7 @@ class AppServiceProvider extends ServiceProvider
 			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
+			'split' => DokSplit::class,
 			'tegah' => DokTegah::class,
 			'tracking_sbp' => TrackingSbp::class,
 		]);
@@ -138,6 +141,7 @@ class AppServiceProvider extends ServiceProvider
 		DokSbp::observe(DokSbpObserver::class);
 		DokSbpN::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
+		DokSplit::observe(DokSplitObserver::class);
 		DokTegah::observe(DokTegahObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
