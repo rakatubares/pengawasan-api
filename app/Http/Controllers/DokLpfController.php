@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokLpfTableResource;
+use App\Models\DokLpf;
 use App\Models\DokLpp;
 use Illuminate\Http\Request;
 
@@ -10,6 +12,37 @@ class DokLpfController extends DokPenyidikanController
 	public function __construct($doc_type='lpf')
 	{
 		parent::__construct($doc_type);
+	}
+
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+
+		$search = '%' . $src . '%';
+		$status = $sta != null ? $sta : [200];
+
+		$search_result = DokLpf::where(function ($query) use ($search, $status) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->whereIn('kode_status', $status);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokLpfTableResource::collection($search_result);
+		return $search_list;
 	}
 
 	protected function getPenyidikan($id)
@@ -87,7 +120,6 @@ class DokLpfController extends DokPenyidikanController
 			'kode_jabatan2' => $request->atasan2['jabatan']['kode'],
 			'plh2' => $request->atasan2['plh'],
 			'pejabat2_id' => $request->atasan2['user']['user_id'],
-			'kode_status' => $request->kode_status,
 		];
 
 		if ($state == 'insert') {

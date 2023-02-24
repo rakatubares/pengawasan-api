@@ -46,7 +46,6 @@ class DokLpfResource extends RequestBasedResource
 				'plh' => $this->plh2,
 				'user' => new RefUserResource($this->pejabat2),
 			],
-			'kode_status' => $this->kode_status,
 		];
 		return $array;
 	}
@@ -80,6 +79,7 @@ class DokLpfResource extends RequestBasedResource
 	{
 		$array = $this->display();
 		$array['barang'] = new DetailBarangResource($this->lpp->penyidikan->bhp);
+		$array['kode_status'] = $this->kode_status;
 		return $array;
 	}
 

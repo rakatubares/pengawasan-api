@@ -22,8 +22,15 @@ class DokSplitResource extends RequestBasedResource
 				'plh' => $this->plh,
 				'user' => new RefUserResource($this->pejabat),
 			],
-			'kode_status' => $this->kode_status,
+			'tembusan' => $this->tembusan($this->tembusan),
 		];
+		return $array;
+	}
+
+	protected function form()
+	{
+		$array = $this->basic();
+		$array['id_lpf'] = $this->lpf->id;
 		return $array;
 	}
 
@@ -59,5 +66,14 @@ class DokSplitResource extends RequestBasedResource
 			$list_petugas[] = $resource_petugas;
 		}
 		return $list_petugas;
+	}
+
+	private function tembusan()
+	{
+		$cc_list = $this->tembusan->toArray();
+		
+		return array_map(function ($data) {
+			return $data['uraian'];
+		}, $cc_list);
 	}
 }

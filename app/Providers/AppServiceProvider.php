@@ -29,6 +29,7 @@ use App\Observers\DokRiksaBadanObserver;
 use App\Observers\DokRiksaObserver;
 use App\Observers\DokSbpObserver;
 use App\Observers\DokSegelObserver;
+use App\Observers\DokSplitObserver;
 use App\Observers\DokTegahObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -83,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
 		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
 		DokSbp::observe(DokSbpObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
+		DokSplit::observe(DokSplitObserver::class);
 		DokTegah::observe(DokTegahObserver::class);
     }
 }

@@ -29,6 +29,7 @@ use App\Http\Controllers\RefNegaraController;
 use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\TembusanController;
 use App\Http\Controllers\TrackingSbpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -211,14 +212,17 @@ Route::get('/lpf/{lpf_id}/docs', [DokLpfController::class, 'docs']);
 Route::get('/lpf/{lpf_id}/pdf', [DokLpfController::class, 'pdf']);
 Route::get('/lpf/{lpf_id}/bhp', [DokLpfController::class, 'bhp']);
 Route::put('/lpf/{lpf_id}/publish', [DokLpfController::class, 'publish']);
+Route::post('/lpf/search', [DokLpfController::class, 'search']);
 
 /**
  * API for SPLIT
  */
 Route::apiResource('split', DokSplitController::class);
 Route::get('/split/{split_id}/display', [DokSplitController::class, 'display']);
+Route::get('/split/{split_id}/form', [DokSplitController::class, 'form']);
 Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
 Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
+Route::put('/split/{split_id}/publish', [DokSplitController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------
@@ -331,6 +335,11 @@ Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
  */
 Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
+
+/**
+ * API for Tembusan
+ */
+Route::post('tembusan/search', [TembusanController::class, 'search']);
 
 /**
  * API for User
