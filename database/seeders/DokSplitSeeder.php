@@ -30,7 +30,7 @@ class DokSplitSeeder extends Seeder
 		$max_lpf_id = DokLpf::max('id');
 		$available_lpf_id = range(1, $max_lpf_id);
 
-		for ($i=1; $i < 6; $i++) { 
+		for ($i=1; $i < 11; $i++) { 
 			// Get data LPF
 			$lpf_id = $faker->randomElement($available_lpf_id);
 			$key = array_search($lpf_id, $available_lpf_id);

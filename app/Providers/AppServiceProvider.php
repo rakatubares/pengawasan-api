@@ -6,6 +6,7 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
+use App\Models\DokLhp;
 use App\Models\DokLp;
 use App\Models\DokLpf;
 use App\Models\DokLphp;
@@ -63,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
 			'item_barang' => DetailBarangItem::class,
+			'lhp' => DokLhp::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,

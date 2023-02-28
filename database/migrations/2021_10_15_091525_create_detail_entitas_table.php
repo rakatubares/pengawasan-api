@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailPetugasTable extends Migration
+class CreateDetailEntitasTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,15 +13,15 @@ class CreateDetailPetugasTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('detail_petugas', function (Blueprint $table) {
+		Schema::create('detail_entitas', function (Blueprint $table) {
 			$table->id();
-			$table->string('officerable_type');
-			$table->integer('officerable_id');
+			$table->string('entityable_type');
+			$table->integer('entityable_id');
 			$table->string('position');
-			$table->integer('petugas_id');
-			$table->timestamps();
+			$table->integer('entity_id');
+            $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index(['officerable_type', 'officerable_id', 'position']);
+			$table->index(['entityable_type', 'entityable_id', 'position']);
 			$table->index('deleted_at');
 		});
 	}
@@ -33,6 +33,6 @@ class CreateDetailPetugasTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('detail_petugas');
+		Schema::dropIfExists('detail_entitas');
 	}
 }

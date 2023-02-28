@@ -34,6 +34,7 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailDokumen;
 use App\Models\DetailSarkut;
+use App\Models\DokLhp;
 use App\Models\DokLp;
 use App\Models\DokLpf;
 use App\Models\DokLphp;
@@ -154,13 +155,13 @@ trait SwitcherTrait
 		],
 
 		// Penyidikan
-		'lpp' => [
-			'tipe_dok' => 'LPP',
+		'lhp' => [
+			'tipe_dok' => 'LHP',
 			'agenda' => '/KPU.305/',
 			'parent' => 'penyidikan',
-			'model' => DokLpp::class,
-			'resource' => DokLppResource::class,
-			'table_resource' => DokLppTableResource::class,
+			'model' => DokLhp::class,
+			'resource' => null,
+			'table_resource' => null,
 		],
 		'lpf' => [
 			'tipe_dok' => 'LPF',
@@ -169,6 +170,14 @@ trait SwitcherTrait
 			'model' => DokLpf::class,
 			'resource' => DokLpfResource::class,
 			'table_resource' => DokLpfTableResource::class,
+		],
+		'lpp' => [
+			'tipe_dok' => 'LPP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpp::class,
+			'resource' => DokLppResource::class,
+			'table_resource' => DokLppTableResource::class,
 		],
 		'split' => [
 			'tipe_dok' => 'SPLIT',
