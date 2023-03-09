@@ -237,6 +237,10 @@ class DokPenyidikanController extends DokController
 				$split = $lpf->split;
 				if ($split != null) {
 					$array[] = ['doc_type' => 'split', 'doc_id' => $split->id];
+					$lhp = $split->lhp;
+					if ($lhp != null) {
+						$array[] = ['doc_type' => 'lhp', 'doc_id' => $lhp->id];
+					}
 				}	
 			}
 		}

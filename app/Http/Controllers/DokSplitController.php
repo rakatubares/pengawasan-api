@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokSplitTableResource;
 use App\Models\DokLpf;
+use App\Models\DokSplit;
 use Illuminate\Http\Request;
 
 class DokSplitController extends DokPenyidikanController
@@ -10,6 +12,37 @@ class DokSplitController extends DokPenyidikanController
 	public function __construct($doc_type='split')
 	{
 		parent::__construct($doc_type);
+	}
+
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$sta = $request->sta;
+		$exc = $request->exc;
+
+		$search = '%' . $src . '%';
+		$status = $sta != null ? $sta : [200];
+
+		$search_result = DokSplit::where(function ($query) use ($search, $status) {
+				$query->where('no_dok_lengkap', 'like', $search)
+					->whereIn('kode_status', $status);
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokSplitTableResource::collection($search_result);
+		return $search_list;
 	}
 
 	protected function getPenyidikan($id)
@@ -93,7 +126,7 @@ class DokSplitController extends DokPenyidikanController
 			app(TembusanController::class)->setCc($this->model, $this->doc->id, $cc_list);
 		}
 
-		// Attach with LPF
+		// Attach to LPF
 		$this->attachLpf($request->id_lpf);
 		$this->penyidikan->lpp->lpf->update(['kode_status' => 133]);
 	}
@@ -118,7 +151,7 @@ class DokSplitController extends DokPenyidikanController
 			}
 		}
 
-		// Update LPF
+		// Update SPLIT
 		if ($availability == true) {
 			$result = $this->updatePenyidikanDocument($request, $id);
 			return $result;

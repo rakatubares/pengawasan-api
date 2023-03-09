@@ -22,6 +22,7 @@ use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Models\TrackingSbp;
 use App\Observers\DetailBarangItemObserver;
+use App\Observers\DokLhpObserver;
 use App\Observers\DokLpfObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
@@ -78,6 +79,7 @@ class AppServiceProvider extends ServiceProvider
 		]);
 
 		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		DokLhp::observe(DokLhpObserver::class);
 		DokLp::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokLpf::observe(DokLpfObserver::class);

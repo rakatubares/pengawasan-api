@@ -224,14 +224,18 @@ Route::get('/split/{split_id}/form', [DokSplitController::class, 'form']);
 Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
 Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
 Route::put('/split/{split_id}/publish', [DokSplitController::class, 'publish']);
+Route::post('/split/search', [DokSplitController::class, 'search']);
 
 /**
  * API for LHP
  */
 Route::apiResource('lhp', DokLhpController::class);
 Route::get('/lhp/{lhp_id}/display', [DokLhpController::class, 'display']);
+Route::get('/lhp/{lhp_id}/form', [DokLhpController::class, 'form']);
+Route::get('/lhp/{lhp_id}/docs', [DokLhpController::class, 'docs']);
 Route::get('/lhp/{lhp_id}/pdf', [DokLhpController::class, 'pdf']);
 Route::get('/lhp/{lhp_id}/bhp', [DokLhpController::class, 'bhp']);
+Route::put('/lhp/{lhp_id}/publish', [DokLhpController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

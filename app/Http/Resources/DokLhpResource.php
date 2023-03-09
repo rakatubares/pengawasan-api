@@ -50,6 +50,13 @@ class DokLhpResource extends RequestBasedResource
 		return $array;
 	}
 
+	protected function form()
+	{
+		$array = $this->basic();
+		$array['id_split'] = $this->split->id;
+		return $array;
+	}
+
 	protected function pdf()
 	{
 		$array = $this->display();
