@@ -6,6 +6,7 @@ use App\Http\Controllers\DetailBarangController;
 use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
+use App\Http\Controllers\DokLhpController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLpfController;
 use App\Http\Controllers\DokLphpController;
@@ -223,6 +224,14 @@ Route::get('/split/{split_id}/form', [DokSplitController::class, 'form']);
 Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
 Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
 Route::put('/split/{split_id}/publish', [DokSplitController::class, 'publish']);
+
+/**
+ * API for LHP
+ */
+Route::apiResource('lhp', DokLhpController::class);
+Route::get('/lhp/{lhp_id}/display', [DokLhpController::class, 'display']);
+Route::get('/lhp/{lhp_id}/pdf', [DokLhpController::class, 'pdf']);
+Route::get('/lhp/{lhp_id}/bhp', [DokLhpController::class, 'bhp']);
 
 /*
  |--------------------------------------------------------------------------

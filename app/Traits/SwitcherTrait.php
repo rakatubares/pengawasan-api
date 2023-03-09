@@ -7,6 +7,8 @@ use App\Http\Resources\DetailBangunanResource;
 use App\Http\Resources\DetailBarangResource;
 use App\Http\Resources\DetailDokumenResource;
 use App\Http\Resources\DetailSarkutResource;
+use App\Http\Resources\DokLhpResource;
+use App\Http\Resources\DokLhpTableResource;
 use App\Http\Resources\DokLpfResource;
 use App\Http\Resources\DokLpfTableResource;
 use App\Http\Resources\DokLphpResource;
@@ -160,8 +162,8 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penyidikan',
 			'model' => DokLhp::class,
-			'resource' => null,
-			'table_resource' => null,
+			'resource' => DokLhpResource::class,
+			'table_resource' => DokLhpTableResource::class,
 		],
 		'lpf' => [
 			'tipe_dok' => 'LPF',
