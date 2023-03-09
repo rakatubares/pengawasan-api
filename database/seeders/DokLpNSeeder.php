@@ -32,7 +32,7 @@ class DokLpNSeeder extends Seeder
 		$max_lphp_id = DokLphpN::max('id');
 		$available_lphp_id = range(1, $max_lphp_id);
 
-		for ($i=1; $i < 21; $i++) { 
+		for ($i=1; $i < 31; $i++) { 
 			// Get data LPHP
 			$lphp_id = $this->faker->randomElement($available_lphp_id);
 			$key = array_search($lphp_id, $available_lphp_id);

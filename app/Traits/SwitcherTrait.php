@@ -17,6 +17,8 @@ use App\Http\Resources\DokContohResource;
 use App\Http\Resources\DokContohTableResource;
 use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLapTableResource;
+use App\Http\Resources\DokLhpResource;
+use App\Http\Resources\DokLhpTableResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLiTableResource;
 use App\Http\Resources\DokLkaiNResource;
@@ -74,6 +76,7 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
+use App\Models\DokLhp;
 use App\Models\DokLi;
 use App\Models\DokLkai;
 use App\Models\DokLkaiN;
@@ -363,13 +366,13 @@ trait SwitcherTrait
 		],
 
 		// Penyidikan
-		'lpp' => [
-			'tipe_dok' => 'LPP',
+		'lhp' => [
+			'tipe_dok' => 'LHP',
 			'agenda' => '/KPU.305/',
 			'parent' => 'penyidikan',
-			'model' => DokLpp::class,
-			'resource' => DokLppResource::class,
-			'table_resource' => DokLppTableResource::class,
+			'model' => DokLhp::class,
+			'resource' => DokLhpResource::class,
+			'table_resource' => DokLhpTableResource::class,
 		],
 		'lpf' => [
 			'tipe_dok' => 'LPF',
@@ -378,6 +381,14 @@ trait SwitcherTrait
 			'model' => DokLpf::class,
 			'resource' => DokLpfResource::class,
 			'table_resource' => DokLpfTableResource::class,
+		],
+		'lpp' => [
+			'tipe_dok' => 'LPP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLpp::class,
+			'resource' => DokLppResource::class,
+			'table_resource' => DokLppTableResource::class,
 		],
 		'split' => [
 			'tipe_dok' => 'SPLIT',

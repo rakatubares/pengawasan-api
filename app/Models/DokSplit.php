@@ -52,6 +52,27 @@ class DokSplit extends Model
 	}
 
 	/**
+	 * Relation to LHP
+	 */
+	public function lhp()
+	{
+		return $this->hasOneThrough(
+			DokLhp::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'split'
+		)->where(
+			'object2_type',
+			'lhp'
+		);
+	}
+
+	/**
 	 * Petugas
 	 */
 	public function petugas()
