@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
 			DokLpfSeeder::class,
 			DokSplitSeeder::class,
 			DokLhpSeeder::class,
+			DokLrpSeeder::class,
 		]);
 	}
 }

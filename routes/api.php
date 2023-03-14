@@ -15,6 +15,7 @@ use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLppController;
 use App\Http\Controllers\DokLptpController;
 use App\Http\Controllers\DokLptpNController;
+use App\Http\Controllers\DokLrpController;
 use App\Http\Controllers\DokRiksaBadanController;
 use App\Http\Controllers\DokRiksaController;
 use App\Http\Controllers\DokSbpController;
@@ -236,6 +237,11 @@ Route::get('/lhp/{lhp_id}/docs', [DokLhpController::class, 'docs']);
 Route::get('/lhp/{lhp_id}/pdf', [DokLhpController::class, 'pdf']);
 Route::get('/lhp/{lhp_id}/bhp', [DokLhpController::class, 'bhp']);
 Route::put('/lhp/{lhp_id}/publish', [DokLhpController::class, 'publish']);
+
+/**
+ * API for LRP
+ */
+Route::apiResource('lrp', DokLrpController::class);
 
 /*
  |--------------------------------------------------------------------------

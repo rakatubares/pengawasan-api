@@ -63,7 +63,7 @@ class DokLppSeeder extends Seeder
 		$max_lpn_id = DokLpN::max('id');
 		$available_lp['lpn'] = range(1, $max_lpn_id);
 
-		for ($i=1; $i < 21; $i++) {
+		for ($i=1; $i < 26; $i++) {
 			// Get data LP
 			$lp_type = $this->faker->randomElement(['lp', 'lpn']);
 			$lp_id = $this->faker->randomElement($available_lp[$lp_type]);

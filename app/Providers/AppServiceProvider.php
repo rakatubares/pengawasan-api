@@ -11,6 +11,7 @@ use App\Models\DokLp;
 use App\Models\DokLpf;
 use App\Models\DokLphp;
 use App\Models\DokLpp;
+use App\Models\DokLrp;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSbp;
@@ -66,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
 			'barang' => DetailBarang::class,
 			'item_barang' => DetailBarangItem::class,
 			'lhp' => DokLhp::class,
+			'lrp' => DokLrp::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
 			'penindakan' => Penindakan::class,
