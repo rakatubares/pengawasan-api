@@ -59,7 +59,7 @@ class DokLrpSeeder extends Seeder
 
 			$with_spdp = rand(0,1);
 			if ($with_spdp) {
-				$no_spdp = $faker->regexify('SPTP-[0-9]{3,5}');
+				$no_spdp = $faker->regexify('SPDP-[0-9]{3,5}');
 				$tanggal_spdp = $faker->dateTimeThisYear()->format('Y-m-d');
 			} else {
 				$no_spdp = null;

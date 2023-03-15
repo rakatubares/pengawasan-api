@@ -242,6 +242,10 @@ Route::put('/lhp/{lhp_id}/publish', [DokLhpController::class, 'publish']);
  * API for LRP
  */
 Route::apiResource('lrp', DokLrpController::class);
+Route::get('/lrp/{lrp_id}/display', [DokLrpController::class, 'display']);
+Route::get('/lrp/{lrp_id}/docs', [DokLrpController::class, 'docs']);
+Route::get('/lrp/{lrp_id}/pdf', [DokLrpController::class, 'pdf']);
+Route::get('/lrp/{lrp_id}/bhp', [DokLrpController::class, 'bhp']);
 
 /*
  |--------------------------------------------------------------------------

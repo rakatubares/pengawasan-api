@@ -66,6 +66,17 @@ class DokLhpResource extends RequestBasedResource
 		return $array;
 	}
 
+	protected function number()
+	{
+		$array = [
+			'id' => $this->id,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tanggal_dokumen' => $this->tanggal_dokumen->format('d-m-Y'),
+		];
+
+		return $array;
+	}
+
 	private function list_saksi()
 	{
 		$list_saksi = [];

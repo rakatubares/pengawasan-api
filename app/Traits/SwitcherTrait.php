@@ -20,6 +20,7 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
+use App\Http\Resources\DokLrpResource;
 use App\Http\Resources\DokLrpTableResource;
 use App\Http\Resources\DokRiksaBadanResource;
 use App\Http\Resources\DokRiksaBadanTableResource;
@@ -196,7 +197,7 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'penyidikan',
 			'model' => DokLrp::class,
-			'resource' => null,
+			'resource' => DokLrpResource::class,
 			'table_resource' => DokLrpTableResource::class,
 		],
 
