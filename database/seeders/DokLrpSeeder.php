@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\DokLhp;
-use App\Models\DokLp;
 use App\Models\DokLrp;
 use App\Models\ObjectRelation;
 use App\Models\RefEntitas;
@@ -36,7 +35,7 @@ class DokLrpSeeder extends Seeder
 			$lhp_id = $faker->randomElement($available_lhp_id);
 			$key = array_search($lhp_id, $available_lhp_id);
 			unset($available_lhp_id[$key]);
-			$lhp = DokLp::find($lhp_id);
+			$lhp = DokLhp::find($lhp_id);
 
 			// Create LRP
 			$with_lk = rand(0,1);
@@ -125,8 +124,8 @@ class DokLrpSeeder extends Seeder
 				'object2_id' => $lrp->id,
 			]);
 
-			// Change LP status
-			$lhp->update(['kode_status' => 232]);
+			// Change LHP status
+			$lhp->update(['kode_status' => 235]);
 		}
 	}
 }

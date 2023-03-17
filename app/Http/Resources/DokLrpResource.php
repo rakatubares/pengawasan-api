@@ -66,6 +66,13 @@ class DokLrpResource extends RequestBasedResource
 		return $array;
 	}
 
+	protected function form()
+	{
+		$array = $this->basic();
+		$array['id_lhp'] = $this->lhp->id;
+		return $array;
+	}
+
 	protected function pdf()
 	{
 		$array = $this->display();
