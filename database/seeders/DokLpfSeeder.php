@@ -32,7 +32,7 @@ class DokLpfSeeder extends Seeder
 		$max_lpp_id = DokLpp::max('id');
 		$available_lpp_id = range(1, $max_lpp_id);
 
-		for ($i=1; $i < 16; $i++) { 
+		for ($i=1; $i < 21; $i++) { 
 			// Get data LPP
 			$lpp_id = $this->faker->randomElement($available_lpp_id);
 			$key = array_search($lpp_id, $available_lpp_id);

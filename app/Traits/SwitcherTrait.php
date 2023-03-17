@@ -37,6 +37,8 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
+use App\Http\Resources\DokLrpResource;
+use App\Http\Resources\DokLrpTableResource;
 use App\Http\Resources\DokNhiResource;
 use App\Http\Resources\DokNhiNResource;
 use App\Http\Resources\DokNhiNTableResource;
@@ -90,6 +92,7 @@ use App\Models\DokLppi;
 use App\Models\DokLppiN;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
+use App\Models\DokLrp;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
@@ -397,6 +400,14 @@ trait SwitcherTrait
 			'model' => DokSplit::class,
 			'resource' => DokSplitResource::class,
 			'table_resource' => DokSplitTableResource::class,
+		],
+		'lrp' => [
+			'tipe_dok' => 'LRP',
+			'agenda' => '/KPU.305/',
+			'parent' => 'penyidikan',
+			'model' => DokLrp::class,
+			'resource' => DokLrpResource::class,
+			'table_resource' => DokLrpTableResource::class,
 		],
 
 		// Objek

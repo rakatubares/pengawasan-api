@@ -25,6 +25,7 @@ use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokLptpController;
 use App\Http\Controllers\DokLptpNController;
+use App\Http\Controllers\DokLrpController;
 use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\DokNiController;
@@ -486,6 +487,18 @@ Route::get('/lhp/{lhp_id}/docs', [DokLhpController::class, 'docs']);
 Route::get('/lhp/{lhp_id}/pdf', [DokLhpController::class, 'pdf']);
 Route::get('/lhp/{lhp_id}/bhp', [DokLhpController::class, 'bhp']);
 Route::put('/lhp/{lhp_id}/publish', [DokLhpController::class, 'publish']);
+Route::post('/lhp/search', [DokLhpController::class, 'search']);
+
+/**
+ * API for LRP
+ */
+Route::apiResource('lrp', DokLrpController::class);
+Route::get('/lrp/{lrp_id}/display', [DokLrpController::class, 'display']);
+Route::get('/lrp/{lrp_id}/form', [DokLrpController::class, 'form']);
+Route::get('/lrp/{lrp_id}/docs', [DokLrpController::class, 'docs']);
+Route::get('/lrp/{lrp_id}/pdf', [DokLrpController::class, 'pdf']);
+Route::get('/lrp/{lrp_id}/bhp', [DokLrpController::class, 'bhp']);
+Route::put('/lrp/{lrp_id}/publish', [DokLrpController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

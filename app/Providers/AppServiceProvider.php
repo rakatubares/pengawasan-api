@@ -23,6 +23,7 @@ use App\Models\DokLkaiN;
 use App\Models\DokLpp;
 use App\Models\DokLppi;
 use App\Models\DokLppiN;
+use App\Models\DokLrp;
 use App\Models\DokNhi;
 use App\Models\DokNhiN;
 use App\Models\DokNi;
@@ -54,6 +55,7 @@ use App\Observers\DokLpObserver;
 use App\Observers\DokLppObserver;
 use App\Observers\DokLkaiObserver;
 use App\Observers\DokLppiObserver;
+use App\Observers\DokLrpObserver;
 use App\Observers\DokNhiNObserver;
 use App\Observers\DokNhiObserver;
 use App\Observers\DokNiObserver;
@@ -103,6 +105,7 @@ class AppServiceProvider extends ServiceProvider
 			'dokumen' => DetailDokumen::class,
 			'item_barang' => DetailBarangItem::class,
 			'lhp' => DokLhp::class,
+			'lrp' => DokLrp::class,
 			'nhi' => DokNhi::class,
 			'nhin' => DokNhiN::class,
 			'ni' => DokNi::class,
@@ -135,6 +138,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLkaiN::observe(DokLkaiObserver::class);
 		DokLppi::observe(DokLppiObserver::class);
 		DokLppiN::observe(DokLppiObserver::class);
+		DokLrp::observe(DokLrpObserver::class);
 		DokNhi::observe(DokNhiObserver::class);
 		DokNhiN::observe(DokNhiNObserver::class);
 		DokNi::observe(DokNiObserver::class);

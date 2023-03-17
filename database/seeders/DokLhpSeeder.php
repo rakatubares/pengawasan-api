@@ -30,7 +30,7 @@ class DokLhpSeeder extends Seeder
 		$max_split_id = DokSplit::max('id');
 		$available_split_id = range(1, $max_split_id);
 
-		for ($i=1; $i < 6; $i++) { 
+		for ($i=1; $i < 11; $i++) { 
 			// Get data SPLIT
 			$split_id = $faker->randomElement($available_split_id);
 			$key = array_search($split_id, $available_split_id);

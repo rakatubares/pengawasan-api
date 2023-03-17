@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DokLhp extends Model
+class DokLrp extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'dok_lhp';
+	protected $table = 'dok_lrp';
 
 	protected $fillable = [
 		'no_dok',
@@ -19,11 +19,18 @@ class DokLhp extends Model
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
-		'kesimpulan',
+		'no_lk',
+		'tanggal_lk',
+		'no_sptp',
+		'tanggal_sptp',
+		'no_spdp',
+		'tanggal_spdp',
+		'alat_bukti_surat',
+		'alat_bukti_petunjuk',
 		'alternatif_penyelesaian',
 		'informasi_lain',
 		'catatan',
-		'peneliti_id',
+		'penyidik_id',
 		'kode_jabatan1',
 		'plh1',
 		'pejabat1_id',
@@ -35,41 +42,23 @@ class DokLhp extends Model
 
 	protected $casts = [
 		'tanggal_dokumen' => 'date',
+		'tanggal_lk' => 'date',
+		'tanggal_sptp' => 'date',
+		'tanggal_spdp' => 'date',
 	];
 
 	/**
-	 * Relation to SPLIT
+	 * Relation to LHP
 	 */
-	public function split()
+	public function lhp()
 	{
 		return $this->hasOneThrough(
-			DokSplit::class,
+			DokLhp::class,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
 			'id',
 			'object1_id'
-		)->where(
-			'object1_type',
-			'split'
-		)->where(
-			'object2_type',
-			'lhp'
-		);
-	}
-
-	/**
-	 * Relation to LRP
-	 */
-	public function lrp()
-	{
-		return $this->hasOneThrough(
-			DokLrp::class,
-			ObjectRelation::class,
-			'object1_id',
-			'id',
-			'id',
-			'object2_id'
 		)->where(
 			'object1_type',
 			'lhp'
@@ -91,11 +80,22 @@ class DokLhp extends Model
 	}
 
 	/**
+	 * Ahli
+	 */
+	public function ahli()
+	{
+		return $this->morphToMany(RefEntitas::class, 'entityable', 'detail_entitas', 'entityable_id', 'entity_id')
+			->wherePivot('position', 'ahli')
+			->wherePivotNull('deleted_at')
+			->withTimestamps();
+	}
+
+	/**
 	 * Detail petugas
 	 */
-	public function peneliti()
+	public function penyidik()
 	{
-		return $this->belongsTo(RefUserCache::class, 'peneliti_id');
+		return $this->belongsTo(RefUserCache::class, 'penyidik_id');
 	}
 
 	public function pejabat1()

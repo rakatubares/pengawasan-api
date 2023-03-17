@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
-class DokLhpResource extends RequestBasedResource
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DokLrpResource extends RequestBasedResource
 {
 	public function basic()
 	{
@@ -15,12 +17,26 @@ class DokLhpResource extends RequestBasedResource
 			'tanggal_dokumen' => $this->tanggal_dokumen
 				? $this->tanggal_dokumen->format('d-m-Y')
 				: null,
-			'kesimpulan' => $this->kesimpulan,
+			'no_lk' => $this->no_lk,
+			'tanggal_lk' => $this->tanggal_lk
+				? $this->tanggal_lk->format('d-m-Y')
+				: null,
+			'no_sptp' => $this->no_sptp,
+			'tanggal_sptp' => $this->tanggal_sptp
+				? $this->tanggal_sptp->format('d-m-Y')
+				: null,
+			'no_spdp' => $this->no_spdp,
+			'tanggal_spdp' => $this->tanggal_spdp
+				? $this->tanggal_spdp->format('d-m-Y')
+				: null,
+			'alat_bukti_surat' => $this->alat_bukti_surat,
+			'alat_bukti_petunjuk' => $this->alat_bukti_petunjuk,
 			'alternatif_penyelesaian' => $this->alternatif_penyelesaian,
 			'informasi_lain' => $this->informasi_lain,
 			'catatan' => $this->catatan,
-			'saksi' => $this->list_saksi($this->saksi),
-			'peneliti' => new RefUserResource($this->peneliti),
+			'saksi' => $this->list_entitas($this->saksi),
+			'ahli' => $this->list_entitas($this->ahli),
+			'penyidik' => new RefUserResource($this->penyidik),
 			'atasan1' => [
 				'jabatan' => new JabatanResource($this->jabatan1),
 				'plh' => $this->plh1,
@@ -37,7 +53,7 @@ class DokLhpResource extends RequestBasedResource
 
 	protected function display()
 	{
-		$penyidikan = $this->split->lpf->lpp->penyidikan;
+		$penyidikan = $this->lhp->split->lpf->lpp->penyidikan;
 		$sbp_type = $penyidikan->penindakan->sbp_relation->object2_type;
 		$lp = $penyidikan->penindakan->$sbp_type->lptp->lphp->lp;
 
@@ -45,7 +61,7 @@ class DokLhpResource extends RequestBasedResource
 		$array['penyidikan'] = new PenyidikanResource($penyidikan);
 		$array['dokumen'] = [];
 		$array['dokumen']['lp'] = new DokLpResource($lp, 'number');
-		$array['dokumen']['split'] = new DokSplitResource($this->split, 'number');
+		$array['dokumen']['lhp'] = new DokLhpResource($this->lhp, 'number');
 
 		return $array;
 	}
@@ -53,37 +69,26 @@ class DokLhpResource extends RequestBasedResource
 	protected function form()
 	{
 		$array = $this->basic();
-		$array['id_split'] = $this->split->id;
+		$array['id_lhp'] = $this->lhp->id;
 		return $array;
 	}
 
 	protected function pdf()
 	{
 		$array = $this->display();
-		$array['barang'] = new DetailBarangResource($this->split->lpf->lpp->penyidikan->bhp);
+		$array['barang'] = new DetailBarangResource($this->lhp->split->lpf->lpp->penyidikan->bhp);
 		$array['kode_status'] = $this->kode_status;
 
 		return $array;
 	}
 
-	protected function number()
+	private function list_entitas($object_entitas)
 	{
-		$array = [
-			'id' => $this->id,
-			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tanggal_dokumen' => $this->tanggal_dokumen->format('d-m-Y'),
-		];
-
-		return $array;
-	}
-
-	private function list_saksi()
-	{
-		$list_saksi = [];
-		foreach ($this->saksi as $saksi) {
-			$resource_saksi = new RefEntitasResource($saksi);
-			$list_saksi[] = $resource_saksi;
+		$list_entitas = [];
+		foreach ($object_entitas as $entitas) {
+			$resource_entitas = new RefEntitasResource($entitas);
+			$list_entitas[] = $resource_entitas;
 		}
-		return $list_saksi;
+		return $list_entitas;
 	}
 }
