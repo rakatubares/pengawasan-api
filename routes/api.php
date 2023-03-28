@@ -12,12 +12,15 @@ use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLiController;
+use App\Http\Controllers\DokLkaiController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
+use App\Http\Controllers\DokLppiController;
 use App\Http\Controllers\DokLptpController;
 use App\Http\Controllers\DokLptpNController;
+use App\Http\Controllers\DokNhiController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
@@ -59,6 +62,45 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 	return $request->user();
 });
+
+/*
+ |--------------------------------------------------------------------------
+ | Intelijen routes
+ |--------------------------------------------------------------------------
+ */
+
+/**
+ * API for LPPI
+ */
+Route::apiResource('lppi', DokLppiController::class);
+Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
+Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
+Route::get('/lppi/{lppi_id}/docs', [DokLppiController::class, 'docs']);
+Route::get('/lppi/{lppi_id}/pdf', [DokLppiController::class, 'pdf']);
+Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
+Route::post('/lppi/search', [DokLppiController::class, 'search']);
+
+/**
+ * API for LKAI
+ */
+Route::apiResource('lkai', DokLkaiController::class);
+Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
+Route::get('/lkai/{lkai_id}/form', [DokLkaiController::class, 'form']);
+Route::get('/lkai/{lkai_id}/docs', [DokLkaiController::class, 'docs']);
+Route::get('/lkai/{lkai_id}/pdf', [DokLkaiController::class, 'pdf']);
+Route::put('/lkai/{lkai_id}/publish', [DokLkaiController::class, 'publish']);
+Route::post('/lkai/search', [DokLkaiController::class, 'search']);
+
+/**
+ * API for NHI
+ */
+Route::apiResource('nhi', DokNhiController::class);
+Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
+Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
+Route::get('/nhi/{nhi_id}/docs', [DokNhiController::class, 'docs']);
+Route::get('/nhi/{nhi_id}/pdf', [DokNhiController::class, 'pdf']);
+Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
+Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------

@@ -19,13 +19,19 @@ use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLapTableResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLiTableResource;
+use App\Http\Resources\DokLkaiResource;
+use App\Http\Resources\DokLkaiTableResource;
 use App\Http\Resources\DokLphpResource;
 use App\Http\Resources\DokLphpTableResource;
 use App\Http\Resources\DokLpNResource;
+use App\Http\Resources\DokLppiResource;
+use App\Http\Resources\DokLppiTableResource;
 use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
+use App\Http\Resources\DokNhiResource;
+use App\Http\Resources\DokNhiTableResource;
 use App\Http\Resources\DokPengamanResource;
 use App\Http\Resources\DokPengamanTableResource;
 use App\Http\Resources\DokReeksporResource;
@@ -56,12 +62,15 @@ use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLi;
+use App\Models\DokLkai;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
+use App\Models\DokLppi;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
+use App\Models\DokNhi;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
@@ -79,6 +88,32 @@ use Illuminate\Database\Eloquent\Model;
 trait SwitcherTrait
 {
 	private $models = [
+		// Intelijen
+		'lkai' => [
+			'tipe_dok' => 'LKAI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLkai::class,
+			'resource' => DokLkaiResource::class,
+			'table_resource' => DokLkaiTableResource::class,
+		],
+		'lppi' => [
+			'tipe_dok' => 'LPPI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+			'table_resource' => DokLppiTableResource::class,
+		],
+		'nhi' => [
+			'tipe_dok' => 'NHI',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNhi::class,
+			'resource' => DokNhiResource::class,
+			'table_resource' => DokNhiTableResource::class,
+		],
+
 		// Penindakan
 		'bast' => [
 			'tipe_dok' => 'BAST',

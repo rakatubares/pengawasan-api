@@ -16,6 +16,7 @@ use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
+use App\Models\DokNhi;
 use App\Models\DokPengaman;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
@@ -79,6 +80,7 @@ class AppServiceProvider extends ServiceProvider
 			'bast' => DokBast::class,
 			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
+			'nhi' => DokNhi::class,
 			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
