@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class DokLapController extends DokPenindakanController
 {
+	private $related_documents = [
+		'LI-1' => 'li',
+		'NHI' => 'nhi'
+	];
 
 	public function __construct($doc_type='lap')
 	{
@@ -26,20 +30,33 @@ class DokLapController extends DokPenindakanController
 	 */
 	public function docs($id)
 	{
+		$lap = $this->model::find($id);
 		$array = [[
 			'doc_type' => 'lap',
 			'doc_id' => (int)$id,
 		]];
 
-		$lap = $this->model::find($id);
-		$li = $lap->li;
-		if ($li != null) {
-			$array[] = [
-				'doc_type' => 'li',
-				'doc_id' => (int)$li->id,
-			];
+		// Intelijen
+		if ($lap->nhi != null) {
+			$intelijen_id = $lap->nhi->intelijen->id;
+			$docs_intelijen = DokIntelijenController::getIntelijenDocuments($intelijen_id);
+		} else {
+			$docs_intelijen = [];
 		}
 		
+		// LI
+		$li = $lap->li;
+		if ($li != null) {
+			$dok_li = [[
+				'doc_type' => 'li',
+				'doc_id' => (int)$li->id,
+			]];
+		} else {
+			$dok_li = [];
+		}
+		
+		// Merge array
+		$array = array_merge($array, $docs_intelijen, $dok_li);
 		return $array;
 	}
 
@@ -155,8 +172,10 @@ class DokLapController extends DokPenindakanController
 	// Handle store relation
 	protected function stored($request)
 	{
-		if ($request->jenis_sumber == 'LI-1') {
-			$this->createDocRelation('li', $request->sumber_id, 106);
+		$jenis_sumber = $request->jenis_sumber;
+
+		if (array_key_exists($jenis_sumber, $this->related_documents)) {
+			$this->createDocRelation($this->related_documents[$jenis_sumber], $request->sumber_id, 106);
 		}
 	}
 
@@ -177,20 +196,24 @@ class DokLapController extends DokPenindakanController
 	protected function updating($request)
 	{
 		$existing_sumber = $this->doc->jenis_sumber;
+		$new_sumber = $request->jenis_sumber;
+
+		$existing_sumber_id = $this->doc->sumber_id;
+		$new_sumber_id = $request->sumber_id;
 
 		// Update relation if necessary
-		if ($existing_sumber == 'LI-1') {
-			if ($request->jenis_sumber == 'LI-1') {
-				if ($request->sumber_id != $this->doc->li->id) {
-					$this->deleteDocRelation('li', 200);
-					$this->createDocRelation('li', $request->sumber_id, 106);
-				}
-			} else {
-				$this->deleteDocRelation('li', 200);
+		if (
+			($existing_sumber != $new_sumber) |
+			($existing_sumber_id != $new_sumber_id)
+		) {
+			// Delete relation to existing document
+			if (array_key_exists($existing_sumber, $this->related_documents)) {
+				$this->deleteDocRelation($this->related_documents[$existing_sumber], 200);
 			}
-		} else {
-			if ($request->jenis_sumber == 'LI-1') {
-				$this->createDocRelation('li', $request->sumber_id, 106);
+
+			// Create new relation
+			if (array_key_exists($new_sumber, $this->related_documents)) {
+				$this->createDocRelation($this->related_documents[$new_sumber], $new_sumber_id, 106);
 			}
 		}
 	}
@@ -206,8 +229,9 @@ class DokLapController extends DokPenindakanController
 	// Additional function when publish
 	protected function published()
 	{
-		if ($this->doc->li != null) {
-			$this->doc->li->update(['kode_status' => 206]);
+		if (array_key_exists($this->doc->jenis_sumber, $this->related_documents)){
+			$sumber = $this->related_documents[$this->doc->jenis_sumber];
+			$this->doc->$sumber->update(['kode_status' => 206]);
 		}
 	}
 }

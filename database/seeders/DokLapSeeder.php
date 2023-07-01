@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\DokLap;
 use App\Models\DokLi;
+use App\Models\DokNhi;
 use App\Models\ObjectRelation;
 use App\Models\RefKategoriPelanggaran;
 use App\Models\RefSkemaPenindakan;
@@ -38,6 +39,10 @@ class DokLapSeeder extends Seeder
 			'bd.0504' => 5
 		];
 
+		// Get NHI
+		$max_nhi_id = DokNhi::max('id');
+		$available_nhi_id = range(1, $max_nhi_id);
+
 		// Get LI-1 ids
 		$max_li_id = DokLi::max('id');
 		$available_li_id = range(1, $max_li_id);
@@ -48,9 +53,18 @@ class DokLapSeeder extends Seeder
 
 			// Choose sumber
 			$jenis_sumber = $this->faker->randomElement($list_jenis_informasi);
-			if ($jenis_sumber == 'Lainnya') {
-				$nomor_sumber = $this->faker->numberBetween(1,1000);
-				$tanggal_sumber = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			if ($jenis_sumber == 'NHI') {
+				// Get data nhi
+				$nhi_id = $this->faker->randomElement($available_nhi_id);
+				if (($key = array_search($nhi_id, $available_nhi_id)) !== false) {
+					unset($available_nhi_id[$key]);
+				}
+				$nhi = DokNhi::find($nhi_id);
+				$nhi->update(['kode_status' => 206]);
+
+				// Get NHI number
+				$nomor_sumber = $nhi->no_dok_lengkap;
+				$tanggal_sumber = $nhi->tanggal_dokumen;
 			} else if ($jenis_sumber == 'LI-1') {
 				// Get data li
 				$li_id = $this->faker->randomElement($available_li_id);
@@ -64,7 +78,7 @@ class DokLapSeeder extends Seeder
 				$nomor_sumber = $li->no_dok_lengkap;
 				$tanggal_sumber = $li->tanggal_dokumen;
 			} else {
-				$nomor_sumber = strtoupper($jenis_sumber) . '-' . $this->faker->numberBetween(1,1000) . $this->agenda . date("Y");
+				$nomor_sumber = $this->faker->numberBetween(1,1000);
 				$tanggal_sumber = $this->faker->dateTimeThisYear()->format('Y-m-d');
 			}
 
@@ -131,7 +145,14 @@ class DokLapSeeder extends Seeder
 			]);
 
 			// Create relation
-			if ($jenis_sumber == 'LI-1') {
+			if ($jenis_sumber == 'NHI') {
+				ObjectRelation::create([
+					'object1_type' => 'nhi',
+					'object1_id' => $nhi->id,
+					'object2_type' => 'lap',
+					'object2_id' => $lap->id,
+				]);
+			} else if ($jenis_sumber == 'LI-1') {
 				ObjectRelation::create([
 					'object1_type' => 'li',
 					'object1_id' => $li->id,

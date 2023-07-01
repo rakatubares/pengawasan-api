@@ -60,6 +60,27 @@ class DokLap extends Model
 	];
 
 	/**
+	 * Relation to NHI object
+	 */
+	public function nhi()
+	{
+		return $this->hasOneThrough(
+			DokNhi::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'nhi'
+		)->where(
+			'object2_type',
+			'lap'
+		);
+	}
+	
+	/**
 	 * Relation to LI object
 	 */
 	public function li()
