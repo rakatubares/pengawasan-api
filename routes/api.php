@@ -117,6 +117,7 @@ Route::get('/nhi/{nhi_id}/docs', [DokNhiController::class, 'docs']);
 Route::get('/nhi/{nhi_id}/pdf', [DokNhiController::class, 'pdf']);
 Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
 Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
+Route::post('/nhi/search', [DokNhiController::class, 'search']);
 
 /**
  * API for NI

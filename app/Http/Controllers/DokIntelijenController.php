@@ -256,6 +256,15 @@ class DokIntelijenController extends DokController
 				$array[] = $doc;
 			}
 		}
+
+		if ($this->intelijen->nhi != null) {
+			if ($this->intelijen->nhi->lap != null) {
+				$array[] = [
+					'doc_type' => 'lap',
+					'doc_id' => $this->intelijen->nhi->lap->id
+				];
+			}
+		}
 		return $array;
 	}
 

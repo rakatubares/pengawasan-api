@@ -103,6 +103,7 @@ class AppServiceProvider extends ServiceProvider
 			'bast' => DokBast::class,
 			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
+			'nhi' => DokNhi::class,
 			'item_barang' => DetailBarangItem::class,
 			'lhp' => DokLhp::class,
 			'lrp' => DokLrp::class,

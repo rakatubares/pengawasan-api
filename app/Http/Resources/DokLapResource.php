@@ -61,6 +61,8 @@ class DokLapResource extends RequestBasedResource
 		$array = $this->basic();
 		if ($this->jenis_sumber == 'LI-1') {
 			$array['sumber_id'] = $this->li->id;
+		} else if ($this->jenis_sumber == 'NHI') {
+			$array['sumber_id'] = $this->nhi->id;
 		} else {
 			$array['sumber_id'] = null;
 		}
