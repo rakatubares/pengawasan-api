@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DokLapController extends DokPenindakanController
 {
-	private $related_documents = [
+	protected $related_documents = [
 		'LI-1' => 'li',
 		'NHI' => 'nhi'
 	];
@@ -32,7 +32,7 @@ class DokLapController extends DokPenindakanController
 	{
 		$lap = $this->model::find($id);
 		$array = [[
-			'doc_type' => 'lap',
+			'doc_type' => $this->doc_type,
 			'doc_id' => (int)$id,
 		]];
 

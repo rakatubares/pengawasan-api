@@ -11,16 +11,20 @@ use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
+use App\Http\Controllers\DokLapNController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLkaiController;
+use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
 use App\Http\Controllers\DokLppiController;
+use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokLptpController;
 use App\Http\Controllers\DokLptpNController;
 use App\Http\Controllers\DokNhiController;
+use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
@@ -318,6 +322,51 @@ Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'pu
  | NPP routes
  |--------------------------------------------------------------------------
  */
+
+/**
+ * API for LPPI-N
+ */
+Route::apiResource('lppin', DokLppiNController::class);
+Route::get('/lppin/{lppin_id}/display', [DokLppiNController::class, 'display']);
+Route::get('/lppin/{lppin_id}/form', [DokLppiNController::class, 'form']);
+Route::get('/lppin/{lppin_id}/docs', [DokLppiNController::class, 'docs']);
+Route::get('/lppin/{lppin_id}/pdf', [DokLppiNController::class, 'pdf']);
+Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
+Route::post('/lppin/search', [DokLppiNController::class, 'search']);
+
+/**
+ * API for LKAI-N
+ */
+Route::apiResource('lkain', DokLkaiNController::class);
+Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
+Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
+Route::get('/lkain/{lkain_id}/docs', [DokLkaiNController::class, 'docs']);
+Route::get('/lkain/{lkain_id}/pdf', [DokLkaiNController::class, 'pdf']);
+Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
+Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
+
+/**
+ * API for NHI-N
+ */
+Route::apiResource('nhin', DokNhiNController::class);
+Route::get('/nhin/{nhin_id}/display', [DokNhiNController::class, 'display']);
+Route::get('/nhin/{nhin_id}/form', [DokNhiNController::class, 'form']);
+Route::get('/nhin/{nhin_id}/docs', [DokNhiNController::class, 'docs']);
+Route::get('/nhin/{nhin_id}/pdf', [DokNhiNController::class, 'pdf']);
+Route::get('/nhin/{nhin_id}/objek', [DokNhiNController::class, 'objek']);
+Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
+Route::post('/nhin/search', [DokNhiNController::class, 'search']);
+
+/**
+ * API for LAP-N
+ */
+Route::resource('lapn', DokLapNController::class);
+Route::get('/lapn/{lapn_id}/display', [DokLapNController::class, 'display']);
+Route::get('/lapn/{lapn_id}/form', [DokLapNController::class, 'form']);
+Route::get('/lapn/{lapn_id}/docs', [DokLapNController::class, 'docs']);
+Route::get('/lapn/{lapn_id}/pdf', [DokLapNController::class, 'pdf']);
+// Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::put('/lapn/{lapn_id}/publish', [DokLapNController::class, 'publish']);
 
 /**
  * API for SBP-N

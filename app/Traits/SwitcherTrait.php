@@ -19,6 +19,7 @@ use App\Http\Resources\DokLapResource;
 use App\Http\Resources\DokLapTableResource;
 use App\Http\Resources\DokLiResource;
 use App\Http\Resources\DokLiTableResource;
+use App\Http\Resources\DokLkaiNResource;
 use App\Http\Resources\DokLkaiResource;
 use App\Http\Resources\DokLkaiTableResource;
 use App\Http\Resources\DokLphpResource;
@@ -30,6 +31,8 @@ use App\Http\Resources\DokLpResource;
 use App\Http\Resources\DokLpTableResource;
 use App\Http\Resources\DokLptpNResource;
 use App\Http\Resources\DokLptpResource;
+use App\Http\Resources\DokNhiNResource;
+use App\Http\Resources\DokNhiNTableResource;
 use App\Http\Resources\DokNhiResource;
 use App\Http\Resources\DokNhiTableResource;
 use App\Http\Resources\DokPengamanResource;
@@ -61,16 +64,20 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
+use App\Models\DokLapN;
 use App\Models\DokLi;
 use App\Models\DokLkai;
+use App\Models\DokLkaiN;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokLppi;
+use App\Models\DokLppiN;
 use App\Models\DokLptp;
 use App\Models\DokLptpN;
 use App\Models\DokNhi;
+use App\Models\DokNhiN;
 use App\Models\DokPengaman;
 use App\Models\DokReekspor;
 use App\Models\DokRiksa;
@@ -97,11 +104,27 @@ trait SwitcherTrait
 			'resource' => DokLkaiResource::class,
 			'table_resource' => DokLkaiTableResource::class,
 		],
+		'lkain' => [
+			'tipe_dok' => 'LKAI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLkaiN::class,
+			'resource' => DokLkaiNResource::class,
+			'table_resource' => DokLkaiTableResource::class,
+		],
 		'lppi' => [
 			'tipe_dok' => 'LPPI',
 			'agenda' => '/KPU.305/',
 			'parent' => 'intelijen',
 			'model' => DokLppi::class,
+			'resource' => DokLppiResource::class,
+			'table_resource' => DokLppiTableResource::class,
+		],
+		'lppin' => [
+			'tipe_dok' => 'LPPI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokLppiN::class,
 			'resource' => DokLppiResource::class,
 			'table_resource' => DokLppiTableResource::class,
 		],
@@ -112,6 +135,14 @@ trait SwitcherTrait
 			'model' => DokNhi::class,
 			'resource' => DokNhiResource::class,
 			'table_resource' => DokNhiTableResource::class,
+		],
+		'nhin' => [
+			'tipe_dok' => 'NHI-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'intelijen',
+			'model' => DokNhiN::class,
+			'resource' => DokNhiNResource::class,
+			'table_resource' => DokNhiNTableResource::class,
 		],
 
 		// Penindakan
@@ -152,6 +183,14 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'lap',
 			'model' => DokLap::class,
+			'resource' => DokLapResource::class,
+			'table_resource' => DokLapTableResource::class,
+		],
+		'lapn' => [
+			'tipe_dok' => 'LAP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'lapn',
+			'model' => DokLapN::class,
 			'resource' => DokLapResource::class,
 			'table_resource' => DokLapTableResource::class,
 		],

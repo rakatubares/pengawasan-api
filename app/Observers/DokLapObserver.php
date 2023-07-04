@@ -3,31 +3,13 @@
 namespace App\Observers;
 
 use App\Models\DokLap;
+use App\Models\DokLapN;
 use App\Models\ObjectRelation;
+use App\Traits\SwitcherTrait;
 
 class DokLapObserver
 {
-	/**
-	 * Handle the DokLap "created" event.
-	 *
-	 * @param  \App\Models\DokLap  $dokLap
-	 * @return void
-	 */
-	public function created(DokLap $dokLap)
-	{
-		//
-	}
-
-	/**
-	 * Handle the DokLap "updated" event.
-	 *
-	 * @param  \App\Models\DokLap  $dokLap
-	 * @return void
-	 */
-	public function updated(DokLap $dokLap)
-	{
-		//
-	}
+	use SwitcherTrait;
 
 	/**
 	 * Handle the DokLap "deleted" event.
@@ -35,8 +17,23 @@ class DokLapObserver
 	 * @param  \App\Models\DokLap  $dokLap
 	 * @return void
 	 */
-	public function deleted(DokLap $dokLap)
+	public function deleted(DokLap|DokLapN $dokLap)
 	{
+		// Get LP type
+		switch (get_class($dokLap)) {
+			case $this->switchObject('lap', 'model'):
+				$lap_type = 'lap';
+				break;
+
+			case $this->switchObject('lapn', 'model'):
+				$lap_type = 'lapn';
+				break;
+			
+			default:
+				$lap_type = null;
+				break;
+		}
+
 		// Change status to 300
 		$dokLap->update(['kode_status' => 300]);
 
@@ -44,35 +41,21 @@ class DokLapObserver
 			$dokLap->li->update(['kode_status' => 200]);
 		}
 
+		if ($dokLap->nhi != null) {
+			$dokLap->nhi->update(['kode_status' => 200]);
+		}
+
+		if ($dokLap->nhin != null) {
+			$dokLap->nhin->update(['kode_status' => 200]);
+		}
+
 		// Delete any possible relations
-		ObjectRelation::where(function($query) use ($dokLap) {
-			$query->where('object1_type', 'lap')
+		ObjectRelation::where(function($query) use ($dokLap, $lap_type) {
+			$query->where('object1_type', $lap_type)
 				->where('object1_id', $dokLap->id);
-		})->orWhere(function($query) use ($dokLap) {
-			$query->where('object2_type', 'lap')
+		})->orWhere(function($query) use ($dokLap, $lap_type) {
+			$query->where('object2_type', $lap_type)
 				->where('object2_id', $dokLap->id);
 		})->delete();
-	}
-
-	/**
-	 * Handle the DokLap "restored" event.
-	 *
-	 * @param  \App\Models\DokLap  $dokLap
-	 * @return void
-	 */
-	public function restored(DokLap $dokLap)
-	{
-		//
-	}
-
-	/**
-	 * Handle the DokLap "force deleted" event.
-	 *
-	 * @param  \App\Models\DokLap  $dokLap
-	 * @return void
-	 */
-	public function forceDeleted(DokLap $dokLap)
-	{
-		//
 	}
 }
