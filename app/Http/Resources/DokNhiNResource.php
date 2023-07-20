@@ -88,4 +88,9 @@ class DokNhiNResource extends DokNhiResource
 		$array['tanggal_lkain'] = $lkain != null ? $lkain->tanggal_dokumen->format('d-m-Y') : null;
 		return $array;
 	}
+
+	protected function objek() {
+		$array = new ObjectResource($this->barang_exim, 'barang');
+		return $array;
+	}
 }

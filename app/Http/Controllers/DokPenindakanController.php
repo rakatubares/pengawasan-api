@@ -255,6 +255,23 @@ class DokPenindakanController extends DokController
 		]];
 
 		$this->getPenindakan($id);
+
+		$lap = $this->penindakan->lap;
+		if ($lap != null) {
+			$nhi = $lap->nhi;
+			if ($nhi != null) {
+				$docs_intelijen = DokIntelijenController::getIntelijenDocuments($nhi->intelijen->id);
+				foreach ($docs_intelijen as $doc) {
+					$array[] = $doc;
+				}
+			}
+
+			$array[] = [
+				'doc_type' => 'lap',
+				'doc_id' => $lap->id
+			];
+		}
+
 		$penindakan_id = $this->penindakan->id;
 		$docs_penindakan = $this->getPenindakanDocuments($penindakan_id);
 		foreach ($docs_penindakan as $doc) {

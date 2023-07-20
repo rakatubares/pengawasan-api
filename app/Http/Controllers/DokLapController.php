@@ -54,9 +54,17 @@ class DokLapController extends DokPenindakanController
 		} else {
 			$dok_li = [];
 		}
+
+		// Penindakan
+		if ($lap->penindakan != null) {
+			$penindakan_id = $lap->penindakan->id;
+			$docs_penindakan = DokPenindakanController::getPenindakanDocuments($penindakan_id);
+		} else {
+			$docs_penindakan = [];
+		}
 		
 		// Merge array
-		$array = array_merge($array, $docs_intelijen, $dok_li);
+		$array = array_merge($array, $docs_intelijen, $dok_li, $docs_penindakan);
 		return $array;
 	}
 

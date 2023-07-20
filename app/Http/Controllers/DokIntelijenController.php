@@ -257,21 +257,41 @@ class DokIntelijenController extends DokController
 			}
 		}
 
-		if ($this->intelijen->nhi != null) {
-			if ($this->intelijen->nhi->lap != null) {
+		$nhi = $this->intelijen->nhi;
+		if ($nhi != null) {
+			$lap = $nhi->lap;
+			if ($lap != null) {
 				$array[] = [
 					'doc_type' => 'lap',
-					'doc_id' => $this->intelijen->nhi->lap->id
+					'doc_id' => $lap->id
 				];
+
+				$penindakan = $lap->penindakan;
+				if ($penindakan != null) {
+					$docs_penindakan = DokPenindakanController::getPenindakanDocuments($penindakan->id);
+					foreach ($docs_penindakan as $doc) {
+						$array[] = $doc;
+					}
+				}
 			}
 		}
 
-		if ($this->intelijen->nhin != null) {
-			if ($this->intelijen->nhin->lapn != null) {
+		$nhin = $this->intelijen->nhin;
+		if ($nhin != null) {
+			$lapn = $nhin->lapn;
+			if ($lapn != null) {
 				$array[] = [
 					'doc_type' => 'lapn',
-					'doc_id' => $this->intelijen->nhin->lapn->id
+					'doc_id' => $lapn->id
 				];
+
+				$penindakan = $lapn->penindakan;
+				if ($penindakan != null) {
+					$docs_penindakan = DokPenindakanController::getPenindakanDocuments($penindakan->id);
+					foreach ($docs_penindakan as $doc) {
+						$array[] = $doc;
+					}
+				}
 			}
 		}
 		return $array;

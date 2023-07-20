@@ -39,6 +39,15 @@ class DokLiController extends DokPenindakanController
 				'doc_type' => 'lap',
 				'doc_id' => (int)$lap->id,
 			];
+
+			// Penindakan
+			if ($lap->penindakan != null) {
+				$penindakan_id = $lap->penindakan->id;
+				$docs_penindakan = DokPenindakanController::getPenindakanDocuments($penindakan_id);
+				foreach ($docs_penindakan as $doc) {
+					$array[] = $doc;
+				}
+			}
 		}
 		
 		return $array;

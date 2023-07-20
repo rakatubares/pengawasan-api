@@ -8,6 +8,7 @@ class DokSbpNSeeder extends DokSbpSeeder
 	{
 		$this->tipe_dok = 'sbpn';
 		$this->tipe_lptp = 'lptpn';
+		$this->tipe_lap = 'lapn';
 		$this->prepareModel();
 	}
 
