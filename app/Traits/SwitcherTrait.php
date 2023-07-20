@@ -79,6 +79,7 @@ use App\Models\DokBukaSegel;
 use App\Models\DokContoh;
 use App\Models\DokLap;
 use App\Models\DokLhp;
+use App\Models\DokLapN;
 use App\Models\DokLi;
 use App\Models\DokLkai;
 use App\Models\DokLkaiN;
@@ -181,6 +182,7 @@ trait SwitcherTrait
 			'table_resource' => DokNiNTableResource::class,
 		],
 		
+
 		// Penindakan
 		'bast' => [
 			'tipe_dok' => 'BAST',
@@ -219,6 +221,14 @@ trait SwitcherTrait
 			'agenda' => '/KPU.305/',
 			'parent' => 'lap',
 			'model' => DokLap::class,
+			'resource' => DokLapResource::class,
+			'table_resource' => DokLapTableResource::class,
+		],
+		'lapn' => [
+			'tipe_dok' => 'LAP-N',
+			'agenda' => '/KPU.305/',
+			'parent' => 'lapn',
+			'model' => DokLapN::class,
 			'resource' => DokLapResource::class,
 			'table_resource' => DokLapTableResource::class,
 		],

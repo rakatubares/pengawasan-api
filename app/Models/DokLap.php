@@ -13,6 +13,10 @@ class DokLap extends Model
 
 	protected $table = 'dok_lap';
 
+	protected $tipe_lap = 'lap';
+	protected $tipe_nhi = 'nhi';
+	protected $nhi_model = DokNhi::class;
+
 	protected $fillable = [
 		'no_dok',
 		'agenda_dok',
@@ -65,7 +69,7 @@ class DokLap extends Model
 	public function nhi()
 	{
 		return $this->hasOneThrough(
-			DokNhi::class,
+			$this->nhi_model,
 			ObjectRelation::class,
 			'object2_id',
 			'id',
@@ -73,10 +77,10 @@ class DokLap extends Model
 			'object1_id'
 		)->where(
 			'object1_type',
-			'nhi'
+			$this->tipe_nhi
 		)->where(
 			'object2_type',
-			'lap'
+			$this->tipe_lap
 		);
 	}
 	
@@ -97,7 +101,28 @@ class DokLap extends Model
 			'li'
 		)->where(
 			'object2_type',
-			'lap'
+			$this->tipe_lap
+		);
+	}
+
+	/**
+	 * Relation to Penindakan
+	 */
+	public function penindakan()
+	{
+		return $this->hasOneThrough(
+			Penindakan::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			$this->tipe_lap
+		)->where(
+			'object2_type',
+			'penindakan'
 		);
 	}
 

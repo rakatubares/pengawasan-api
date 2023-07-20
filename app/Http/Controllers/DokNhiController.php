@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DokNhiTableResource;
-use App\Models\DokNhi;
 use App\Traits\ConverterTrait;
 use Illuminate\Http\Request;
 
@@ -38,7 +37,7 @@ class DokNhiController extends DokIntelijenController
 		$exc = $request->exc;
 		$search = '%' . $src . '%';
 
-		$search_result = DokNhi::where(function ($query) use ($search, $flt) 
+		$search_result = $this->model::where(function ($query) use ($search, $flt) 
 			{
 				$query->where('no_dok_lengkap', 'like', $search)
 					->when($flt != null, function ($query) use ($flt)

@@ -80,6 +80,48 @@ class Penindakan extends Model
 	}
 
 	/**
+	 * LAP
+	 */
+	public function lap()
+	{
+		return $this->hasOneThrough(
+			DokLap::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'lap'
+		)->where(
+			'object2_type',
+			'penindakan'
+		);
+	}
+
+	/**
+	 * LAP-N
+	 */
+	public function lapn()
+	{
+		return $this->hasOneThrough(
+			DokLapN::class,
+			ObjectRelation::class,
+			'object2_id',
+			'id',
+			'id',
+			'object1_id'
+		)->where(
+			'object1_type',
+			'lapn'
+		)->where(
+			'object2_type',
+			'penindakan'
+		);
+	}
+
+	/**
 	 * Dokumen
 	 */
 	public function dokumen()

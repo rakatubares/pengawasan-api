@@ -11,6 +11,7 @@ use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokLap;
+use App\Models\DokLapN;
 use App\Models\DokLhp;
 use App\Models\DokLi;
 use App\Models\DokLp;
@@ -104,6 +105,7 @@ class AppServiceProvider extends ServiceProvider
 			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
 			'nhi' => DokNhi::class,
+			'nhin' => DokNhiN::class,
 			'item_barang' => DetailBarangItem::class,
 			'lhp' => DokLhp::class,
 			'lrp' => DokLrp::class,
@@ -127,6 +129,7 @@ class AppServiceProvider extends ServiceProvider
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLap::observe(DokLapObserver::class);
+		DokLapN::observe(DokLapObserver::class);
 		DokLhp::observe(DokLhpObserver::class);
 		DokLi::observe(DokLiObserver::class);
 		DokLp::observe(DokLpObserver::class);

@@ -11,6 +11,7 @@ use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
+use App\Http\Controllers\DokLapNController;
 use App\Http\Controllers\DokLhpController;
 use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLkaiController;
@@ -388,6 +389,18 @@ Route::get('/nin/{nin_id}/form', [DokNiNController::class, 'form']);
 Route::get('/nin/{nin_id}/docs', [DokNiNController::class, 'docs']);
 Route::get('/nin/{nin_id}/pdf', [DokNiNController::class, 'pdf']);
 Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
+Route::post('/nhin/search', [DokNhiNController::class, 'search']);
+
+/**
+ * API for LAP-N
+ */
+Route::resource('lapn', DokLapNController::class);
+Route::get('/lapn/{lapn_id}/display', [DokLapNController::class, 'display']);
+Route::get('/lapn/{lapn_id}/form', [DokLapNController::class, 'form']);
+Route::get('/lapn/{lapn_id}/docs', [DokLapNController::class, 'docs']);
+Route::get('/lapn/{lapn_id}/pdf', [DokLapNController::class, 'pdf']);
+// Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::put('/lapn/{lapn_id}/publish', [DokLapNController::class, 'publish']);
 
 /**
  * API for SBP-N

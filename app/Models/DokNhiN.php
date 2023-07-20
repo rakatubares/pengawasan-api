@@ -90,6 +90,27 @@ class DokNhiN extends Model
 	}
 
 	/**
+	 * Relation to LAP object
+	 */
+	public function lapn()
+	{
+		return $this->hasOneThrough(
+			DokLapN::class,
+			ObjectRelation::class,
+			'object1_id',
+			'id',
+			'id',
+			'object2_id'
+		)->where(
+			'object1_type',
+			'nhin'
+		)->where(
+			'object2_type',
+			'lapn'
+		);
+	}
+
+	/**
 	 * Detail kantor
 	 */
 	public function kantor_bc()

@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\DokLap;
-use App\Models\DokLi;
-use App\Models\DokNhi;
 use App\Models\ObjectRelation;
 use App\Models\RefKategoriPelanggaran;
 use App\Models\RefSkemaPenindakan;
@@ -18,10 +15,35 @@ class DokLapSeeder extends Seeder
 
 	public function __construct()
 	{
-		$this->faker = Faker::create();
 		$this->tipe_dok = 'lap';
+		$this->nama_informasi = [
+			'nhi' => 'NHI',
+			'li' => 'LI-1',
+			'lainnya' => 'Lainnya'
+		];
+		$this->list_jenis_informasi = array_keys($this->nama_informasi);
+		$this->tipe_nhi = 'nhi';
+		$this->tipe_li = 'li';
+		$this->seed_count = 20;
+		$this->prepareModel();
+	}
+
+	protected function prepareModel()
+	{
+		$this->faker = Faker::create();
 		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
 		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
+		$this->model = $this->switchObject($this->tipe_dok, 'model');
+
+		$this->related_model = [];
+		$this->available_id = [];
+		foreach ($this->list_jenis_informasi as $jenis) {
+			if ($jenis != 'lainnya') {
+				$this->related_model[$jenis] = $this->switchObject($jenis, 'model');
+				$max_id = $this->related_model[$jenis]::max('id');
+				$this->available_id[$jenis] = range(1, $max_id);	
+			}
+		}
 	}
 
     /**
@@ -31,7 +53,6 @@ class DokLapSeeder extends Seeder
      */
     public function run()
     {
-		$list_jenis_informasi = ['NHI', 'LI-1', 'Lainnya'];
 		$list_kategori_pelanggaran = RefKategoriPelanggaran::all('id')->toArray();
 		$list_skema_penindakan = RefSkemaPenindakan::all('id');
 		$list_kode_jabatan = [
@@ -39,44 +60,25 @@ class DokLapSeeder extends Seeder
 			'bd.0504' => 5
 		];
 
-		// Get NHI
-		$max_nhi_id = DokNhi::max('id');
-		$available_nhi_id = range(1, $max_nhi_id);
-
-		// Get LI-1 ids
-		$max_li_id = DokLi::max('id');
-		$available_li_id = range(1, $max_li_id);
-
-        for ($i=1; $i < 21; $i++) { 
-			$max_pra_penindakan = DokLap::max('no_dok');
-			$no_current = $max_pra_penindakan + 1;
+        for ($i=1; $i < $this->seed_count + 1; $i++) { 
+			$max_lap = $this->model::max('no_dok');
+			$no_current = $max_lap + 1;
 
 			// Choose sumber
-			$jenis_sumber = $this->faker->randomElement($list_jenis_informasi);
-			if ($jenis_sumber == 'NHI') {
-				// Get data nhi
-				$nhi_id = $this->faker->randomElement($available_nhi_id);
-				if (($key = array_search($nhi_id, $available_nhi_id)) !== false) {
-					unset($available_nhi_id[$key]);
+			$jenis_sumber = $this->faker->randomElement($this->list_jenis_informasi);
+			if ($jenis_sumber != 'lainnya') {
+				// Get related document data
+				$related_id = $this->faker->randomElement($this->available_id[$jenis_sumber]);
+				if (($key = array_search($related_id, $this->available_id[$jenis_sumber])) !== false) {
+					unset($this->available_id[$jenis_sumber][$key]);
 				}
-				$nhi = DokNhi::find($nhi_id);
-				$nhi->update(['kode_status' => 206]);
+				$related_doc = $this->related_model[$jenis_sumber]::find($related_id);
+				$related_doc->update(['kode_status' => 206]);
+				
 
-				// Get NHI number
-				$nomor_sumber = $nhi->no_dok_lengkap;
-				$tanggal_sumber = $nhi->tanggal_dokumen;
-			} else if ($jenis_sumber == 'LI-1') {
-				// Get data li
-				$li_id = $this->faker->randomElement($available_li_id);
-				if (($key = array_search($li_id, $available_li_id)) !== false) {
-					unset($available_li_id[$key]);
-				}
-				$li = DokLi::find($li_id);
-				$li->update(['kode_status' => 206]);
-
-				// Get LI number
-				$nomor_sumber = $li->no_dok_lengkap;
-				$tanggal_sumber = $li->tanggal_dokumen;
+				// Get doc number
+				$nomor_sumber = $related_doc->no_dok_lengkap;
+				$tanggal_sumber = $related_doc->tanggal_dokumen;
 			} else {
 				$nomor_sumber = $this->faker->numberBetween(1,1000);
 				$tanggal_sumber = $this->faker->dateTimeThisYear()->format('Y-m-d');
@@ -103,13 +105,13 @@ class DokLapSeeder extends Seeder
 			$jabatan_penerbit = $this->faker->randomElement(['bd.0503', 'bd.0504']);
 			$penerbit_id = $list_kode_jabatan[$jabatan_penerbit];
 
-			$lap = DokLap::create([
+			$lap = $this->model::create([
 				'no_dok' => $no_current,
 				'agenda_dok' => $this->agenda,
 				'thn_dok' => date("Y"),
 				'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
 				'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-				'jenis_sumber' => $jenis_sumber,
+				'jenis_sumber' => $this->nama_informasi[$jenis_sumber],
 				'nomor_sumber' => $nomor_sumber,
 				'tanggal_sumber' => $tanggal_sumber,
 				'dugaan_pelanggaran_id' => $kategori_pelanggaran['id'],
@@ -145,18 +147,11 @@ class DokLapSeeder extends Seeder
 			]);
 
 			// Create relation
-			if ($jenis_sumber == 'NHI') {
+			if ($jenis_sumber != 'lainnya') {
 				ObjectRelation::create([
-					'object1_type' => 'nhi',
-					'object1_id' => $nhi->id,
-					'object2_type' => 'lap',
-					'object2_id' => $lap->id,
-				]);
-			} else if ($jenis_sumber == 'LI-1') {
-				ObjectRelation::create([
-					'object1_type' => 'li',
-					'object1_id' => $li->id,
-					'object2_type' => 'lap',
+					'object1_type' => $jenis_sumber,
+					'object1_id' => $related_doc->id,
+					'object2_type' => $this->tipe_dok,
 					'object2_id' => $lap->id,
 				]);
 			}

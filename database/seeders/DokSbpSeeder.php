@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\DetailBarang;
+use App\Models\DetailSarkut;
 use App\Models\DokRiksa;
 use App\Models\DokRiksaBadan;
 use App\Models\DokSegel;
@@ -10,7 +12,10 @@ use App\Models\DokTolakSbp1;
 use App\Models\DokTolakSbp2;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
+use App\Models\RefKategoriBarang;
+use App\Models\RefKemasan;
 use App\Models\RefLokasi;
+use App\Models\RefSatuan;
 use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -24,6 +29,7 @@ class DokSbpSeeder extends Seeder
 	{
 		$this->tipe_dok = 'sbp';
 		$this->tipe_lptp = 'lptp';
+		$this->tipe_lap = 'lap';
 		$this->prepareModel();
 	}
 
@@ -34,6 +40,7 @@ class DokSbpSeeder extends Seeder
 		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
 		$this->model = $this->switchObject($this->tipe_dok, 'model');
 		$this->model_lptp = $this->switchObject($this->tipe_lptp, 'model');
+		$this->model_lap = $this->switchObject($this->tipe_lap, 'model');
 	}
 
     /**
@@ -43,15 +50,54 @@ class DokSbpSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=1; $i < 51; $i++) { 
-			$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan', 'orang']);
+		// Get lap ids
+		$lap_ids = $this->model_lap::select('id')
+			->where(['flag_layak_penindakan' => true])
+			->get()
+			->toArray();
+
+		$available_lap_id = [];
+		foreach ($lap_ids as $key => $value) {
+			$available_lap_id[] = $value['id'];
+		}
+
+        for ($i=1; $i < 51; $i++) {
+			// Get data lap
+			$linked = false;
+			if (sizeof($available_lap_id) > 0) {
+				$linked = $this->faker->boolean();
+			}
+			
+			if ($linked) {
+				$lap_id = $this->faker->randomElement($available_lap_id);
+				$key = array_search($lap_id, $available_lap_id);
+				unset($available_lap_id[$key]);
+				$lap = $this->model_lap::find($lap_id);
+				$nhi = $lap->nhi;
+			}
+
+			// Determine object penindakan
+			if ($linked && ($this->tipe_lap == 'lapn') && ($nhi != null)) {
+				if ($nhi->flag_exim != null) {
+					$objek_penindakan = 'barang';
+				} else if ($nhi->flag_sarkut != null) {
+					$objek_penindakan = 'sarkut';
+				} else if ($nhi->flag_orang) {
+					$objek_penindakan = 'orang';
+				} else {
+					$objek_penindakan = 'bangunan';
+				}
+			} else {
+				$objek_penindakan = $this->faker->randomElement(['sarkut', 'barang', 'bangunan', 'orang']);
+			}
 			$max_lokasi_id = RefLokasi::max('id');
 
+			$lokasi_penindakan = ($linked && ($nhi != null)) ? $nhi['tempat_indikasi'] : $this->faker->address();
 			$penindakan = Penindakan::create([
 				'sprint_id' => $this->faker->numberBetween(1,10),
 				'tanggal_penindakan' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
 				'grup_lokasi_id' => $this->faker->numberBetween(1,$max_lokasi_id),
-				'lokasi_penindakan' => $this->faker->address(),
+				'lokasi_penindakan' => $lokasi_penindakan,
 				'saksi_id' => $this->faker->numberBetween(1,100),
 				'petugas1_id' => 1,
 				'petugas2_id' => 2,
@@ -75,6 +121,17 @@ class DokSbpSeeder extends Seeder
 
 			$lptp = $this->createLptp();
 
+			// Create relation LAP - Penindakan
+			if ($linked) {
+				ObjectRelation::create([
+					'object1_type' => $this->tipe_lap,
+					'object1_id' => $lap->id,
+					'object2_type' => 'penindakan',
+					'object2_id' => $penindakan->id,
+				]);
+				$lap->update(['kode_status' => 207]);
+			}
+
 			// Create relation Penindakan - SBP
 			ObjectRelation::create([
 				'object1_type' => 'penindakan',
@@ -93,7 +150,9 @@ class DokSbpSeeder extends Seeder
 
 			switch ($objek_penindakan) {
 				case 'sarkut':
-					$object = $this->createSarkut();
+					$object = ($linked && ($this->tipe_lap == 'lapn') && ($nhi != null)) 
+						? $this->copySarkutNhiN($nhi) 
+						: $this->createSarkut();
 					$object_id = $object->id;
 					$this->createRiksa($penindakan->id);
 					$this->createTegah($penindakan->id);
@@ -101,7 +160,11 @@ class DokSbpSeeder extends Seeder
 					break;
 
 				case 'barang':
-					$object = $this->createBarang();
+					if ($linked && ($nhi != null)) {
+						$object = ($this->tipe_lap == 'lap') ? $this->copyBarangNhi($nhi) : $this->copyBarangNhiN($nhi);
+					} else {
+						$object = $this->createBarang();
+					}
 					$object_id = $object->id;
 					$this->createRiksa($penindakan->id);
 					$this->createTegah($penindakan->id);
@@ -116,7 +179,11 @@ class DokSbpSeeder extends Seeder
 					break;
 
 				case 'orang':
-					$object_id = $this->faker->numberBetween(1,100);
+					if ($linked && ($this->tipe_lap == 'lapn') && ($nhi != null)) {
+						$object_id = $nhi->entitas_id;
+					} else {
+						$object_id = $this->faker->numberBetween(1,100);
+					}
 					$this->createRiksaBadan($penindakan->id);
 					Penindakan::find($penindakan->id)->update(['saksi_id' => $object_id]);
 					break;
@@ -157,6 +224,88 @@ class DokSbpSeeder extends Seeder
 			}
 		}
     }
+
+	protected function copyBarangNhi($nhi) {
+		$barang = DetailBarang::create([
+			'jumlah_kemasan' => $nhi->objectable['jumlah_kemasan'],
+			'kemasan_id' => $nhi->objectable['kemasan_id'],
+			'pemilik_id' => $nhi->objectable['pemilik_id'],
+		]);
+
+		DetailBarang::find($barang->id)
+			->dokumen()
+			->create([
+				'jns_dok' => $nhi->objectable->dokumen['jns_dok'],
+				'no_dok' => $nhi->objectable->dokumen['no_dok'],
+				'tgl_dok' => $nhi->objectable->dokumen['tgl_dok'],
+			]);
+
+		foreach ($nhi->objectable->itemBarang as $item) {
+			DetailBarang::find($barang->id)
+				->itemBarang()
+				->create([
+					'jumlah_barang' => $item['jumlah_barang'],
+					'satuan_id' => $item['satuan_id'],
+					'uraian_barang' => $item['uraian_barang'],
+					'kategori_id' => $item['kategori_id'],
+				]);
+		}
+
+		return $barang;
+	}
+
+	protected function copyBarangNhiN($nhi) {
+		$max_kemasan_id = RefKemasan::max('id');
+
+		$barang = DetailBarang::create([
+			'jumlah_kemasan' => $this->faker->numberBetween(1, 100),
+			'kemasan_id' => $this->faker->numberBetween(1,$max_kemasan_id),
+			'pemilik_id' => $this->faker->numberBetween(1, 100)
+		]);
+
+		DetailBarang::find($barang->id)
+			->dokumen()
+			->create([
+				'jns_dok' => $nhi->jns_dok_exim,
+				'no_dok' => $nhi->nomor_dok_exim,
+				'tgl_dok' => $nhi->tanggal_dok_exim,
+			]);
+
+		try {
+			foreach ($nhi->barang_exim->itemBarang as $item) {
+				DetailBarang::find($barang->id)
+					->itemBarang()
+					->create([
+						'jumlah_barang' => $item['jumlah_barang'],
+						'satuan_id' => $item['satuan_id'],
+						'uraian_barang' => $item['uraian_barang'],
+						'kategori_id' => $item['kategori_id'],
+					]);
+			}
+		} catch (\Throwable $th) {
+			// var_dump($nhi);
+			var_dump($nhi->barang_exim);
+			throw $th;
+		}
+		
+
+		return $barang;
+	}
+
+	protected function copySarkutNhiN($nhi) {
+		$sarkut = DetailSarkut::create([
+			'nama_sarkut' => $nhi->nama_sarkut,
+			'jenis_sarkut' => 'Pesawat',
+			'no_flight_trayek' => $nhi->no_flight_trayek_sarkut,
+			'jumlah_kapasitas' => $this->faker->numberBetween(1, 100),
+			'satuan_kapasitas' => $this->faker->regexify('[A-Z]{3}'),
+			'pilot_id' => $this->faker->numberBetween(1, 100),
+			'bendera' => $this->faker->countryCode(),
+			'no_reg_polisi' => $this->faker->regexify('[A-Z]{5}'),
+		]);
+
+		return $sarkut;
+	}
 
 	protected function createLptp()
 	{

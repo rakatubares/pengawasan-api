@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DokLapController extends DokPenindakanController
 {
-	private $related_documents = [
+	protected $related_documents = [
 		'LI-1' => 'li',
 		'NHI' => 'nhi'
 	];
@@ -32,7 +32,7 @@ class DokLapController extends DokPenindakanController
 	{
 		$lap = $this->model::find($id);
 		$array = [[
-			'doc_type' => 'lap',
+			'doc_type' => $this->doc_type,
 			'doc_id' => (int)$id,
 		]];
 
@@ -54,9 +54,17 @@ class DokLapController extends DokPenindakanController
 		} else {
 			$dok_li = [];
 		}
+
+		// Penindakan
+		if ($lap->penindakan != null) {
+			$penindakan_id = $lap->penindakan->id;
+			$docs_penindakan = DokPenindakanController::getPenindakanDocuments($penindakan_id);
+		} else {
+			$docs_penindakan = [];
+		}
 		
 		// Merge array
-		$array = array_merge($array, $docs_intelijen, $dok_li);
+		$array = array_merge($array, $docs_intelijen, $dok_li, $docs_penindakan);
 		return $array;
 	}
 

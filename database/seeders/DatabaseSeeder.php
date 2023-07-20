@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
 			DokLkaiNSeeder::class,
 			DokNhiNSeeder::class,
 			DokNiNSeeder::class,
+			DokLapNSeeder::class,
 			DokSbpNSeeder::class,
 			DokLphpNSeeder::class,
 			DokLpNSeeder::class,
