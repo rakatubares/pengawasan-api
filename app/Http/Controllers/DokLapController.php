@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DokLapTableResource;
 use Illuminate\Http\Request;
 
 class DokLapController extends DokPenindakanController
@@ -14,6 +15,49 @@ class DokLapController extends DokPenindakanController
 	public function __construct($doc_type='lap')
 	{
 		parent::__construct($doc_type);
+	}
+
+	/**
+	 * Display resource based on search query
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function search(Request $request)
+	{
+		$src = $request->src;
+		$flt = $request->flt;
+		$exc = $request->exc;
+		$search = '%' . $src . '%';
+
+		$search_result = $this->model::where(function ($query) use ($search, $flt) 
+			{
+				$query->where('no_dok_lengkap', 'like', $search)
+					->when($flt != null, function ($query) use ($flt)
+					{
+						foreach ($flt as $column => $value) {
+							if (is_array($value)) {
+								$query->whereIn($column, $value);
+							} else if ($value == null) {
+								$query->where($column, $value);
+							} else {
+								$search_value = '%' . $value . '%';
+								$query->where($column, 'like', $search_value);
+							}
+						}
+						return $query;
+					});
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = DokLapTableResource::collection($search_result);
+		return $search_list;
 	}
 
 	/*

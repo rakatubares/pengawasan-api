@@ -65,6 +65,12 @@ class DokSbpObserver
 		// Change status to 300
 		$sbp->update(['kode_status' => 300]);
 
+		// Restore LAP status to 200
+		$lap = $sbp->penindakan->lap;
+		if ($lap != null) {
+			$lap->update(['kode_status' => 200]);
+		}
+
 		// Delete related model
 		$sbp->lptp->delete();
 		if ($sbp->penindakan != null) {

@@ -162,6 +162,7 @@ Route::get('/lap/{lap_id}/docs', [DokLapController::class, 'docs']);
 Route::get('/lap/{lap_id}/pdf', [DokLapController::class, 'pdf']);
 Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
+Route::post('/lap/search', [DokLapController::class, 'search']);
 
 /**
  * API for SBP

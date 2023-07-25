@@ -40,10 +40,14 @@ class DokSbpResource extends RequestBasedResource
 
 	protected function display()
 	{
+		$lap = $this->penindakan->lap;
 		$lptp_type = $this->doc_type == 'sbpn' ? 'lptpn' : 'lptp';
 		$lptp_resource = $this->switchObject($lptp_type, 'resource');
 		
 		$array = $this->basic();
+		$array['lap_id'] = $lap != null ? $lap->id : null;
+		$array['nomor_lap'] = $lap != null ? $lap->no_dok_lengkap : null;
+		$array['tanggal_lap'] = $lap != null ? $lap->tanggal_dokumen->format('d-m-Y') : null;
 		$array['penindakan'] = new PenindakanResource($this->penindakan, 'basic');
 		$array['lptp'] = new $lptp_resource($this->lptp);
 		return $array;

@@ -167,6 +167,11 @@ class DokSbpController extends DokPenindakanController
 		// Save data penindakan and create object relation
 		$this->storePenindakan($request);
 		$this->attachPenindakan($this->penindakan->id);
+
+		// Create LAP relation
+		if ($request->lap_id != null) {
+			$this->attachLap($request->lap_id);
+		}
 	}
 
 	/**
@@ -180,6 +185,25 @@ class DokSbpController extends DokPenindakanController
 	{
 		$result = $this->updatePenindakanDocument($request, $id);
 		return $result;
+	}
+
+	function updating($request) 
+	{
+		// Update relation with LAP when necessary
+		$this->getPenindakan($this->doc->id);
+		$existing_lap = $this->penindakan->lap;
+		if ($existing_lap == null) {
+			if ($request->lap_id != null) {
+				$this->attachLap($request->lap_id);
+			}
+		} else {
+			if ($request->lap_id == null) {
+				$this->detachLap();
+			} else if ($existing_lap->id != $request->lap_id) {
+				$this->detachLap();
+				$this->attachLap($request->lap_id);
+			}
+		}
 	}
 
 	protected function updated($request)
@@ -203,17 +227,25 @@ class DokSbpController extends DokPenindakanController
 	 */
 	public function publish($id)
 	{
-		// Create array from SBP object
-		$docs = $this->docs($id);
-
 		// Get currrent date
 		$this->getPenindakanDate($id);
+
+		// Update LAP status
+		$lap = $this->penindakan->lap;
+		if ($lap != null) {
+			$lap->update(['kode_status' => 207]);
+		}
+
+		// Publish SBP
+		$this->doc->update(['thn_dok' => $this->year]);
+		$this->publishDocument($this->doc_type, $id);
 	
 		// Publish each document
+		$docs = $this->getPenindakanDocuments($this->penindakan->id);
 		foreach ($docs as $doc) {
 			$doc_model = $this->switchObject($doc['doc_type'], 'model');
 			$doc_object = $doc_model::find($doc['doc_id']);
-			$doc_object->thn_dok = $this->year;
+			$doc_object->update(['thn_dok' => $this->year]);
 			$this->publishDocument($doc['doc_type'], $doc['doc_id']);
 		}
 	}

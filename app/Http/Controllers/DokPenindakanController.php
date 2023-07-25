@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DokLap;
 use App\Models\ObjectRelation;
 use App\Models\Penindakan;
 use Illuminate\Http\Request;
@@ -245,6 +246,27 @@ class DokPenindakanController extends DokController
 	{
 		$this->updateStatus($this->doc->$source_type, $source_status);
 		$this->deleteRelation($source_type, $this->doc->$source_type->id, $this->doc_type, $this->doc->id);
+	}
+
+	/**
+	 * Create relation with LAP
+	 * 
+	 * @param Int $lap_id
+	 */
+	protected function attachLap($lap_id) {
+		$this->createRelation('lap', $lap_id, 'penindakan', $this->penindakan->id);
+		$this->updateStatus(DokLap::find($lap_id), 107);
+	}
+
+	/**
+	 * Delete relation with LAP
+	 */
+	protected function detachLap()
+	{
+		$penindakan = $this->doc->penindakan;
+		$lap_id = $penindakan->lap->id;
+		$this->deleteRelation('lap', $lap_id, 'penindakan', $penindakan->id);
+		$this->updateStatus(DokLap::find($lap_id), 200);
 	}
 
 	protected function getRelatedDocuments($id)
