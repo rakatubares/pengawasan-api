@@ -278,29 +278,27 @@ class DokPenindakanController extends DokController
 
 		// Penindakan
 		$this->getPenindakan($id);
-
-		$lap = $this->penindakan->lap;
-		if ($lap != null) {
-			$nhi = $lap->nhi;
-			if ($nhi != null) {
-				$docs_intelijen = DokIntelijenController::getIntelijenDocuments($nhi->intelijen->id);
-				foreach ($docs_intelijen as $doc) {
-					$array[] = $doc;
-				}
-			}
-
-			$array[] = [
-				'doc_type' => 'lap',
-				'doc_id' => $lap->id
-			];
-		}
-
 		$penindakan_id = $this->penindakan->id;
 		$docs_penindakan = $this->getPenindakanDocuments($penindakan_id);
 		foreach ($docs_penindakan as $key => $doc) {
 			if ($doc['doc_type'] == $this->doc_type) {
 				unset($docs_penindakan[$key]);
 			}
+		}
+
+		// Intelijen
+		$docs_intelijen = [];
+		$lap = $this->penindakan->lap;
+		if ($lap != null) {
+			$nhi = $lap->nhi;
+			if ($nhi != null) {
+				$docs_intelijen = DokIntelijenController::getIntelijenDocuments($nhi->intelijen->id);
+			}
+
+			$docs_intelijen[] = [
+				'doc_type' => 'lap',
+				'doc_id' => $lap->id
+			];
 		}
 
 		// Penyidikan
@@ -312,7 +310,7 @@ class DokPenindakanController extends DokController
 		}
 
 		// Merge array
-		$array = array_merge($array, $docs_penindakan, $docs_penyidikan);
+		$array = array_merge($array, $docs_intelijen, $docs_penindakan, $docs_penyidikan);
 		return $array;
 	}
 
