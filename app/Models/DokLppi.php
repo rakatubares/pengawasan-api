@@ -30,17 +30,11 @@ class DokLppi extends Model
 		'tgl_terima_info_eksternal',
 		'no_dok_info_eksternal',
 		'tgl_dok_info_eksternal',
-		'penerima_info_id',
-		'penilai_info_id',
 		'kesimpulan',
-		'disposisi_id',
 		'tanggal_disposisi',
 		'flag_analisis',
 		'flag_arsip',
 		'catatan',
-		'kode_jabatan',
-		'plh',
-		'pejabat_id',
 		'kode_status',
 	];
 
@@ -72,40 +66,87 @@ class DokLppi extends Model
 	}
 
 	/**
-	 * Detail penerima info
+	 * Petugas
 	 */
-	public function penerima_info()
+
+	function detail_petugas()
 	{
-		return $this->belongsTo(RefUserCache::class, 'penerima_info_id');
+		return $this->morphMany(DetailPetugas::class, 'officerable');
 	}
 
-	/**
-	 * Detail penilai info
-	 */
-	public function penilai_info()
+	function penerima_informasi()
 	{
-		return $this->belongsTo(RefUserCache::class, 'penilai_info_id');
+		return $this->hasOneThrough(
+			RefUserCache::class,
+			DetailPetugas::class,
+			'officerable_id',
+			'nip',
+			'id',
+			'nip'
+		)->where(
+			['officerable_type', 'lppi'],
+			['detail_petugas.posisi', 'penerima_informasi']
+		);
 	}
 
-	/**
-	 * Detail tujuan disposisi
-	 */
-	public function disposisi()
+	function penilai_informasi()
 	{
-		return $this->belongsTo(RefUserCache::class, 'disposisi_id');
+		return $this->hasOneThrough(
+			RefUserCache::class,
+			DetailPetugas::class,
+			'officerable_id',
+			'nip',
+			'id',
+			'nip'
+		)->where(
+			['officerable_type', 'lppi'],
+			['detail_petugas.posisi', 'penilai_informasi']
+		);
 	}
 
-	/**
-	 * Detail pejabat
-	 */
-	public function pejabat()
+	function penerima_disposisi()
 	{
-		return $this->belongsTo(RefUserCache::class, 'pejabat_id');
+		return $this->hasOneThrough(
+			RefUserCache::class,
+			DetailPetugas::class,
+			'officerable_id',
+			'nip',
+			'id',
+			'nip'
+		)->where(
+			['officerable_type', 'lppi'],
+			['detail_petugas.posisi', 'penerima_disposisi']
+		);
 	}
 
-	public function jabatan()
+	function pejabat()
 	{
-		return $this->belongsTo(RefJabatan::class, 'kode_jabatan', 'kode');
+		return $this->hasOneThrough(
+			RefUserCache::class,
+			DetailPetugas::class,
+			'officerable_id',
+			'nip',
+			'id',
+			'nip'
+		)->where(
+			['officerable_type', 'lppi'],
+			['detail_petugas.posisi', 'pejabat']
+		);
+	}
+
+	function jabatan()
+	{
+		return $this->hasOneThrough(
+			RefJabatan::class,
+			DetailPetugas::class,
+			'officerable_id',
+			'kode',
+			'id',
+			'kode_jabatan'
+		)->where(
+			['officerable_type', 'lppi'],
+			['detail_petugas.posisi', 'pejabat']
+		);
 	}
 
 	public function status()

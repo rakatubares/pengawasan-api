@@ -54,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
 			'item_barang' => DetailBarangItem::class,
+			'lppi' => DokLppi::class,
 			'nhi' => DokNhi::class,
 			'nhin' => DokNhiN::class,
 			'ni' => DokNi::class,

@@ -35,17 +35,11 @@ class CreateDokLppiTable extends Migration
 			$table->date('tgl_terima_info_eksternal')->nullable()->index();
 			$table->string('no_dok_info_eksternal')->nullable()->index();
 			$table->date('tgl_dok_info_eksternal')->nullable()->index();
-			$table->integer('penerima_info_id')->nullable()->index();
-			$table->integer('penilai_info_id')->nullable()->index();
 			$table->text('kesimpulan')->nullable();
-			$table->integer('disposisi_id')->index();
 			$table->date('tanggal_disposisi')->nullable();
 			$table->boolean('flag_analisis')->nullable();
 			$table->boolean('flag_arsip')->nullable();
 			$table->text('catatan')->nullable();
-			$table->string('kode_jabatan')->index();
-			$table->boolean('plh')->nullable()->index();
-			$table->integer('pejabat_id')->index();
 			$table->integer('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

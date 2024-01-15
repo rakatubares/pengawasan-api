@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DokLppi;
 use App\Models\Intelijen;
 use App\Models\ObjectRelation;
 use App\Models\RefKepercayaanSumber;
@@ -87,17 +88,11 @@ class DokLppiSeeder extends Seeder
 				'tgl_terima_info_eksternal' => $tgl_terima_info_eksternal,
 				'no_dok_info_eksternal' => $no_dok_info_eksternal,
 				'tgl_dok_info_eksternal' => $tgl_dok_info_eksternal,
-				'penerima_info_id' => 1,
-				'penilai_info_id' => 2,
 				'kesimpulan' => $faker->text(),
-				'disposisi_id' => 1,
 				'tanggal_disposisi' => $faker->dateTimeThisYear()->format('Y-m-d'),
 				'flag_analisis' => $faker->boolean(),
 				'flag_arsip' => $faker->boolean(),
 				'catatan' => $faker->text(),
-				'kode_jabatan' => $faker->randomElement(['bd.0501', 'bd.0502']),
-				'plh' => $faker->boolean(),
-				'pejabat_id' => $faker->randomElement([6, 7]),
 				'kode_status' => 200
 			]);
 
@@ -120,6 +115,23 @@ class DokLppiSeeder extends Seeder
 						'kode_validitas' => $faker->randomElement($list_kode_validitas),
 					]);
 			}
+
+			/**
+			 * Petugas
+			 */
+			$petugas = [
+				['posisi' => 'penerima_informasi', 'flag_pejabat' => false, 'nip' => $faker->randomElement(['123456', '665544'])],
+				['posisi' => 'peneliti_informasi', 'flag_pejabat' => false, 'nip' => $faker->randomElement(['123456', '665544'])],
+				['posisi' => 'penerima_disposisi', 'flag_pejabat' => false, 'nip' => $faker->randomElement(['123456', '665544'])],
+			];
+			foreach ($petugas as $p) {
+				DokLppi::find($lppi->id)->detail_petugas()->create($p);
+			}
+			
+			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
+			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '111', '2222']) : '147';
+			$pejabat = ['posisi' => 'pejabat', 'flag_pejabat' => true, 'kode_jabatan' => 'bd.0501', 'tipe_ttd' => $tipe_ttd, 'nip' => $nip_pejabat];
+			DokLppi::find($lppi->id)->detail_petugas()->create($pejabat);
 		}
 	}
 }
