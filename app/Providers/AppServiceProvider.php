@@ -6,22 +6,26 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailSarkut;
-use App\Models\DokLkai;
+use App\Models\Intelijen\DokLkai;
 use App\Models\DokLkaiN;
-use App\Models\DokLppi;
+use App\Models\Intelijen\DokLppi;
 use App\Models\DokLppiN;
-use App\Models\DokNhi;
+use App\Models\Intelijen\DokNhi;
 use App\Models\DokNhiN;
-use App\Models\DokNi;
 use App\Models\DokNiN;
+use App\Models\Entitas\EntitasBadanHukum;
+use App\Models\Entitas\EntitasOrang;
+use App\Models\Intelijen\DokNhiBkc;
+use App\Models\Intelijen\DokNhiExim;
+use App\Models\Intelijen\DokNhiTertentu;
+use App\Models\Intelijen\DokNi;
 use App\Models\Penindakan;
 use App\Models\RefEntitas;
-use App\Observers\DetailBarangItemObserver;
-use App\Observers\DokLkaiObserver;
-use App\Observers\DokLppiObserver;
 use App\Observers\DokNhiNObserver;
-use App\Observers\DokNhiObserver;
-use App\Observers\DokNiObserver;
+use App\Observers\Intelijen\DokLkaiObserver;
+use App\Observers\Intelijen\DokLppiObserver;
+use App\Observers\Intelijen\DokNhiObserver;
+use App\Observers\Intelijen\DokNiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -53,9 +57,15 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
+			'entitas-badan-hukum' => EntitasBadanHukum::class,
+			'entitas-orang' => EntitasOrang::class,
 			'item_barang' => DetailBarangItem::class,
 			'lppi' => DokLppi::class,
+			'lkai' => DokLkai::class,
 			'nhi' => DokNhi::class,
+			'nhi-exim' => DokNhiExim::class,
+			'nhi-bkc' => DokNhiBkc::class,
+			'nhi-tertentu' => DokNhiTertentu::class,
 			'nhin' => DokNhiN::class,
 			'ni' => DokNi::class,
 			'nin' => DokNiN::class,
@@ -64,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
 			'sarkut' => DetailSarkut::class,
 		]);
 
-		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		// DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokLkai::observe(DokLkaiObserver::class);
 		DokLkaiN::observe(DokLkaiObserver::class);
 		DokLppi::observe(DokLppiObserver::class);

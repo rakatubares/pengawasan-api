@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TembusanResource;
-use App\Models\RefTembusan;
+use App\Models\References\RefTembusan;
 use Illuminate\Http\Request;
 
 class TembusanController extends Controller

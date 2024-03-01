@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\JabatanResource;
-use App\Models\RefJabatan;
+use App\Models\References\RefJabatan;
 use App\Models\RefUserCache;
 use App\Services\SSO;
 use Illuminate\Http\Request;
@@ -20,6 +20,40 @@ class RefUserCacheController extends Controller
 	public function __construct(SSO $sso)
 	{
 		$this->sso = $sso;
+	}
+
+	/**
+	 * Search user by name/nip query
+	 *
+	 * @param  \Illuminate\Http\Request $r
+	 * @return \Illuminate\Http\Response
+	 */
+	function search(Request $request) {
+		// return $request;
+		$token = $request->bearerToken();
+        $this->sso->setToken($token);
+
+		$query = $request['query'];
+
+		$data = $this->sso->getUserByNameNip($query);
+		return $data;
+	}
+
+	/**
+	 * Display a listing of users by role.
+	 *
+	 * @param  \Illuminate\Http\Request $r
+	 * @return \Illuminate\Http\Response
+	 */
+	public function nip(Request $request)
+	{
+		$token = $request->bearerToken();
+        $this->sso->setToken($token);
+
+		$nip = $request->nip;
+
+		$data = $this->sso->getUserByNip($nip, false);
+		return $data;
 	}
 
 	/**
@@ -68,13 +102,6 @@ class RefUserCacheController extends Controller
 	 */
 	public function listJabatan(Request $request)
 	{
-		// $token = $request->bearerToken();
-        // $this->sso->setToken($token);
-
-		// $positions = $request->positions;
-
-		// $data = $this->sso->getJabatanByCode($positions);
-		// return $data;
 		$results = RefJabatan::whereIn('kode', $request->positions)->get();
 		$jabatan = JabatanResource::collection($results);
 		return $jabatan;
