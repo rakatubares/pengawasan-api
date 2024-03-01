@@ -58,6 +58,7 @@ trait DetailSeederTrait
 
 		$item_count = $this->faker->numberBetween(1, 10);
 		for ($i=0; $i < $item_count; $i++) { 
+			$with_bruto = $this->faker->boolean();
 			DetailBarang::find($barang->id)
 				->itemBarang()
 				->create([
@@ -65,6 +66,8 @@ trait DetailSeederTrait
 					'satuan_id' => $this->faker->numberBetween(1,$max_satuan_id),
 					'uraian_barang' => $this->faker->text(),
 					'kategori_id' => $this->faker->numberBetween(1,$max_kategori_id),
+					'bruto' => $with_bruto ? $this->faker->randomFloat(min:0, max:100) : null,
+					'satuan_bruto' => $with_bruto ? $this->faker->randomElement(['KG', 'GRAM', 'TON']) : null,
 				]);
 		}
 

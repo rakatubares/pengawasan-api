@@ -15,12 +15,24 @@ class CreateRefKantorBCTable extends Migration
 	{
 		Schema::create('ref_kantor_bc', function (Blueprint $table) {
 			$table->id();
-			$table->integer('tipe')->nullable()->index();
-			$table->integer('level')->nullable()->index();
-			$table->string('parent')->nullable()->index();
-			$table->string('kd_kantor')->index();
-			$table->string('nama_kantor')->index();
-			$table->boolean('active')->index()->default(true);
+			$table->string('kode_kantor')->unique();
+			$table->string('nama_kantor_pendek')->nullable();
+			$table->string('nama_kantor_panjang')->nullable();
+			$table->string('kode_kantor_induk')->nullable();
+			$table->integer('kode_kantor_group')->nullable();
+			$table->integer('kode_eselon')->nullable();
+			$table->integer('kode_pulau')->nullable();
+			$table->integer('kode_kabupaten')->nullable();
+			$table->string('alamat1')->nullable();
+			$table->string('alamat2')->nullable();
+			$table->string('kode_pos')->nullable();
+			$table->string('telepon')->nullable();
+			$table->string('fax')->nullable();
+			$table->string('website')->nullable();
+			$table->float('longitude')->nullable();
+			$table->float('latitude')->nullable();
+			$table->string('flag_kanwil')->nullable();
+			$table->string('flag_aktif')->nullable();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('deleted_at');

@@ -1,20 +1,27 @@
 <?php
 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
-use App\Http\Controllers\DetailBarangController;
-use App\Http\Controllers\DetailBarangItemController;
 use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
-use App\Http\Controllers\RefEntitasController;
-use App\Http\Controllers\RefJabatanController;
-use App\Http\Controllers\RefKategoriBarangController;
-use App\Http\Controllers\RefKemasanController;
-use App\Http\Controllers\RefLokasiController;
-use App\Http\Controllers\RefNegaraController;
-use App\Http\Controllers\RefSatuanController;
+use App\Http\Controllers\DocumentsChainController;
+use App\Http\Controllers\DokController;
+use App\Http\Controllers\Entitas\EntitasBadanHukumController;
+use App\Http\Controllers\Entitas\EntitasOrangController;
+use App\Http\Controllers\References\RefBandaraController;
+use App\Http\Controllers\References\RefJabatanController;
+use App\Http\Controllers\References\RefKantorBCController;
+use App\Http\Controllers\References\RefKategoriBarangController;
+use App\Http\Controllers\References\RefKemasanController;
+use App\Http\Controllers\References\RefKepercayaanSumberController;
+use App\Http\Controllers\References\RefLokasiController;
+use App\Http\Controllers\References\RefNegaraController;
+use App\Http\Controllers\References\RefSatuanController;
+use App\Http\Controllers\References\RefValiditasInformasiController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\TembusanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +42,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*
  |--------------------------------------------------------------------------
+ | Documents chain routes
+ |--------------------------------------------------------------------------
+ */
+
+Route::get('/chain/{doc_type}/id/{doc_id}', [DocumentsChainController::class, 'show']);
+Route::post('/doc/{doc_type}/search', [DokController::class, 'search']);
+
+/*
+ |--------------------------------------------------------------------------
  | Details routes
  |--------------------------------------------------------------------------
  */
+
+/**
+ * API for detail barang
+ */
+Route::prefix('/barang/{doc_type}/{doc_id}')->group(function () {
+	Route::apiResource('/item', BarangController::class);
+});
 
 /**
  * API for Details
@@ -51,24 +74,6 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
 	});
 
-	// Barang
-	Route::prefix('/barang')->group(function() {
-		Route::post('/new', [DetailBarangController::class, 'store']);
-		Route::post('/upsert', [DetailBarangController::class, 'store']);
-		Route::post('/', [DetailBarangController::class, 'store']);
-		Route::put('/{barang_id}', [DetailBarangController::class, 'update']);
-		Route::delete('/', [DetailBarangController::class, 'destroy']);
-
-		// Item barang
-		Route::prefix('item')->group(function() {
-			Route::get('/', [DetailBarangItemController::class, 'index']);
-			Route::post('/', [DetailBarangItemController::class, 'store']);
-			Route::get('/{item_id}', [DetailBarangItemController::class, 'show']);
-			Route::put('/{item_id}', [DetailBarangItemController::class, 'update']);
-			Route::delete('/{item_id}', [DetailBarangItemController::class, 'destroy']);
-		});
-	});
-
 	// Bangunan
 	Route::prefix('/bangunan')->group(function() {
 		Route::get('/{how?}', [DetailBangunanController::class, 'show']);
@@ -79,7 +84,6 @@ Route::prefix('{doc_type}/{doc_id}')->group(function() {
 
 	// Badan
 	Route::prefix('/orang')->group(function() {
-		// Route::get('/', [DetailBadanController::class, 'show']);
 		Route::post('/', [DetailBadanController::class, 'store']);
 		Route::delete('/', [DetailBadanController::class, 'destroy']);
 	});
@@ -105,10 +109,16 @@ Route::apiResource('sprint', RefSprintController::class);
 Route::post('/sprint/search', [RefSprintController::class, 'search']);
 
 /**
- * API for Entity
+ * API for Personal Entity
  */
-Route::apiResource('entitas', RefEntitasController::class);
-Route::post('/entitas/search', [RefEntitasController::class, 'search']);
+Route::apiResource('entitas/orang', EntitasOrangController::class);
+Route::post('/entitas/orang/search', [EntitasOrangController::class, 'search']);
+
+/**
+ * API for Company Entity
+ */
+Route::apiResource('entitas/badanhukum', EntitasBadanHukumController::class);
+Route::post('/entitas/badanhukum/search', [EntitasBadanHukumController::class, 'search']);
 
 /**
  * API for Jabatan
@@ -118,7 +128,13 @@ Route::apiResource('jabatan', RefJabatanController::class);
 /**
  * API for Grup Lokasi
  */
-Route::get('lokasi', [RefLokasiController::class, 'index']);
+Route::post('lokasi/search', [RefLokasiController::class, 'search']);
+
+/**
+ * API for Kantor BC
+ */
+Route::get('kantor/kode/{kode_kantor}', [RefKantorBCController::class, 'getDataByCode']);
+Route::post('kantor/search', [RefKantorBCController::class, 'search']);
 
 /**
  * API for Kemasan
@@ -129,6 +145,7 @@ Route::post('kemasan/search', [RefKemasanController::class, 'search']);
 /**
  * API for Satuan
  */
+Route::get('satuan', [RefSatuanController::class, 'index']);
 Route::get('satuan/{id}', [RefSatuanController::class, 'show']);
 Route::post('satuan/search', [RefSatuanController::class, 'search']);
 
@@ -146,10 +163,33 @@ Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
 
 /**
+ * API for Bandara
+ */
+Route::get('bandara/{code}', [RefBandaraController::class, 'show']);
+Route::post('bandara/search', [RefBandaraController::class, 'search']);
+
+/**
+ * API for Klasifikasi Kepercayaan
+ */
+Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
+
+/**
+ * API for Klasifikasi Validitas
+ */
+Route::get('validitas', [RefValiditasInformasiController::class, 'index']);
+
+/**
+ * API for Tembusan
+ */
+Route::post('tembusan/search', [TembusanController::class, 'search']);
+
+/**
  * API for User
  */
 Route::apiResource('user', RefUserCacheController::class);
 Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
+Route::post('/user/nip', [RefUserCacheController::class, 'nip']);
+Route::post('/user/search', [RefUserCacheController::class, 'search']);
 Route::post('/user/role', [RefUserCacheController::class, 'role']);
 Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
 Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);

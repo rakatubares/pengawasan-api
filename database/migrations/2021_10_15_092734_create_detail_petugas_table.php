@@ -15,8 +15,7 @@ class CreateDetailPetugasTable extends Migration
 	{
 		Schema::create('detail_petugas', function (Blueprint $table) {
 			$table->id();
-			$table->string('officerable_type');
-			$table->integer('officerable_id');
+			$table->morphs('officerable');
 			$table->string('posisi');
 			$table->boolean('flag_pejabat');
 			$table->string('kode_jabatan')->nullable();
