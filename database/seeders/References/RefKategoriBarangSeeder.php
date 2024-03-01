@@ -1,0 +1,94 @@
+<?php
+
+namespace Database\Seeders\References;
+
+use App\Models\References\RefKategoriBarang;
+use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+
+class RefKategoriBarangSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+		$kategori = [
+			'TEKSTIL & PRODUK TEKSTIL & ACCESORIES',
+			'BALLPRESS',
+			'DAGING (SAPI/AYAM/BABI/BEBEK)',
+			'BERAS',
+			'GULA',
+			'BAWANG',
+			'SEREALIA',
+			'SEMBAKO LAINNYA',
+			'HANDPHONE, GADGET, PART & ACCESORIES',
+			'ELEKTRONIK',
+			'BIJI & PRODUK PLASTIK (KEC. FURNITURE)',
+			'BESI, BAJA & PRODUKNYA (KEC. FURNITURE)',
+			'KENDARAAN DARAT (BERMOTOR/TIDAK), PART & ACCESORIES',
+			'KENDARAAN AIR (BERMOTOR/TIDAK), PART & ACCESORIES',
+			'KENDARAAN UDARA (BERMOTOR/TIDAK), PART & ACCESORIES',
+			'MAKANAN DAN MINUMAN (OLAHAN / KEMASAN)',
+			'PRODUK PERTANIAN & PERKEBUNAN',
+			'LOGAM MULIA DAN PERHIASAN',
+			'LOGAM NON MULIA',
+			'SENJATA API, AIRGUN, AIRSOFTGUN & PART',
+			'BAHAN PELEDAK & AMMONIUM NITRAT',
+			'SENJATA TAJAM',
+			'KOSMETIK',
+			'OBAT-OBATAN',
+			'BAHAN KIMIA',
+			'CITES (FLORA & FAUNA)',
+			'HEWAN DAN BAGIAN TUBUH (NON CITES)',
+			'TUMBUHAN DAN BAGIAN TUMBUHAN (NON CITES)',
+			'BENDA CAGAR BUDAYA',
+			'PRODUK MELANGGAR HAKI',
+			'NPP (NARKOTIKA, PSIKOTROPIKA DAM PREKUSOR)',
+			'KAYU & ROTAN (ASALAN)',
+			'PRODUK OLAHAN KAYU & RITAN (KEC. FURNITURE)',
+			'FURNITURE',
+			'PUPUK',
+			'RACUN & PESTISIDA',
+			'CRUDE OIL(MINYAK MENTAH), PELUMAS & BBM',
+			'UANG TUNAI',
+			'HASIL TEMBAKAU',
+			'MINUMAN MENGANDUNG ETIL ALKOHOL',
+			'ETIL ALKOHOL',
+			'PITA CUKAI',
+			'CRUDE PALM OIL (MINYAK SAWIT)',
+			'PRODUK TURUNAN CPO (KEC. MINYAK GORENG)',
+			'MINERBA, TANAH, PASIR & TOP SOIL',
+			'BARANG PORNOGRAFI & SEXTOYS',
+			'ALAT BERAT, PART & ACC',
+			'MESIN (BAKAR, LISTRIK, POMPA, DLL)',
+			'PRODUK PERIKANAN & KELAUTAN',
+			'PRODUK MAINAN & ALAT OLAH RAGA',
+			'ALAT KESEHATAN',
+			'PERKAKAS (MEKANIK/ELEKTRIK)',
+			'PERALATAN DAPUR DAN KAMAR MANDI',
+			'BIBIT DAN BENIH TANAMAN',
+			'ALAS KAKI',
+			'TAS',
+			'LIMBAH & SCRAP',
+			'HVG (HIGH VALUE GOODS)',
+			'PERSYARATAN PERIZINAN',
+			'PEMBUKUAN, PENCATATAN & ADMINISTRASI LAINNYA',
+			'BARANG LAINNYA',
+			'BARANG & BAHAN RADIOAKTIF',
+		];
+
+		$now = Carbon::now('utc')->toDateTimeString();
+		$data = array_map(function($k) use ($now) {
+			return [
+				'kategori' => $k,
+				"active" => true,
+				"created_at" => $now,
+				"updated_at" => $now,
+			];
+		}, $kategori);
+		RefKategoriBarang::insert($data);
+    }
+}
