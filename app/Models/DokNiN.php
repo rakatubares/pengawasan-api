@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Intelijen\DokNi;
+
 class DokNiN extends DokNi
 {
 	protected $table = 'dok_nin';

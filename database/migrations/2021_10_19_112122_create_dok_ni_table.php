@@ -25,16 +25,16 @@ class CreateDokNiTable extends Migration
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
 			$table->enum('sifat',['segera','sangat segera']);
 			$table->enum('klasifikasi',['rahasia','sangat rahasia']);
 			$table->string('tujuan')->nullable();
 			$table->text('uraian')->nullable();
-			$table->string('kode_jabatan')->index();
-			$table->boolean('plh_pejabat')->nullable()->index();
-			$table->integer('pejabat_id')->index();
-			$table->integer('kode_status')->index();
+			$table->string('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->index('created_at');
+			$table->index('updated_at');
 			$table->index('deleted_at');
 		});
 	}
