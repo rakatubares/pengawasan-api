@@ -4,18 +4,18 @@ namespace App\Models\Intelijen;
 
 use App\Models\Dokumen;
 
-class DokLkai extends Dokumen
+class DokLkaiN extends Dokumen
 {
-	protected $table = 'dok_lkai';
-	public $kode_dokumen = 'lkai';
-	public $tipe_dokumen = 'LKAI';
-	public $kode_lppi = 'lppi';
-	public $kode_lpti = 'lpti';
-	public $tipe_lpti = 'LPTI';
-	public $kode_npi = 'npi';
-	public $tipe_npi = 'NPI';
-	public $kode_nhi = 'nhi';
-	public $kode_ni = 'ni';
+	protected $table = 'dok_lkain';
+	public $kode_dokumen = 'lkain';
+	public $tipe_dokumen = 'LKAI-N';
+	public $kode_lppi = 'lppin';
+	public $kode_lpti = 'lptin';
+	public $tipe_lpti = 'LPTI-N';
+	public $kode_npi = 'npin';
+	public $tipe_npi = 'NPI-N';
+	public $kode_nhi = 'nhin';
+	public $kode_ni = 'nin';
 
 	protected $fillable = [
 		'no_dok',
@@ -24,18 +24,17 @@ class DokLkai extends Dokumen
 		'no_dok_lengkap',
 		'tanggal_dokumen',
 		'chain_id',
-		'nomor_lpti',
-		'tanggal_lpti',
-		'nomor_npi',
-		'tanggal_npi',
+		'nomor_lptin',
+		'tanggal_lptin',
+		'nomor_npin',
+		'tanggal_npin',
 		'informasi',
 		'prosedur',
 		'hasil',
 		'kesimpulan',
-		'flag_rekom_nhi',
-		'flag_rekom_ni',
+		'flag_rekom_nhin',
+		'flag_rekom_nin',
 		'rekomendasi_lain',
-		'informasi_lain',
 		'tujuan',
 		'keputusan_pejabat',
 		'catatan_pejabat',
@@ -48,8 +47,8 @@ class DokLkai extends Dokumen
 
 	protected $casts = [
 		'tanggal_dokumen' => 'date',
-		'tanggal_lpti' => 'date',
-		'tanggal_npi' => 'date',
+		'tanggal_lptin' => 'date',
+		'tanggal_npin' => 'date',
 		'tanggal_terima_pejabat' => 'date',
 		'tanggal_terima_atasan' => 'date',
 	];

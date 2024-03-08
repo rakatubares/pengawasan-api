@@ -17,8 +17,17 @@ class DokNhiResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$lkai = $this->chain->lkai;
+		$array = $this->nhiArray();
 		
+		$lkai = $this->chain->lkai;
+		$array['lkai_id'] = $lkai != null ? $lkai->id : null;
+		$array['nomor_lkai'] = $lkai != null ? $lkai->no_dok_lengkap : null;
+		$array['tanggal_lkai'] = $lkai != null ? $lkai->tanggal_dokumen->format('d-m-Y') : null;
+
+		return $array;
+	}
+
+	protected function nhiArray() {
 		$array = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
@@ -28,16 +37,14 @@ class DokNhiResource extends JsonResource
 			'tanggal_dokumen' => $this->tanggal_dokumen
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
-			'lkai_id' => $lkai != null ? $lkai->id : null,
-			'nomor_lkai' => $lkai != null ? $lkai->no_dok_lengkap : null,
-			'tanggal_lkai' => $lkai != null ? $lkai->tanggal_dokumen->format('d-m-Y') : null,
 			'sifat' => $this->sifat,
 			'klasifikasi' => $this->klasifikasi,
 			'tujuan' => $this->tujuan,
 			'tempat_indikasi' => $this->tempat_indikasi,
-			'waktu_indikasi' => $this->waktu_indikasi
-				? $this->waktu_indikasi->format('d-m-Y H:i:s') 
+			'tanggal_indikasi' => $this->tanggal_indikasi != null 
+				? $this->tanggal_indikasi->format('d-m-Y') 
 				: null,
+			'waktu_indikasi' => $this->waktu_indikasi,
 			'zona_waktu' => $this->zona_waktu,
 			'kantor' => new RefKantorBCResource($this->kantor),
 			'detail' => new DokNhiDetailResource($this->detail, $this->detail_type),

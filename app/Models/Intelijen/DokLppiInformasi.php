@@ -8,26 +8,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ItemInformasi extends Model
+class DokLppiInformasi extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'item_informasi';
+	protected $table = 'dok_lppi_informasi';
 
 	protected $fillable = [
-		'ikhtisar_id',
+		'infoable_type',
+		'infoable_id',
 		'informasi',
 		'kode_kepercayaan',
 		'kode_validitas',
 	];
 
-	/**
-	 * Header ikhtisar informasi
-	 */
-	public function ikhtisar()
+	public function infoable() 
 	{
-		return $this->belongsTo(IkhtisarInformasi::class, 'ikhtisar_id');
+		return $this->morphTo();
 	}
 
 	/**

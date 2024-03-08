@@ -4,6 +4,7 @@ namespace Database\Seeders\Intelijen;
 
 use App\Models\Intelijen\DokLkai;
 use App\Models\Intelijen\DokNi;
+use App\Models\Penomoran;
 use App\Models\References\RefTembusan;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -92,6 +93,13 @@ class DokNiSeeder extends Seeder
 				$ni->tembusan()->attach([$cc_data->id => ['no_urut' => $x]]);
 			} 
 		}
+
+		Penomoran::create([
+			'tipe_dokumen' => $ni->tipe_dokumen,
+			'agenda' => $ni->agenda_dokumen,
+			'tahun' => date('Y'),
+			'nomor_terakhir' => $crn_ni,
+		]);
 	}
 
 	// Create random uraian length

@@ -22,7 +22,6 @@ trait BarangTrait
 				'uraian_barang' => $faker->text(),
 				'kategori_id' => $faker->numberBetween(1,$max_kategori_id),
 				'berat' => $with_bruto ? $faker->randomFloat(min:0, max:100) : null,
-				'satuan_berat' => $with_bruto ? $faker->randomElement(['KG', 'GRAM', 'TON']) : null,
 			]);
 		}
 	}

@@ -24,6 +24,7 @@ class DokNhi extends Dokumen
 		'klasifikasi',
 		'tujuan',
 		'tempat_indikasi',
+		'tanggal_indikasi',
 		'waktu_indikasi',
 		'zona_waktu',
 		'kode_kantor',
@@ -35,7 +36,7 @@ class DokNhi extends Dokumen
 
 	protected $casts = [
 		'tanggal_dokumen' => 'date',
-		'waktu_indikasi' => 'datetime',
+		'tanggal_indikasi' => 'date',
 	];
 
 

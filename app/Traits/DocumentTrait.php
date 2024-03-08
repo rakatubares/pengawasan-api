@@ -2,10 +2,13 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\Intelijen\DokLkaiNResource;
 use App\Http\Resources\Intelijen\DokLkaiResource;
 use App\Http\Resources\Intelijen\DokLkaiTableResource;
 use App\Http\Resources\Intelijen\DokLppiResource;
 use App\Http\Resources\Intelijen\DokLppiTableResource;
+use App\Http\Resources\Intelijen\DokNhiNResource;
+use App\Http\Resources\Intelijen\DokNhiNTableResource;
 use App\Http\Resources\Intelijen\DokNhiResource;
 use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
@@ -34,10 +37,15 @@ trait DocumentTrait
 
 	public function getResource($doc_type) {
 		$resources = [
+			// Intelijen
 			'lppi' => DokLppiResource::class,
 			'lkai' => DokLkaiResource::class,
 			'nhi' => DokNhiResource::class,
 			'ni' => DokNiResource::class,
+			// NPP
+			'lppin' => DokLppiResource::class,
+			'lkain' => DokLkaiNResource::class,
+			'nhin' => DokNhiNResource::class,
 		];
 
 		try {
@@ -51,10 +59,15 @@ trait DocumentTrait
 
 	public function getTableResource($doc_type) {
 		$resources = [
+			// Intelijen
 			'lppi' => DokLppiTableResource::class,
 			'lkai' => DokLkaiTableResource::class,
 			'nhi' => DokNhiTableResource::class,
 			'ni' => DokNhiTableResource::class,
+			// NPP
+			'lppin' => DokLppiTableResource::class,
+			'lkain' => DokLkaiTableResource::class,
+			'nhin' => DokNhiNTableResource::class,
 		];
 
 		try {

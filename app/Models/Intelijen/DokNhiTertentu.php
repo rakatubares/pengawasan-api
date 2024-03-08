@@ -18,7 +18,7 @@ class DokNhiTertentu extends Model
 		'nomor_dok',
 		'tanggal_dok',
 		'nama_sarkut',
-		'no_flight_trayek',
+		'nomor_sarkut',
 		'nomor_awb',
 		'tanggal_awb',
 		'merek_koli',

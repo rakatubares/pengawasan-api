@@ -23,7 +23,6 @@ class Barang extends Model
 		'uraian_barang',
 		'kategori_id',
 		'berat',
-		'satuan_berat',
 	];
 
 	public function goodsable() {

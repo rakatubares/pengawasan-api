@@ -19,7 +19,7 @@ class CreateDokNhiTertentuTable extends Migration
 			$table->string('nomor_dok')->nullable();
 			$table->date('tanggal_dok')->nullable();
 			$table->string('nama_sarkut')->nullable();
-			$table->string('no_flight_trayek')->nullable();
+			$table->string('nomor_sarkut')->nullable();
 			$table->string('nomor_awb')->nullable();
 			$table->date('tanggal_awb')->nullable();
 			$table->string('merek_koli')->nullable();

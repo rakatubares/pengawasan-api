@@ -1,12 +1,11 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Intelijen;
 
 class DokLppiNSeeder extends DokLppiSeeder
 {
 	public function __construct()
 	{
-		$this->tipe_dok = 'lppin';
-		$this->prepareModel();
+		parent::__construct('lppin');
 	}
 }

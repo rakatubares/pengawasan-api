@@ -21,7 +21,6 @@ class CreateBarangTable extends Migration
 			$table->text('uraian_barang');
 			$table->integer('kategori_id')->nullable()->index();
 			$table->float('berat')->nullable();
-			$table->string('satuan_berat')->nullable();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('deleted_at');

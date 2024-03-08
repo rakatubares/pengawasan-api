@@ -35,7 +35,8 @@ class DokNhiController extends DokController
 			'sifat' => 'string',
 			'klasifikasi' => 'string',
 			'tujuan' => 'string',
-			'waktu_indikasi' => 'nullable|date',
+			'tanggal_indikasi' => 'nullable|date',
+			'waktu_indikasi' => 'nullable|time',
 			'zona_waktu' => 'string',
 			'flag_exim' => 'boolean',
 			'tanggal_dok_exim' => 'nullable|date',
@@ -53,7 +54,8 @@ class DokNhiController extends DokController
 	 */
 	protected function prepareData(Request $request)
 	{
-		$waktu_indikasi = $this->dateFromText($request->waktu_indikasi, 'Y-m-d H:i:s');
+		$tanggal_indikasi = $this->dateFromText($request->tanggal_indikasi, 'Y-m-d');
+		$waktu_indikasi = $this->dateFromText($request->waktu_indikasi, 'H:i:s');
 		$request->tempat_indikasi = trim(strtoupper($request->tempat_indikasi));
 
 		$data = [
@@ -61,6 +63,7 @@ class DokNhiController extends DokController
 			'klasifikasi' => $request->klasifikasi,
 			'tujuan' => $request->tujuan,
 			'tempat_indikasi' => $request->tempat_indikasi,
+			'tanggal_indikasi' => $tanggal_indikasi,
 			'waktu_indikasi' => $waktu_indikasi,
 			'zona_waktu' => $request->zona_waktu,
 			'kode_kantor' => $request->kantor['kode_kantor'],

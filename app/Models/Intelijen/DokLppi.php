@@ -43,4 +43,9 @@ class DokLppi extends Dokumen
 		'tgl_dok_info_eksternal' => 'date',
 		'tanggal_disposisi' => 'date',
 	];
+
+	public function informasi()
+	{
+		return $this->morphMany(DokLppiInformasi::class, 'infoable');
+	}
 }

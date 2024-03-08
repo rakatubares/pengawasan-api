@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateItemInformasiTable extends Migration
+class CreateDokLppiInformasiTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateItemInformasiTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_informasi', function (Blueprint $table) {
+        Schema::create('dok_lppi_informasi', function (Blueprint $table) {
             $table->id();
-			$table->integer('ikhtisar_id')->index();
+			$table->morphs('infoable');
 			$table->text('informasi');
 			$table->string('kode_kepercayaan')->index();
 			$table->integer('kode_validitas')->index();
@@ -32,6 +32,6 @@ class CreateItemInformasiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_informasi');
+        Schema::dropIfExists('dok_lppi_informasi');
     }
 }

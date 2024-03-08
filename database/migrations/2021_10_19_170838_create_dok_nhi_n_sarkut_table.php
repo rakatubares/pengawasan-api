@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDokNhiBkcTable extends Migration
+class CreateDokNhiNSarkutTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,14 +13,14 @@ class CreateDokNhiBkcTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_nhi_bkc', function (Blueprint $table) {
+		Schema::create('dok_nhin_sarkut', function (Blueprint $table) {
 			$table->id();
-			$table->string('tempat_penimbunan')->nullable();
-			$table->string('penyalur')->nullable();
-			$table->string('tempat_penjualan')->nullable();
-			$table->string('nppbkc')->nullable();
 			$table->string('nama_sarkut')->nullable();
+			$table->string('jenis_sarkut')->nullable();
 			$table->string('nomor_sarkut')->nullable();
+			$table->string('kode_pelabuhan_asal')->nullable();
+			$table->string('kode_pelabuhan_tujuan')->nullable();
+			$table->string('imo_mmsi')->nullable();
 			$table->text('data_lain')->nullable();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
@@ -29,12 +29,12 @@ class CreateDokNhiBkcTable extends Migration
 	}
 
 	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
+		* Reverse the migrations.
+		*
+		* @return void
+		*/
 	public function down()
 	{
-		Schema::dropIfExists('dok_nhi_bkc');
+		Schema::dropIfExists('dok_nhin_sarkut');
 	}
 }

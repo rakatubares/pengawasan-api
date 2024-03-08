@@ -9,6 +9,10 @@ class CreateDokLkaiTable extends Migration
 	public function __construct()
 	{
 		$this->table_name = 'dok_lkai';
+		$this->kode_lpti = 'lpti';
+		$this->kode_npi = 'npi';
+		$this->kode_nhi = 'nhi';
+		$this->kode_ni = 'ni';
 	}
 
 	/**
@@ -26,17 +30,16 @@ class CreateDokLkaiTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
-			$table->boolean('flag_lpti')->index();
-			$table->string('nomor_lpti')->nullable()->index();
-			$table->date('tanggal_lpti')->nullable()->index();
-			$table->boolean('flag_npi')->index();
-			$table->string('nomor_npi')->nullable()->index();
-			$table->date('tanggal_npi')->nullable()->index();
+			$table->string('nomor_'.$this->kode_lpti)->nullable()->index();
+			$table->date('tanggal_'.$this->kode_lpti)->nullable()->index();
+			$table->string('nomor_'.$this->kode_npi)->nullable()->index();
+			$table->date('tanggal_'.$this->kode_npi)->nullable()->index();
+			$table->text('informasi')->nullable();
 			$table->text('prosedur')->nullable();
 			$table->text('hasil')->nullable();
 			$table->text('kesimpulan')->nullable();
-			$table->boolean('flag_rekom_nhi')->index();
-			$table->boolean('flag_rekom_ni')->index();
+			$table->boolean('flag_rekom_'.$this->kode_nhi)->index();
+			$table->boolean('flag_rekom_'.$this->kode_ni)->index();
 			$table->text('rekomendasi_lain')->nullable();
 			if ($this->table_name == 'dok_lkai') {
 				$table->text('informasi_lain')->nullable();

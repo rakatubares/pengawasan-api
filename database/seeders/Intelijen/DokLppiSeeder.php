@@ -3,7 +3,6 @@
 namespace Database\Seeders\Intelijen;
 
 use App\Models\DocumentsChain;
-use App\Models\Intelijen\IkhtisarInformasi;
 use App\Models\Penomoran;
 use App\Models\References\RefKepercayaanSumber;
 use App\Models\References\RefValiditasInformasi;
@@ -65,19 +64,6 @@ class DokLppiSeeder extends Seeder
 			// Create document chain
 			$chain = DocumentsChain::create();
 
-			// Create ikhtisar informasi
-			$ikhtisar = IkhtisarInformasi::create(['chain_id' => $chain->id]);
-			$informasi_count = $faker->numberBetween(1, 5);
-			for ($i=0; $i < $informasi_count; $i++) { 
-				IkhtisarInformasi::find($ikhtisar->id)
-					->informasi()
-					->create([
-						'informasi' => $faker->text(),
-						'kode_kepercayaan' => $faker->randomElement($list_kode_kepercayaan),
-						'kode_validitas' => $faker->randomElement($list_kode_validitas),
-					]);
-			}
-
 			// Insert data
 			$lppi = new $this->model;
 			$lppi->no_dok = $crn_lppi;
@@ -103,6 +89,17 @@ class DokLppiSeeder extends Seeder
 			$lppi->catatan = $faker->text();
 			$lppi->kode_status = 'terbit';
 			$lppi->saveQuietly();
+
+			// Create ikhtisar informasi
+			$informasi_count = $faker->numberBetween(1, 5);
+			for ($i=0; $i < $informasi_count; $i++) { 
+				$lppi->informasi()
+					->create([
+						'informasi' => $faker->text(),
+						'kode_kepercayaan' => $faker->randomElement($list_kode_kepercayaan),
+						'kode_validitas' => $faker->randomElement($list_kode_validitas),
+					]);
+			}
 
 			/**
 			 * Petugas

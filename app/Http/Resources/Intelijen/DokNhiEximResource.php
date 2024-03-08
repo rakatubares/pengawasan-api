@@ -23,7 +23,7 @@ class DokNhiEximResource extends JsonResource
 				? $this->tanggal_dok->format('d-m-Y')
 				: null,
 			'nama_sarkut' => $this->nama_sarkut,
-			'no_flight_trayek' => $this->no_flight_trayek,
+			'nomor_sarkut' => $this->nomor_sarkut,
 			'nomor_awb' => $this->nomor_awb,
 			'tanggal_awb' => $this->tanggal_awb
 				? $this->tanggal_awb->format('d-m-Y')

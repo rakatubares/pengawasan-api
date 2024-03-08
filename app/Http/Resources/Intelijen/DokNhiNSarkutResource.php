@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Intelijen;
 
+use App\Http\Resources\References\RefBandaraResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DokNhiBkcResource extends JsonResource
+class DokNhiNSarkutResource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -15,15 +16,15 @@ class DokNhiBkcResource extends JsonResource
 	public function toArray($request)
 	{
 		$array = [
-			'tempat_penimbunan' => $this->tempat_penimbunan,
-			'penyalur' => $this->penyalur,
-			'tempat_penjualan' => $this->tempat_penjualan,
-			'nppbkc' => $this->nppbkc,
 			'nama_sarkut' => $this->nama_sarkut,
+			'jenis_sarkut' => $this->jenis_sarkut,
 			'nomor_sarkut' => $this->nomor_sarkut,
+			'pelabuhan_asal' => new RefBandaraResource($this->pelabuhan_asal),
+			'pelabuhan_tujuan' => new RefBandaraResource($this->pelabuhan_tujuan),
+			'imo_mmsi' => $this->imo_mmsi,
 			'data_lain' => $this->data_lain,
 		];
-		
+
 		return $array;
 	}
 }

@@ -50,29 +50,10 @@ class DokLppiResource extends JsonResource
 			'flag_arsip' => $this->flag_arsip == 1 ? true : false,
 			'catatan' => $this->catatan,
 			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
-			'ikhtisar' => InformasiResource::collection($this->chain->ikhtisar_informasi->informasi),
+			'informasi' => InformasiResource::collection($this->informasi),
 			'kode_status' => $this->kode_status,
 		];
 
 		return $array;
 	}
-
-	// protected function display()
-	// {
-	// 	$array = $this->basic();
-	// 	// $array['ikhtisar'] = IkhtisarInformasiResource::collection($this->intelijen->ikhtisar);
-	// 	return $array;
-	// }
-
-	// protected function pdf()
-	// {
-	// 	$array = $this->display();
-	// 	// $array['kode_status'] = $this->kode_status;
-	// 	return $array;
-	// }
-
-	// protected function form()
-	// {
-	// 	return $this->display();
-	// }
 }

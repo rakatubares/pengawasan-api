@@ -19,7 +19,7 @@ class DokNhiBkc extends Model
 		'tempat_penjualan',
 		'nppbkc',
 		'nama_sarkut',
-		'no_flight_trayek',
+		'nomor_sarkut',
 		'data_lain',
 	];
 

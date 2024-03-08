@@ -29,6 +29,7 @@ class DokNhiDetailResource extends JsonResource
 	{
 		switch ($this->type) {
 			case 'nhi-exim':
+			case 'nhin-exim':
 				$detail = new DokNhiEximResource($this->resource);
 				break;
 
@@ -38,6 +39,18 @@ class DokNhiDetailResource extends JsonResource
 
 			case 'nhi-tertentu':
 				$detail = new DokNhiTertentuResource($this->resource);
+				break;
+
+			case 'nhin-sarkut':
+				$detail = new DokNhiNSarkutResource($this->resource);
+				break;
+
+			case 'nhin-orang':
+				$detail = new DokNhiNOrangResource($this->resource);
+				break;
+
+			default:
+				$detail = $this->resource;
 				break;
 		}
 

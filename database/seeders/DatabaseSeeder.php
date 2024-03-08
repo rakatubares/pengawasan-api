@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Intelijen\DokLkaiNSeeder;
 use Database\Seeders\Intelijen\DokLkaiSeeder;
+use Database\Seeders\Intelijen\DokLppiNSeeder;
 use Database\Seeders\Intelijen\DokLppiSeeder;
+use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
@@ -53,9 +56,9 @@ class DatabaseSeeder extends Seeder
 			DokLkaiSeeder::class,
 			DokNhiSeeder::class,
 			DokNiSeeder::class,
-			// DokLppiNSeeder::class,
-			// DokLkaiNSeeder::class,
-			// DokNhiNSeeder::class,
+			DokLppiNSeeder::class,
+			DokLkaiNSeeder::class,
+			DokNhiNSeeder::class,
 			// DokNiNSeeder::class,
 		]);
 	}

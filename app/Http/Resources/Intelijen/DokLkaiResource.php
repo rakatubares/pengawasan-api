@@ -2,23 +2,25 @@
 
 namespace App\Http\Resources\Intelijen;
 
-// use App\Http\Resources\IkhtisarInformasiResource;
 use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Traits\DocumentTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokLkaiResource extends JsonResource
 {
+	use DocumentTrait;
+
 	/**
 	 * Create a new resource instance.
 	 *
 	 * @param  mixed  $resource
 	 * @return void
 	 */
-	// public function __construct($resource, $request_type='')
-	// {
-	// 	parent::__construct($resource, $request_type);
-	// 	$this->lppi_type = 'lppi';
-	// }
+	public function __construct($resource, $kode_dokumen='lkai')
+	{
+		parent::__construct($resource);
+		$this->kode_dokumen = $kode_dokumen;
+	}
 
 	/**
 	 * Transform the resource into an array for display.
@@ -28,79 +30,59 @@ class DokLkaiResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$array = $this->lkaiArray();
+		
 		$lppi = $this->chain->lppi;
-
-		$array = [
-			'id' => $this->id,
-			'no_dok' => $this->no_dok,
-			'agenda_dok' => $this->agenda_dok,
-			'thn_dok' => $this->thn_dok,
-			'no_dok_lengkap' => $this->no_dok_lengkap,
-			'tanggal_dokumen' => $this->tanggal_dokumen
-				? $this->tanggal_dokumen->format('d-m-Y') 
-				: null,
-			'lppi_id' => $lppi != null ? $lppi->id : null,
-			'nomor_lppi' => $lppi != null ? $lppi->no_dok_lengkap : null,
-			'tanggal_lppi' => $lppi != null ? $lppi->tanggal_dokumen->format('d-m-Y') : null,
-			'flag_lpti' => $this->flag_lpti == 1 ? true : false,
-			'nomor_lpti' => $this->nomor_lpti,
-			'tanggal_lpti' => $this->tanggal_lpti
-				? $this->tanggal_lpti->format('d-m-Y')
-				: null,
-			'flag_npi' => $this->flag_npi == 1 ? true : false,
-			'nomor_npi' => $this->nomor_npi,
-			'tanggal_npi' => $this->tanggal_npi
-				? $this->tanggal_npi->format('d-m-Y')
-				: null,
-			'prosedur' => $this->prosedur,
-			'hasil' => $this->hasil,
-			'kesimpulan' => $this->kesimpulan,
-			'flag_rekom_nhi' => $this->flag_rekom_nhi == 1 ? true : false,
-			'flag_rekom_ni' => $this->flag_rekom_ni == 1 ? true : false,
-			'rekomendasi_lain' => $this->rekomendasi_lain,
-			'informasi_lain' => $this->informasi_lain,
-			'tujuan' => $this->tujuan,
-			'keputusan_pejabat' => $this->keputusan_pejabat == 1 ? true : false,
-			'catatan_pejabat' => $this->catatan_pejabat,
-			'tanggal_terima_pejabat' => $this->tanggal_terima_pejabat
-				? $this->tanggal_terima_pejabat->format('d-m-Y')
-				: null,
-			'keputusan_atasan' => $this->keputusan_atasan == 1 ? true : false,
-			'catatan_atasan' => $this->catatan_atasan,
-			'tanggal_terima_atasan' => $this->tanggal_terima_atasan
-				? $this->tanggal_terima_atasan->format('d-m-Y')
-				: null,
-			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
-			'ikhtisar' => InformasiResource::collection($this->chain->ikhtisar_informasi->informasi),
-			'kode_status' => $this->kode_status,
-		];
-
+		$array['lppi_id'] = $lppi != null ? $lppi->id : null;
+		$array['nomor_lppi'] = $lppi != null ? $lppi->no_dok_lengkap : null;
+		$array['tanggal_lppi'] = $lppi != null ? $lppi->tanggal_dokumen->format('d-m-Y') : null;
+		$array['flag_lpti'] = $this->flag_lpti == 1 ? true : false;
+		$array['nomor_lpti'] = $this->nomor_lpti;
+		$array['tanggal_lpti'] = $this->tanggal_lpti
+			? $this->tanggal_lpti->format('d-m-Y')
+			: null;
+		$array['flag_npi'] = $this->flag_npi == 1 ? true : false;
+		$array['nomor_npi'] = $this->nomor_npi;
+		$array['tanggal_npi'] = $this->tanggal_npi
+			? $this->tanggal_npi->format('d-m-Y')
+			: null;
+		$array['flag_rekom_nhi'] = $this->flag_rekom_nhi == 1 ? true : false;
+		$array['flag_rekom_ni'] = $this->flag_rekom_ni == 1 ? true : false;
 		return $array;
 	}
 
-	// protected function display()
-	// {
-	// 	// $lppi_type = $this->lppi_type;
-	// 	// $lppi = $this->intelijen->$lppi_type;
-	// 	// $lppi = $this->lppi;
-
-	// 	$array = $this->basic();
-	// 	// $array['lppi_id'] = $lppi != null ? $lppi->id : null;
-	// 	// $array['nomor_lppi'] = $lppi != null ? $lppi->no_dok_lengkap : null;
-	// 	// $array['tanggal_lppi'] = $lppi != null ? $lppi->tanggal_dokumen->format('d-m-Y') : null;
-	// 	// $array['ikhtisar'] = IkhtisarInformasiResource::collection($this->intelijen->informasi);
-	// 	return $array;
-	// }
-
-	// protected function pdf()
-	// {
-	// 	$array = $this->display();
-		
-	// 	return $array;
-	// }
-
-	// protected function form()
-	// {
-	// 	return $this->display();
-	// }
+	protected function lkaiArray()
+	{
+		$array = [];
+		$array['id'] = $this->id;
+		$array['no_dok'] = $this->no_dok;
+		$array['agenda_dok'] = $this->agenda_dok;
+		$array['thn_dok'] = $this->thn_dok;
+		$array['no_dok_lengkap'] = $this->no_dok_lengkap;
+		$array['tanggal_dokumen'] = $this->tanggal_dokumen
+			? $this->tanggal_dokumen->format('d-m-Y') 
+			: null;
+		$array['informasi'] = $this->informasi;
+		$array['prosedur'] = $this->prosedur;
+		$array['hasil'] = $this->hasil;
+		$array['kesimpulan'] = $this->kesimpulan;
+		$array['rekomendasi_lain'] = $this->rekomendasi_lain;
+		if ($this->kode_dokumen == 'lkai') {
+			$array['informasi_lain'] = $this->informasi_lain;
+		}
+		$array['tujuan'] = $this->tujuan;
+		$array['keputusan_pejabat'] = $this->keputusan_pejabat == 1 ? true : false;
+		$array['catatan_pejabat'] = $this->catatan_pejabat;
+		$array['tanggal_terima_pejabat'] = $this->tanggal_terima_pejabat
+			? $this->tanggal_terima_pejabat->format('d-m-Y')
+			: null;
+		$array['keputusan_atasan'] = $this->keputusan_atasan == 1 ? true : false;
+		$array['catatan_atasan'] = $this->catatan_atasan;
+		$array['tanggal_terima_atasan'] = $this->tanggal_terima_atasan
+			? $this->tanggal_terima_atasan->format('d-m-Y')
+			: null;
+		$array['petugas'] = ListPosisiPegawaiResource::associative($this->detail_petugas);
+		$array['kode_status'] = $this->kode_status;
+		return $array;
+	}
 }

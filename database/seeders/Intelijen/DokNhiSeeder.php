@@ -9,17 +9,16 @@ use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiBkc;
 use App\Models\Intelijen\DokNhiExim;
 use App\Models\Intelijen\DokNhiTertentu;
+use App\Models\Penomoran;
 use App\Models\References\RefLokasi;
 use App\Models\References\RefTembusan;
 use App\Traits\BarangTrait;
-use Database\Seeders\DetailSeederTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DokNhiSeeder extends Seeder
 {
 	use BarangTrait;
-	use DetailSeederTrait;
 
 	/**
 	 * Run the database seeds.
@@ -64,7 +63,8 @@ class DokNhiSeeder extends Seeder
 			$nhi->klasifikasi = $faker->randomElement(['rahasia', 'sangat rahasia']);
 			$nhi->tujuan = $faker->randomElement(['Kepala Seksi Patroli dan Operasi I', 'Kepala Seksi Patroli dan Operasi II']);
 			$nhi->tempat_indikasi = $faker->randomElement($lokasi)->lokasi;
-			$nhi->waktu_indikasi = $faker->dateTime();
+			$nhi->tanggal_indikasi = $faker->dateTimeThisYear()->format('Y-m-d');
+			$nhi->waktu_indikasi = $faker->time();
 			$nhi->zona_waktu = 'WIB';
 			$nhi->kode_kantor = '050100';
 			$nhi->indikasi = $faker->text();
@@ -80,7 +80,7 @@ class DokNhiSeeder extends Seeder
 					'nomor_dok' => $faker->numberBetween(1, 999999),
 					'tanggal_dok' => $faker->date(),
 					'nama_sarkut' => $faker->company(),
-					'no_flight_trayek' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
+					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
 					'nomor_awb' => $faker->regexify('[A-Z]{3}[0-9]{10}'),
 					'tanggal_awb' => $faker->date(),
 					'merek_koli' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
@@ -101,7 +101,7 @@ class DokNhiSeeder extends Seeder
 					'tempat_penjualan' => $faker->address(),
 					'nppbkc' => $faker->regexify('[0-9]{15}'),
 					'nama_sarkut' => $faker->company(),
-					'no_flight_trayek' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
+					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
 					'data_lain' => $faker->text(),
 				]);
 			} else if ($kegiatan == 'tertentu') {
@@ -110,7 +110,7 @@ class DokNhiSeeder extends Seeder
 					'nomor_dok' => $faker->numberBetween(1, 999999),
 					'tanggal_dok' => $faker->date(),
 					'nama_sarkut' => $faker->company(),
-					'no_flight_trayek' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
+					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
 					'nomor_awb' => $faker->regexify('[A-Z]{3}[0-9]{10}'),
 					'tanggal_awb' => $faker->date(),
 					'merek_koli' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
@@ -166,5 +166,12 @@ class DokNhiSeeder extends Seeder
 				$nhi->tembusan()->attach([$cc_data->id => ['no_urut' => $x]]);
 			} 
 		}
+
+		Penomoran::create([
+			'tipe_dokumen' => $nhi->tipe_dokumen,
+			'agenda' => $nhi->agenda_dokumen,
+			'tahun' => date('Y'),
+			'nomor_terakhir' => $crn_nhi,
+		]);
 	}
 }

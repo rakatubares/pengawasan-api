@@ -44,7 +44,7 @@ class DokLppiController extends DokController
 			'petugas.penilai_informasi.nip' => 'nullable|integer',
 			'petugas.penerima_disposisi.nip' => 'integer',
 			'petugas.pejabat.nip' => 'integer',
-			'ikhtisar' => 'required|array|min:1'
+			'informasi' => 'required|array|min:1'
 		]);
 	}
 
@@ -91,12 +91,40 @@ class DokLppiController extends DokController
 	}
 
 	protected function stored(Request $request) {
-		$this->createIkhtisarInformasi($this->doc, $request->ikhtisar);
+		$this->createInformasi($request->informasi);
 		parent::stored($request);
 	}
 
 	protected function updated(Request $request) {
-		$this->updateIkhtisarInformasi($this->doc, $request->ikhtisar);
+		$this->updateInformasi($request->informasi);
 		parent::updated($request);
+	}
+
+	private function createInformasi($new_infos) {
+		foreach ($new_infos as $info) {
+			$this->doc->informasi()->create($info);
+		}
+	}
+
+	private function updateInformasi($new_infos) {
+		$old_infos = $this->doc->informasi;
+
+		// Update existing info or insert new info if the new ones more than old ones
+		foreach ($new_infos as $k => $info) {
+			if ($k < sizeof($old_infos)) {
+				$info_id = $old_infos[$k]['id'];
+				$this->doc->informasi()->find($info_id)->update($info);
+			} else {
+				$this->doc->informasi()->create($info);
+			}
+		}
+
+		// Delete exceeding info if the old ones more than the new ones
+		if (sizeof($new_infos) < sizeof($old_infos)) {
+			for ($i=sizeof($new_infos); $i < sizeof($old_infos); $i++) { 
+				$info_id = $old_infos[$i]['id'];
+				$this->doc->informasi()->find($info_id)->delete($info);
+			}
+		}
 	}
 }

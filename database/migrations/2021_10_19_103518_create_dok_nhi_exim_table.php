@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokNhiEximTable extends Migration
 {
+	public function __construct()
+	{
+		$this->table_name = 'dok_nhi_exim';
+	}
+
 	/**
 	 * Run the migrations.
 	 *
@@ -13,14 +18,14 @@ class CreateDokNhiEximTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('dok_nhi_exim', function (Blueprint $table) {
+		Schema::create($this->table_name, function (Blueprint $table) {
 			$table->id();
 			$table->string('tipe')->nullable();
 			$table->string('jenis_dok')->nullable();
 			$table->string('nomor_dok')->nullable();
 			$table->date('tanggal_dok')->nullable();
 			$table->string('nama_sarkut')->nullable();
-			$table->string('no_flight_trayek')->nullable();
+			$table->string('nomor_sarkut')->nullable();
 			$table->string('nomor_awb')->nullable();
 			$table->date('tanggal_awb')->nullable();
 			$table->string('merek_koli')->nullable();
@@ -41,6 +46,6 @@ class CreateDokNhiEximTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('dok_nhi_exim');
+		Schema::dropIfExists($this->table_name);
 	}
 }
