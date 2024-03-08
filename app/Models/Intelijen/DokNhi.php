@@ -12,6 +12,7 @@ class DokNhi extends Dokumen
 	protected $table = 'dok_nhi';
 	public $kode_dokumen = 'nhi';
 	public $tipe_dokumen = 'NHI';
+	public $kode_lkai = 'lkai';
 
 	protected $fillable = [
 		'no_dok',

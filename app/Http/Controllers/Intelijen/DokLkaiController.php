@@ -24,7 +24,8 @@ class DokLkaiController extends DokController
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function validateCommonData(Request $request) {
+	protected function validateCommonData(Request $request) 
+	{
 		$request->validate([
 			'keputusan_pejabat' => 'boolean',
 			'tanggal_terima_pejabat' => 'date',

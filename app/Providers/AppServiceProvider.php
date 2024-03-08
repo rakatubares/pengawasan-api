@@ -27,6 +27,7 @@ use App\Models\RefEntitas;
 use App\Observers\Intelijen\DokLkaiNObserver;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
+use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
@@ -92,6 +93,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLppiN::observe(DokLppiObserver::class);
 		DokLkaiN::observe(DokLkaiNObserver::class);
 		DokNhiN::observe(DokNhiNObserver::class);
+		DokNhiNExim::observe(DokNhiNEximObserver::class);
 		DokNiN::observe(DokNiObserver::class);
     }
 }

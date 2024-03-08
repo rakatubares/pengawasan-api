@@ -15,7 +15,7 @@ class CreateDokNhiNOrangTable extends Migration
     {
         Schema::create('dok_nhin_orang', function (Blueprint $table) {
             $table->id();
-			$table->integer('entitas_id')->index();
+			$table->integer('entitas_id')->nullable()->index();
 			$table->string('nomor_sarkut')->nullable();
 			$table->string('kode_pelabuhan_asal')->nullable();
 			$table->string('kode_pelabuhan_tujuan')->nullable();

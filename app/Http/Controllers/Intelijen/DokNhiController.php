@@ -15,6 +15,9 @@ class DokNhiController extends DokController
 	public function __construct($doc_type='nhi')
 	{
 		parent::__construct($doc_type);
+		$doc = new $this->model;
+		$this->kode_lkai = $doc->kode_lkai;
+		$this->field_lkai_id = $this->kode_lkai . '_id';
 	}
 
 	/*
@@ -22,6 +25,18 @@ class DokNhiController extends DokController
 	 | Data modify functions
 	 |--------------------------------------------------------------------------
 	 */
+
+	protected function validateCommonData(Request $request) 
+	{
+		$request->validate([
+			'sifat' => 'string',
+			'klasifikasi' => 'string',
+			'tujuan' => 'string',
+			'tanggal_indikasi' => 'nullable|date',
+			'zona_waktu' => 'string',
+			'detail.type' => 'string',
+		]);
+	}
 
 	/**
 	 * Validate request
@@ -32,16 +47,6 @@ class DokNhiController extends DokController
 	{
 		$request->validate([
 			'lkai_id' => 'nullable|integer',
-			'sifat' => 'string',
-			'klasifikasi' => 'string',
-			'tujuan' => 'string',
-			'tanggal_indikasi' => 'nullable|date',
-			'waktu_indikasi' => 'nullable|time',
-			'zona_waktu' => 'string',
-			'flag_exim' => 'boolean',
-			'tanggal_dok_exim' => 'nullable|date',
-			'tanggal_awb_exim' => 'nullable|date',
-			'detail.type' => 'string',
 		]);
 	}
 
@@ -76,13 +81,14 @@ class DokNhiController extends DokController
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
 
+		$field_lkai_id = $this->field_lkai_id;
 		// Get chain ID
-		if ($request->lkai_id == null) {
+		if ($request->$field_lkai_id == null) {
 			// Create new chain
 			$chain = $this->createChain();
 		} else {
 			// Get chain from existing LKAI
-			$lkai = $this->attachTo('lkai', $request->lkai_id);
+			$lkai = $this->attachTo($this->kode_lkai, $request->$field_lkai_id);
 			$chain = $lkai->chain;
 		}
 		$data['chain_id'] = $chain->id;
@@ -101,43 +107,23 @@ class DokNhiController extends DokController
 		parent::stored($request);
 	}
 
-	protected function createNhiDetail($request) {
-		$detail_type = $request->detail['type'];
-		$detail_data = $request->detail['data'];
-		$detail = Relation::getMorphedModel($detail_type)::create($detail_data);
-
-		if (isset($request->detail['data']['entitas'])) {
-			$detail->update([
-				'entitas_type' => $request->detail['data']['entitas']['type'],
-				'entitas_id' => $request->detail['data']['entitas']['data']['id'],
-			]);
-		}
-		
-		return $detail;
-	}
-
-	protected function attachNhiDetail($request, $detail) {
-		$this->doc->update([
-			'detail_type' => $request->detail['type'],
-			'detail_id' => $detail->id,
-		]);
-	}
-
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
-		$existing_lkai = $this->doc->chain->lkai;
+		$kode_lkai = $this->kode_lkai;
+		$field_lkai_id = $this->field_lkai_id;
+		$existing_lkai = $this->doc->chain->$kode_lkai;
 		if ($existing_lkai == null) {
-			if ($request->lkai_id != null) {
-				$lkai = $this->attachTo('lkai', $request->lkai_id);
+			if ($request->$field_lkai_id != null) {
+				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		} else {
-			if ($request->lkai_id == null) {
-				$this->detachFrom('lkai', $existing_lkai->id);
+			if ($request->$field_lkai_id == null) {
+				$this->detachFrom($kode_lkai, $existing_lkai->id);
 				$data['chain_id'] = null;
-			} else if ($request->lkai_id != $existing_lkai->id) {
-				$this->detachFrom('lkai', $existing_lkai->id);
-				$lkai = $this->attachTo('lkai', $request->lkai_id);
+			} else if ($request->$field_lkai_id != $existing_lkai->id) {
+				$this->detachFrom($kode_lkai, $existing_lkai->id);
+				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		}
@@ -149,7 +135,7 @@ class DokNhiController extends DokController
 		$existing_detail_id = $this->doc->detail_id;
 		$existing_detail = Relation::getMorphedModel($existing_detail_type)::find($existing_detail_id);
 
-		if ($existing_detail == $request->detail['type']) {
+		if ($existing_detail_type == $request->detail['type']) {
 			$this->updateNhiDetail($request, $existing_detail);
 		} else {
 			// Delete previous detail
@@ -163,11 +149,80 @@ class DokNhiController extends DokController
 		parent::updated($request);
 	}
 
+	protected function attachNhiDetail($request, $detail) {
+		$this->doc->update([
+			'detail_type' => $request->detail['type'],
+			'detail_id' => $detail->id,
+		]);
+	}
+
+	protected function createNhiDetail($request) {
+		$detail_type = $request->detail['type'];
+		$detail_data = $request->detail['data'];
+		$detail = Relation::getMorphedModel($detail_type)::create($detail_data);
+		$this->updateDetail($detail, $request);
+		return $detail;
+	}
+
 	protected function updateNhiDetail(Request $request, $detail) {
 		$detail->update($request->detail['data']);
+		$this->updateDetail($detail, $request);
 	}
 
 	protected function deleteNhiDetail($existing_detail) {
 		$existing_detail->delete();
+	}
+
+	private function updateDetail($detail, $request) {
+		$detail_type = $request->detail['type'];
+
+		if (
+			($detail_type == 'nhi-exim') || 
+			($detail_type == 'nhi-tertentu') ||
+			($detail_type == 'nhin-exim')
+		) {
+			$this->updateEntitasDetail($detail, $request);
+		}
+
+		if (
+			($detail_type == 'nhin-sarkut') ||
+			($detail_type == 'nhin-orang')
+		) {
+			$this->updatePelabuhanDetail($detail, $request);
+		}
+
+		if ($detail_type == 'nhin-orang') {
+			$this->updateOrangDetail($detail, $request);
+		}
+	}
+
+	private function updateEntitasDetail($detail, $request) {
+		if (isset($request->detail['data']['entitas'])) {
+			$detail->update([
+				'entitas_type' => $request->detail['data']['entitas']['type'],
+				'entitas_id' => $request->detail['data']['entitas']['data']['id'],
+			]);
+		}
+	}
+
+	private function updatePelabuhanDetail($detail, $request) {
+		if (isset($request->detail['data']['pelabuhan_asal'])) {
+			$detail->update([
+				'kode_pelabuhan_asal' => $request->detail['data']['pelabuhan_asal']['iata_code'],
+			]);
+		}
+		if (isset($request->detail['data']['pelabuhan_tujuan'])) {
+			$detail->update([
+				'kode_pelabuhan_tujuan' => $request->detail['data']['pelabuhan_tujuan']['iata_code'],
+			]);
+		}
+	}
+
+	private function updateOrangDetail($detail, $request) {
+		if (isset($request->detail['data']['entitas'])) {
+			$detail->update([
+				'entitas_id' => $request->detail['data']['entitas']['id'],
+			]);
+		}
 	}
 }
