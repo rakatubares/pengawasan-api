@@ -18,6 +18,7 @@ class DokNhiNController extends DokNhiController
 	 */
 	protected function validateData(Request $request)
 	{
+		$this->validateCommonData($request);
 		$request->validate([
 			'lkain_id' => 'nullable|integer',
 		]);

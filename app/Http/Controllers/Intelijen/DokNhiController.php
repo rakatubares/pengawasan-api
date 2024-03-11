@@ -45,6 +45,7 @@ class DokNhiController extends DokController
 	 */
 	protected function validateData(Request $request)
 	{
+		$this->validateCommonData($request);
 		$request->validate([
 			'lkai_id' => 'nullable|integer',
 		]);
