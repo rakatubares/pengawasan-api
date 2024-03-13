@@ -9,6 +9,7 @@ class DokNi extends Dokumen
 	protected $table = 'dok_ni';
 	public $kode_dokumen = 'ni';
 	public $tipe_dokumen = 'NI';
+	public $kode_lkai = 'lkai';
 
 	protected $fillable = [
 		'no_dok',

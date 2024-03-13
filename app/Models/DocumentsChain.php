@@ -9,7 +9,7 @@ use App\Models\Intelijen\DokLppiN;
 use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
-use App\Models\Intelijen\IkhtisarInformasi;
+use App\Models\Intelijen\DokNiN;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +24,7 @@ class DocumentsChain extends Model
 	protected $fillable = ['latest_document'];
 	public $doc_types = [
 		'lppi', 'lkai', 'nhi', 'ni',
-		'lppin', 'lkain', 'nhin',
+		'lppin', 'lkain', 'nhin', 'nin',
 	];
 
 	public function status() {
@@ -57,5 +57,9 @@ class DocumentsChain extends Model
 
 	public function nhin() {
 		return $this->hasOne(DokNhiN::class, 'chain_id');
+	}
+
+	public function nin() {
+		return $this->hasOne(DokNiN::class, 'chain_id');
 	}
 }

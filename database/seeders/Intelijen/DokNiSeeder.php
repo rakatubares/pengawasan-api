@@ -2,15 +2,21 @@
 
 namespace Database\Seeders\Intelijen;
 
-use App\Models\Intelijen\DokLkai;
-use App\Models\Intelijen\DokNi;
 use App\Models\Penomoran;
 use App\Models\References\RefTembusan;
 use Faker\Factory as Faker;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 
 class DokNiSeeder extends Seeder
 {
+	public function __construct($kode_dokumen='ni') {
+		$this->kode_dokumen = $kode_dokumen;
+		$this->model_ni = Relation::getMorphedModel($this->kode_dokumen);
+		$ni = new $this->model_ni;
+		$this->kode_lkai = $ni->kode_lkai;
+		$this->model_lkai = Relation::getMorphedModel($this->kode_lkai);
+	}
 	/**
 	 * Run the database seeds.
 	 *
@@ -21,7 +27,7 @@ class DokNiSeeder extends Seeder
 		$this->faker = Faker::create();
 
 		// Get LKAI ids
-		$list_id_lkai = DokLkai::select('id')->where('kode_status', 'terbit')
+		$list_id_lkai = $this->model_lkai::select('id')->where('kode_status', 'terbit')
 			->get()
 			->toArray();
 		$available_lkai_id = array_map(
@@ -33,19 +39,19 @@ class DokNiSeeder extends Seeder
 		$year = date("Y");
 
 		for ($d=1; $d < 11; $d++) { 
-			$max_ni = DokNi::max('no_dok');
+			$max_ni = $this->model_ni::max('no_dok');
 			$crn_ni = $max_ni + 1;
 
 			// LKAI
 			$lkai_id = $this->faker->randomElement($available_lkai_id);
 			$key = array_search($lkai_id, $available_lkai_id);
 			unset($available_lkai_id[$key]);
-			$lkai = DokLkai::find($lkai_id);
+			$lkai = $this->model_lkai::find($lkai_id);
 			$lkai->update(['kode_status' => 'tindak-lanjut']);
 			$chain = $lkai->chain;
 
 			// Create NI data
-			$ni = new DokNi();
+			$ni = new $this->model_ni;
 			$ni->no_dok = $crn_ni;
 			$ni->agenda_dok = $ni->agenda_dokumen;
 			$ni->thn_dok = $year;

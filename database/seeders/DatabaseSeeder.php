@@ -8,6 +8,7 @@ use Database\Seeders\Intelijen\DokLppiNSeeder;
 use Database\Seeders\Intelijen\DokLppiSeeder;
 use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
+use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
@@ -59,7 +60,7 @@ class DatabaseSeeder extends Seeder
 			DokLppiNSeeder::class,
 			DokLkaiNSeeder::class,
 			DokNhiNSeeder::class,
-			// DokNiNSeeder::class,
+			DokNiNSeeder::class,
 		]);
 	}
 }

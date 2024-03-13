@@ -9,7 +9,6 @@ use App\Http\Controllers\DetailDokumenController;
 use App\Http\Controllers\DetailSarkutController;
 use App\Http\Controllers\DocumentsChainController;
 use App\Http\Controllers\DokController;
-use App\Http\Controllers\DokNiNController;
 use App\Http\Controllers\Entitas\EntitasBadanHukumController;
 use App\Http\Controllers\Entitas\EntitasOrangController;
 use App\Http\Controllers\Intelijen\DokLkaiController;
@@ -19,6 +18,7 @@ use App\Http\Controllers\Intelijen\DokLppiNController;
 use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
+use App\Http\Controllers\Intelijen\DokNiNController;
 use App\Http\Controllers\References\RefBandaraController;
 use App\Http\Controllers\References\RefJabatanController;
 use App\Http\Controllers\References\RefKantorBCController;
@@ -117,10 +117,6 @@ Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
  * API for NI-N
  */
 Route::apiResource('nin', DokNiNController::class);
-Route::get('/nin/{nin_id}/display', [DokNiNController::class, 'display']);
-Route::get('/nin/{nin_id}/form', [DokNiNController::class, 'form']);
-Route::get('/nin/{nin_id}/docs', [DokNiNController::class, 'docs']);
-Route::get('/nin/{nin_id}/pdf', [DokNiNController::class, 'pdf']);
 Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
 
 /*

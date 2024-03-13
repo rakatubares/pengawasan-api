@@ -10,6 +10,9 @@ class DokNiController extends DokController
 	public function __construct($doc_type='ni')
 	{
 		parent::__construct($doc_type);
+		$doc = new $this->model;
+		$this->kode_lkai = $doc->kode_lkai;
+		$this->field_lkai_id = $this->kode_lkai . '_id';
 	}
 
 	/*
@@ -18,6 +21,14 @@ class DokNiController extends DokController
 	 |--------------------------------------------------------------------------
 	 */
 
+	protected function validateCommonData(Request $request) 
+	{
+		$request->validate([
+			'sifat' => 'string',
+			'klasifikasi' => 'string',
+		]);
+	}
+
 	/**
 	 * Validate request
 	 * 
@@ -25,10 +36,9 @@ class DokNiController extends DokController
 	 */
 	protected function validateData(Request $request)
 	{
+		$this->validateCommonData($request);
 		$request->validate([
 			'lkai_id' => 'integer',
-			'sifat' => 'string',
-			'klasifikasi' => 'string',
 		]);
 	}
 
@@ -54,13 +64,14 @@ class DokNiController extends DokController
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
 
+		$field_lkai_id = $this->field_lkai_id;
 		// Get chain ID
-		if ($request->lkai_id == null) {
+		if ($request->$field_lkai_id == null) {
 			// Create new chain
 			$chain = $this->createChain();
 		} else {
 			// Get chain from existing LKAI
-			$lkai = $this->attachTo('lkai', $request->lkai_id);
+			$lkai = $this->attachTo($this->kode_lkai, $request->$field_lkai_id);
 			$chain = $lkai->chain;
 		}
 		$data['chain_id'] = $chain->id;
@@ -75,19 +86,21 @@ class DokNiController extends DokController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
-		$existing_lkai = $this->doc->chain->lkai;
+		$kode_lkai = $this->kode_lkai;
+		$field_lkai_id = $this->field_lkai_id;
+		$existing_lkai = $this->doc->chain->$kode_lkai;
 		if ($existing_lkai == null) {
-			if ($request->lkai_id != null) {
-				$lkai = $this->attachTo('lkai', $request->lkai_id);
+			if ($request->$field_lkai_id != null) {
+				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		} else {
-			if ($request->lkai_id == null) {
-				$this->detachFrom('lkai', $existing_lkai->id);
+			if ($request->$field_lkai_id == null) {
+				$this->detachFrom($kode_lkai, $existing_lkai->id);
 				$data['chain_id'] = null;
-			} else if ($request->lkai_id != $existing_lkai->id) {
-				$this->detachFrom('lkai', $existing_lkai->id);
-				$lkai = $this->attachTo('lkai', $request->lkai_id);
+			} else if ($request->$field_lkai_id != $existing_lkai->id) {
+				$this->detachFrom($kode_lkai, $existing_lkai->id);
+				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		}
