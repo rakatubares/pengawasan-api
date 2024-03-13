@@ -14,6 +14,8 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
+use App\Http\Resources\Penindakan\DokLiResource;
+use App\Http\Resources\Penindakan\DokLiTableResource;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
@@ -44,6 +46,8 @@ trait DocumentTrait
 			'lkai' => DokLkaiResource::class,
 			'nhi' => DokNhiResource::class,
 			'ni' => DokNiResource::class,
+			// Penindakan
+			'li' => DokLiResource::class,
 			// NPP
 			'lppin' => DokLppiResource::class,
 			'lkain' => DokLkaiNResource::class,
@@ -67,6 +71,8 @@ trait DocumentTrait
 			'lkai' => DokLkaiTableResource::class,
 			'nhi' => DokNhiTableResource::class,
 			'ni' => DokNhiTableResource::class,
+			// Penindakan
+			'li' => DokLiTableResource::class,
 			// NPP
 			'lppin' => DokLppiTableResource::class,
 			'lkain' => DokLkaiTableResource::class,

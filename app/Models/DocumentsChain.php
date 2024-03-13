@@ -10,6 +10,7 @@ use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokLi;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,12 +26,16 @@ class DocumentsChain extends Model
 	public $doc_types = [
 		'lppi', 'lkai', 'nhi', 'ni',
 		'lppin', 'lkain', 'nhin', 'nin',
+		'li',
 	];
 
 	public function status() {
 		return $this->belongsTo(RefKodeDokumen::class, 'latest_document', 'kode_dokumen');
 	}
 
+	/**
+	 * Intelijen
+	 */
 	public function lppi() {
 		return $this->hasOne(DokLppi::class,'chain_id');
 	}
@@ -61,5 +66,12 @@ class DocumentsChain extends Model
 
 	public function nin() {
 		return $this->hasOne(DokNiN::class, 'chain_id');
+	}
+
+	/**
+	 * Penindakan
+	 */
+	public function li() {
+		return $this->hasOne(DokLi::class, 'chain_id');
 	}
 }

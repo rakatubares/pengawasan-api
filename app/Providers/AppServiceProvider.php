@@ -12,7 +12,6 @@ use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
 use App\Models\DokLap;
 use App\Models\DokLapN;
-use App\Models\DokLi;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
@@ -34,7 +33,6 @@ use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLapObserver;
-use App\Observers\DokLiObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
@@ -62,8 +60,7 @@ use App\Models\Intelijen\DokNhiNSarkut;
 use App\Models\Intelijen\DokNhiTertentu;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
-use App\Models\Penindakan;
-use App\Models\RefEntitas;
+use App\Models\Penindakan\DokLi;
 use App\Observers\Intelijen\DokLkaiNObserver;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
@@ -71,6 +68,7 @@ use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
+use App\Observers\Penindakan\DokLiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -108,6 +106,8 @@ class AppServiceProvider extends ServiceProvider
 			'entitas-badan-hukum' => EntitasBadanHukum::class,
 			'entitas-orang' => EntitasOrang::class,
 			'item_barang' => DetailBarangItem::class,
+			'orang' => RefEntitas::class,
+			'pegawai' => RefUserCache::class,
 			// Intelijen
 			'lppi' => DokLppi::class,
 			'lppin' => DokLppiN::class,
@@ -123,21 +123,21 @@ class AppServiceProvider extends ServiceProvider
 			'nhin-orang' => DokNhiNOrang::class,
 			'ni' => DokNi::class,
 			'nin' => DokNiN::class,
-			'orang' => RefEntitas::class,
-			'pegawai' => RefUserCache::class,
+			// Penindakan
 			'penindakan' => Penindakan::class,
+			'li' => DokLi::class,
 			'riksa' => DokRiksa::class,
 			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
 			'segel' => DokSegel::class,
 		]);
 
-		DetailBarangItem::observe((DetailBarangItemObserver::class));
+		// DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLap::observe(DokLapObserver::class);
 		DokLapN::observe(DokLapObserver::class);
-		DokLi::observe(DokLiObserver::class);
+		
 		DokLp::observe(DokLpObserver::class);
 		DokLpN::observe(DokLpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
@@ -163,5 +163,8 @@ class AppServiceProvider extends ServiceProvider
 		DokNhiN::observe(DokNhiNObserver::class);
 		DokNhiNExim::observe(DokNhiNEximObserver::class);
 		DokNiN::observe(DokNiObserver::class);
+
+		// Penindakan
+		DokLi::observe(DokLiObserver::class);
     }
 }

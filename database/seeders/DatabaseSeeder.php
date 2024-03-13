@@ -10,6 +10,7 @@ use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
+use Database\Seeders\Penindakan\DokLiSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
 use Database\Seeders\References\RefKantorBCSeeder;
@@ -59,7 +60,6 @@ class DatabaseSeeder extends Seeder
 			DokLppiSeeder::class,
 			DokLkaiSeeder::class,
 			DokNhiSeeder::class,
-			DokLiSeeder::class,
 			DokNiSeeder::class,
 
 			DokLppiNSeeder::class,
@@ -67,27 +67,29 @@ class DatabaseSeeder extends Seeder
 			DokNhiNSeeder::class,
 			DokNiNSeeder::class,
 
-			DokLapSeeder::class,
-			DokSbpSeeder::class,
-			DokLphpSeeder::class,
-			DokLpSeeder::class,
-			DokRiksaSeeder::class,
-			DokRiksaBadanSeeder::class,
-			DokSegelSeeder::class,
-			DokTitipSeeder::class,
-			DokBukaSegelSeeder::class,
-			DokPengamanSeeder::class,
-			DokBukaPengamanSeeder::class,
-			DokBastSeeder::class,
-			DokContohSeeder::class,
-			DokReeksporSeeder::class,
-			DokLppiNSeeder::class,
-			DokLkaiNSeeder::class,
-			DokNhiNSeeder::class,
-			DokLapNSeeder::class,
-			DokSbpNSeeder::class,
-			DokLphpNSeeder::class,
-			DokLpNSeeder::class,
+			// Penindakan
+			DokLiSeeder::class,
+			// DokLapSeeder::class,
+			// DokSbpSeeder::class,
+			// DokLphpSeeder::class,
+			// DokLpSeeder::class,
+			// DokRiksaSeeder::class,
+			// DokRiksaBadanSeeder::class,
+			// DokSegelSeeder::class,
+			// DokTitipSeeder::class,
+			// DokBukaSegelSeeder::class,
+			// DokPengamanSeeder::class,
+			// DokBukaPengamanSeeder::class,
+			// DokBastSeeder::class,
+			// DokContohSeeder::class,
+			// DokReeksporSeeder::class,
+			// DokLppiNSeeder::class,
+			// DokLkaiNSeeder::class,
+			// DokNhiNSeeder::class,
+			// DokLapNSeeder::class,
+			// DokSbpNSeeder::class,
+			// DokLphpNSeeder::class,
+			// DokLpNSeeder::class,
 		]);
 	}
 }

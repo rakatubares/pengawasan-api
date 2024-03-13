@@ -13,7 +13,7 @@ use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLapNController;
-use App\Http\Controllers\DokLiController;
+// use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
@@ -48,6 +48,7 @@ use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
 use App\Http\Controllers\Intelijen\DokNiNController;
+use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\References\RefBandaraController;
 use App\Http\Controllers\References\RefJabatanController;
 use App\Http\Controllers\References\RefKantorBCController;
@@ -133,12 +134,7 @@ Route::get('/penindakan/{id}', [PenindakanController::class, 'show']);
  * API for LI-1
  */
 Route::apiResource('li', DokLiController::class);
-Route::get('/li/{li_id}/display', [DokLiController::class, 'display']);
-Route::get('/li/{li_id}/form', [DokLiController::class, 'form']);
-Route::get('/li/{li_id}/docs', [DokLiController::class, 'docs']);
-Route::get('/li/{li_id}/pdf', [DokLiController::class, 'pdf']);
 Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
-Route::post('/li/search', [DokLiController::class, 'search']);
 
 /**
  * API for LAP

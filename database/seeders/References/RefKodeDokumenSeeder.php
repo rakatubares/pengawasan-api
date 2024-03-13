@@ -68,7 +68,7 @@ class RefKodeDokumenSeeder extends Seeder
 
 			// Penindakan
 			[
-				'kode_dokumen' => 'li_1',
+				'kode_dokumen' => 'li',
 				'short_title' => 'LI-1',
 				'title' => 'Lembar Informasi',
 				'group' => 'penindakan',
