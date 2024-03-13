@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DetailBadanController;
 use App\Http\Controllers\DetailBangunanController;
 use App\Http\Controllers\DetailBarangController;
@@ -13,18 +14,12 @@ use App\Http\Controllers\DokContohController;
 use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLapNController;
 use App\Http\Controllers\DokLiController;
-use App\Http\Controllers\DokLkaiController;
-use App\Http\Controllers\DokLkaiNController;
 use App\Http\Controllers\DokLpController;
 use App\Http\Controllers\DokLphpController;
 use App\Http\Controllers\DokLphpNController;
 use App\Http\Controllers\DokLpNController;
-use App\Http\Controllers\DokLppiController;
-use App\Http\Controllers\DokLppiNController;
 use App\Http\Controllers\DokLptpController;
 use App\Http\Controllers\DokLptpNController;
-use App\Http\Controllers\DokNhiController;
-use App\Http\Controllers\DokNhiNController;
 use App\Http\Controllers\DokPengamanController;
 use App\Http\Controllers\DokReeksporController;
 use App\Http\Controllers\DokRiksaController;
@@ -39,16 +34,33 @@ use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
 use App\Http\Controllers\PenindakanController;
 use App\Http\Controllers\RefEntitasController;
-use App\Http\Controllers\RefJabatanController;
-use App\Http\Controllers\RefKategoriBarangController;
 use App\Http\Controllers\RefKategoriPelanggaranController;
-use App\Http\Controllers\RefKemasanController;
-use App\Http\Controllers\RefLokasiController;
-use App\Http\Controllers\RefNegaraController;
-use App\Http\Controllers\RefSatuanController;
 use App\Http\Controllers\RefSkemaPenindakanController;
+use App\Http\Controllers\DocumentsChainController;
+use App\Http\Controllers\DokController;
+use App\Http\Controllers\Entitas\EntitasBadanHukumController;
+use App\Http\Controllers\Entitas\EntitasOrangController;
+use App\Http\Controllers\Intelijen\DokLkaiController;
+use App\Http\Controllers\Intelijen\DokLkaiNController;
+use App\Http\Controllers\Intelijen\DokLppiController;
+use App\Http\Controllers\Intelijen\DokLppiNController;
+use App\Http\Controllers\Intelijen\DokNhiController;
+use App\Http\Controllers\Intelijen\DokNhiNController;
+use App\Http\Controllers\Intelijen\DokNiController;
+use App\Http\Controllers\Intelijen\DokNiNController;
+use App\Http\Controllers\References\RefBandaraController;
+use App\Http\Controllers\References\RefJabatanController;
+use App\Http\Controllers\References\RefKantorBCController;
+use App\Http\Controllers\References\RefKategoriBarangController;
+use App\Http\Controllers\References\RefKemasanController;
+use App\Http\Controllers\References\RefKepercayaanSumberController;
+use App\Http\Controllers\References\RefLokasiController;
+use App\Http\Controllers\References\RefNegaraController;
+use App\Http\Controllers\References\RefSatuanController;
+use App\Http\Controllers\References\RefValiditasInformasiController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
+use App\Http\Controllers\TembusanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -69,6 +81,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /*
  |--------------------------------------------------------------------------
+ | Documents chain routes
+ |--------------------------------------------------------------------------
+ */
+
+Route::get('/chain/{doc_type}/id/{doc_id}', [DocumentsChainController::class, 'show']);
+Route::post('/doc/{doc_type}/search', [DokController::class, 'search']);
+
+/*
+ |--------------------------------------------------------------------------
  | Intelijen routes
  |--------------------------------------------------------------------------
  */
@@ -77,35 +98,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  * API for LPPI
  */
 Route::apiResource('lppi', DokLppiController::class);
-Route::get('/lppi/{lppi_id}/display', [DokLppiController::class, 'display']);
-Route::get('/lppi/{lppi_id}/form', [DokLppiController::class, 'form']);
-Route::get('/lppi/{lppi_id}/docs', [DokLppiController::class, 'docs']);
-Route::get('/lppi/{lppi_id}/pdf', [DokLppiController::class, 'pdf']);
 Route::put('/lppi/{lppi_id}/publish', [DokLppiController::class, 'publish']);
-Route::post('/lppi/search', [DokLppiController::class, 'search']);
 
 /**
  * API for LKAI
  */
 Route::apiResource('lkai', DokLkaiController::class);
-Route::get('/lkai/{lkai_id}/display', [DokLkaiController::class, 'display']);
-Route::get('/lkai/{lkai_id}/form', [DokLkaiController::class, 'form']);
-Route::get('/lkai/{lkai_id}/docs', [DokLkaiController::class, 'docs']);
-Route::get('/lkai/{lkai_id}/pdf', [DokLkaiController::class, 'pdf']);
 Route::put('/lkai/{lkai_id}/publish', [DokLkaiController::class, 'publish']);
-Route::post('/lkai/search', [DokLkaiController::class, 'search']);
 
 /**
  * API for NHI
  */
 Route::apiResource('nhi', DokNhiController::class);
-Route::get('/nhi/{nhi_id}/display', [DokNhiController::class, 'display']);
-Route::get('/nhi/{nhi_id}/form', [DokNhiController::class, 'form']);
-Route::get('/nhi/{nhi_id}/docs', [DokNhiController::class, 'docs']);
-Route::get('/nhi/{nhi_id}/pdf', [DokNhiController::class, 'pdf']);
-Route::get('/nhi/{nhi_id}/objek', [DokNhiController::class, 'objek']);
 Route::put('/nhi/{nhi_id}/publish', [DokNhiController::class, 'publish']);
-Route::post('/nhi/search', [DokNhiController::class, 'search']);
+
+/**
+ * API for NI
+ */
+Route::apiResource('ni', DokNiController::class);
+Route::put('/ni/{ni_id}/publish', [DokNiController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------
@@ -327,35 +338,25 @@ Route::put('/reekspor/{reekspor_id}/publish', [DokReeksporController::class, 'pu
  * API for LPPI-N
  */
 Route::apiResource('lppin', DokLppiNController::class);
-Route::get('/lppin/{lppin_id}/display', [DokLppiNController::class, 'display']);
-Route::get('/lppin/{lppin_id}/form', [DokLppiNController::class, 'form']);
-Route::get('/lppin/{lppin_id}/docs', [DokLppiNController::class, 'docs']);
-Route::get('/lppin/{lppin_id}/pdf', [DokLppiNController::class, 'pdf']);
 Route::put('/lppin/{lppin_id}/publish', [DokLppiNController::class, 'publish']);
-Route::post('/lppin/search', [DokLppiNController::class, 'search']);
 
 /**
  * API for LKAI-N
  */
 Route::apiResource('lkain', DokLkaiNController::class);
-Route::get('/lkain/{lkain_id}/display', [DokLkaiNController::class, 'display']);
-Route::get('/lkain/{lkain_id}/form', [DokLkaiNController::class, 'form']);
-Route::get('/lkain/{lkain_id}/docs', [DokLkaiNController::class, 'docs']);
-Route::get('/lkain/{lkain_id}/pdf', [DokLkaiNController::class, 'pdf']);
 Route::put('/lkain/{lkain_id}/publish', [DokLkaiNController::class, 'publish']);
-Route::post('/lkain/search', [DokLkaiNController::class, 'search']);
 
 /**
  * API for NHI-N
  */
 Route::apiResource('nhin', DokNhiNController::class);
-Route::get('/nhin/{nhin_id}/display', [DokNhiNController::class, 'display']);
-Route::get('/nhin/{nhin_id}/form', [DokNhiNController::class, 'form']);
-Route::get('/nhin/{nhin_id}/docs', [DokNhiNController::class, 'docs']);
-Route::get('/nhin/{nhin_id}/pdf', [DokNhiNController::class, 'pdf']);
-Route::get('/nhin/{nhin_id}/objek', [DokNhiNController::class, 'objek']);
 Route::put('/nhin/{nhin_id}/publish', [DokNhiNController::class, 'publish']);
-Route::post('/nhin/search', [DokNhiNController::class, 'search']);
+
+/**
+ * API for NI-N
+ */
+Route::apiResource('nin', DokNiNController::class);
+Route::put('/nin/{nin_id}/publish', [DokNiNController::class, 'publish']);
 
 /**
  * API for LAP-N
@@ -409,6 +410,7 @@ Route::get('/lpn/{lpn_id}/pdf', [DokLpNController::class, 'pdf']);
 Route::get('/lpn/{lpn_id}/objek', [DokLpNController::class, 'objek']);
 Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
 
+
 /*
  |--------------------------------------------------------------------------
  | Details routes
@@ -416,58 +418,64 @@ Route::put('/lpn/{lpn_id}/publish', [DokLpNController::class, 'publish']);
  */
 
 /**
+ * API for detail barang
+ */
+Route::prefix('/barang/{doc_type}/{doc_id}')->group(function () {
+	Route::apiResource('/item', BarangController::class);
+});
+
+/**
  * API for Details
  */
-Route::prefix('{doc_type}/{doc_id}')->group(function() {
-	// Sarkut
-	Route::prefix('/sarkut')->group(function() {
-		Route::get('/', [DetailSarkutController::class, 'show']);
-		Route::post('/', [DetailSarkutController::class, 'store']);
-		Route::put('/{sarkut_id}', [DetailSarkutController::class, 'update']);
-		Route::delete('/', [DetailSarkutController::class, 'destroy']);
-	});
+// Route::prefix('{doc_type}/{doc_id}')->group(function() {
+// 	// Sarkut
+// 	Route::prefix('/sarkut')->group(function() {
+// 		Route::get('/{how?}', [DetailSarkutController::class, 'show']);
+// 		Route::post('/', [DetailSarkutController::class, 'store']);
+// 		Route::put('/{sarkut_id}', [DetailSarkutController::class, 'update']);
+// 		Route::delete('/', [DetailSarkutController::class, 'destroy']);
+// 	});
 
-	// Barang
-	Route::prefix('/barang')->group(function() {
-		Route::post('/new', [DetailBarangController::class, 'store']);
-		Route::post('/upsert', [DetailBarangController::class, 'store']);
-		Route::post('/', [DetailBarangController::class, 'store']);
-		Route::put('/{barang_id}', [DetailBarangController::class, 'update']);
-		Route::delete('/', [DetailBarangController::class, 'destroy']);
+// 	// Barang
+// 	Route::prefix('/barang')->group(function() {
+// 		Route::post('/new', [DetailBarangController::class, 'store']);
+// 		Route::post('/upsert', [DetailBarangController::class, 'store']);
+// 		Route::post('/', [DetailBarangController::class, 'store']);
+// 		Route::put('/{barang_id}', [DetailBarangController::class, 'update']);
+// 		Route::delete('/', [DetailBarangController::class, 'destroy']);
 
-		// Item barang
-		Route::prefix('item')->group(function() {
-			Route::get('/', [DetailBarangItemController::class, 'index']);
-			Route::post('/', [DetailBarangItemController::class, 'store']);
-			Route::get('/{item_id}', [DetailBarangItemController::class, 'show']);
-			Route::put('/{item_id}', [DetailBarangItemController::class, 'update']);
-			Route::delete('/{item_id}', [DetailBarangItemController::class, 'destroy']);
-		});
-	});
+// 		// Item barang
+// 		Route::prefix('item')->group(function() {
+// 			Route::get('/', [DetailBarangItemController::class, 'index']);
+// 			Route::post('/', [DetailBarangItemController::class, 'store']);
+// 			Route::get('/{item_id}', [DetailBarangItemController::class, 'show']);
+// 			Route::put('/{item_id}', [DetailBarangItemController::class, 'update']);
+// 			Route::delete('/{item_id}', [DetailBarangItemController::class, 'destroy']);
+// 		});
+// 	});
 
-	// Bangunan
-	Route::prefix('/bangunan')->group(function() {
-		Route::get('/', [DetailBangunanController::class, 'show']);
-		Route::post('/', [DetailBangunanController::class, 'store']);
-		Route::put('/{bangunan_id}', [DetailBangunanController::class, 'update']);
-		Route::delete('/', [DetailBangunanController::class, 'destroy']);
-	});
+// 	// Bangunan
+// 	Route::prefix('/bangunan')->group(function() {
+// 		Route::get('/{how?}', [DetailBangunanController::class, 'show']);
+// 		Route::post('/', [DetailBangunanController::class, 'store']);
+// 		Route::put('/{bangunan_id}', [DetailBangunanController::class, 'update']);
+// 		Route::delete('/', [DetailBangunanController::class, 'destroy']);
+// 	});
 
-	// Badan
-	Route::prefix('/orang')->group(function() {
-		// Route::get('/', [DetailBadanController::class, 'show']);
-		Route::post('/', [DetailBadanController::class, 'store']);
-		Route::delete('/', [DetailBadanController::class, 'destroy']);
-	});
+// 	// Badan
+// 	Route::prefix('/orang')->group(function() {
+// 		// Route::get('/', [DetailBadanController::class, 'show']);
+// 		Route::post('/', [DetailBadanController::class, 'store']);
+// 		Route::delete('/', [DetailBadanController::class, 'destroy']);
+// 	});
 
-	// Dokumen
-	Route::prefix('/dokumen')->group(function() {
-		Route::get('/', [DetailDokumenController::class, 'show']);
-		Route::post('/', [DetailDokumenController::class, 'store']);
-		Route::put('/{dokumen_id}', [DetailDokumenController::class, 'update']);
-		Route::delete('/', [DetailDokumenController::class, 'destroy']);
-	});
-});
+// 	// Dokumen
+// 	Route::prefix('/dokumen')->group(function() {
+// 		Route::get('/{how?}', [DetailDokumenController::class, 'show']);
+// 		Route::post('/{how?}', [DetailDokumenController::class, 'store']);
+// 		Route::delete('/', [DetailDokumenController::class, 'destroy']);
+// 	});
+// });
 
 /*
  |--------------------------------------------------------------------------
@@ -482,10 +490,16 @@ Route::apiResource('sprint', RefSprintController::class);
 Route::post('/sprint/search', [RefSprintController::class, 'search']);
 
 /**
- * API for Entity
+ * API for Personal Entity
  */
-Route::apiResource('entitas', RefEntitasController::class);
-Route::post('/entitas/search', [RefEntitasController::class, 'search']);
+Route::apiResource('entitas/orang', EntitasOrangController::class);
+Route::post('/entitas/orang/search', [EntitasOrangController::class, 'search']);
+
+/**
+ * API for Company Entity
+ */
+Route::apiResource('entitas/badanhukum', EntitasBadanHukumController::class);
+Route::post('/entitas/badanhukum/search', [EntitasBadanHukumController::class, 'search']);
 
 /**
  * API for Jabatan
@@ -505,7 +519,13 @@ Route::apiResource('penindakan', RefSkemaPenindakanController::class);
 /**
  * API for Grup Lokasi
  */
-Route::get('lokasi', [RefLokasiController::class, 'index']);
+Route::post('lokasi/search', [RefLokasiController::class, 'search']);
+
+/**
+ * API for Kantor BC
+ */
+Route::get('kantor/kode/{kode_kantor}', [RefKantorBCController::class, 'getDataByCode']);
+Route::post('kantor/search', [RefKantorBCController::class, 'search']);
 
 /**
  * API for Kemasan
@@ -516,6 +536,7 @@ Route::post('kemasan/search', [RefKemasanController::class, 'search']);
 /**
  * API for Satuan
  */
+Route::get('satuan', [RefSatuanController::class, 'index']);
 Route::get('satuan/{id}', [RefSatuanController::class, 'show']);
 Route::post('satuan/search', [RefSatuanController::class, 'search']);
 
@@ -533,10 +554,33 @@ Route::get('negara/{kode}', [RefNegaraController::class, 'show']);
 Route::post('negara/search', [RefNegaraController::class, 'search']);
 
 /**
+ * API for Bandara
+ */
+Route::get('bandara/{code}', [RefBandaraController::class, 'show']);
+Route::post('bandara/search', [RefBandaraController::class, 'search']);
+
+/**
+ * API for Klasifikasi Kepercayaan
+ */
+Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
+
+/**
+ * API for Klasifikasi Validitas
+ */
+Route::get('validitas', [RefValiditasInformasiController::class, 'index']);
+
+/**
+ * API for Tembusan
+ */
+Route::post('tembusan/search', [TembusanController::class, 'search']);
+
+/**
  * API for User
  */
 Route::apiResource('user', RefUserCacheController::class);
 Route::get('/user/id/{id}', [RefUserCacheController::class, 'show']);
+Route::post('/user/nip', [RefUserCacheController::class, 'nip']);
+Route::post('/user/search', [RefUserCacheController::class, 'search']);
 Route::post('/user/role', [RefUserCacheController::class, 'role']);
 Route::post('/user/jabatan', [RefUserCacheController::class, 'jabatan']);
 Route::post('/jabatan/list', [RefUserCacheController::class, 'listJabatan']);
