@@ -10,7 +10,7 @@ class DokObserver
 	use DocumentsChainTrait;
 
 	protected function setDefaultDocumentProperties($dokumen) {
-		$no_dok_lengkap = $dokumen->tipe_dokumen . '-' . '      ' . $dokumen->agenda_dokumen;
+		$no_dok_lengkap = $dokumen->tipe_dokumen . '-' . '      ' . $dokumen->agenda_dokumen . $dokumen->thn_dok;
 		$dokumen['agenda_dok'] = $dokumen->agenda_dokumen;
 		$dokumen['no_dok_lengkap'] = $no_dok_lengkap;
 		$dokumen['kode_status'] = 'draft';

@@ -45,7 +45,7 @@ class DokLkaiSeeder extends Seeder
 		$crn_lpti = 1;
 		$crn_npi = 1;
 
-		for ($d=1; $d < 31; $d++) { 
+		for ($d=1; $d < 41; $d++) { 
 			$max_lkai = $this->model_lkai::max('no_dok');
 			$crn_lkai = $max_lkai + 1;
 

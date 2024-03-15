@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Penindakan\DokLapController;
+
 class DokLapNController extends DokLapController
 {
 	protected $related_documents = [

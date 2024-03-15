@@ -1,8 +1,8 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\References;
 
-use App\Models\RefSkemaPenindakan;
+use App\Models\References\RefSkemaPenindakan;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 

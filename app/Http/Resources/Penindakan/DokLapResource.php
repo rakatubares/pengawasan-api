@@ -1,10 +1,21 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Penindakan;
 
-class DokLapResource extends RequestBasedResource
+use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Http\Resources\References\RefKategoriPelanggaranResource;
+use App\Http\Resources\References\RefSkemaPenindakanResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DokLapResource extends JsonResource
 {
-	protected function basic()
+	/**
+	 * Transform the resource into an array for display.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
 	{
 		$array = [
 			'id' => $this->id,
@@ -16,8 +27,11 @@ class DokLapResource extends RequestBasedResource
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
 			'jenis_sumber' => $this->jenis_sumber,
+			'sumber_id' => $this->get_sumber_id(),
 			'nomor_sumber' => $this->nomor_sumber,
-			'tanggal_sumber' => $this->tanggal_sumber->format('d-m-Y'),
+			'tanggal_sumber' => $this->tanggal_sumber
+				? $this->tanggal_sumber->format('d-m-Y')
+				: null,
 			'dugaan_pelanggaran' => new RefKategoriPelanggaranResource($this->dugaan_pelanggaran),
 			'flag_pelaku' => $this->flag_pelaku,
 			'keterangan_pelaku' => $this->keterangan_pelaku,
@@ -41,40 +55,24 @@ class DokLapResource extends RequestBasedResource
 			'flag_layak_patroli' => $this->flag_layak_patroli,
 			'keterangan_patroli' => $this->keterangan_patroli,
 			'kesimpulan' => $this->kesimpulan,
-			'penerbit' => [
-				'jabatan' => new JabatanResource($this->jabatan_penerbit),
-				'plh' => $this->plh_penerbit,
-				'user' => new RefUserResource($this->penerbit),
-			],
-			'atasan' => [
-				'jabatan' => new JabatanResource($this->jabatan_atasan),
-				'plh' => $this->plh_atasan,
-				'user' => new RefUserResource($this->atasan),
-			],
+			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
+			'kode_status' => $this->kode_status,
 		];
 
 		return $array;
 	}
 
-	protected function form()
-	{
-		$array = $this->basic();
-		if ($this->jenis_sumber == 'LI-1') {
-			$array['sumber_id'] = $this->li->id;
-		} else if ($this->jenis_sumber == 'NHI') {
-			$array['sumber_id'] = $this->nhi->id;
-		} else if ($this->jenis_sumber == 'NHI-N') {
-			$array['sumber_id'] = $this->nhi->id;
-		} else {
-			$array['sumber_id'] = null;
-		}
-		return $array;
-	}
+	private function get_sumber_id() {
+		$sumber_id = null;
 
-	protected function pdf()
-	{
-		$array = $this->basic();
-		$array['kode_status'] = $this->kode_status;
-		return $array;
+		if (
+			($this->jenis_sumber != 'lainnya') &
+			($this->jenis_sumber != null)
+		) {
+			$jenis_sumber = $this->jenis_sumber;
+			$sumber_id = $this->chain->$jenis_sumber->id;
+		}
+
+		return $sumber_id;
 	}
 }

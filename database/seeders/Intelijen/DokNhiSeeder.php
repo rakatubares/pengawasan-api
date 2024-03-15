@@ -39,7 +39,7 @@ class DokNhiSeeder extends Seeder
 		// Current year
 		$year = date("Y");
 
-		for ($d=1; $d < 11; $d++) { 
+		for ($d=1; $d < 21; $d++) { 
 			$max_nhi = DokNhi::max('no_dok');
 			$crn_nhi = $max_nhi + 1;
 

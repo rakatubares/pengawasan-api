@@ -10,17 +10,20 @@ use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
+use Database\Seeders\Penindakan\DokLapSeeder;
 use Database\Seeders\Penindakan\DokLiSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
 use Database\Seeders\References\RefKantorBCSeeder;
 use Database\Seeders\References\RefKategoriBarangSeeder;
+use Database\Seeders\References\RefKategoriPelanggaranSeeder;
 use Database\Seeders\References\RefKemasanSeeder;
 use Database\Seeders\References\RefKepercayaanSumberSeeder;
 use Database\Seeders\References\RefKodeDokumenSeeder;
 use Database\Seeders\References\RefLokasiSeeder;
 use Database\Seeders\References\RefNegaraSeeder;
 use Database\Seeders\References\RefSatuanSeeder;
+use Database\Seeders\References\RefSkemaPenindakanSeeder;
 use Database\Seeders\References\RefStatusSeeder;
 use Database\Seeders\References\RefTipeKantorSeeder;
 use Database\Seeders\References\RefValiditasInformasiSeeder;
@@ -69,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
 			// Penindakan
 			DokLiSeeder::class,
-			// DokLapSeeder::class,
+			DokLapSeeder::class,
 			// DokSbpSeeder::class,
 			// DokLphpSeeder::class,
 			// DokLpSeeder::class,

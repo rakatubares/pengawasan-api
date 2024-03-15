@@ -11,7 +11,7 @@ use App\Http\Controllers\DokBastController;
 use App\Http\Controllers\DokBukaPengamanController;
 use App\Http\Controllers\DokBukaSegelController;
 use App\Http\Controllers\DokContohController;
-use App\Http\Controllers\DokLapController;
+// use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\DokLapNController;
 // use App\Http\Controllers\DokLiController;
 use App\Http\Controllers\DokLpController;
@@ -33,11 +33,12 @@ use App\Http\Controllers\DokTitipController;
 use App\Http\Controllers\DokTolakSbp1Controller;
 use App\Http\Controllers\DokTolakSbp2Controller;
 use App\Http\Controllers\PenindakanController;
-use App\Http\Controllers\RefEntitasController;
-use App\Http\Controllers\RefKategoriPelanggaranController;
-use App\Http\Controllers\RefSkemaPenindakanController;
+// use App\Http\Controllers\RefEntitasController;
+// use App\Http\Controllers\RefKategoriPelanggaranController;
+// use App\Http\Controllers\RefSkemaPenindakanController;
 use App\Http\Controllers\DocumentsChainController;
 use App\Http\Controllers\DokController;
+// use App\Http\Controllers\DokLapController;
 use App\Http\Controllers\Entitas\EntitasBadanHukumController;
 use App\Http\Controllers\Entitas\EntitasOrangController;
 use App\Http\Controllers\Intelijen\DokLkaiController;
@@ -48,16 +49,19 @@ use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
 use App\Http\Controllers\Intelijen\DokNiNController;
+use App\Http\Controllers\Penindakan\DokLapController;
 use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\References\RefBandaraController;
 use App\Http\Controllers\References\RefJabatanController;
 use App\Http\Controllers\References\RefKantorBCController;
 use App\Http\Controllers\References\RefKategoriBarangController;
+use App\Http\Controllers\References\RefKategoriPelanggaranController;
 use App\Http\Controllers\References\RefKemasanController;
 use App\Http\Controllers\References\RefKepercayaanSumberController;
 use App\Http\Controllers\References\RefLokasiController;
 use App\Http\Controllers\References\RefNegaraController;
 use App\Http\Controllers\References\RefSatuanController;
+use App\Http\Controllers\References\RefSkemaPenindakanController;
 use App\Http\Controllers\References\RefValiditasInformasiController;
 use App\Http\Controllers\RefSprintController;
 use App\Http\Controllers\RefUserCacheController;
@@ -139,12 +143,7 @@ Route::put('/li/{li_id}/publish', [DokLiController::class, 'publish']);
 /**
  * API for LAP
  */
-Route::resource('lap', DokLapController::class);
-Route::get('/lap/{lap_id}/display', [DokLapController::class, 'display']);
-Route::get('/lap/{lap_id}/form', [DokLapController::class, 'form']);
-Route::get('/lap/{lap_id}/docs', [DokLapController::class, 'docs']);
-Route::get('/lap/{lap_id}/pdf', [DokLapController::class, 'pdf']);
-Route::get('/lap/{lap_id}/objek', [DokLapController::class, 'objek']);
+Route::apiResource('lap', DokLapController::class);
 Route::put('/lap/{lap_id}/publish', [DokLapController::class, 'publish']);
 
 /**
@@ -502,15 +501,15 @@ Route::post('/entitas/badanhukum/search', [EntitasBadanHukumController::class, '
  */
 Route::apiResource('jabatan', RefJabatanController::class);
 
-/**
- * API for Kategori Pelanggaran
- */
-Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
+// /**
+//  * API for Kategori Pelanggaran
+//  */
+// Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
 
-/**
- * API for Skema Penindakan
- */
-Route::apiResource('penindakan', RefSkemaPenindakanController::class);
+// /**
+//  * API for Skema Penindakan
+//  */
+// Route::apiResource('penindakan', RefSkemaPenindakanController::class);
 
 /**
  * API for Grup Lokasi
@@ -564,6 +563,16 @@ Route::get('kepercayaan', [RefKepercayaanSumberController::class, 'index']);
  * API for Klasifikasi Validitas
  */
 Route::get('validitas', [RefValiditasInformasiController::class, 'index']);
+
+/**
+ * API for Kategori Pelanggaran
+ */
+Route::get('pelanggaran', [RefKategoriPelanggaranController::class, 'index']);
+
+/**
+ * API for Skema Penindakan
+ */
+Route::get('skema_penindakan', [RefSkemaPenindakanController::class, 'index']);
 
 /**
  * API for Tembusan

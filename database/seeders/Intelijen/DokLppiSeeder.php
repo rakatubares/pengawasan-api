@@ -31,7 +31,7 @@ class DokLppiSeeder extends Seeder
 		$ref_validitas = RefValiditasInformasi::all()->all();
 		$list_kode_validitas = array_map(function ($v){ return $v->klasifikasi; }, $ref_validitas);
 
-		for ($d=1; $d < 41; $d++) { 
+		for ($d=1; $d < 51; $d++) { 
 			$max_lppi = $this->model::max('no_dok');
 			$crn_lppi = $max_lppi + 1;
 

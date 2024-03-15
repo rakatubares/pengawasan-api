@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Penindakan\DokLap;
+
 class DokLapN extends DokLap
 {
     protected $table = 'dok_lapn';

@@ -10,7 +10,7 @@ use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
-use App\Models\DokLap;
+// use App\Models\DokLap;
 use App\Models\DokLapN;
 use App\Models\DokLp;
 use App\Models\DokLphp;
@@ -32,7 +32,7 @@ use App\Models\RefUserCache;
 use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
-use App\Observers\DokLapObserver;
+// use App\Observers\DokLapObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
@@ -60,6 +60,7 @@ use App\Models\Intelijen\DokNhiNSarkut;
 use App\Models\Intelijen\DokNhiTertentu;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
 use App\Observers\Intelijen\DokLkaiNObserver;
 use App\Observers\Intelijen\DokLkaiObserver;
@@ -68,6 +69,7 @@ use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
+use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -126,6 +128,7 @@ class AppServiceProvider extends ServiceProvider
 			// Penindakan
 			'penindakan' => Penindakan::class,
 			'li' => DokLi::class,
+			'lap' => DokLap::class,
 			'riksa' => DokRiksa::class,
 			'riksabadan' => DokRiksaBadan::class,
 			'sarkut' => DetailSarkut::class,
@@ -135,7 +138,6 @@ class AppServiceProvider extends ServiceProvider
 		// DetailBarangItem::observe((DetailBarangItemObserver::class));
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
-		DokLap::observe(DokLapObserver::class);
 		DokLapN::observe(DokLapObserver::class);
 		
 		DokLp::observe(DokLpObserver::class);
@@ -166,5 +168,6 @@ class AppServiceProvider extends ServiceProvider
 
 		// Penindakan
 		DokLi::observe(DokLiObserver::class);
+		DokLap::observe(DokLapObserver::class);
     }
 }

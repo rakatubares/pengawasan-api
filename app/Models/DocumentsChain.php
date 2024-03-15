@@ -10,6 +10,7 @@ use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,7 +27,7 @@ class DocumentsChain extends Model
 	public $doc_types = [
 		'lppi', 'lkai', 'nhi', 'ni',
 		'lppin', 'lkain', 'nhin', 'nin',
-		'li',
+		'li', 'lap',
 	];
 
 	public function status() {
@@ -73,5 +74,9 @@ class DocumentsChain extends Model
 	 */
 	public function li() {
 		return $this->hasOne(DokLi::class, 'chain_id');
+	}
+
+	public function lap() {
+		return $this->hasOne(DokLap::class, 'chain_id');
 	}
 }
