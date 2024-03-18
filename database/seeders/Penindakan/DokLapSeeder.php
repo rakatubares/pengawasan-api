@@ -2,23 +2,16 @@
 
 namespace Database\Seeders\Penindakan;
 
-// use App\Models\ObjectRelation;
-
 use App\Models\DocumentsChain;
 use App\Models\Penomoran;
 use App\Models\References\RefKategoriPelanggaran;
 use App\Models\References\RefSkemaPenindakan;
-// use App\Models\RefKategoriPelanggaran;
-// use App\Models\RefSkemaPenindakan;
-// use App\Traits\SwitcherTrait;
 use Faker\Factory as Faker;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 
 class DokLapSeeder extends Seeder
 {
-	// use SwitcherTrait;
-
 	public function __construct($kode_dokumen='lap')
 	{
 		$this->kode_dokumen = $kode_dokumen;
@@ -32,27 +25,7 @@ class DokLapSeeder extends Seeder
 		$lap = new $this->model_lap;
 		$this->kode_nhi = $lap->kode_nhi;
 		$this->kode_li = $lap->kode_li;
-		// $this->seed_count = 20;
-		// $this->prepareModel();
 	}
-
-	// protected function prepareModel()
-	// {
-	// 	$this->faker = Faker::create();
-	// 	$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
-	// 	$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
-	// 	$this->model = $this->switchObject($this->tipe_dok, 'model');
-
-	// 	$this->related_model = [];
-	// 	$this->available_id = [];
-	// 	foreach ($this->list_jenis_informasi as $jenis) {
-	// 		if ($jenis != 'lainnya') {
-	// 			$this->related_model[$jenis] = $this->switchObject($jenis, 'model');
-	// 			$max_id = $this->related_model[$jenis]::max('id');
-	// 			$this->available_id[$jenis] = range(1, $max_id);	
-	// 		}
-	// 	}
-	// }
 
     /**
      * Run the database seeds.
@@ -66,10 +39,6 @@ class DokLapSeeder extends Seeder
 		// References
 		$list_kategori_pelanggaran = RefKategoriPelanggaran::all('id')->toArray();
 		$list_skema_penindakan = RefSkemaPenindakan::all('id');
-		// $list_kode_jabatan = [
-		// 	'bd.0503' => 4, 
-		// 	'bd.0504' => 5
-		// ];
 
 		// Source
 		$available_source_id = [];
@@ -132,9 +101,6 @@ class DokLapSeeder extends Seeder
 				$ket_layak_patroli = $faker->sentence($nbWords = 20);
 			}
 
-			// $jabatan_penerbit = $this->faker->randomElement(['bd.0503', 'bd.0504']);
-			// $penerbit_id = $list_kode_jabatan[$jabatan_penerbit];
-
 			$lap = new $this->model_lap;
 			$lap->no_dok = $no_current;
 			$lap->agenda_dok = $lap->agenda_dokumen;
@@ -191,57 +157,6 @@ class DokLapSeeder extends Seeder
 			 * Documents chain
 			 */
 			$chain->update(['latest_document' => $lap->kode_dokumen]);
-
-			// $lap = $this->model::create([
-			// 	'no_dok' => $no_current,
-			// 	'agenda_dok' => $this->agenda,
-			// 	'thn_dok' => date("Y"),
-			// 	'no_dok_lengkap' => $this->tipe_surat . '-' . $no_current . $this->agenda . date("Y"),
-			// 	'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
-			// 	'jenis_sumber' => $this->nama_informasi[$jenis_sumber],
-			// 	'nomor_sumber' => $nomor_sumber,
-			// 	'tanggal_sumber' => $tanggal_sumber,
-			// 	'dugaan_pelanggaran_id' => $kategori_pelanggaran['id'],
-			// 	'flag_pelaku' => $this->faker->boolean(),
-			// 	'keterangan_pelaku' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_pelanggaran' => $this->faker->boolean(),
-			// 	'keterangan_pelanggaran' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_locus' => $this->faker->boolean(),
-			// 	'keterangan_locus' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_tempus' => $this->faker->boolean(),
-			// 	'keterangan_tempus' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_kewenangan' => $this->faker->boolean(),
-			// 	'keterangan_kewenangan' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_sdm' => $this->faker->boolean(),
-			// 	'keterangan_sdm' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_sarpras' => $this->faker->boolean(),
-			// 	'keterangan_sarpras' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_anggaran' => $this->faker->boolean(),
-			// 	'keterangan_anggaran' => $this->faker->sentence($nbWords = 20),
-			// 	'flag_layak_penindakan' => $layak_penindakan,
-			// 	'skema_penindakan_id' => $skema_id,
-			// 	'keterangan_skema_penindakan' => $ket_skema_penindakan,
-			// 	'flag_layak_patroli' => $layak_patroli,
-			// 	'keterangan_patroli' => $ket_layak_patroli,
-			// 	'kesimpulan' => $this->faker->sentence($nbWords = 20),
-			// 	'kode_jabatan_penerbit' => $jabatan_penerbit,
-			// 	'plh_penerbit' => false,
-			// 	'penerbit_id' => $penerbit_id,
-			// 	'kode_jabatan_atasan' => 'bd.05',
-			// 	'plh_atasan' => false,
-			// 	'atasan_id' => 3,
-			// 	'kode_status' => 200
-			// ]);
-
-			// // Create relation
-			// if ($jenis_sumber != 'lainnya') {
-			// 	ObjectRelation::create([
-			// 		'object1_type' => $jenis_sumber,
-			// 		'object1_id' => $related_doc->id,
-			// 		'object2_type' => $this->tipe_dok,
-			// 		'object2_id' => $lap->id,
-			// 	]);
-			// }
 		}
 
 		Penomoran::create([
