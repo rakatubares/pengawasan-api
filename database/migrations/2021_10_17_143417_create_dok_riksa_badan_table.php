@@ -19,14 +19,9 @@ class CreateDokRiksaBadanTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->string('asal');
-			$table->string('tujuan')->nullable();
-			$table->integer('pendamping_id')->nullable()->index();
-			$table->integer('sarkut_id')->nullable()->index();
-			$table->text('uraian_pemeriksaan')->nullable();
-			$table->text('hasil_pemeriksaan')->nullable();
-			$table->integer('saksi_id')->nullable()->index();
-			$table->integer('kode_status')->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
+			$table->string('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

@@ -12,6 +12,15 @@ use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
+use App\Models\Penindakan\DokLptp;
+use App\Models\Penindakan\DokRiksa;
+use App\Models\Penindakan\DokRiksaBadan;
+use App\Models\Penindakan\DokSbp;
+use App\Models\Penindakan\DokSegel;
+use App\Models\Penindakan\DokTegah;
+use App\Models\Penindakan\DokTolakSbp1;
+use App\Models\Penindakan\DokTolakSbp2;
+use App\Models\Penindakan\Penindakan;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +36,9 @@ class DocumentsChain extends Model
 	public $doc_types = [
 		'lppi', 'lkai', 'nhi', 'ni',
 		'lppin', 'lkain', 'nhin', 'nin',
-		'li', 'lap',
+		'li', 'lap', 
+		'riksa_badan', 'riksa', 'tegah', 'segel',
+		'sbp', 'tolak1', 'tolak2', 'lptp',
 	];
 
 	public function status() {
@@ -72,11 +83,62 @@ class DocumentsChain extends Model
 	/**
 	 * Penindakan
 	 */
-	public function li() {
+	public function penindakan() {
+		return $this->hasOne(Penindakan::class, 'chain_id');
+	}
+	
+	 public function li() {
 		return $this->hasOne(DokLi::class, 'chain_id');
 	}
 
 	public function lap() {
 		return $this->hasOne(DokLap::class, 'chain_id');
+	}
+
+	public function riksa_badan() {
+		return $this->hasOne(DokRiksaBadan::class, 'chain_id');
+	}
+
+	public function riksa() {
+		return $this->hasOne(DokRiksa::class, 'chain_id');
+	}
+
+	public function tegah() {
+		return $this->hasOne(DokTegah::class, 'chain_id');
+	}
+
+	public function segel() {
+		return $this->hasOne(DokSegel::class, 'chain_id');
+	}
+
+	public function sbp() {
+		return $this->hasOne(DokSbp::class, 'chain_id');
+	}
+
+	public function tolak1() {
+		return $this->hasOneThrough(
+			DokTolakSbp1::class, 
+			DokSbp::class,
+			'chain_id',
+			'parent_id',
+			'id',
+			'id',
+		)->where('parent_type', 'sbp');
+	}
+
+	public function tolak2() {
+		$tolak1 = new DokTolakSbp1();
+		$tolak2 = new DokTolakSbp2();
+
+		$tolak1_table = $tolak1->getTable();
+		$tolak2_table = $tolak2->getTable();
+
+		return $this->tolak1()
+			->join($tolak2_table, $tolak2_table.'.tolak1_id', '=', $tolak1_table.'.id')
+			->select($tolak2_table.'.*');
+	}
+
+	public function lptp() {
+		return $this->hasOne(DokLptp::class, 'chain_id');
 	}
 }

@@ -18,6 +18,15 @@ use App\Http\Resources\Penindakan\DokLapResource;
 use App\Http\Resources\Penindakan\DokLapTableResource;
 use App\Http\Resources\Penindakan\DokLiResource;
 use App\Http\Resources\Penindakan\DokLiTableResource;
+use App\Http\Resources\Penindakan\DokLptpResource;
+use App\Http\Resources\Penindakan\DokRiksaBadanResource;
+use App\Http\Resources\Penindakan\DokRiksaResource;
+use App\Http\Resources\Penindakan\DokSbpResource;
+use App\Http\Resources\Penindakan\DokSbpTableResource;
+use App\Http\Resources\Penindakan\DokSegelResource;
+use App\Http\Resources\Penindakan\DokTegahResource;
+use App\Http\Resources\Penindakan\DokTolakSbp1Resource;
+use App\Http\Resources\Penindakan\DokTolakSbp2Resource;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
@@ -37,7 +46,7 @@ trait DocumentTrait
 	{
 		// Return TRUE if document is unpublished
 		$kode_status = $doc->kode_status;
-		$is_unpublished = (in_array($kode_status, $this->unpublished_status)) ? true : false;
+		$is_unpublished = (in_array($kode_status, $doc->unpublished_status)) ? true : false;
 		return $is_unpublished;
 	}
 
@@ -48,14 +57,23 @@ trait DocumentTrait
 			'lkai' => DokLkaiResource::class,
 			'nhi' => DokNhiResource::class,
 			'ni' => DokNiResource::class,
-			// Penindakan
-			'li' => DokLiResource::class,
-			'lap' => DokLapResource::class,
-			// NPP
+
 			'lppin' => DokLppiResource::class,
 			'lkain' => DokLkaiNResource::class,
 			'nhin' => DokNhiNResource::class,
 			'nin' => DokNiNResource::class,
+
+			// Penindakan
+			'li' => DokLiResource::class,
+			'lap' => DokLapResource::class,
+			'riksa_badan' => DokRiksaBadanResource::class,
+			'riksa' => DokRiksaResource::class,
+			'tegah' => DokTegahResource::class,
+			'segel' => DokSegelResource::class,
+			'sbp' => DokSbpResource::class,
+			'tolak1' => DokTolakSbp1Resource::class,
+			'tolak2' => DokTolakSbp2Resource::class,
+			'lptp' => DokLptpResource::class,
 		];
 
 		try {
@@ -74,14 +92,16 @@ trait DocumentTrait
 			'lkai' => DokLkaiTableResource::class,
 			'nhi' => DokNhiTableResource::class,
 			'ni' => DokNhiTableResource::class,
-			// Penindakan
-			'li' => DokLiTableResource::class,
-			'lap' => DokLapTableResource::class,
-			// NPP
+
 			'lppin' => DokLppiTableResource::class,
 			'lkain' => DokLkaiTableResource::class,
 			'nhin' => DokNhiNTableResource::class,
 			'nin' => DokNiNTableResource::class,
+
+			// Penindakan
+			'li' => DokLiTableResource::class,
+			'lap' => DokLapTableResource::class,
+			'sbp' => DokSbpTableResource::class,
 		];
 
 		try {

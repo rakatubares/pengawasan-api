@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Router;
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -40,6 +42,10 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+
+// Custom router class
+// https://stackoverflow.com/questions/39915619/how-to-extend-illuminate-routing-route-in-laravel
+$app->singleton('router', Router::class);
 
 /*
 |--------------------------------------------------------------------------

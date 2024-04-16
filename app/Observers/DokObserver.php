@@ -4,9 +4,11 @@ namespace App\Observers;
 
 use App\Models\Penomoran;
 use App\Traits\DocumentsChainTrait;
+use App\Traits\DocumentTrait;
 
 class DokObserver
 {
+	use DocumentTrait;
 	use DocumentsChainTrait;
 
 	protected function setDefaultDocumentProperties($dokumen) {

@@ -6,44 +6,24 @@ use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailDokumen;
-use App\Models\DetailSarkut;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokBukaSegel;
-// use App\Models\DokLap;
 use App\Models\DokLapN;
 use App\Models\DokLp;
 use App\Models\DokLphp;
 use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokPengaman;
-use App\Models\DokRiksa;
-use App\Models\DokRiksaBadan;
-use App\Models\DokSbp;
-use App\Models\DokSbpN;
-use App\Models\DokSegel;
-use App\Models\DokTegah;
 use App\Models\DokTitip;
-use App\Models\DokTolakSbp1;
-use App\Models\DokTolakSbp2;
-use App\Models\Penindakan;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
-use App\Observers\DetailBarangItemObserver;
 use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokBukaSegelObserver;
-// use App\Observers\DokLapObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
-use App\Observers\DokRiksaBadanObserver;
-use App\Observers\DokRiksaObserver;
-use App\Observers\DokSbpObserver;
-use App\Observers\DokSegelObserver;
-use App\Observers\DokTegahObserver;
 use App\Observers\DokTitipObserver;
-use App\Observers\DokTolakSbp1Observer;
-use App\Observers\DokTolakSbp2Observer;
 use App\Models\Entitas\EntitasBadanHukum;
 use App\Models\Entitas\EntitasOrang;
 use App\Models\Intelijen\DokLkai;
@@ -62,6 +42,16 @@ use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
+use App\Models\Penindakan\DokLptp;
+use App\Models\Penindakan\DokRiksa;
+use App\Models\Penindakan\DokRiksaBadan;
+use App\Models\Penindakan\DokSbp;
+use App\Models\Penindakan\DokSegel;
+use App\Models\Penindakan\DokTegah;
+use App\Models\Penindakan\DokTolakSbp1;
+use App\Models\Penindakan\DokTolakSbp2;
+use App\Models\Penindakan\Penindakan;
+use App\Models\Penindakan\PenindakanBarang;
 use App\Observers\Intelijen\DokLkaiNObserver;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
@@ -71,6 +61,15 @@ use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
 use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
+use App\Observers\Penindakan\DokLptpObserver;
+use App\Observers\Penindakan\DokRiksaBadanObserver;
+use App\Observers\Penindakan\DokRiksaObserver;
+use App\Observers\Penindakan\DokSbpObserver;
+use App\Observers\Penindakan\DokSegelObserver;
+use App\Observers\Penindakan\DokTegahObserver;
+use App\Observers\Penindakan\DokTolakSbp1Observer;
+use App\Observers\Penindakan\DokTolakSbp2Observer;
+use App\Services\ResourceRegistrar;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -90,6 +89,13 @@ class AppServiceProvider extends ServiceProvider
 
 			return new SSO($request);
 		});
+
+		// Custom route registration
+		// https://stackoverflow.com/questions/16661292/add-new-methods-to-a-resource-controller-in-laravel
+		$registrar = new ResourceRegistrar($this->app['router']);
+		$this->app->bind('Illuminate\Routing\ResourceRegistrar', function () use ($registrar) {
+			return $registrar;
+		});
     }
 
     /**
@@ -99,6 +105,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+		/**
+		 * Models
+		 */
         Relation::enforceMorphMap([
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
@@ -110,6 +119,7 @@ class AppServiceProvider extends ServiceProvider
 			'item_barang' => DetailBarangItem::class,
 			'orang' => RefEntitas::class,
 			'pegawai' => RefUserCache::class,
+
 			// Intelijen
 			'lppi' => DokLppi::class,
 			'lppin' => DokLppiN::class,
@@ -125,17 +135,25 @@ class AppServiceProvider extends ServiceProvider
 			'nhin-orang' => DokNhiNOrang::class,
 			'ni' => DokNi::class,
 			'nin' => DokNiN::class,
+			
 			// Penindakan
-			'penindakan' => Penindakan::class,
 			'li' => DokLi::class,
 			'lap' => DokLap::class,
+			'penindakan' => Penindakan::class,
+			'penindakan-barang' => PenindakanBarang::class,
+			'riksa_badan' => DokRiksaBadan::class,
 			'riksa' => DokRiksa::class,
-			'riksabadan' => DokRiksaBadan::class,
-			'sarkut' => DetailSarkut::class,
+			'tegah' => DokTegah::class,
 			'segel' => DokSegel::class,
+			'sbp' => DokSbp::class,
+			'tolak1' => DokTolakSbp1::class,
+			'tolak2' => DokTolakSbp2::class,
+			'lptp' => DokLptp::class,
 		]);
 
-		// DetailBarangItem::observe((DetailBarangItemObserver::class));
+		/**
+		 * Observers
+		 */
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLapN::observe(DokLapObserver::class);
@@ -145,15 +163,8 @@ class AppServiceProvider extends ServiceProvider
 		DokLphp::observe(DokLphpObserver::class);
 		DokLphpN::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
-		DokRiksa::observe(DokRiksaObserver::class);
-		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
-		DokSbp::observe(DokSbpObserver::class);
-		DokSbpN::observe(DokSbpObserver::class);
-		DokSegel::observe(DokSegelObserver::class);
-		DokTegah::observe(DokTegahObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
-		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
-		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
+		
 		// Intelijen
 		DokLppi::observe(DokLppiObserver::class);
 		DokLkai::observe(DokLkaiObserver::class);
@@ -169,5 +180,13 @@ class AppServiceProvider extends ServiceProvider
 		// Penindakan
 		DokLi::observe(DokLiObserver::class);
 		DokLap::observe(DokLapObserver::class);
+		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
+		DokRiksa::observe(DokRiksaObserver::class);
+		DokTegah::observe(DokTegahObserver::class);
+		DokSegel::observe(DokSegelObserver::class);
+		DokSbp::observe(DokSbpObserver::class);
+		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
+		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
+		DokLptp::observe(DokLptpObserver::class);
     }
 }

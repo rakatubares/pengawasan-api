@@ -16,8 +16,7 @@ class RefKemasanResource extends JsonResource
     {
         $array = [
 			'id' => $this->id,
-			'kode_kemasan' => $this->kode_kemasan,
-			'uraian_kemasan' => $this->uraian_kemasan
+			'kemasan' => $this->kemasan,
 		];
 
 		return $array;

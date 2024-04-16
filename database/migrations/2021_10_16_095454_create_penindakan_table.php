@@ -16,14 +16,18 @@ class CreatePenindakanTable extends Migration
         Schema::create('penindakan', function (Blueprint $table) {
             $table->id();
 			$table->integer('sprint_id')->nullable()->index();
-			$table->string('object_type')->nullable()->index();
-			$table->string('object_id')->nullable()->index();
-			$table->date('tanggal_penindakan')->nullable()->index();
-			$table->integer('grup_lokasi_id')->nullable()->index();
+			$table->integer('chain_id')->index();
+			$table->date('tanggal_mulai_penindakan')->nullable()->index();
+			$table->time('waktu_mulai_penindakan')->nullable()->index();
+			$table->date('tanggal_selesai_penindakan')->nullable()->index();
+			$table->time('waktu_selesai_penindakan')->nullable()->index();
 			$table->string('lokasi_penindakan')->nullable()->index();
+			$table->integer('kategori_penindakan_id')->nullable()->index();
+			$table->text('uraian_penindakan')->nullable();
+			$table->text('alasan_penindakan')->nullable();
+			$table->string('jenis_pelanggaran')->nullable()->index();
+			$table->text('hal_terjadi')->nullable();
 			$table->integer('saksi_id')->nullable()->index();
-			$table->integer('petugas1_id')->nullable()->index();
-			$table->integer('petugas2_id')->nullable()->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

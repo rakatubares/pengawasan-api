@@ -20,6 +20,16 @@ class RefKemasanController extends Controller
 		$kemasan = new RefKemasanResource(RefKemasan::find($id));
 		return $kemasan;
 	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index() {
+		$kemasan = RefKemasan::orderBy('kemasan')->get();
+		return RefKemasanResource::collection($kemasan);
+	}
 	
 	/**
 	 * Display resource based on search query

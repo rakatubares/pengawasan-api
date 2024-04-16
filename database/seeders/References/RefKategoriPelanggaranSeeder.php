@@ -54,6 +54,12 @@ class RefKategoriPelanggaranSeeder extends Seeder
 				'updated_at' => $now
 			],
 			[
+				'kategori' => 'Barang Larangan Pembatasan',
+				'active' => TRUE,
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[
 				'kategori' => 'Barang Tertentu',
 				'active' => TRUE,
 				'created_at' => $now,

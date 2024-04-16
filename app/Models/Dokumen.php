@@ -18,6 +18,7 @@ class Dokumen extends Model
 	public $agenda_dokumen = '/KPU.305/';
 
 	protected $observables = ['edited', 'publishing', 'published'];
+	public $unpublished_status = ['draft'];
 
 	/**
 	 * Documents chain

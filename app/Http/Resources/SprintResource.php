@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Http\Resources\References\RefJabatanResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class SprintResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        $array = [
+			'id' => $this->id,
+			'nomor_sprint' => $this->nomor_sprint,
+			'tanggal_sprint' => $this->tanggal_sprint->format('d-m-Y'),
+			'pejabat' => new RefJabatanResource($this->pejabat)
+		];
+
+		return $array;
+    }
+}

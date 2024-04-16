@@ -12,6 +12,7 @@ use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
 use Database\Seeders\Penindakan\DokLapSeeder;
 use Database\Seeders\Penindakan\DokLiSeeder;
+use Database\Seeders\Penindakan\DokSbpSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
 use Database\Seeders\References\RefKantorBCSeeder;
@@ -58,7 +59,8 @@ class DatabaseSeeder extends Seeder
 			RefUserCacheSeeder::class,
 			EntitasOrangSeeder::class,
 			EntitasBadanHukumSeeder::class,
-			RefSprintSeeder::class,
+			SprintSeeder::class,
+			
 			// Intelijen
 			DokLppiSeeder::class,
 			DokLkaiSeeder::class,
@@ -73,7 +75,7 @@ class DatabaseSeeder extends Seeder
 			// Penindakan
 			DokLiSeeder::class,
 			DokLapSeeder::class,
-			// DokSbpSeeder::class,
+			DokSbpSeeder::class,
 			// DokLphpSeeder::class,
 			// DokLpSeeder::class,
 			// DokRiksaSeeder::class,

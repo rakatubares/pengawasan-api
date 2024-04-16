@@ -19,7 +19,9 @@ class CreateDokRiksaTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
-			$table->integer('kode_status')->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
+			$table->string('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

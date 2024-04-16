@@ -23,7 +23,6 @@ class DokController extends Controller
 	protected $table_resource = null;
 	protected $date = null;
 	protected $year = null;
-	protected $unpublished_status = ['draft'];
 
 	public function __construct($doc_type=null)
 	{
@@ -113,6 +112,21 @@ class DokController extends Controller
 		$search_list = $this->table_resource::collection($search_result);
 		return $search_list;
 	}
+
+	/**
+	 * Validate request
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 */
+	protected function validateData(Request $request) {}
+
+	/**
+	 * Prepare data SBP from request to array
+	 * 
+	 * @param Request $request
+	 * @return Array
+	 */
+	protected function prepareData(Request $request) { return []; }
 
 	/*
 	 |--------------------------------------------------------------------------

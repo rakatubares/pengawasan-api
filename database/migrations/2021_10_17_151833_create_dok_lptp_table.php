@@ -24,12 +24,11 @@ class CreateDokLptpTable extends Migration
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
+			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
 			$table->text('alasan_tidak_penindakan')->nullable();
 			$table->text('catatan')->nullable();
-			$table->string('jabatan_atasan')->index();
-			$table->boolean('plh')->nullable()->index();
-			$table->integer('atasan_id')->index();
-			$table->integer('kode_status')->index();
+			$table->string('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');
