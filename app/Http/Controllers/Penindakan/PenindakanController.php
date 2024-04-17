@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Penindakan;
 
-// use App\Http\Controllers\Controller;
 use App\Http\Controllers\DokController;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
@@ -12,34 +11,56 @@ use App\Models\Penindakan\Penindakan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-// use Illuminate\Http\Request;
-
 class PenindakanController extends DokController
 {
 	private function prepareDataPenindakan($request) {
 		$penindakan = $request->penindakan;
 
 		$sprint_id = $penindakan['sprint'] ? $penindakan['sprint']['id'] : null;
-		$tanggal_mulai_penindakan = $penindakan['tanggal_mulai_penindakan'] != null
-			? date('Y-m-d', strtotime($penindakan['tanggal_mulai_penindakan'])) : null;
-		$tanggal_selesai_penindakan = $penindakan['tanggal_selesai_penindakan'] != null
-			? date('Y-m-d', strtotime($penindakan['tanggal_selesai_penindakan'])) : null;
+		$tanggal_mulai_penindakan = isset($penindakan['tanggal_mulai_penindakan'])
+			? (
+				$penindakan['tanggal_mulai_penindakan'] != null
+					? date('Y-m-d', strtotime($penindakan['tanggal_mulai_penindakan'])) 
+					: null
+			) : null;
+		$waktu_mulai_penindakan = isset($penindakan['waktu_mulai_penindakan'])
+			? $penindakan['waktu_mulai_penindakan'] : null;
+		$tanggal_selesai_penindakan = isset($penindakan['tanggal_selesai_penindakan'])
+			? (
+				$penindakan['tanggal_selesai_penindakan'] != null
+					? date('Y-m-d', strtotime($penindakan['tanggal_selesai_penindakan'])) 
+					: null
+			) : null;
+		$waktu_selesai_penindakan = isset($penindakan['waktu_selesai_penindakan'])
+			? $penindakan['waktu_selesai_penindakan'] : null;
 		$saksi_id = $penindakan['saksi'] ? $penindakan['saksi']['id'] : null;
-		$kategori_penindakan_id = $penindakan['kategori_penindakan'] 
-			? $penindakan['kategori_penindakan']['id'] : null;
+		$kategori_penindakan_id = isset($penindakan['kategori_penindakan'])
+			? (
+				$penindakan['kategori_penindakan'] != null
+					? $penindakan['kategori_penindakan']['id'] 
+					: null
+			) : null;
+		$uraian_penindakan = isset($penindakan['uraian_penindakan'])
+			? $penindakan['uraian_penindakan'] : null;
+		$alasan_penindakan = isset($penindakan['alasan_penindakan'])
+			? $penindakan['alasan_penindakan'] : null;
+		$jenis_pelanggaran = isset($penindakan['jenis_pelanggaran'])
+			? $penindakan['jenis_pelanggaran'] : null;
+		$hal_terjadi = isset($penindakan['hal_terjadi'])
+			? $penindakan['hal_terjadi'] : null;
 
 		$data_penindakan = [
 			'sprint_id' => $sprint_id,
 			'tanggal_mulai_penindakan' => $tanggal_mulai_penindakan,
-			'waktu_mulai_penindakan' => $penindakan['waktu_mulai_penindakan'],
+			'waktu_mulai_penindakan' => $waktu_mulai_penindakan,
 			'tanggal_selesai_penindakan' => $tanggal_selesai_penindakan,
-			'waktu_selesai_penindakan' => $penindakan['waktu_selesai_penindakan'],
+			'waktu_selesai_penindakan' => $waktu_selesai_penindakan,
 			'lokasi_penindakan' => $penindakan['lokasi_penindakan'],
 			'kategori_penindakan_id' => $kategori_penindakan_id,
-			'uraian_penindakan' => $penindakan['uraian_penindakan'],
-			'alasan_penindakan' => $penindakan['alasan_penindakan'],
-			'jenis_pelanggaran' => $penindakan['jenis_pelanggaran'],
-			'hal_terjadi' => $penindakan['hal_terjadi'],
+			'uraian_penindakan' => $uraian_penindakan,
+			'alasan_penindakan' => $alasan_penindakan,
+			'jenis_pelanggaran' => $jenis_pelanggaran,
+			'hal_terjadi' => $hal_terjadi,
 			'saksi_id' => $saksi_id,
 		];
 
@@ -86,16 +107,9 @@ class PenindakanController extends DokController
 			// BA Riksa Badan
 			$existing_riksa_badan = $chain->riksa_badan;
 			if ($request->riksa_badan) { 
-				// $data_riksa_badan = $data;
-				// $data_riksa_badan['uraian_pemeriksaan'] = $request->data_riksa_badan['uraian_pemeriksaan'];
-				// $data_riksa_badan['hasil_pemeriksaan'] = $request->data_riksa_badan['hasil_pemeriksaan'];
-
 				if (!$existing_riksa_badan) {
 					DokRiksaBadan::create($data); 
-				} 
-				// else {
-				// 	$existing_riksa_badan->update($data_riksa_badan);
-				// }
+				}
 			} else {
 				if ($existing_riksa_badan) {
 					$existing_riksa_badan->delete();

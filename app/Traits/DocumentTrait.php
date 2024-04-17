@@ -20,6 +20,7 @@ use App\Http\Resources\Penindakan\DokLiResource;
 use App\Http\Resources\Penindakan\DokLiTableResource;
 use App\Http\Resources\Penindakan\DokLptpResource;
 use App\Http\Resources\Penindakan\DokRiksaBadanResource;
+use App\Http\Resources\Penindakan\DokRiksaBadanTableResource;
 use App\Http\Resources\Penindakan\DokRiksaResource;
 use App\Http\Resources\Penindakan\DokSbpResource;
 use App\Http\Resources\Penindakan\DokSbpTableResource;
@@ -101,6 +102,7 @@ trait DocumentTrait
 			// Penindakan
 			'li' => DokLiTableResource::class,
 			'lap' => DokLapTableResource::class,
+			'riksa_badan' => DokRiksaBadanTableResource::class,
 			'sbp' => DokSbpTableResource::class,
 		];
 
