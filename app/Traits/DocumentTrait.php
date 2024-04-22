@@ -26,6 +26,7 @@ use App\Http\Resources\Penindakan\DokRiksaTableResource;
 use App\Http\Resources\Penindakan\DokSbpResource;
 use App\Http\Resources\Penindakan\DokSbpTableResource;
 use App\Http\Resources\Penindakan\DokSegelResource;
+use App\Http\Resources\Penindakan\DokSegelTableResource;
 use App\Http\Resources\Penindakan\DokTegahResource;
 use App\Http\Resources\Penindakan\DokTolakSbp1Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp2Resource;
@@ -105,6 +106,7 @@ trait DocumentTrait
 			'lap' => DokLapTableResource::class,
 			'riksa_badan' => DokRiksaBadanTableResource::class,
 			'riksa' => DokRiksaTableResource::class,
+			'segel' => DokSegelTableResource::class,
 			'sbp' => DokSbpTableResource::class,
 		];
 
