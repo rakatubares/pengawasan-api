@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers\Penindakan;
 
-use App\Http\Controllers\DokController;
-// use App\Models\DokTegah;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
-class DokTegahController extends DokController
+class DokTegahController extends PenindakanController
 {
 	public function __construct($doc_type='tegah')
 	{
 		parent::__construct($doc_type);
 	}
 
-	// /**
-	//  * Store a newly created resource in storage.
-	//  *
-	//  * @param  \Illuminate\Http\Request  $request
-	//  * @return \Illuminate\Http\Response
-	//  */
-	// public function store(Request $request)
-	// {
-    //     $no_dok_lengkap = $this->tipe_surat . '-     ' . $this->agenda_dok;
+	protected function storing(Request $request) {
+		$data = parent::storing($request);
+		$chain = $this->createChain();
+		$data['chain_id'] = $chain->id;
 
-	// 	$insert_result = DokTegah::create([
-	// 		'agenda_dok' => $this->agenda_dok,
-	// 		'no_dok_lengkap' => $no_dok_lengkap,
-	// 		'kode_status' => 100,
-	// 	]);
+		return $data;
+	}
 
-	// 	return $insert_result;
-	// }
+	protected function stored($request)
+	{
+		$this->createPenindakan($request);
+		parent::stored($request);
+	}
+
+	protected function updated($request) {
+		$this->updatePenindakan($request);
+		parent::updated($request);
+	}
 }

@@ -33,7 +33,8 @@ class PenindakanController extends DokController
 			) : null;
 		$waktu_selesai_penindakan = isset($penindakan['waktu_selesai_penindakan'])
 			? $penindakan['waktu_selesai_penindakan'] : null;
-		$saksi_id = $penindakan['saksi'] ? $penindakan['saksi']['id'] : null;
+		$lokasi_penindakan = isset($penindakan['lokasi_penindakan']) 
+			? $penindakan['lokasi_penindakan'] : null;
 		$kategori_penindakan_id = isset($penindakan['kategori_penindakan'])
 			? (
 				$penindakan['kategori_penindakan'] != null
@@ -48,6 +49,7 @@ class PenindakanController extends DokController
 			? $penindakan['jenis_pelanggaran'] : null;
 		$hal_terjadi = isset($penindakan['hal_terjadi'])
 			? $penindakan['hal_terjadi'] : null;
+		$saksi_id = $penindakan['saksi'] ? $penindakan['saksi']['id'] : null;
 
 		$data_penindakan = [
 			'sprint_id' => $sprint_id,
@@ -55,7 +57,7 @@ class PenindakanController extends DokController
 			'waktu_mulai_penindakan' => $waktu_mulai_penindakan,
 			'tanggal_selesai_penindakan' => $tanggal_selesai_penindakan,
 			'waktu_selesai_penindakan' => $waktu_selesai_penindakan,
-			'lokasi_penindakan' => $penindakan['lokasi_penindakan'],
+			'lokasi_penindakan' => $lokasi_penindakan,
 			'kategori_penindakan_id' => $kategori_penindakan_id,
 			'uraian_penindakan' => $uraian_penindakan,
 			'alasan_penindakan' => $alasan_penindakan,
