@@ -14,6 +14,8 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
+use App\Http\Resources\Penindakan\DokBukaSegelResource;
+use App\Http\Resources\Penindakan\DokBukaSegelTableResource;
 use App\Http\Resources\Penindakan\DokLapResource;
 use App\Http\Resources\Penindakan\DokLapTableResource;
 use App\Http\Resources\Penindakan\DokLiResource;
@@ -74,6 +76,7 @@ trait DocumentTrait
 			'riksa' => DokRiksaResource::class,
 			'tegah' => DokTegahResource::class,
 			'segel' => DokSegelResource::class,
+			'buka_segel' => DokBukaSegelResource::class,
 			'sbp' => DokSbpResource::class,
 			'tolak1' => DokTolakSbp1Resource::class,
 			'tolak2' => DokTolakSbp2Resource::class,
@@ -109,6 +112,7 @@ trait DocumentTrait
 			'riksa' => DokRiksaTableResource::class,
 			'tegah' => DokTegahTableResource::class,
 			'segel' => DokSegelTableResource::class,
+			'buka_segel' => DokBukaSegelTableResource::class,
 			'sbp' => DokSbpTableResource::class,
 		];
 

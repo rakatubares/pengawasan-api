@@ -17,6 +17,7 @@ use App\Http\Controllers\Penindakan\Detail\PenindakanBadanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBangunanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBarangController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanSarkutController;
+use App\Http\Controllers\Penindakan\DokBukaSegelController;
 use App\Http\Controllers\Penindakan\DokLapController;
 use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\Penindakan\DokLptpController;
@@ -87,6 +88,7 @@ Route::group(['prefix' => 'doc'], function() {
 		'riksa' => DokRiksaController::class,
 		'tegah' => DokTegahController::class,
 		'segel' => DokSegelController::class,
+		'buka_segel' => DokBukaSegelController::class,
 		'sbp' => DokSbpController::class,
 		'tolak1' => DokTolakSbp1Controller::class,
 		'tolak2' => DokTolakSbp2Controller::class,

@@ -79,6 +79,13 @@ class PenindakanController extends DokController
 		$this->savePetugas($request->penindakan['petugas'], $this->penindakan);
 	}
 
+	protected function createEmptyPenindakan() {
+		$data_penindakan = [
+			'chain_id' => $this->doc->chain->id,
+		];
+		$this->penindakan = Penindakan::create($data_penindakan);
+	}
+
 	protected function updatePenindakan($request) {
 		$penindakan = $this->doc->chain->penindakan;
 		
@@ -141,7 +148,6 @@ class PenindakanController extends DokController
 					$existing_tegah->delete();
 				}
 			}
-				
 
 			// BA Segel
 			$existing_segel = $chain->segel;

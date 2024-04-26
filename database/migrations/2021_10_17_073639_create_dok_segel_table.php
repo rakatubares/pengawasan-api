@@ -21,11 +21,11 @@ class CreateDokSegelTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
-			$table->string('jenis_segel')->index();
+			$table->string('jenis_segel');
 			$table->integer('jumlah_segel');
-			$table->string('satuan_segel')->nullable()->index();
-			$table->string('nomor_segel')->nullable()->index();
-			$table->string('tempat_segel')->nullable()->index();
+			$table->string('satuan_segel')->nullable();
+			$table->string('nomor_segel')->nullable();
+			$table->string('tempat_segel')->nullable();
 			$table->string('kode_status')->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

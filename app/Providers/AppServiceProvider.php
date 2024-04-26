@@ -8,7 +8,6 @@ use App\Models\DetailBarangItem;
 use App\Models\DetailDokumen;
 use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
-use App\Models\DokBukaSegel;
 use App\Models\DokLapN;
 use App\Models\DokLp;
 use App\Models\DokLphp;
@@ -19,7 +18,6 @@ use App\Models\DokTitip;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DokBukaPengamanObserver;
-use App\Observers\DokBukaSegelObserver;
 use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
@@ -40,6 +38,7 @@ use App\Models\Intelijen\DokNhiNSarkut;
 use App\Models\Intelijen\DokNhiTertentu;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLptp;
@@ -59,6 +58,7 @@ use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
+use App\Observers\Penindakan\DokBukaSegelObserver;
 use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
 use App\Observers\Penindakan\DokLptpObserver;
@@ -112,7 +112,6 @@ class AppServiceProvider extends ServiceProvider
 			'bangunan' => DetailBangunan::class,
 			'barang' => DetailBarang::class,
 			'bast' => DokBast::class,
-			'bukasegel' => DokBukaSegel::class,
 			'dokumen' => DetailDokumen::class,
 			'entitas-badan-hukum' => EntitasBadanHukum::class,
 			'entitas-orang' => EntitasOrang::class,
@@ -145,6 +144,7 @@ class AppServiceProvider extends ServiceProvider
 			'riksa' => DokRiksa::class,
 			'tegah' => DokTegah::class,
 			'segel' => DokSegel::class,
+			'buka_segel' => DokBukaSegel::class,
 			'sbp' => DokSbp::class,
 			'tolak1' => DokTolakSbp1::class,
 			'tolak2' => DokTolakSbp2::class,
@@ -155,7 +155,6 @@ class AppServiceProvider extends ServiceProvider
 		 * Observers
 		 */
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
-		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokLapN::observe(DokLapObserver::class);
 		
 		DokLp::observe(DokLpObserver::class);
@@ -184,6 +183,7 @@ class AppServiceProvider extends ServiceProvider
 		DokRiksa::observe(DokRiksaObserver::class);
 		DokTegah::observe(DokTegahObserver::class);
 		DokSegel::observe(DokSegelObserver::class);
+		DokBukaSegel::observe(DokBukaSegelObserver::class);
 		DokSbp::observe(DokSbpObserver::class);
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
 		DokTolakSbp2::observe(DokTolakSbp2Observer::class);

@@ -10,6 +10,7 @@ use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLptp;
@@ -37,7 +38,7 @@ class DocumentsChain extends Model
 		'lppi', 'lkai', 'nhi', 'ni',
 		'lppin', 'lkain', 'nhin', 'nin',
 		'li', 'lap', 
-		'riksa_badan', 'riksa', 'tegah', 'segel',
+		'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
 		'sbp', 'tolak1', 'tolak2', 'lptp',
 	];
 
@@ -109,6 +110,10 @@ class DocumentsChain extends Model
 
 	public function segel() {
 		return $this->hasOne(DokSegel::class, 'chain_id');
+	}
+
+	public function buka_segel() {
+		return $this->hasOne(DokBukaSegel::class, 'chain_id');
 	}
 
 	public function sbp() {
