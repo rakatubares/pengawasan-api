@@ -31,7 +31,6 @@ class DokLkaiController extends DokController
 			'tanggal_terima_pejabat' => 'date',
 			'keputusan_atasan' => 'boolean',
 			'tanggal_terima_atasan' => 'date',
-			'informasi' => 'required',
 		]);
 	}
 
