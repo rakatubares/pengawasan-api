@@ -69,25 +69,20 @@ class DokBukaSegelController extends PenindakanController
 			$chain = $segel->chain;
 		} else {
 			$chain = $this->createChain();
+			$this->createEmptyPenindakan($chain->id);
 		}
 		$data['chain_id'] = $chain->id;
 		
 		return $data;
 	}
 
-	protected function stored($request)
-	{
-		if (!$request->segel_id) {
-			$this->createEmptyPenindakan();
-		}
-		parent::stored($request);
-	}
-
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
 		$chain = $this->doc->chain;
 
+		// Check for segel id
 		if ($request->segel_id) {
+			// Process if segel id exists
 			if ($this->doc->asal_segel == 'segel') {
 				$existing_segel_id = $this->doc->chain->segel->id;
 
@@ -110,18 +105,11 @@ class DokBukaSegelController extends PenindakanController
 				$existing_segel_id = $this->doc->chain->segel->id;
 				$this->detachFrom('segel', $existing_segel_id);
 				$chain = $this->createChain();
+				$this->createEmptyPenindakan($chain->id);
 			}
 		}
 		$data['chain_id'] = $chain->id;
 
 		return $data;
-	}
-
-	protected function updated(Request $request) {
-		// Create penindakan if not exists
-		if (!$this->doc->chain->penindakan) {
-			$this->createEmptyPenindakan();
-		}
-		parent::updated($request);
 	}
 }

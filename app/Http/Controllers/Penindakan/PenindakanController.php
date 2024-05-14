@@ -79,10 +79,8 @@ class PenindakanController extends DokController
 		$this->savePetugas($request->penindakan['petugas'], $this->penindakan);
 	}
 
-	protected function createEmptyPenindakan() {
-		$data_penindakan = [
-			'chain_id' => $this->doc->chain->id,
-		];
+	protected function createEmptyPenindakan($chain_id) {
+		$data_penindakan = ['chain_id' => $chain_id];
 		$this->penindakan = Penindakan::create($data_penindakan);
 	}
 
