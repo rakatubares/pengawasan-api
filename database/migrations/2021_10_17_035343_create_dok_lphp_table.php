@@ -25,15 +25,10 @@ class CreateDokLphpTable extends Migration
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
 			$table->text('analisa')->nullable();
 			$table->text('catatan')->nullable();
-			$table->string('kode_jabatan_penyusun')->index();
-			$table->boolean('plh_penyusun')->nullable()->index();
-			$table->integer('penyusun_id')->index();
-			$table->string('kode_jabatan_atasan')->index();
-			$table->boolean('plh_atasan')->nullable()->index();
-			$table->integer('atasan_id')->index();
-			$table->integer('kode_status')->index();
+			$table->string('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->index('created_at');

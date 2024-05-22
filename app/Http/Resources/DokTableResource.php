@@ -8,6 +8,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokTableResource extends JsonResource
 {
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
+	{
+		return $this->makeBasicArray();
+	}
+
 	protected function makeBasicArray() {
 		$document_status = new RefStatusResource($this->status);
 		$chain_status = new RefKodeDokumenResource($this->chain->status);

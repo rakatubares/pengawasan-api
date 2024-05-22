@@ -13,6 +13,7 @@ use App\Models\Intelijen\DokNiN;
 use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
+use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLptp;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
@@ -39,7 +40,7 @@ class DocumentsChain extends Model
 		'lppin', 'lkain', 'nhin', 'nin',
 		'li', 'lap', 
 		'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
-		'sbp', 'tolak1', 'tolak2', 'lptp',
+		'sbp', 'tolak1', 'tolak2', 'lptp', 'lphp',
 	];
 
 	public function status() {
@@ -145,5 +146,9 @@ class DocumentsChain extends Model
 
 	public function lptp() {
 		return $this->hasOne(DokLptp::class, 'chain_id');
+	}
+
+	public function lphp() {
+		return $this->hasOne(DokLphp::class, 'chain_id');
 	}
 }

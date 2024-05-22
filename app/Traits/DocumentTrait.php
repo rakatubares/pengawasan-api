@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\DokTableResource;
 use App\Http\Resources\Intelijen\DokLkaiNResource;
 use App\Http\Resources\Intelijen\DokLkaiResource;
 use App\Http\Resources\Intelijen\DokLkaiTableResource;
@@ -20,6 +21,8 @@ use App\Http\Resources\Penindakan\DokLapResource;
 use App\Http\Resources\Penindakan\DokLapTableResource;
 use App\Http\Resources\Penindakan\DokLiResource;
 use App\Http\Resources\Penindakan\DokLiTableResource;
+use App\Http\Resources\Penindakan\DokLphpResource;
+use App\Http\Resources\Penindakan\DokLphpTableResource;
 use App\Http\Resources\Penindakan\DokLptpResource;
 use App\Http\Resources\Penindakan\DokRiksaBadanResource;
 use App\Http\Resources\Penindakan\DokRiksaBadanTableResource;
@@ -81,6 +84,7 @@ trait DocumentTrait
 			'tolak1' => DokTolakSbp1Resource::class,
 			'tolak2' => DokTolakSbp2Resource::class,
 			'lptp' => DokLptpResource::class,
+			'lphp' => DokLphpResource::class,
 		];
 
 		try {
@@ -114,12 +118,13 @@ trait DocumentTrait
 			'segel' => DokSegelTableResource::class,
 			'buka_segel' => DokBukaSegelTableResource::class,
 			'sbp' => DokSbpTableResource::class,
+			'lphp' => DokLphpTableResource::class,
 		];
 
 		try {
 			$resource = $resources[$doc_type];
 		} catch (\Throwable $th) {
-			$resource = null;
+			$resource = DokTableResource::class;
 		}
 
 		return $resource;

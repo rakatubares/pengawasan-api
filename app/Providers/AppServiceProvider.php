@@ -10,15 +10,12 @@ use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokLapN;
 use App\Models\DokLp;
-use App\Models\DokLphp;
-use App\Models\DokLphpN;
 use App\Models\DokLpN;
 use App\Models\DokPengaman;
 use App\Models\DokTitip;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DokBukaPengamanObserver;
-use App\Observers\DokLphpObserver;
 use App\Observers\DokLpObserver;
 use App\Observers\DokPengamanObserver;
 use App\Observers\DokTitipObserver;
@@ -41,6 +38,7 @@ use App\Models\Intelijen\DokNiN;
 use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
+use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLptp;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
@@ -61,6 +59,7 @@ use App\Observers\Intelijen\DokNiObserver;
 use App\Observers\Penindakan\DokBukaSegelObserver;
 use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
+use App\Observers\Penindakan\DokLphpObserver;
 use App\Observers\Penindakan\DokLptpObserver;
 use App\Observers\Penindakan\DokRiksaBadanObserver;
 use App\Observers\Penindakan\DokRiksaObserver;
@@ -149,6 +148,7 @@ class AppServiceProvider extends ServiceProvider
 			'tolak1' => DokTolakSbp1::class,
 			'tolak2' => DokTolakSbp2::class,
 			'lptp' => DokLptp::class,
+			'lphp' => DokLphp::class,
 		]);
 
 		/**
@@ -159,8 +159,6 @@ class AppServiceProvider extends ServiceProvider
 		
 		DokLp::observe(DokLpObserver::class);
 		DokLpN::observe(DokLpObserver::class);
-		DokLphp::observe(DokLphpObserver::class);
-		DokLphpN::observe(DokLphpObserver::class);
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
 		
@@ -188,5 +186,6 @@ class AppServiceProvider extends ServiceProvider
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
 		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
 		DokLptp::observe(DokLptpObserver::class);
+		DokLphp::observe(DokLphpObserver::class);
     }
 }
