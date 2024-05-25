@@ -89,8 +89,6 @@ class DokLphpSeeder extends Seeder
 		/**
 		 * Update penomoran
 		 */
-
-		// SBP
 		Penomoran::create([
 			'tipe_dokumen' => $lphp->tipe_dokumen,
 			'agenda' => $lphp->agenda_dokumen,

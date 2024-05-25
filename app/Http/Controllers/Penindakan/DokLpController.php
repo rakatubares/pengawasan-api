@@ -5,21 +5,13 @@ namespace App\Http\Controllers\Penindakan;
 use App\Http\Controllers\DokController;
 use Illuminate\Http\Request;
 
-class DokLphpController extends DokController
+class DokLpController extends DokController
 {
-	public function __construct($doc_type='lphp')
+	public function __construct($doc_type='lp')
 	{
 		parent::__construct($doc_type);
-		$this->lptp_type = 'lptp';
-		$this->sbp_type = 'sbp';
 	}
 
-	/*
-	 |--------------------------------------------------------------------------
-	 | Data modify functions
-	 |--------------------------------------------------------------------------
-	 */
-	
 	/**
 	 * Validate request
 	 * 
@@ -28,7 +20,7 @@ class DokLphpController extends DokController
 	protected function validateData(Request $request)
 	{
 		$request->validate([
-			'lptp_id' => 'required|integer',
+			'lphp_id' => 'required|integer',
 			'tanggal_dokumen' => 'required|date',
 		]);
 	}
@@ -48,8 +40,8 @@ class DokLphpController extends DokController
 		$data_lphp = [
 			'thn_dok' => $thn_dok,
 			'tanggal_dokumen' => $tanggal_dokumen,
-			'analisa' => $request->analisa,
-			'catatan' => $request->catatan,
+			'pasal' => $request->pasal,
+			'modus' => $request->modus,
 		];
 
 		return $data_lphp;
@@ -57,8 +49,8 @@ class DokLphpController extends DokController
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
-		$lptp = $this->attachTo('lptp', $request->lptp_id);
-		$data['chain_id'] = $lptp->chain->id;
+		$lphp = $this->attachTo('lphp', $request->lphp_id);
+		$data['chain_id'] = $lphp->chain->id;
 
 		return $data;
 	}
@@ -66,16 +58,16 @@ class DokLphpController extends DokController
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
 		$chain = $this->doc->chain;
-		$existing_lptp_id = $this->doc->chain->lptp->id;
+		$existing_lphp_id = $this->doc->chain->lphp->id;
 
-		// Change LPTP if lptp_id different from previous data
-		if ($request->lptp_id != $existing_lptp_id) {
-			// Detach from previous LPTP
-			$this->detachFrom('lptp', $existing_lptp_id);
+		// Change LPHP if lptp_id different from previous data
+		if ($request->lphp_id != $existing_lphp_id) {
+			// Detach from previous LPHP
+			$this->detachFrom('lphp', $existing_lphp_id);
 
-			// Attach to new LPTP
-			$lptp = $this->attachTo('lptp', $request->lptp_id);
-			$chain = $lptp->chain;
+			// Attach to new LPHP
+			$lphp = $this->attachTo('lphp', $request->lphp_id);
+			$chain = $lphp->chain;
 		}
 
 		$data['chain_id'] = $chain->id;

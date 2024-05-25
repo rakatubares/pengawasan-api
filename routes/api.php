@@ -20,6 +20,7 @@ use App\Http\Controllers\Penindakan\Detail\PenindakanSarkutController;
 use App\Http\Controllers\Penindakan\DokBukaSegelController;
 use App\Http\Controllers\Penindakan\DokLapController;
 use App\Http\Controllers\Penindakan\DokLiController;
+use App\Http\Controllers\Penindakan\DokLpController;
 use App\Http\Controllers\Penindakan\DokLphpController;
 use App\Http\Controllers\Penindakan\DokLptpController;
 use App\Http\Controllers\Penindakan\DokRiksaBadanController;
@@ -95,6 +96,7 @@ Route::group(['prefix' => 'doc'], function() {
 		'tolak2' => DokTolakSbp2Controller::class,
 		'lptp' => DokLptpController::class,
 		'lphp' => DokLphpController::class,
+		'lp' => DokLpController::class,
 	]);	
 
 	Route::post('/{doc_type}/search', [DokController::class, 'search']);
