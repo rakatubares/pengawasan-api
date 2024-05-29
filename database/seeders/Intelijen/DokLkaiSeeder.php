@@ -101,6 +101,8 @@ class DokLkaiSeeder extends Seeder
 			$informasi_lain = $faker->boolean() ? $faker->text() : null;
 
 			// Create LKAI
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$field_nomor_lpti = 'nomor_' . $this->kode_lpti;
 			$field_tanggal_lpti = 'tanggal_' . $this->kode_lpti;
 			$field_nomor_npi = 'nomor_' . $this->kode_npi;
@@ -137,6 +139,8 @@ class DokLkaiSeeder extends Seeder
 			$lkai->catatan_atasan = $faker->text();
 			$lkai->tanggal_terima_atasan = $faker->dateTimeThisYear()->format('Y-m-d');
 			$lkai->kode_status = 'terbit';
+			$lkai->created_by = $creator;
+			$lkai->updated_by = $creator;
 			$lkai->saveQuietly();
 
 			/**

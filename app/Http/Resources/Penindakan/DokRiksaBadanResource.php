@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Penindakan;
 
+use App\Http\Resources\RefUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokRiksaBadanResource extends JsonResource
@@ -27,6 +28,7 @@ class DokRiksaBadanResource extends JsonResource
 			'hasil_pemeriksaan' => $this->hasil_pemeriksaan,
 			'penindakan' => new PenindakanResource($this->chain->penindakan),
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 
 		return $array;

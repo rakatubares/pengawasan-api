@@ -65,6 +65,8 @@ class DokLppiSeeder extends Seeder
 			$chain = DocumentsChain::create();
 
 			// Insert data
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$lppi = new $this->model;
 			$lppi->no_dok = $crn_lppi;
 			$lppi->agenda_dok = $lppi->agenda_dokumen;
@@ -88,6 +90,8 @@ class DokLppiSeeder extends Seeder
 			$lppi->flag_arsip = $faker->boolean();
 			$lppi->catatan = $faker->text();
 			$lppi->kode_status = 'terbit';
+			$lppi->created_by = $creator;
+			$lppi->updated_by = $creator;
 			$lppi->saveQuietly();
 
 			// Create ikhtisar informasi

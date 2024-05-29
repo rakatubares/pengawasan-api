@@ -52,6 +52,8 @@ class DokLpSeeder extends Seeder
 			$crn_lp = $max_lp + 1;
 
 			// Create LP
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$lp = new $this->model_lp;
 			$lp->no_dok = $crn_lp;
 			$lp->agenda_dok = $lp->agenda_dokumen;
@@ -62,6 +64,8 @@ class DokLpSeeder extends Seeder
 			$lp->pasal = $faker->sentence($nbWOrds = 5);
 			$lp->modus = $faker->sentence($nbWOrds = 20);
 			$lp->kode_status = 'terbit';
+			$lp->created_by = $creator;
+			$lp->updated_by = $creator;
 			$lp->saveQuietly();
 
 			/**

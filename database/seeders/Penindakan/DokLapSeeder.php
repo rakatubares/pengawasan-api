@@ -101,6 +101,9 @@ class DokLapSeeder extends Seeder
 				$ket_layak_patroli = $faker->sentence($nbWords = 20);
 			}
 
+			// Create LAP
+			$creator = $faker->randomElement(['123456', '665544']);
+			
 			$lap = new $this->model_lap;
 			$lap->no_dok = $no_current;
 			$lap->agenda_dok = $lap->agenda_dokumen;
@@ -135,6 +138,8 @@ class DokLapSeeder extends Seeder
 			$lap->keterangan_patroli = $ket_layak_patroli;
 			$lap->kesimpulan = $faker->sentence($nbWords = 20);
 			$lap->kode_status = 'terbit';
+			$lap->created_by = $creator;
+			$lap->updated_by = $creator;
 			$lap->saveQuietly();
 			
 			/**

@@ -18,7 +18,7 @@ class SSO {
 
 	private function attach()
 	{
-		$this->sso->attach('http://pengawasan.local/api');
+		$this->sso->attach();
 	}
 
 	public function setToken($token)
@@ -37,6 +37,7 @@ class SSO {
 			return redirect('http://ssologin.local/login?appid=3');
 		} else {
 			// echo 'User info is NOT null';
+			return $userInfo;
 		}
 	}
 

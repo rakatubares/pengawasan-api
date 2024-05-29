@@ -70,7 +70,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  |--------------------------------------------------------------------------
  */
 
-Route::group(['prefix' => 'doc'], function() {
+Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 	Route::docResources([
 		// Intelijen
 		'lppi' => DokLppiController::class,

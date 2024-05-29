@@ -36,6 +36,8 @@ class DokBukaSegelSeeder extends Seeder
 			$no_current = $max_buka_segel + 1;
 				
 			// Create Buka Segel
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$buka_segel = new DokBukaSegel();
 			$buka_segel->no_dok = $no_current;
 			$buka_segel->agenda_dok = $buka_segel->agenda_dokumen;
@@ -46,6 +48,8 @@ class DokBukaSegelSeeder extends Seeder
 			$buka_segel->tanggal_buka_segel = $faker->dateTimeThisYear()->format('Y-m-d');
 			$buka_segel->saksi_id = $faker->numberBetween(1,100);
 			$buka_segel->kode_status = 'terbit';
+			$buka_segel->created_by = $creator;
+			$buka_segel->updated_by = $creator;
 
 			$flag_segel = $faker->boolean();
 			if ($flag_segel) {

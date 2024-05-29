@@ -14,6 +14,7 @@ class CreateRefUserCacheTable extends Migration
     public function up()
     {
         Schema::create('ref_user_cache', function (Blueprint $table) {
+			$table->id();
             $table->integer('user_id')->unsigned();
 			$table->string('username')->index();
 			$table->string('name')->index();
@@ -23,7 +24,6 @@ class CreateRefUserCacheTable extends Migration
 			$table->string('pejabat')->index();
 			$table->string('status')->index();
             $table->timestamps();
-			$table->primary('user_id');
 			$table->index('created_at');
 			$table->index('updated_at');
         });

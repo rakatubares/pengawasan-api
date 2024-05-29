@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class RefUserCache extends Model
+class RefUserCache extends Authenticatable
 {
     use HasFactory;
 
@@ -21,8 +21,6 @@ class RefUserCache extends Model
 		'pejabat',
 		'status'
 	];
-
-	protected $primaryKey = 'user_id';
 
 	public $timestamps = true;
 }

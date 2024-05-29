@@ -52,6 +52,8 @@ class DokLphpSeeder extends Seeder
 			$tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
 
 			// Create LPHP
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$lphp = new $this->model_lphp;
 			$lphp->no_dok = $crn_lphp;
 			$lphp->agenda_dok = $lphp->agenda_dokumen;
@@ -62,6 +64,8 @@ class DokLphpSeeder extends Seeder
 			$lphp->analisa = $faker->sentence($nbWOrds = 20);
 			$lphp->catatan = $faker->sentence($nbWOrds = 20);
 			$lphp->kode_status = 'terbit';
+			$lphp->created_by = $creator;
+			$lphp->updated_by = $creator;
 			$lphp->saveQuietly();
 
 			/**

@@ -130,6 +130,8 @@ class DokSbpSeeder extends Seeder
 			/**
 			 * Create SBP
 			 */
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$max_sbp = $this->model_sbp::max('no_dok');
 			$crn_sbp = $max_sbp + 1;
 			$tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
@@ -142,6 +144,8 @@ class DokSbpSeeder extends Seeder
 			$sbp->tanggal_dokumen = $tanggal_dokumen;
 			$sbp->chain_id = $chain->id;
 			$sbp->kode_status = 'tindak-lanjut';
+			$sbp->created_by = $creator;
+			$sbp->updated_by = $creator;
 			$sbp->saveQuietly();
 
 			/**
@@ -237,6 +241,8 @@ class DokSbpSeeder extends Seeder
 					$riksa_badan->tanggal_dokumen = $tanggal_dokumen;
 					$riksa_badan->chain_id = $chain->id;
 					$riksa_badan->kode_status = 'terbit';
+					$riksa_badan->created_by = $creator;
+					$riksa_badan->updated_by = $creator;
 					$riksa_badan->saveQuietly();
 				}
 			}
@@ -258,6 +264,8 @@ class DokSbpSeeder extends Seeder
 					$riksa->tanggal_dokumen = $tanggal_dokumen;
 					$riksa->chain_id = $chain->id;
 					$riksa->kode_status = 'terbit';
+					$riksa->created_by = $creator;
+					$riksa->updated_by = $creator;
 					$riksa->saveQuietly();
 				}
 			}
@@ -279,6 +287,8 @@ class DokSbpSeeder extends Seeder
 					$tegah->tanggal_dokumen = $tanggal_dokumen;
 					$tegah->chain_id = $chain->id;
 					$tegah->kode_status = 'terbit';
+					$tegah->created_by = $creator;
+					$tegah->updated_by = $creator;
 					$tegah->saveQuietly();
 				}
 			}
@@ -305,6 +315,8 @@ class DokSbpSeeder extends Seeder
 					$segel->nomor_segel = "{$segel->tipe_dokumen}-{$crn_segel}{$segel->agenda_dokumen}{$year}";
 					$segel->tempat_segel = $faker->word();
 					$segel->kode_status = 'terbit';
+					$segel->created_by = $creator;
+					$segel->updated_by = $creator;
 					$segel->saveQuietly();
 				}
 			}
@@ -328,6 +340,8 @@ class DokSbpSeeder extends Seeder
 				$tolak1->parent_id = $sbp->id;
 				$tolak1->alasan = $faker->text();
 				$tolak1->kode_status = 'terbit';
+				$tolak1->created_by = $creator;
+				$tolak1->updated_by = $creator;
 				$tolak1->saveQuietly();
 
 				// Update flag tolak sbp
@@ -350,6 +364,8 @@ class DokSbpSeeder extends Seeder
 					$tolak2->alasan = $faker->text();
 					$tolak2->saksi_id = $faker->numberBetween(1,100);
 					$tolak2->kode_status = 'terbit';
+					$tolak2->created_by = $creator;
+					$tolak2->updated_by = $creator;
 					$tolak2->saveQuietly();
 
 					// Update flag tolak ba tolak 1

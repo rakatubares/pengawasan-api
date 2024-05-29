@@ -52,6 +52,8 @@ class DokNhiSeeder extends Seeder
 			$chain = $lkai->chain;
 
 			// Create NHI header data
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$nhi = new DokNhi();
 			$nhi->no_dok = $crn_nhi;
 			$nhi->agenda_dok = $nhi->agenda_dokumen;
@@ -69,6 +71,8 @@ class DokNhiSeeder extends Seeder
 			$nhi->kode_kantor = '050100';
 			$nhi->indikasi = $faker->text();
 			$nhi->kode_status = 'terbit';
+			$nhi->created_by = $creator;
+			$nhi->updated_by = $creator;
 			$nhi->saveQuietly();
 
 			// Create kegiatan data

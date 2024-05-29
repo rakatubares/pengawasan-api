@@ -17,7 +17,7 @@ class Dokumen extends Model
 
 	public $agenda_dokumen = '/KPU.305/';
 
-	protected $observables = ['edited', 'publishing', 'published'];
+	protected $observables = ['editing', 'edited', 'publishing', 'published'];
 	public $unpublished_status = ['draft'];
 
 	/**
@@ -55,6 +55,13 @@ class Dokumen extends Model
 	}
 
 	/**
+	 * User
+	 */
+	public function creator() {
+		return $this->hasOne(RefUserCache::class, 'nip', 'created_by');
+	}
+
+	/**
 	 * Riwayat status dokumen
 	 */
 	public function status_history() 
@@ -64,6 +71,7 @@ class Dokumen extends Model
 
 	public function edit($data) 
 	{
+		$this->fireModelEvent('editing');
 		$this->update($data);
 		$this->fireModelEvent('edited');
 	}

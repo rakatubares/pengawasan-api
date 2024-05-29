@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Penomoran;
 use App\Traits\DocumentsChainTrait;
 use App\Traits\DocumentTrait;
+use Illuminate\Support\Facades\Auth;
 
 class DokObserver
 {
@@ -75,26 +76,45 @@ class DokObserver
 
 	public function creating($dokumen) {
 		$this->setDefaultDocumentProperties($dokumen);
+		$dokumen['created_by'] = Auth::user()->nip;
+		$dokumen['updated_by'] = Auth::user()->nip;
 	}
 
 	public function created($dokumen)
 	{
-		$dokumen->status_history()->create(['kode_status' => 'draft']);
+		$dokumen->status_history()
+			->create(['kode_status' => 'draft', 'nip_pegawai' => Auth::user()->nip]);
+	}
+
+	public function editing() 
+	{
+		$dokumen['updated_by'] = Auth::user()->nip;
 	}
 
 	public function edited($dokumen)
 	{
-		$dokumen->status_history()->create(['kode_status' => 'edit-draft']);
+		$dokumen->status_history()
+			->create(['kode_status' => 'edit-draft', 'nip_pegawai' => Auth::user()->nip]);
 	}
 
-	public function publishing($dokumen) {
+	public function publishing($dokumen) 
+	{
 		$this->getNewDocumentNumber($dokumen);
+		$dokumen['updated_by'] = Auth::user()->nip;
 	}
 
-	public function published($dokumen) {
+	public function published($dokumen) 
+	{
 		$this->updatePenomoran($dokumen);
 		$this->setLatestChainStatus($dokumen);
-		$dokumen->status_history()->create(['kode_status' => 'terbit']);
+		$dokumen->status_history()
+			->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
+	}
+
+	public function deleting($dokumen) 
+	{
+		$dokumen['updated_by'] = Auth::user()->nip;
+		$dokumen['deleted_by'] = Auth::user()->nip;	
 	}
 
 	public function deleted($dokumen) {
@@ -102,7 +122,8 @@ class DokObserver
 		$dokumen->update(['kode_status' => 'dihapus']);
 		
 		// Save history
-		$dokumen->status_history()->create(['kode_status' => 'dihapus']);
+		$dokumen->status_history()
+			->create(['kode_status' => 'dihapus', 'nip_pegawai' => Auth::user()->nip]);
 
 		// Delete chain if no other documents
 		if ($dokumen->chain->latest_document == null) {

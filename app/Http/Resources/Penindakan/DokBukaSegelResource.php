@@ -4,6 +4,7 @@ namespace App\Http\Resources\Penindakan;
 
 use App\Http\Resources\Entitas\EntitasOrangResource;
 use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Http\Resources\RefUserResource;
 use App\Http\Resources\SprintResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -59,6 +60,7 @@ class DokBukaSegelResource extends JsonResource
 			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
 			'penindakan' => new PenindakanResource($this->chain->penindakan),
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 
 		return $array;

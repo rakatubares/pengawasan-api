@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
-class RefUserResource extends RequestBasedResource
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class RefUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -10,7 +12,7 @@ class RefUserResource extends RequestBasedResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function basic()
+    public function toArray($request)
     {
         $array = [
 			'user_id' => $this->user_id,
@@ -25,14 +27,4 @@ class RefUserResource extends RequestBasedResource
 
 		return $array;
     }
-
-	public function display()
-	{
-		$array = [
-			'name' => $this->name,
-			'nip' => $this->nip,
-		];
-
-		return $array;
-	}
 }

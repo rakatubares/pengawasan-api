@@ -47,7 +47,7 @@ class SprintController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'nomor_sprint' => 'required|unique:ref_sprint,nomor_sprint,NULL,id,deleted_at,NULL',
+			'nomor_sprint' => 'required|unique:sprint,nomor_sprint,NULL,id,deleted_at,NULL',
 			'tanggal_sprint' => 'required|date',
 			'pejabat.id' => 'required|integer'
 		]);

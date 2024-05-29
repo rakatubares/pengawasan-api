@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Intelijen;
 
 use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Http\Resources\RefUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokLppiResource extends JsonResource
@@ -52,6 +53,7 @@ class DokLppiResource extends JsonResource
 			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
 			'informasi' => InformasiResource::collection($this->informasi),
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 
 		return $array;

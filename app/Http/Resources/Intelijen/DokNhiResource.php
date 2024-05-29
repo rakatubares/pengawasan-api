@@ -4,6 +4,7 @@ namespace App\Http\Resources\Intelijen;
 
 use App\Http\Resources\ListPosisiPegawaiResource;
 use App\Http\Resources\References\RefKantorBCResource;
+use App\Http\Resources\RefUserResource;
 use App\Http\Resources\TembusanResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -52,6 +53,7 @@ class DokNhiResource extends JsonResource
 			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
 			'tembusan' => TembusanResource::collection($this->tembusan),
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 
 		return $array;

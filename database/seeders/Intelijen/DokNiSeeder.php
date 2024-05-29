@@ -51,6 +51,8 @@ class DokNiSeeder extends Seeder
 			$chain = $lkai->chain;
 
 			// Create NI data
+			$creator = $this->faker->randomElement(['123456', '665544']);
+
 			$ni = new $this->model_ni;
 			$ni->no_dok = $crn_ni;
 			$ni->agenda_dok = $ni->agenda_dokumen;
@@ -63,6 +65,8 @@ class DokNiSeeder extends Seeder
 			$ni->tujuan = $this->faker->randomElement(['Kepala Seksi Patroli dan Operasi I', 'Kepala Seksi Patroli dan Operasi II']);
 			$ni->uraian = $this->createUraian();
 			$ni->kode_status = 'terbit';
+			$ni->created_by = $creator;
+			$ni->updated_by = $creator;
 			$ni->saveQuietly();
 
 			/**

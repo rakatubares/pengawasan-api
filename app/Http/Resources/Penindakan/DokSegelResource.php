@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Penindakan;
 
+use App\Http\Resources\RefUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokSegelResource extends JsonResource
@@ -30,6 +31,7 @@ class DokSegelResource extends JsonResource
 			'tempat_segel' => $this->tempat_segel,
 			'penindakan' => new PenindakanResource($this->chain->penindakan),
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 
 		return $array;

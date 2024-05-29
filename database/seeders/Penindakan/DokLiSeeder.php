@@ -31,6 +31,8 @@ class DokLiSeeder extends Seeder
 			$chain = DocumentsChain::create();
 
 			// Create LI
+			$creator = $faker->randomElement(['123456', '665544']);
+
 			$li = new DokLi();
 			$li->no_dok = $no_current;
 			$li->agenda_dok = $li->agenda_dokumen;
@@ -43,6 +45,8 @@ class DokLiSeeder extends Seeder
 			$li->tindak_lanjut = $faker->sentence($nbWOrds = 20);
 			$li->catatan = $faker->sentence($nbWOrds = 20);
 			$li->kode_status = 'terbit';
+			$li->created_by = $creator;
+			$li->updated_by = $creator;
 			$li->saveQuietly();
 
 			/**

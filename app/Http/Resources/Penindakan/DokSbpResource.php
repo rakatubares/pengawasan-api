@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Penindakan;
 
 use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Http\Resources\RefUserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DokSbpResource extends JsonResource
@@ -32,6 +33,7 @@ class DokSbpResource extends JsonResource
 				'petugas' => ListPosisiPegawaiResource::associative($this->chain->lptp->detail_petugas),
 			],
 			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
 		];
 		return $array;
 	}

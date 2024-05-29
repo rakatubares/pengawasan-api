@@ -38,6 +38,8 @@ class DokTableResource extends JsonResource
 			'status' => $status,
 			'status_color' => $document_status->color,
 			'status_dokumen' => $this->kode_status,
+			'creator_name' => $this->creator['name'],
+			'creator_id' => $this->creator['nip'],
 		];
 
 		return $array;
