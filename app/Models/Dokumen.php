@@ -8,6 +8,7 @@ use App\Traits\PetugasTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Dokumen extends Model
 {
@@ -18,7 +19,7 @@ class Dokumen extends Model
 	public $agenda_dokumen = '/KPU.305/';
 
 	protected $observables = ['editing', 'edited', 'publishing', 'published'];
-	public $unpublished_status = ['draft'];
+	public $unpublished_status = ['draft', 'rollback'];
 
 	/**
 	 * Documents chain
@@ -83,12 +84,26 @@ class Dokumen extends Model
 		$this->fireModelEvent('published');
 	}
 
-	public function followedUp() 
+	public function rollback($remark=null) 
 	{
-		$this->update(['kode_status' => 'tindak-lanjut']);
+		// Rollback status
+		$this->update(['kode_status' => 'rollback']);
+		
+		// Add history
+		$this->status_history()
+			->create([
+				'kode_status' => 'rollback', 
+				'keterangan' => $remark,
+				'nip_pegawai' => Auth::user()->nip
+			]);
 	}
-	public function unFollowedUp() 
+
+	public function followedUp($status_name='status_tindak_lanjut') 
 	{
-		$this->update(['kode_status' => 'terbit']);
+		$this->update([$status_name => true]);
+	}
+	public function unFollowedUp($status_name='status_tindak_lanjut') 
+	{
+		$this->update([$status_name => false]);
 	}
 }

@@ -24,7 +24,7 @@ class ResourceRegistrar extends OriginalRegistrar
 	 *
 	 * @var string[]
 	 */
-	protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'publish'];
+	protected $resourceDefaults = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy', 'publish', 'rollback'];
 
 	/**
 	 * Add the pubish method for a resourceful route.
@@ -42,6 +42,26 @@ class ResourceRegistrar extends OriginalRegistrar
 		$uri = $this->getResourceUri($name).'/{'.$base.'}/publish';
 
 		$action = $this->getResourceAction($name, $controller, 'publish', $options);
+
+		return $this->router->match(['PUT', 'PATCH'], $uri, $action);
+	}
+
+	/**
+	 * Add the rollback method for a resourceful route.
+	 *
+	 * @param  string  $name
+	 * @param  string  $base
+	 * @param  string  $controller
+	 * @param  array  $options
+	 * @return \Illuminate\Routing\Route
+	 */
+	protected function addResourceRollback($name, $base, $controller, $options)
+	{
+		$name = $this->getShallowName($name, $options);
+
+		$uri = $this->getResourceUri($name).'/{'.$base.'}/rollback';
+
+		$action = $this->getResourceAction($name, $controller, 'rollback', $options);
 
 		return $this->router->match(['PUT', 'PATCH'], $uri, $action);
 	}

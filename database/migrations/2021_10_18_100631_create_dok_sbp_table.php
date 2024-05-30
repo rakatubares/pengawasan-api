@@ -27,7 +27,8 @@ class CreateDokSbpTable extends Migration
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
 			$table->string('kode_status')->index();
-			$table->boolean('status_tolak')->index()->default(false);
+			$table->boolean('status_tindak_lanjut')->default(false)->index();
+			$table->boolean('status_tolak')->default(false)->index();
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->string('created_by')->nullable()->index();

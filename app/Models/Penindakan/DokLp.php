@@ -20,7 +20,8 @@ class DokLp extends Dokumen
 		'chain_id',
 		'pasal',
 		'modus',
-		'kode_status'
+		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

@@ -42,7 +42,7 @@ class DokLphpSeeder extends Seeder
 			unset($available_lptp_id[$key]);
 			$lptp = $model_lptp::find($lptp_id);
 			$chain = $lptp->chain;
-			$lptp->update(['kode_status' => 'tindak-lanjut']);
+			$lptp->update(['status_tindak_lanjut' => true]);
 
 			/**
 			 * Create LPHP

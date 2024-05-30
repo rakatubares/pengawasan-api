@@ -33,6 +33,7 @@ class DokNhi extends Dokumen
 		'detail_id',
 		'indikasi',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

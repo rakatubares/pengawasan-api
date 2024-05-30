@@ -20,7 +20,8 @@ class DokLphp extends Dokumen
 		'chain_id',
 		'analisa',
 		'catatan',
-		'kode_status'
+		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

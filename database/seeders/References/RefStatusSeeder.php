@@ -46,30 +46,9 @@ class RefStatusSeeder extends Seeder
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 'aju-perbaikan',
-				'uraian_status' => 'Pengajuan perbaikan',
+				'kode_status' => 'rollback',
+				'uraian_status' => 'Proses perbaikan dokumen',
 				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'setuju-perbaikan',
-				'uraian_status' => 'Persetujuan perbaikan',
-				'color' => 'success',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'tolak-perbaikan',
-				'uraian_status' => 'Penolakan perbaikan',
-				'color' => 'danger',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'batal-perbaikan',
-				'uraian_status' => 'Pembatalan aju perbaikan',
-				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],

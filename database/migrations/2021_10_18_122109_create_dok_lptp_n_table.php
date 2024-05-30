@@ -27,6 +27,7 @@ class CreateDokLptpNTable extends Migration
 			$table->text('alasan_tidak_penindakan')->nullable();
 			$table->text('catatan')->nullable();
 			$table->integer('kode_status')->index();
+			$table->boolean('status_tindak_lanjut')->default(false)->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->string('created_by')->nullable()->index();

@@ -22,6 +22,7 @@ class DokLi extends Dokumen
 		'tindak_lanjut',
 		'catatan',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

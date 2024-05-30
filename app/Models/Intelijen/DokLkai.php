@@ -44,6 +44,7 @@ class DokLkai extends Dokumen
 		'catatan_atasan',
 		'tanggal_terima_atasan',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

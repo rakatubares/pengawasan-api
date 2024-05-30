@@ -20,6 +20,7 @@ class DokSbp extends Dokumen
 		'tanggal_dokumen',
 		'chain_id',
 		'kode_status',
+		'status_tindak_lanjut',
 		'status_tolak',
 	];
 

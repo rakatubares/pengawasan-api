@@ -23,6 +23,7 @@ class DokNi extends Dokumen
 		'tujuan',
 		'uraian',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

@@ -80,7 +80,7 @@ class DokLkaiSeeder extends Seeder
 				unset($available_lppi_id[$key]);
 				$lppi = $this->model_lppi::find($lppi_id);
 				$chain = $lppi->chain;
-				$lppi->update(['kode_status' => 'tindak-lanjut']);
+				$lppi->update(['status_tindak_lanjut' => true]);
 
 				// Ikhtisar informasi
 				$informasi = $lppi->informasi()->get()->toArray();

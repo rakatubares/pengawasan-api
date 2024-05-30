@@ -33,6 +33,7 @@ class DokLppi extends Dokumen
 		'flag_arsip',
 		'catatan',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

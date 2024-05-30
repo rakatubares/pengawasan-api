@@ -19,7 +19,8 @@ class DokLptp extends Dokumen
 		'chain_id',
 		'alasan_tidak_penindakan',
 		'catatan',
-		'kode_status'
+		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

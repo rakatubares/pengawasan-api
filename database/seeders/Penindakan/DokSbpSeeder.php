@@ -72,7 +72,7 @@ class DokSbpSeeder extends Seeder
 				unset($available_lap_id[$key]);
 				$lap = $model_lap::find($lap_id);
 				$chain = $lap->chain;
-				$lap->update(['kode_status' => 'tindak-lanjut']);
+				$lap->update(['status_tindak_lanjut' => true]);
 			} else {
 				$chain = DocumentsChain::create();
 			}
@@ -143,7 +143,8 @@ class DokSbpSeeder extends Seeder
 			$sbp->no_dok_lengkap = "{$sbp->tipe_dokumen}-{$crn_sbp}{$sbp->agenda_dokumen}{$year}";
 			$sbp->tanggal_dokumen = $tanggal_dokumen;
 			$sbp->chain_id = $chain->id;
-			$sbp->kode_status = 'tindak-lanjut';
+			$sbp->kode_status = 'terbit';
+			$sbp->status_tindak_lanjut = true;
 			$sbp->created_by = $creator;
 			$sbp->updated_by = $creator;
 			$sbp->saveQuietly();

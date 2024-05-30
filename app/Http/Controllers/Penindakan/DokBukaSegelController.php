@@ -65,7 +65,7 @@ class DokBukaSegelController extends PenindakanController
 		$data = parent::storing($request);
 
 		if ($request->segel_id) {
-			$segel = $this->attachTo('segel', $request->segel_id);
+			$segel = $this->attachTo('segel', $request->segel_id, 'status_buka_segel');
 			$chain = $segel->chain;
 		} else {
 			$chain = $this->createChain();
@@ -89,21 +89,21 @@ class DokBukaSegelController extends PenindakanController
 				// Change segel if segel_id different from previous data
 				if ($request->segel_id != $existing_segel_id) {
 					// Detach from previous segel
-					$this->detachFrom('segel', $existing_segel_id);
+					$this->detachFrom('segel', $existing_segel_id, 'status_buka_segel');
 
 					// Attach to new segel
-					$segel = $this->attachTo('segel', $request->segel_id);
+					$segel = $this->attachTo('segel', $request->segel_id, 'status_buka_segel');
 					$chain = $segel->chain;
 				}
 			} else {
 				// Attach to new segel
-				$segel = $this->attachTo('segel', $request->segel_id);
+				$segel = $this->attachTo('segel', $request->segel_id, 'status_buka_segel');
 				$chain = $segel->chain;
 			}
 		} else {
 			if ($this->doc->asal_segel == 'segel') {
 				$existing_segel_id = $this->doc->chain->segel->id;
-				$this->detachFrom('segel', $existing_segel_id);
+				$this->detachFrom('segel', $existing_segel_id, 'status_buka_segel');
 				$chain = $this->createChain();
 				$this->createEmptyPenindakan($chain->id);
 			}

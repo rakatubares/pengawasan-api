@@ -26,22 +26,28 @@ class DokObserver
 		$agenda = $dokumen->getOriginal('agenda_dok') ?? $dokumen->agenda_dokumen;
 		$tipe_dokumen = $dokumen->tipe_dokumen;
 
-		$latest_number = Penomoran::where([
-			['tipe_dokumen', '=', $tipe_dokumen],
-			['agenda', '=', $agenda],
-			['tahun', '=', $year],
-		])->first();
-
-		if ($latest_number != null) {
-			$new_number = $latest_number['nomor_terakhir'] + 1;
+		if ($dokumen->getOriginal('no_dok') == null) {
+			$latest_number = Penomoran::where([
+				['tipe_dokumen', '=', $tipe_dokumen],
+				['agenda', '=', $agenda],
+				['tahun', '=', $year],
+			])->first();
+	
+			if ($latest_number != null) {
+				$number = $latest_number['nomor_terakhir'] + 1;
+				$no_dok_lengkap = $tipe_dokumen . '-' . $number . $agenda . $year;
+			} else {
+				$number = 1;
+			}
 		} else {
-			$new_number = 1;
+			$number = $dokumen->getOriginal('no_dok');
+			$no_dok_lengkap = $dokumen->getOriginal('no_dok_lengkap');
 		}
-
-		$dokumen['no_dok'] = $new_number;
+		
+		$dokumen['no_dok'] = $number;
 		$dokumen['agenda_dok'] = $agenda;
 		$dokumen['thn_dok'] = $year;
-		$dokumen['no_dok_lengkap'] = $tipe_dokumen . '-' . $new_number . $agenda . $year;
+		$dokumen['no_dok_lengkap'] = $no_dok_lengkap;
 		$dokumen['tanggal_dokumen'] = $date;
 	}
 
@@ -105,10 +111,15 @@ class DokObserver
 
 	public function published($dokumen) 
 	{
-		$this->updatePenomoran($dokumen);
-		$this->setLatestChainStatus($dokumen);
-		$dokumen->status_history()
-			->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
+		if ($dokumen->kode_status == 'draft') {
+			$this->updatePenomoran($dokumen);
+			$this->setLatestChainStatus($dokumen);
+			$dokumen->status_history()
+				->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
+		} else {
+			$dokumen->status_history()
+				->create(['kode_status' => 'perbaikan', 'nip_pegawai' => Auth::user()->nip]);
+		}
 	}
 
 	public function deleting($dokumen) 

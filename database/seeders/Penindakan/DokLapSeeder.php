@@ -67,7 +67,7 @@ class DokLapSeeder extends Seeder
 				}
 				$source_model = Relation::getMorphedModel($jenis_sumber);
 				$source = $source_model::find($source_id);
-				$source->update(['kode_status' => 'tindak-lanjut']);
+				$source->update(['status_tindak_lanjut' => true]);
 
 				// Get doc number
 				$nomor_sumber = $source->no_dok_lengkap;

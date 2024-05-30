@@ -352,18 +352,57 @@ class DokController extends Controller
 
 	/*
 	 |--------------------------------------------------------------------------
+	 | Rollback functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Rollback published document status for editing.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function rollback(Request $request, $doc_id) {
+		// Check if document is already published
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_published = !$this->checkUnpublished($this->doc);
+
+		if ($is_published) {
+			$permission = 'rollback-' . $this->doc_type;
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+
+			if ($permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->rollback($request->keterangan);
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen belum diterbitkan.'], 422);
+			return $result;
+		}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
 	 | Relation functions
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function attachTo($doc_type, $doc_id) {
+	protected function attachTo($doc_type, $doc_id, $column_name=null) {
 		$related_doc = $this->getDocument($doc_type, $doc_id);
-		$related_doc->followedUp();
+		$related_doc->followedUp($column_name);
 		return $related_doc;
 	}
 
-	protected function detachFrom($doc_type, $doc_id) {
+	protected function detachFrom($doc_type, $doc_id, $column_name=null) {
 		$related_doc = $this->getDocument($doc_type, $doc_id);
-		$related_doc->unFollowedUp();
+		$related_doc->unFollowedUp($column_name);
 	}
 }

@@ -42,6 +42,7 @@ class CreateDokLppiTable extends Migration
 			$table->boolean('flag_arsip')->nullable();
 			$table->text('catatan')->nullable();
 			$table->string('kode_status')->index();
+			$table->boolean('status_tindak_lanjut')->default(false)->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->string('created_by')->nullable()->index();

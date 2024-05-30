@@ -23,7 +23,9 @@ class DokSegel extends Dokumen
 		'satuan_segel',
 		'nomor_segel',
 		'tempat_segel',
-		'kode_status'
+		'kode_status',
+		'status_segel',
+		'status_titip',
 	];
 
 	protected $casts = [

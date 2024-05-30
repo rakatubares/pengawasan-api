@@ -47,6 +47,7 @@ class DokLap extends Dokumen
 		'keterangan_patroli',
 		'kesimpulan',
 		'kode_status',
+		'status_tindak_lanjut',
 	];
 
 	protected $casts = [

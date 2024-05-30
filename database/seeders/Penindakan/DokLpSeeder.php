@@ -41,7 +41,7 @@ class DokLpSeeder extends Seeder
 			unset($available_lphp_id[$key]);
 			$lphp = $model_lphp::find($lphp_id);
 			$chain = $lphp->chain;
-			$lphp->update(['kode_status' => 'tindak-lanjut']);
+			$lphp->update(['status_tindak_lanjut' => true]);
 
 			/**
 			 * Create LP

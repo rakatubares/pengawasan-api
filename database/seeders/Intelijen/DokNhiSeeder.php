@@ -48,7 +48,7 @@ class DokNhiSeeder extends Seeder
 			$key = array_search($lkai_id, $available_lkai_id);
 			unset($available_lkai_id[$key]);
 			$lkai = DokLkai::find($lkai_id);
-			$lkai->update(['kode_status' => 'tindak-lanjut']);
+			$lkai->update(['status_tindak_lanjut' => true]);
 			$chain = $lkai->chain;
 
 			// Create NHI header data
