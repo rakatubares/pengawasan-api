@@ -18,8 +18,8 @@ class Dokumen extends Model
 
 	public $agenda_dokumen = '/KPU.305/';
 
-	protected $observables = ['editing', 'edited', 'publishing', 'published'];
-	public $unpublished_status = ['draft', 'rollback'];
+	protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'amended'];
+	public $unpublished_status = ['draft', 'booking-nomor', 'rollback'];
 
 	/**
 	 * Documents chain
@@ -77,11 +77,23 @@ class Dokumen extends Model
 		$this->fireModelEvent('edited');
 	}
 
+	public function book() 
+	{
+		$this->fireModelEvent('booking');
+		$this->update(['kode_status' => 'booking-nomor']);
+		$this->fireModelEvent('booked');
+	}
+
 	public function publish() 
 	{
+		$prePublishStatus = $this->kode_status;
 		$this->fireModelEvent('publishing');
 		$this->update(['kode_status' => 'terbit']);
-		$this->fireModelEvent('published');
+		if (in_array($prePublishStatus, ['draft', 'booking-nomor'])) {
+			$this->fireModelEvent('published');
+		} else {
+			$this->fireModelEvent('amended');
+		}
 	}
 
 	public function rollback($remark=null) 

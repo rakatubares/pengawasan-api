@@ -44,7 +44,6 @@ class DokLppiController extends DokController
 			'petugas.penilai_informasi.nip' => 'nullable|integer',
 			'petugas.penerima_disposisi.nip' => 'integer',
 			'petugas.pejabat.nip' => 'integer',
-			'informasi' => 'required|array|min:1'
 		]);
 	}
 

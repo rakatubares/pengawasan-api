@@ -31,6 +31,13 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
+			[
+				'kode_status' => 'booking-nomor',
+				'uraian_status' => 'Booking penomoran',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
 			[ 
 				'kode_status' => 'terbit',
 				'uraian_status' => 'Penerbitan',
@@ -47,7 +54,14 @@ class RefStatusSeeder extends Seeder
 			],
 			[
 				'kode_status' => 'rollback',
-				'uraian_status' => 'Proses perbaikan dokumen',
+				'uraian_status' => 'Rollback status dokumen terbit',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[
+				'kode_status' => 'perbaikan',
+				'uraian_status' => 'Perubahan data',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now

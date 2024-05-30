@@ -23,7 +23,7 @@ class DokTableResource extends JsonResource
 		$document_status = new RefStatusResource($this->status);
 		$chain_status = new RefKodeDokumenResource($this->chain->status);
 
-		if (in_array($document_status->kode_status, ['draft', 'rollback', 'aju-batal', 'batal', 'dihapus'])) {
+		if (in_array($document_status->kode_status, ['draft', 'booking-nomor', 'rollback', 'aju-batal', 'batal', 'dihapus'])) {
 			$status = $document_status->kode_status;
 		} else {
 			$status = $chain_status->short_title;

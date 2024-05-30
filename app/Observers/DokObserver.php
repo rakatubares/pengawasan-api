@@ -103,6 +103,19 @@ class DokObserver
 			->create(['kode_status' => 'edit-draft', 'nip_pegawai' => Auth::user()->nip]);
 	}
 
+	public function booking($dokumen) 
+	{
+		$this->getNewDocumentNumber($dokumen);
+		$dokumen['updated_by'] = Auth::user()->nip;
+	}
+
+	public function booked($dokumen) 
+	{
+		$this->updatePenomoran($dokumen);
+		$dokumen->status_history()
+			->create(['kode_status' => 'booking-nomor', 'nip_pegawai' => Auth::user()->nip]);
+	}
+
 	public function publishing($dokumen) 
 	{
 		$this->getNewDocumentNumber($dokumen);
@@ -111,15 +124,16 @@ class DokObserver
 
 	public function published($dokumen) 
 	{
-		if ($dokumen->kode_status == 'draft') {
-			$this->updatePenomoran($dokumen);
-			$this->setLatestChainStatus($dokumen);
-			$dokumen->status_history()
-				->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
-		} else {
-			$dokumen->status_history()
-				->create(['kode_status' => 'perbaikan', 'nip_pegawai' => Auth::user()->nip]);
-		}
+		$this->updatePenomoran($dokumen);
+		$this->setLatestChainStatus($dokumen);
+		$dokumen->status_history()
+			->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
+	}
+
+	public function amended($dokumen) 
+	{
+		$dokumen->status_history()
+			->create(['kode_status' => 'perbaikan', 'nip_pegawai' => Auth::user()->nip]);
 	}
 
 	public function deleting($dokumen) 

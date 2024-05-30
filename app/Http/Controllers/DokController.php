@@ -159,11 +159,9 @@ class DokController extends Controller
 	protected function store(Request $request)
 	{
 		$permission = 'create-' . $this->doc_type;
-		$user = $this->getUserInfo($request->bearerToken());
 		$permitted = $this->checkPermission($permission, $request->bearerToken());
-		$match_user = $user['nip'] == $this->doc->created_by;
 
-		if ($match_user && $permitted) {
+		if ($permitted) {
 			DB::beginTransaction();
 			try {
 				// Pre-creation operation
@@ -272,6 +270,48 @@ class DokController extends Controller
 
 	/*
 	 |--------------------------------------------------------------------------
+	 | Booking number functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Book document number.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function book(Request $request, $doc_id) 
+	{
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_draft = $this->doc->kode_status == 'draft';
+
+		if ($is_draft) {
+			$permission = 'create-' . $this->doc_type;
+			$user = $this->getUserInfo($request->bearerToken());
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+			$match_user = $user['nip'] == $this->doc->created_by;
+
+			if ($match_user && $permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->book();
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
+			return $result;
+		}
+		// $this->publish($request, $doc_id);
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
 	 | Publish functions
 	 |--------------------------------------------------------------------------
 	 */
@@ -325,8 +365,9 @@ class DokController extends Controller
 	public function destroy(Request $request, $doc_id)
 	{
 		$this->doc = $this->getDocument($this->doc_type, $doc_id);
-		$is_unpublished = $this->checkUnpublished($this->doc);
-		if ($is_unpublished) {
+		$is_draft = $this->doc->kode_status == 'draft';
+
+		if ($is_draft) {
 			$permission = 'delete-' . $this->doc_type;
 			$user = $this->getUserInfo($request->bearerToken());
 			$permitted = $this->checkPermission($permission, $request->bearerToken());

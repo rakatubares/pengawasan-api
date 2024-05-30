@@ -32,7 +32,7 @@ class Router extends OriginalRouter
 	 */
 	public function docResource($name, $controller, array $options = [])
 	{
-		$only = ['index', 'show', 'store', 'update', 'destroy', 'publish', 'rollback'];
+		$only = ['index', 'show', 'store', 'update', 'destroy', 'publish', 'rollback', 'book'];
 
 		if (isset($options['except'])) {
 			$only = array_diff($only, (array) $options['except']);
