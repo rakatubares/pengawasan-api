@@ -34,6 +34,7 @@ class DokNhi extends Dokumen
 		'indikasi',
 		'kode_status',
 		'status_tindak_lanjut',
+		'status_sbp',
 	];
 
 	protected $casts = [

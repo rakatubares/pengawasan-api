@@ -7,6 +7,18 @@ use App\Observers\DokObserver;
 class DokSbpObserver extends DokObserver
 {
 	/**
+	 * Handle the DokSbp "booked" event.
+	 *
+	 * @param  \App\Models\Penindakan\DokSbp  $dokSbp
+	 * @return void
+	 */
+	public function booked($dokSbp) 
+	{
+		parent::booked($dokSbp);
+		$dokSbp->chain->lptp->book();
+	}
+
+	/**
 	 * Handle the DokSbp "publishing" event.
 	 *
 	 * @param  \App\Models\Penindakan\DokSbp  $dokSbp
@@ -112,9 +124,9 @@ class DokSbpObserver extends DokObserver
 	 * @return void
 	 */
 	public function deleted($dokSbp) {
-		if ($dokSbp->chain->lap != null) {
-			$dokSbp->chain->lap->unFollowedUp();
-		}
+		$chain = $dokSbp->chain;
+		if ($chain->nhi) { $chain->nhi->unFollowedUp('status_sbp'); }
+		if ($chain->lap) { $chain->lap->unFollowedUp(); }
 		$dokSbp->chain->lptp->delete();
 		parent::deleted($dokSbp);
 	}

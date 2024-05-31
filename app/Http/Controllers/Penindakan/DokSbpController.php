@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Penindakan;
 
-use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLptp;
 use Illuminate\Http\Request;
 
@@ -23,10 +22,14 @@ class DokSbpController extends PenindakanController
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
 
-		if ($request->lap_id != null) {
-			// Attach to existing chain when source is available
-			$source = $this->attachTo('lap', $request->lap_id);
+		if ($request->sumber_id != null) {
+			// Get source's chain
+			$source = $this->getDocument($request->jenis_sumber, $request->sumber_id);
 			$chain = $source->chain;
+
+			// Attach to chain's documents if exist
+			if ($chain->nhi) { $chain->nhi->followedUp('status_sbp'); }
+			if ($chain->lap) { $chain->lap->followedUp(); }
 		} else {
 			// Create new chain when source is not available
 			$chain = $this->createChain();
@@ -51,35 +54,41 @@ class DokSbpController extends PenindakanController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
+		$old_chain = $this->doc->chain;
+		$old_chain_id = $old_chain->id;
 
-		if ($request->lap_id) {
-			$existing_chain_id = $this->doc->chain->id;
+		if ($request->sumber_id) {
+			$new_source = $this->getDocument($request->jenis_sumber, $request->sumber_id);
+			$new_chain = $new_source->chain;
+			$new_chain_id = $new_chain->id;
 
-			$lap = DokLap::findOrFail($request->lap_id);
-			$new_chain_id = $lap->chain->id;
+			if ($old_chain_id != $new_chain_id) {
+				// Rollback previous chain connection if exist
+				if ($old_chain->nhi) { $old_chain->nhi->unFollowedUp('status_sbp'); }
+				if ($old_chain->lap) { $old_chain->lap->unFollowedUp(); }
 
-			if ($existing_chain_id != $new_chain_id) {
-				if ($this->doc->chain->lap) {
-					// Rollback previous chain connection
-					$this->doc->chain->lap->unFollowedUp();
-				} else {
-					// Remove previous chain
-					$this->doc->chain->delete();
-				}
+				// Remove chain if no cannected document available
+				if (!$old_chain->nhi &&!$old_chain->lap) { $old_chain->delete(); }
 				
+				// Change chain
 				$data['chain_id'] = $new_chain_id;
 				$this->changeChain($new_chain_id);
-				$lap->followedUp();
+
+				// Attach to chain's documents if exist
+				if ($new_chain->nhi) { $new_chain->nhi->followedUp('status_sbp'); }
+				if ($new_chain->lap) { $new_chain->lap->followedUp(); }
 			}
 		} else {
-			if ($this->doc->chain->lap) {
-				// Rollback previous chain connection
-				$this->doc->chain->lap->unFollowedUp();
+			// Rollback previous chain connection if exist
+			if ($old_chain->nhi) { $old_chain->nhi->unFollowedUp('status_sbp'); }
+			if ($old_chain->lap) { $old_chain->lap->unFollowedUp(); } 
 
-				// Create new chain
-				$chain = $this->createChain();
-				$data['chain_id'] = $chain->id;
-				$this->changeChain($chain->id);
+			// Create new chain if previous chain has connected document
+			if ($old_chain->nhi || $old_chain->lap) 
+			{
+				$new_chain = $this->createChain();
+				$data['chain_id'] = $new_chain->id;
+				$this->changeChain($new_chain->id);
 			}
 		}
 		

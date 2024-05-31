@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Penindakan;
 
 use App\Http\Controllers\DokController;
+use App\Models\DocumentsChain;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
 use App\Models\Penindakan\DokSegel;
@@ -96,12 +97,36 @@ class PenindakanController extends DokController
 	}
 
 	protected function changeChain($chain_id) {
+		// Get existing chain
 		$chain = $this->doc->chain;
 
+		// Get new chain
+		$new_chain = DocumentsChain::find($chain_id);
+
+		// Update related
 		$chain->penindakan->update(['chain_id' => $chain_id]);
 		
-		if ($chain->sbp) { $chain->sbp->update(['chain_id' => $chain_id]); }
-		if ($chain->lptp) { $chain->lptp->update(['chain_id' => $chain_id]); }
+		if ($chain->riksa_badan) { $chain->riksa_badan->update(['chain_id' => $chain_id]); }
+		if ($chain->riksa) { $chain->riksa->update(['chain_id' => $chain_id]); }
+		if ($chain->tegah) { $chain->tegah->update(['chain_id' => $chain_id]); }
+		if ($chain->segel) { $chain->segel->update(['chain_id' => $chain_id]); }
+		if ($chain->buka_segel) { $chain->buka_segel->update(['chain_id' => $chain_id]); }
+		if ($chain->sbp) { 
+			$chain->sbp->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'sbp']);
+		}
+		if ($chain->lptp) { 
+			$chain->lptp->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'lptp']);
+		}
+		if ($chain->lphp) { 
+			$chain->lphp->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'lphp']);
+		}
+		if ($chain->lp) { 
+			$chain->lp->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'lp']);
+		}
 	}
 
 	public function tindakan(Request $request, $penindakan_id) {

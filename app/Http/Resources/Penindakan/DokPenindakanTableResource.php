@@ -26,9 +26,9 @@ class DokPenindakanTableResource extends DokTableResource
 
 		$array = $this->makeBasicArray();
 		$array['nama_saksi'] = $this->chain->penindakan->saksi
-			? $this->chain->penindakan->saksi->nama : null;
-		$array['petugas1'] = $petugas1 ? $petugas1->petugas->name : null;
-		$array['petugas2'] = $petugas2 ? $petugas2->petugas->name : null;
+			? $this->chain->penindakan->saksi->nama : '-';
+		$array['petugas1'] = $petugas1 ? $petugas1->petugas->name : '-';
+		$array['petugas2'] = $petugas2 ? $petugas2->petugas->name : '-';
 
 		return $array;
 	}

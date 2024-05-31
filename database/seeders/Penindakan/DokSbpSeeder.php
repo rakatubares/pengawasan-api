@@ -72,7 +72,8 @@ class DokSbpSeeder extends Seeder
 				unset($available_lap_id[$key]);
 				$lap = $model_lap::find($lap_id);
 				$chain = $lap->chain;
-				$lap->update(['status_tindak_lanjut' => true]);
+				$lap->followedUp();
+				if ($chain->nhi) { $chain->nhi->followedUp('status_sbp'); }
 			} else {
 				$chain = DocumentsChain::create();
 			}

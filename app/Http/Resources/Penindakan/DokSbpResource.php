@@ -25,7 +25,8 @@ class DokSbpResource extends JsonResource
 			'tanggal_dokumen' => $this->tanggal_dokumen 
 				? $this->tanggal_dokumen->format('d-m-Y') 
 				: null,
-			'lap_id' => $this->chain->lap ? $this->chain->lap->id : null,
+			'jenis_sumber' => $this->chain->nhi ? 'nhi' : null,
+			'sumber_id' => $this->chain->nhi ? $this->chain->nhi->id : null,
 			'penindakan' => new PenindakanResource($this->chain->penindakan),
 			'lptp' => [
 				'no_dok_lengkap' => $this->chain->lptp->no_dok_lengkap,
