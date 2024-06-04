@@ -338,6 +338,7 @@ class DokSbpSeeder extends Seeder
 				$tolak1->thn_dok = $year;
 				$tolak1->no_dok_lengkap = "{$tolak1->tipe_dokumen}-{$crn_tolak1}{$tolak1->agenda_dokumen}{$year}";
 				$tolak1->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
+				$tolak1->chain_id = $chain->id;
 				$tolak1->parent_type = $sbp->kode_dokumen;
 				$tolak1->parent_id = $sbp->id;
 				$tolak1->alasan = $faker->text();
@@ -362,6 +363,7 @@ class DokSbpSeeder extends Seeder
 					$tolak2->thn_dok = $year;
 					$tolak2->no_dok_lengkap = "{$tolak2->tipe_dokumen}-{$crn_tolak2}{$tolak2->agenda_dokumen}{$year}";
 					$tolak2->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
+					$tolak2->chain_id = $chain->id;
 					$tolak2->tolak1_id = $tolak1->id;
 					$tolak2->alasan = $faker->text();
 					$tolak2->saksi_id = $faker->numberBetween(1,100);
@@ -391,6 +393,22 @@ class DokSbpSeeder extends Seeder
 			'agenda' => $sbp->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_sbp,
+		]);
+
+		// Tolak 1
+		Penomoran::create([
+			'tipe_dokumen' => $tolak1->tipe_dokumen,
+			'agenda' => $tolak1->agenda_dokumen,
+			'tahun' => $year,
+			'nomor_terakhir' => $crn_tolak1,
+		]);
+
+		// Tolak 2
+		Penomoran::create([
+			'tipe_dokumen' => $tolak2->tipe_dokumen,
+			'agenda' => $tolak2->agenda_dokumen,
+			'tahun' => $year,
+			'nomor_terakhir' => $crn_tolak2,
 		]);
 
 		// LPTP

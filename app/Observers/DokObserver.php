@@ -35,10 +35,10 @@ class DokObserver
 	
 			if ($latest_number != null) {
 				$number = $latest_number['nomor_terakhir'] + 1;
-				$no_dok_lengkap = $tipe_dokumen . '-' . $number . $agenda . $year;
 			} else {
 				$number = 1;
 			}
+			$no_dok_lengkap = $tipe_dokumen . '-' . $number . $agenda . $year;
 		} else {
 			$number = $dokumen->getOriginal('no_dok');
 			$no_dok_lengkap = $dokumen->getOriginal('no_dok_lengkap');

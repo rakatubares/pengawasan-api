@@ -7,7 +7,7 @@ use App\Observers\DokObserver;
 class DokBukaSegelObserver extends DokObserver
 {
 	/**
-	 * Handle the DokLap "deleted" event.
+	 * Handle the DokBukaSegel "deleted" event.
 	 *
 	 * @param  \App\Models\Penindakan\DokBukaSegel  $dokBukaSegel
 	 * @return void

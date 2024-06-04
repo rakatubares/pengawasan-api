@@ -17,6 +17,7 @@ class DokTolakSbp1 extends Dokumen
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
+		'chain_id',
 		'parent_type',
 		'parent_id',
 		'alasan',

@@ -20,6 +20,7 @@ class CreateDokTolakSbp1Table extends Migration
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
 			$table->string('parent_type')->index();
 			$table->integer('parent_id')->index();
 			$table->text('alasan');

@@ -18,6 +18,7 @@ class DokTolakSbp2 extends Dokumen
 		'thn_dok',
 		'no_dok_lengkap',
 		'tanggal_dokumen',
+		'chain_id',
 		'tolak1_id',
 		'alasan',
 		'saksi_id',

@@ -19,7 +19,8 @@ class DokSbpController extends PenindakanController
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function storing(Request $request) {
+	protected function storing(Request $request) 
+	{
 		$data = parent::storing($request);
 
 		if ($request->sumber_id != null) {
@@ -52,7 +53,8 @@ class DokSbpController extends PenindakanController
 		parent::stored($request);
 	}
 
-	protected function updating(Request $request) {
+	protected function updating(Request $request) 
+	{
 		$data = parent::updating($request);
 		$old_chain = $this->doc->chain;
 		$old_chain_id = $old_chain->id;
@@ -68,7 +70,7 @@ class DokSbpController extends PenindakanController
 				if ($old_chain->lap) { $old_chain->lap->unFollowedUp(); }
 
 				// Remove chain if no cannected document available
-				if (!$old_chain->nhi &&!$old_chain->lap) { $old_chain->delete(); }
+				if (!$old_chain->nhi && !$old_chain->lap) { $old_chain->delete(); }
 				
 				// Change chain
 				$data['chain_id'] = $new_chain_id;
@@ -95,7 +97,8 @@ class DokSbpController extends PenindakanController
 		return $data;
 	}
 
-	protected function updated($request) {
+	protected function updated($request) 
+	{
 		$this->updatePenindakan($request);
 
 		// Update LPTP
