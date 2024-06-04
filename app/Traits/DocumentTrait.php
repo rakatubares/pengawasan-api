@@ -39,6 +39,7 @@ use App\Http\Resources\Penindakan\DokTegahTableResource;
 use App\Http\Resources\Penindakan\DokTolakSbp1Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp1TableResource;
 use App\Http\Resources\Penindakan\DokTolakSbp2Resource;
+use App\Http\Resources\Penindakan\DokTolakSbp2TableResource;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
@@ -123,6 +124,7 @@ trait DocumentTrait
 			'buka_segel' => DokBukaSegelTableResource::class,
 			'sbp' => DokSbpTableResource::class,
 			'tolak1' => DokTolakSbp1TableResource::class,
+			'tolak2' => DokTolakSbp2TableResource::class,
 			'lphp' => DokLphpTableResource::class,
 			'lp' =>DokLpTableResource::class,
 		];

@@ -23,7 +23,7 @@ class CreateDokTolakSbp2Table extends Migration
 			$table->integer('chain_id')->index();
 			$table->integer('tolak1_id')->index();
 			$table->text('alasan');
-			$table->integer('saksi_id')->index();
+			$table->integer('saksi_id')->nullable()->index();
 			$table->string('kode_status')->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

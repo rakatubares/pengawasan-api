@@ -18,6 +18,12 @@ class DokTolakSbp1Observer extends DokObserver
 		parent::deleted($dokTolakSbp1);
 	}
 
+	/**
+	 * Handle the DokTolakSbp1 "published" event.
+	 *
+	 * @param  \App\Models\Penindakan\DokTolakSbp1  $dokTolakSbp1
+	 * @return void
+	 */
 	public function published($dokumen) 
 	{
 		$this->updatePenomoran($dokumen);
