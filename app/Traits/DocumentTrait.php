@@ -26,6 +26,8 @@ use App\Http\Resources\Penindakan\DokLphpTableResource;
 use App\Http\Resources\Penindakan\DokLpResource;
 use App\Http\Resources\Penindakan\DokLpTableResource;
 use App\Http\Resources\Penindakan\DokLptpResource;
+use App\Http\Resources\Penindakan\DokPengamanResource;
+use App\Http\Resources\Penindakan\DokPengamanTableResource;
 use App\Http\Resources\Penindakan\DokRiksaBadanResource;
 use App\Http\Resources\Penindakan\DokRiksaBadanTableResource;
 use App\Http\Resources\Penindakan\DokRiksaResource;
@@ -90,6 +92,8 @@ trait DocumentTrait
 			'lptp' => DokLptpResource::class,
 			'lphp' => DokLphpResource::class,
 			'lp' => DokLpResource::class,
+
+			'pengaman' => DokPengamanResource::class,
 		];
 
 		try {
@@ -127,6 +131,8 @@ trait DocumentTrait
 			'tolak2' => DokTolakSbp2TableResource::class,
 			'lphp' => DokLphpTableResource::class,
 			'lp' =>DokLpTableResource::class,
+
+			'pengaman' => DokPengamanTableResource::class,
 		];
 
 		try {

@@ -128,8 +128,8 @@ class RefKodeDokumenSeeder extends Seeder
 				'group' => 'penindakan',
 			],
 			[
-				'kode_dokumen' => 'tanda_pengaman',
-				'short_title' => 'BA Tanda Pengaman',
+				'kode_dokumen' => 'pengaman',
+				'short_title' => 'BA Pengaman',
 				'title' => 'Berita Acara Pelekatan Tanda Pengaman',
 				'group' => 'penindakan',
 			],

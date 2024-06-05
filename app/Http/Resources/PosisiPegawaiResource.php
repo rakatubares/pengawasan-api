@@ -24,6 +24,7 @@ class PosisiPegawaiResource extends JsonResource
 			'posisi' => $this->posisi,
 			'nip' => $this->nip,
 			'name' => $this->petugas->name,
+			'pangkat' => $this->petugas->pangkat,
 			'user_id' => $this->petugas->user_id,
 			'flag_pejabat' => $this->flag_pejabat,
 		];

@@ -59,7 +59,7 @@ class DokBukaSegelSeeder extends Seeder
 				unset($available_segel_id[$key]);
 				$segel = DokSegel::find($segel_id);
 				$chain = $segel->chain;
-				$segel->update(['status_buka_segel' => true]);
+				$segel->update(['status_buka' => true]);
 
 				// Set Segel data
 				$buka_segel->chain_id = $chain->id;

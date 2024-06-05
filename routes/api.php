@@ -23,6 +23,7 @@ use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\Penindakan\DokLpController;
 use App\Http\Controllers\Penindakan\DokLphpController;
 use App\Http\Controllers\Penindakan\DokLptpController;
+use App\Http\Controllers\Penindakan\DokPengamanController;
 use App\Http\Controllers\Penindakan\DokRiksaBadanController;
 use App\Http\Controllers\Penindakan\DokRiksaController;
 use App\Http\Controllers\Penindakan\DokSbpController;
@@ -97,6 +98,8 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'lptp' => DokLptpController::class,
 		'lphp' => DokLphpController::class,
 		'lp' => DokLpController::class,
+
+		'pengaman' => DokPengamanController::class,
 	]);	
 
 	Route::post('/{doc_type}/search', [DokController::class, 'search']);

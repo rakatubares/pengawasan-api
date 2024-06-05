@@ -4,12 +4,12 @@ namespace App\Models\Penindakan;
 
 use App\Models\Dokumen;
 
-class DokSegel extends Dokumen
+class DokPengaman extends Dokumen
 {
-	protected $table = 'dok_segel';
-	public $kode_dokumen = 'segel';
+	protected $table = 'dok_pengaman';
+	public $kode_dokumen = 'pengaman';
 	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Segel/KPU.305/';
+	public $agenda_dokumen = '/Tanda Pengaman/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',
@@ -18,13 +18,14 @@ class DokSegel extends Dokumen
 		'no_dok_lengkap',
 		'tanggal_dokumen',
 		'chain_id',
-		'jenis_segel',
-		'jumlah_segel',
-		'satuan_segel',
-		'nomor_segel',
-		'tempat_segel',
+		'alasan_pengamanan',
+		'keterangan',
+		'jenis_pengaman',
+		'jumlah_pengaman',
+		'satuan_pengaman',
+		'nomor_pengaman',
+		'tempat_pengaman',
 		'kode_status',
-		'status_titip',
 		'status_buka',
 	];
 

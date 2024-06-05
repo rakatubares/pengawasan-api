@@ -10,12 +10,10 @@ use App\Models\DokBast;
 use App\Models\DokBukaPengaman;
 use App\Models\DokLapN;
 use App\Models\DokLpN;
-use App\Models\DokPengaman;
 use App\Models\DokTitip;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DokBukaPengamanObserver;
-use App\Observers\DokPengamanObserver;
 use App\Observers\DokTitipObserver;
 use App\Models\Entitas\EntitasBadanHukum;
 use App\Models\Entitas\EntitasOrang;
@@ -39,6 +37,7 @@ use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLp;
 use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLptp;
+use App\Models\Penindakan\DokPengaman;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
 use App\Models\Penindakan\DokSbp;
@@ -61,6 +60,7 @@ use App\Observers\Penindakan\DokLiObserver;
 use App\Observers\Penindakan\DokLphpObserver;
 use App\Observers\Penindakan\DokLpObserver;
 use App\Observers\Penindakan\DokLptpObserver;
+use App\Observers\Penindakan\DokPengamanObserver;
 use App\Observers\Penindakan\DokRiksaBadanObserver;
 use App\Observers\Penindakan\DokRiksaObserver;
 use App\Observers\Penindakan\DokSbpObserver;
@@ -150,6 +150,8 @@ class AppServiceProvider extends ServiceProvider
 			'lptp' => DokLptp::class,
 			'lphp' => DokLphp::class,
 			'lp' => DokLp::class,
+
+			'pengaman' => DokPengaman::class,
 		]);
 
 		/**
@@ -159,7 +161,6 @@ class AppServiceProvider extends ServiceProvider
 		DokLapN::observe(DokLapObserver::class);
 		
 		DokLpN::observe(DokLpObserver::class);
-		DokPengaman::observe(DokPengamanObserver::class);
 		DokTitip::observe(DokTitipObserver::class);
 		
 		// Intelijen
@@ -188,5 +189,7 @@ class AppServiceProvider extends ServiceProvider
 		DokLptp::observe(DokLptpObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokLp::observe(DokLpObserver::class);
+
+		DokPengaman::observe(DokPengamanObserver::class);
     }
 }
