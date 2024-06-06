@@ -110,12 +110,15 @@ class Dokumen extends Model
 			]);
 	}
 
-	public function followedUp($status_name='status_tindak_lanjut') 
+	public function followedUp($status_name=null) 
 	{
-		$this->update([$status_name => true]);
+		$status = $status_name != null ? $status_name : 'status_tindak_lanjut';
+		$this->update([$status => true]);
 	}
-	public function unFollowedUp($status_name='status_tindak_lanjut') 
+	
+	public function unFollowedUp($status_name=null) 
 	{
-		$this->update([$status_name => false]);
+		$status = $status_name != null ? $status_name : 'status_tindak_lanjut';
+		$this->update([$status => false]);
 	}
 }

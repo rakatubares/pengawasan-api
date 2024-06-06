@@ -95,6 +95,8 @@ trait DocumentTrait
 			'lphp' => DokLphpResource::class,
 			'lp' => DokLpResource::class,
 
+			'lapn' => DokLapResource::class,
+
 			'pengaman' => DokPengamanResource::class,
 			'buka_pengaman' => DokBukaPengamanResource::class,
 		];
@@ -133,7 +135,9 @@ trait DocumentTrait
 			'tolak1' => DokTolakSbp1TableResource::class,
 			'tolak2' => DokTolakSbp2TableResource::class,
 			'lphp' => DokLphpTableResource::class,
-			'lp' =>DokLpTableResource::class,
+			'lp' => DokLpTableResource::class,
+
+			'lapn' => DokLapTableResource::class,
 
 			'pengaman' => DokPengamanTableResource::class,
 			'buka_pengaman' => DokBukaPengamanTableResource::class,

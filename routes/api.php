@@ -20,6 +20,7 @@ use App\Http\Controllers\Penindakan\Detail\PenindakanSarkutController;
 use App\Http\Controllers\Penindakan\DokBukaPengamanController;
 use App\Http\Controllers\Penindakan\DokBukaSegelController;
 use App\Http\Controllers\Penindakan\DokLapController;
+use App\Http\Controllers\Penindakan\DokLapNController;
 use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\Penindakan\DokLpController;
 use App\Http\Controllers\Penindakan\DokLphpController;
@@ -99,6 +100,8 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'lptp' => DokLptpController::class,
 		'lphp' => DokLphpController::class,
 		'lp' => DokLpController::class,
+
+		'lapn' => DokLapNController::class,
 
 		'pengaman' => DokPengamanController::class,
 		'buka_pengaman' => DokBukaPengamanController::class,
