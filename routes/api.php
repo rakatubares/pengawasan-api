@@ -17,6 +17,7 @@ use App\Http\Controllers\Penindakan\Detail\PenindakanBadanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBangunanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBarangController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanSarkutController;
+use App\Http\Controllers\Penindakan\DokBukaPengamanController;
 use App\Http\Controllers\Penindakan\DokBukaSegelController;
 use App\Http\Controllers\Penindakan\DokLapController;
 use App\Http\Controllers\Penindakan\DokLiController;
@@ -100,6 +101,7 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'lp' => DokLpController::class,
 
 		'pengaman' => DokPengamanController::class,
+		'buka_pengaman' => DokBukaPengamanController::class,
 	]);	
 
 	Route::post('/{doc_type}/search', [DokController::class, 'search']);

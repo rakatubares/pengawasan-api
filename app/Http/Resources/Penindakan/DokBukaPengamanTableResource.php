@@ -2,16 +2,16 @@
 
 namespace App\Http\Resources\Penindakan;
 
-class DokBukaSegelTableResource extends DokPenindakanTableResource
+class DokBukaPengamanTableResource extends DokPenindakanTableResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
-    {
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
+	{
 		$petugas1 = $this->detail_petugas()
 			->where('detail_petugas.posisi', 'petugas1')
 			->latest()
@@ -23,14 +23,14 @@ class DokBukaSegelTableResource extends DokPenindakanTableResource
 			->first();
 
 		$array = parent::toArray($request);
-		$array['nomor_segel'] = $this->asal_segel == 'segel'
-			? $this->chain->segel->nomor_segel
-			: $this->nomor_segel;
-		$array['tanggal_segel'] = $this->asal_segel == 'segel'
+		$array['nomor_pengaman'] = $this->asal_pengaman == 'pengaman'
+			? $this->chain->pengaman->nomor_pengaman
+			: $this->nomor_pengaman;
+		$array['tanggal_pengaman'] = $this->asal_pengaman == 'pengaman'
 			? $this->chain->penindakan->tanggal_selesai_penindakan->format('d-m-Y') 
 			: (
-				$this->tanggal_segel 
-				? $this->tanggal_segel->format('d-m-Y') 
+				$this->tanggal_pengaman 
+				? $this->tanggal_pengaman->format('d-m-Y') 
 				: '-'
 			);
 		$array['nama_saksi'] = $this->saksi ? $this->saksi->nama : '-';
@@ -38,5 +38,5 @@ class DokBukaSegelTableResource extends DokPenindakanTableResource
 		$array['petugas2'] = $petugas2 ? $petugas2->petugas->name : '-';
 
 		return $array;
-    }
+	}
 }

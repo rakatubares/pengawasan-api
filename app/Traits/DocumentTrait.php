@@ -15,6 +15,8 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
+use App\Http\Resources\Penindakan\DokBukaPengamanResource;
+use App\Http\Resources\Penindakan\DokBukaPengamanTableResource;
 use App\Http\Resources\Penindakan\DokBukaSegelResource;
 use App\Http\Resources\Penindakan\DokBukaSegelTableResource;
 use App\Http\Resources\Penindakan\DokLapResource;
@@ -94,6 +96,7 @@ trait DocumentTrait
 			'lp' => DokLpResource::class,
 
 			'pengaman' => DokPengamanResource::class,
+			'buka_pengaman' => DokBukaPengamanResource::class,
 		];
 
 		try {
@@ -133,6 +136,7 @@ trait DocumentTrait
 			'lp' =>DokLpTableResource::class,
 
 			'pengaman' => DokPengamanTableResource::class,
+			'buka_pengaman' => DokBukaPengamanTableResource::class,
 		];
 
 		try {

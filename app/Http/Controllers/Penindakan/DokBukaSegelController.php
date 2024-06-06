@@ -65,7 +65,7 @@ class DokBukaSegelController extends PenindakanController
 		$data = parent::storing($request);
 
 		if ($request->segel_id) {
-			$segel = $this->attachTo('segel', $request->segel_id, 'status_buka_segel');
+			$segel = $this->attachTo('segel', $request->segel_id, 'status_buka');
 			$chain = $segel->chain;
 		} else {
 			$chain = $this->createChain();

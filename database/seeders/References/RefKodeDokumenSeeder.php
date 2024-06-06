@@ -128,12 +128,6 @@ class RefKodeDokumenSeeder extends Seeder
 				'group' => 'penindakan',
 			],
 			[
-				'kode_dokumen' => 'pengaman',
-				'short_title' => 'BA Pengaman',
-				'title' => 'Berita Acara Pelekatan Tanda Pengaman',
-				'group' => 'penindakan',
-			],
-			[
 				'kode_dokumen' => 'titip',
 				'short_title' => 'BA Penitipan',
 				'title' => 'Berita Acara Penitipan',
@@ -197,6 +191,18 @@ class RefKodeDokumenSeeder extends Seeder
 				'kode_dokumen' => 'bast',
 				'short_title' => 'BAST',
 				'title' => 'Berita Acara Serah Terima',
+				'group' => 'penindakan',
+			],
+			[
+				'kode_dokumen' => 'pengaman',
+				'short_title' => 'BA Pengaman',
+				'title' => 'Berita Acara Pelekatan Tanda Pengaman',
+				'group' => 'penindakan',
+			],
+			[
+				'kode_dokumen' => 'buka_pengaman',
+				'short_title' => 'BA Buka Pengaman',
+				'title' => 'Berita Acara Pembukaan Tanda Pengaman',
 				'group' => 'penindakan',
 			],
 

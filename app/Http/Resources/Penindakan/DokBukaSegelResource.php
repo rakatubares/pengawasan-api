@@ -46,7 +46,7 @@ class DokBukaSegelResource extends JsonResource
 				? $this->chain->segel->nomor_segel
 				: $this->nomor_segel,
 			'tanggal_segel' => $this->asal_segel == 'segel'
-				? $this->chain->penindakan->tanggal_selesai_penindakan 
+				? $this->chain->penindakan->tanggal_selesai_penindakan->format('d-m-Y') 
 				: (
 					$this->tanggal_segel 
 					? $this->tanggal_segel->format('d-m-Y') 

@@ -7,13 +7,11 @@ use App\Models\DetailBarang;
 use App\Models\DetailBarangItem;
 use App\Models\DetailDokumen;
 use App\Models\DokBast;
-use App\Models\DokBukaPengaman;
 use App\Models\DokLapN;
 use App\Models\DokLpN;
 use App\Models\DokTitip;
 use App\Models\RefEntitas;
 use App\Models\RefUserCache;
-use App\Observers\DokBukaPengamanObserver;
 use App\Observers\DokTitipObserver;
 use App\Models\Entitas\EntitasBadanHukum;
 use App\Models\Entitas\EntitasOrang;
@@ -31,6 +29,7 @@ use App\Models\Intelijen\DokNhiNSarkut;
 use App\Models\Intelijen\DokNhiTertentu;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
+use App\Models\Penindakan\DokBukaPengaman;
 use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
 use App\Models\Penindakan\DokLi;
@@ -54,6 +53,7 @@ use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
+use App\Observers\Penindakan\DokBukaPengamanObserver;
 use App\Observers\Penindakan\DokBukaSegelObserver;
 use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
@@ -152,12 +152,12 @@ class AppServiceProvider extends ServiceProvider
 			'lp' => DokLp::class,
 
 			'pengaman' => DokPengaman::class,
+			'buka_pengaman' => DokBukaPengaman::class,
 		]);
 
 		/**
 		 * Observers
 		 */
-		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 		DokLapN::observe(DokLapObserver::class);
 		
 		DokLpN::observe(DokLpObserver::class);
@@ -191,5 +191,6 @@ class AppServiceProvider extends ServiceProvider
 		DokLp::observe(DokLpObserver::class);
 
 		DokPengaman::observe(DokPengamanObserver::class);
+		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
     }
 }

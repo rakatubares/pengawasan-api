@@ -10,6 +10,7 @@ use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
+use Database\Seeders\Penindakan\DokBukaPengamanSeeder;
 use Database\Seeders\Penindakan\DokBukaSegelSeeder;
 use Database\Seeders\Penindakan\DokLapSeeder;
 use Database\Seeders\Penindakan\DokLiSeeder;
@@ -84,11 +85,11 @@ class DatabaseSeeder extends Seeder
 			DokLpSeeder::class,
 			DokBukaSegelSeeder::class,
 			DokPengamanSeeder::class,
+			DokBukaPengamanSeeder::class,
 			// DokRiksaSeeder::class,
 			// DokRiksaBadanSeeder::class,
 			// DokSegelSeeder::class,
 			// DokTitipSeeder::class,
-			// DokBukaPengamanSeeder::class,
 			// DokBastSeeder::class,
 			// DokContohSeeder::class,
 			// DokReeksporSeeder::class,

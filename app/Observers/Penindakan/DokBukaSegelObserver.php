@@ -15,7 +15,7 @@ class DokBukaSegelObserver extends DokObserver
 	public function deleted($dokBukaSegel) {
 		// Roll back BA Segel status if related
 		if ($dokBukaSegel->chain->segel != null) {
-			$dokBukaSegel->chain->segel->unFollowedUp();
+			$dokBukaSegel->chain->segel->unFollowedUp('status_buka');
 		}
 		
 		parent::deleted($dokBukaSegel);

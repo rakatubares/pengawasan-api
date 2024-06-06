@@ -6,12 +6,12 @@ use App\Models\Dokumen;
 use App\Models\Entitas\EntitasOrang;
 use App\Models\Sprint;
 
-class DokBukaSegel extends Dokumen
+class DokBukaPengaman extends Dokumen
 {
-	protected $table = 'dok_buka_segel';
-	public $kode_dokumen = 'buka_segel';
+	protected $table = 'dok_buka_pengaman';
+	public $kode_dokumen = 'buka_pengaman';
 	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Buka Segel/KPU.305/';
+	public $agenda_dokumen = '/Tanda Pengaman/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',
@@ -21,22 +21,23 @@ class DokBukaSegel extends Dokumen
 		'tanggal_dokumen',
 		'chain_id',
 		'sprint_id',
-		'tanggal_buka_segel',
-		'asal_segel',
-		'jenis_segel',
-		'jumlah_segel',
-		'satuan_segel',
-		'nomor_segel',
-		'tanggal_segel',
-		'tempat_segel',
+		'tanggal_buka_pengaman',
+		'asal_pengaman',
+		'jenis_pengaman',
+		'jumlah_pengaman',
+		'satuan_pengaman',
+		'nomor_pengaman',
+		'tanggal_pengaman',
+		'tempat_pengaman',
+		'dasar_pengamanan',
 		'saksi_id',
-		'kode_status',
+		'kode_status'
 	];
 
 	protected $casts = [
 		'tanggal_dokumen' => 'date',
-		'tanggal_buka_segel' => 'date',
-		'tanggal_segel' => 'date',
+		'tanggal_buka_pengaman' => 'date',
+		'tanggal_pengaman' => 'date',
 	];
 
 	public function sprint()
