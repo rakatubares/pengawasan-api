@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokSbpTable extends Migration
 {
-	public function __construct()
-	{
-		$this->table_name = 'dok_sbp';
-	}
+	protected $table_name = 'dok_sbp';
 
     /**
      * Run the migrations.

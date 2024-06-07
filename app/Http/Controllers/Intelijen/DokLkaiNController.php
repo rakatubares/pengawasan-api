@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokLkaiNController extends DokLkaiController
 {
-	public function __construct()
-	{
-		parent::__construct('lkain');
-	}
+	protected $doc_type = 'lkain';
 
 	/**
 	 * Validate request

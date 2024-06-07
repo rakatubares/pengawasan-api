@@ -111,21 +111,37 @@ class PenindakanController extends DokController
 		if ($chain->tegah) { $chain->tegah->update(['chain_id' => $chain_id]); }
 		if ($chain->segel) { $chain->segel->update(['chain_id' => $chain_id]); }
 		if ($chain->buka_segel) { $chain->buka_segel->update(['chain_id' => $chain_id]); }
+		
 		if ($chain->sbp) { 
 			$chain->sbp->update(['chain_id' => $chain_id]); 
 			$new_chain->update(['latest_document' => 'sbp']);
+		} elseif ($chain->sbpn) {
+			$chain->sbpn->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'sbpn']);
 		}
+
 		if ($chain->lptp) { 
 			$chain->lptp->update(['chain_id' => $chain_id]); 
 			$new_chain->update(['latest_document' => 'lptp']);
+		} elseif ($chain->lptpn) {
+			$chain->lptpn->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'lptpn']);
 		}
+
 		if ($chain->lphp) { 
 			$chain->lphp->update(['chain_id' => $chain_id]); 
 			$new_chain->update(['latest_document' => 'lphp']);
+		} elseif ($chain->lphpn) {
+			$chain->lphpn->update(['chain_id' => $chain_id]);
+			$new_chain->update(['latest_document' => 'lphpn']);
 		}
+
 		if ($chain->lp) { 
 			$chain->lp->update(['chain_id' => $chain_id]); 
 			$new_chain->update(['latest_document' => 'lp']);
+		} elseif ($chain->lpn) {
+			$chain->lpn->update(['chain_id' => $chain_id]); 
+			$new_chain->update(['latest_document' => 'lpn']);
 		}
 	}
 

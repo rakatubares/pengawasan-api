@@ -7,12 +7,7 @@ use Illuminate\Http\Request;
 
 class DokLphpController extends DokController
 {
-	public function __construct($doc_type='lphp')
-	{
-		parent::__construct($doc_type);
-		$this->lptp_type = 'lptp';
-		$this->sbp_type = 'sbp';
-	}
+	protected $doc_type = 'lphp';
 
 	/*
 	 |--------------------------------------------------------------------------

@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokNiNController extends DokNiController
 {
-	public function __construct()
-	{
-		parent::__construct('nin');
-	}
+	protected $doc_type = 'nin';
 
 	/**
 	 * Validate request

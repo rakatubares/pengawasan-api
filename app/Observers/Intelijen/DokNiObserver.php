@@ -13,8 +13,9 @@ class DokNiObserver extends DokObserver
 	 * @return void
 	 */
 	public function deleted($dokNi) {
-		if ($dokNi->chain->lkai != null) {
-			$dokNi->chain->lkai->unFollowedUp();
+		$kode_lkai = $dokNi->kode_lkai;
+		if ($dokNi->chain->$kode_lkai != null) {
+			$dokNi->chain->$kode_lkai->unFollowedUp();
 		}
 		parent::deleted($dokNi);
 	}

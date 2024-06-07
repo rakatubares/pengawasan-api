@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 
 class DokLiController extends DokController
 {
-	public function __construct($doc_type='li')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'li';
 
 	/*
 	 |--------------------------------------------------------------------------

@@ -9,6 +9,7 @@ class DokSbp extends Dokumen
 	protected $table = 'dok_sbp';
 	public $kode_dokumen = 'sbp';
 	public $tipe_dokumen = 'SBP';
+	public $kode_nhi = 'nhi';
 	public $kode_lap = 'lap';
 	public $kode_lptp = 'lptp';
 

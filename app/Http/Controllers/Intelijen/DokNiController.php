@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 
 class DokNiController extends DokController
 {
-	public function __construct($doc_type='ni')
+	protected $doc_type = 'ni';
+
+	public function __construct()
 	{
-		parent::__construct($doc_type);
+		parent::__construct();
 		$doc = new $this->model;
 		$this->kode_lkai = $doc->kode_lkai;
 		$this->field_lkai_id = $this->kode_lkai . '_id';

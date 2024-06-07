@@ -18,7 +18,6 @@ class DokController extends Controller
 	use TembusanTrait;
 	use UserTrait;
 
-	protected $doc = null;
 	protected $doc_type = null;
 	protected $model = null;
 	protected $resource = null;
@@ -26,9 +25,8 @@ class DokController extends Controller
 	protected $date = null;
 	protected $year = null;
 
-	public function __construct($doc_type=null)
+	public function __construct()
 	{
-		$this->doc_type = $doc_type;
 		$this->model = $this->getModel($this->doc_type);
 		$this->resource = $this->getResource($this->doc_type);
 		$this->table_resource = $this->getTableResource($this->doc_type);
@@ -73,8 +71,7 @@ class DokController extends Controller
 		$permitted = $this->checkPermission($permission, $request->bearerToken());
 		
 		if ($permitted) {
-			$doc = new $this->resource($this->model::findOrFail($id));
-			return $doc;
+			return new $this->resource($this->model::findOrFail($id));
 		} else {
 			return response()->json(['error' => 'Unauthorized'], 401);
 		}
@@ -87,11 +84,11 @@ class DokController extends Controller
 	 * @param  string  $doc_type
 	 * @return \Illuminate\Http\Response
 	 */
-	public function search(Request $request, $doc_type) {
-		// return $doc_type;
-
+	public function search(Request $request, $doc_type) 
+	{
 		if ($this->doc_type == null) {
-			$this->__construct($doc_type);
+			$this->doc_type = $doc_type;
+			$this->__construct();
 		}
 
 		$src = $request->src;
@@ -307,7 +304,6 @@ class DokController extends Controller
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
 			return $result;
 		}
-		// $this->publish($request, $doc_id);
 	}
 
 	/*

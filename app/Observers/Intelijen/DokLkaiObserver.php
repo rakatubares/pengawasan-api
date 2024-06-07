@@ -13,8 +13,9 @@ class DokLkaiObserver extends DokObserver
 	 * @return void
 	 */
 	public function deleted($dokLkai) {
-		if ($dokLkai->chain->lppi != null) {
-			$dokLkai->chain->lppi->unFollowedUp();
+		$kode_lppi = $dokLkai->kode_lppi;
+		if ($dokLkai->chain->$kode_lppi != null) {
+			$dokLkai->chain->$kode_lppi->unFollowedUp();
 		}
 		parent::deleted($dokLkai);
 	}

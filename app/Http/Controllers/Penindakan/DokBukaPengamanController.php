@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokBukaPengamanController extends PenindakanController
 {
-	public function __construct($doc_type='buka_pengaman')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'buka_pengaman';
 
 	/*
 	 |--------------------------------------------------------------------------

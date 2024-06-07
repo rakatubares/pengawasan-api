@@ -15,7 +15,8 @@ class DokSbpObserver extends DokObserver
 	public function booked($dokSbp) 
 	{
 		parent::booked($dokSbp);
-		$dokSbp->chain->lptp->book();
+		$kode_lptp = $dokSbp->kode_lptp;
+		$dokSbp->chain->$kode_lptp->book();
 	}
 
 	/**
@@ -71,7 +72,8 @@ class DokSbpObserver extends DokObserver
 	 */
 	public function published($dokSbp) {
 		parent::published($dokSbp);
-		$dokSbp->chain->lptp->publish();
+		$kode_lptp = $dokSbp->kode_lptp;
+		$dokSbp->chain->$kode_lptp->publish();
 		$dokSbp->update(['kode_status' => 'tindak-lanjut']);
 	}
 
@@ -125,9 +127,19 @@ class DokSbpObserver extends DokObserver
 	 */
 	public function deleted($dokSbp) {
 		$chain = $dokSbp->chain;
-		if ($chain->nhi) { $chain->nhi->unFollowedUp('status_sbp'); }
-		if ($chain->lap) { $chain->lap->unFollowedUp(); }
-		$dokSbp->chain->lptp->delete();
+
+		// Get related documents' code
+		$kode_nhi = $dokSbp->kode_nhi;
+		$kode_lap = $dokSbp->kode_lap;
+		$kode_lptp = $dokSbp->kode_lptp;
+
+		// Detach from source
+		if ($chain->$kode_nhi) { $chain->$kode_nhi->unFollowedUp('status_sbp'); }
+		if ($chain->$kode_lap) { $chain->$kode_lap->unFollowedUp(); }
+
+		// Delete related LPTP
+		$dokSbp->chain->$kode_lptp->delete();
+		
 		parent::deleted($dokSbp);
 	}
 }

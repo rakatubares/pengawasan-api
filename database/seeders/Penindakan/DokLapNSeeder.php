@@ -4,14 +4,6 @@ namespace Database\Seeders\Penindakan;
 
 class DokLapNSeeder extends DokLapSeeder
 {
-	public function __construct()
-	{
-		parent::__construct(
-			'lapn',
-			[
-				'nhin' => 'NHI-N',
-				'lainnya' => 'Lainnya'
-			]
-		);
-	}
+	protected $kode_dokumen = 'lapn';
+	protected $list_jenis_informasi = ['nhin', 'lainnya'];
 }

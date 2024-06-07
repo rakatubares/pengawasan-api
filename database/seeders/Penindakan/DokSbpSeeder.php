@@ -22,11 +22,13 @@ class DokSbpSeeder extends Seeder
 {
 	use ObjekPenindakanSeederTrait;
 
-	public function __construct($kode_dokumen='sbp')
+	protected $kode_dokumen='sbp';
+
+	public function __construct()
 	{
-		$this->kode_dokumen = $kode_dokumen;
 		$this->model_sbp = Relation::getMorphedModel($this->kode_dokumen);
 		$sbp = new $this->model_sbp;
+		$this->kode_nhi = $sbp->kode_nhi;
 		$this->kode_lap = $sbp->kode_lap;
 		$this->kode_lptp = $sbp->kode_lptp;
 	}
@@ -39,6 +41,8 @@ class DokSbpSeeder extends Seeder
     public function run()
     {
 		$faker = Faker::create();
+		$kode_nhi = $this->kode_nhi;
+		$kode_lap = $this->kode_lap;
 
 		// Get lap ids
 		$model_lap = Relation::getMorphedModel($this->kode_lap);
@@ -73,7 +77,9 @@ class DokSbpSeeder extends Seeder
 				$lap = $model_lap::find($lap_id);
 				$chain = $lap->chain;
 				$lap->followedUp();
-				if ($chain->nhi) { $chain->nhi->followedUp('status_sbp'); }
+
+				// Check NHI
+				if ($chain->$kode_nhi) { $chain->$kode_nhi->followedUp('status_sbp'); }
 			} else {
 				$chain = DocumentsChain::create();
 			}
@@ -82,12 +88,12 @@ class DokSbpSeeder extends Seeder
 			 * Create Penindakan
 			 */
 			if ($from_lap) {
-				if ($chain->nhi) {
-					$lokasi_penindakan = $chain->nhi->tempat_indikasi;
+				if ($chain->$kode_nhi) {
+					$lokasi_penindakan = $chain->$kode_nhi->tempat_indikasi;
 				} else {
 					$lokasi_penindakan = $faker->randomElement($lokasi)->lokasi;
 				}
-				$kategori_pelanggaran_id = $chain->lap->dugaan_pelanggaran_id;
+				$kategori_pelanggaran_id = $chain->$kode_lap->dugaan_pelanggaran_id;
 			} else {
 				$lokasi_penindakan = $faker->randomElement($lokasi)->lokasi;
 				$kategori_pelanggaran = $faker->randomElement($list_kategori_pelanggaran);

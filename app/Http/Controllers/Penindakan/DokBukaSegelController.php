@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokBukaSegelController extends PenindakanController
 {
-	public function __construct($doc_type='buka_segel')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'buka_segel';
 
 	/**
 	 * Validate request

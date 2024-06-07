@@ -10,9 +10,11 @@ class DokLkaiController extends DokController
 {
 	use ConverterTrait;
 
-	public function __construct($doc_type='lkai')
+	protected $doc_type = 'lkai';
+
+	public function __construct()
 	{
-		parent::__construct($doc_type);
+		parent::__construct();
 		$doc = new $this->model;
 		$this->kode_lppi = $doc->kode_lppi;
 		$this->field_lppi_id = $this->kode_lppi . '_id';

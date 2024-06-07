@@ -9,6 +9,7 @@ class DokLptp extends Dokumen
 	protected $table = 'dok_lptp';
 	public $kode_dokumen = 'lptp';
 	public $tipe_dokumen = 'LPTP';
+	public $kode_sbp = 'sbp';
 
 	protected $fillable = [
 		'no_dok',

@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokPengamanController extends PenindakanController
 {
-	public function __construct($doc_type='pengaman')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'pengaman';
 
 	protected function validateData(Request $request) 
 	{

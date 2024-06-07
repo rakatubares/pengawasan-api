@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 
 class DokTegahController extends PenindakanController
 {
-	public function __construct($doc_type='tegah')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'tegah';
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);

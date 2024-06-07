@@ -16,6 +16,8 @@ class DokLptpResource extends JsonResource
 	*/
 	public function toArray($request)
     {
+		$kode_sbp = $this->kode_sbp;
+
         $array = [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
@@ -29,9 +31,9 @@ class DokLptpResource extends JsonResource
 			'catatan' => $this->catatan,
 			'penindakan' => new PenindakanResource($this->chain->penindakan),
 			'sbp' => [
-				'no_dok_lengkap' => $this->chain->sbp->no_dok_lengkap,
-				'tanggal_dokumen' => $this->chain->sbp->tanggal_dokumen
-					? $this->chain->sbp->tanggal_dokumen->format('d-m-Y')
+				'no_dok_lengkap' => $this->chain->$kode_sbp->no_dok_lengkap,
+				'tanggal_dokumen' => $this->chain->$kode_sbp->tanggal_dokumen
+					? $this->chain->$kode_sbp->tanggal_dokumen->format('d-m-Y')
 					: null,
 			],
 			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),

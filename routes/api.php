@@ -25,10 +25,12 @@ use App\Http\Controllers\Penindakan\DokLiController;
 use App\Http\Controllers\Penindakan\DokLpController;
 use App\Http\Controllers\Penindakan\DokLphpController;
 use App\Http\Controllers\Penindakan\DokLptpController;
+use App\Http\Controllers\Penindakan\DokLptpNController;
 use App\Http\Controllers\Penindakan\DokPengamanController;
 use App\Http\Controllers\Penindakan\DokRiksaBadanController;
 use App\Http\Controllers\Penindakan\DokRiksaController;
 use App\Http\Controllers\Penindakan\DokSbpController;
+use App\Http\Controllers\Penindakan\DokSbpNController;
 use App\Http\Controllers\Penindakan\DokSegelController;
 use App\Http\Controllers\Penindakan\DokTegahController;
 use App\Http\Controllers\Penindakan\DokTolakSbp1Controller;
@@ -102,6 +104,8 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'lp' => DokLpController::class,
 
 		'lapn' => DokLapNController::class,
+		'sbpn' => DokSbpNController::class,
+		'lptpn' => DokLptpNController::class,
 
 		'pengaman' => DokPengamanController::class,
 		'buka_pengaman' => DokBukaPengamanController::class,

@@ -12,26 +12,12 @@ use Illuminate\Database\Seeder;
 
 class DokLapSeeder extends Seeder
 {
-	public function __construct(
-		$kode_dokumen='lap',
-		$nama_informasi=[
-			'nhi' => 'NHI',
-			'li' => 'LI-1',
-			'lainnya' => 'Lainnya'
-		]
-	)
+	protected $kode_dokumen = 'lap';
+	protected $list_jenis_informasi = ['nhi', 'li', 'lainnya'];
+
+	public function __construct()
 	{
-		// $this->kode_dokumen = $kode_dokumen;
-		$this->model_lap = Relation::getMorphedModel($kode_dokumen);
-		// $this->nama_informasi = [
-		// 	'nhi' => 'NHI',
-		// 	'li' => 'LI-1',
-		// 	'lainnya' => 'Lainnya'
-		// ];
-		$this->list_jenis_informasi = array_keys($nama_informasi);
-		// $lap = new $this->model_lap;
-		// $this->kode_nhi = $lap->kode_nhi;
-		// $this->kode_li = $lap->kode_li;
+		$this->model_lap = Relation::getMorphedModel($this->kode_dokumen);
 	}
 
     /**

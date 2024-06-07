@@ -12,10 +12,7 @@ class DokLppiController extends DokController
 	use ConverterTrait;
 	use IkhtisarInformasiTrait;
 
-	public function __construct($doc_type='lppi')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'lppi';
 
 	/*
 	 |--------------------------------------------------------------------------

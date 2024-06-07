@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLapTable extends Migration
 {
-	public function __construct()
-	{
-		$this->table_name = 'dok_lap';
-	}
+	protected $table_name = 'dok_lap';
 
     /**
      * Run the migrations.

@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 
 class DokTolakSbp1Controller extends DokController
 {
-	public function __construct($doc_type='tolak1')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'tolak1';
 
 	protected function validateData(Request $request) 
 	{

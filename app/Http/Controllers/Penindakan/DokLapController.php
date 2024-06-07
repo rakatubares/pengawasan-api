@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 
 class DokLapController extends DokController
 {
-	public function __construct($doc_type='lap')
-	{
-		parent::__construct($doc_type);
-	}
+	protected $doc_type = 'lap';
 
 	/*
 	 |--------------------------------------------------------------------------

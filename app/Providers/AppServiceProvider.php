@@ -36,26 +36,25 @@ use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLp;
 use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLptp;
+use App\Models\Penindakan\DokLptpN;
 use App\Models\Penindakan\DokPengaman;
 use App\Models\Penindakan\DokRiksa;
 use App\Models\Penindakan\DokRiksaBadan;
 use App\Models\Penindakan\DokSbp;
+use App\Models\Penindakan\DokSbpN;
 use App\Models\Penindakan\DokSegel;
 use App\Models\Penindakan\DokTegah;
 use App\Models\Penindakan\DokTolakSbp1;
 use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
 use App\Models\Penindakan\PenindakanBarang;
-use App\Observers\Intelijen\DokLkaiNObserver;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
 use App\Observers\Intelijen\DokNhiNEximObserver;
-use App\Observers\Intelijen\DokNhiNObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
 use App\Observers\Penindakan\DokBukaPengamanObserver;
 use App\Observers\Penindakan\DokBukaSegelObserver;
-use App\Observers\Penindakan\DokLapNObserver;
 use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
 use App\Observers\Penindakan\DokLphpObserver;
@@ -153,6 +152,8 @@ class AppServiceProvider extends ServiceProvider
 			'lp' => DokLp::class,
 
 			'lapn' => DokLapN::class,
+			'sbpn' => DokSbpN::class,
+			'lptpn' => DokLptpN::class,
 
 			'pengaman' => DokPengaman::class,
 			'buka_pengaman' => DokBukaPengaman::class,
@@ -171,8 +172,8 @@ class AppServiceProvider extends ServiceProvider
 		DokNi::observe(DokNiObserver::class);
 		
 		DokLppiN::observe(DokLppiObserver::class);
-		DokLkaiN::observe(DokLkaiNObserver::class);
-		DokNhiN::observe(DokNhiNObserver::class);
+		DokLkaiN::observe(DokLkaiObserver::class);
+		DokNhiN::observe(DokNhiObserver::class);
 		DokNhiNExim::observe(DokNhiNEximObserver::class);
 		DokNiN::observe(DokNiObserver::class);
 
@@ -191,7 +192,9 @@ class AppServiceProvider extends ServiceProvider
 		DokLphp::observe(DokLphpObserver::class);
 		DokLp::observe(DokLpObserver::class);
 
-		DokLapN::observe((DokLapNObserver::class));
+		DokLapN::observe(DokLapObserver::class);
+		DokSbpN::observe(DokSbpObserver::class);
+		DokLptpN::observe(DokLptpObserver::class);
 
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
