@@ -52,27 +52,12 @@ class DokObserver
 	}
 
 	protected function updatePenomoran($dokumen) {
-		$penomoran = Penomoran::where([
-			['tipe_dokumen', '=', $dokumen->tipe_dokumen],
-			['agenda', '=', $dokumen['agenda_dok']],
-			['tahun', '=', $dokumen['thn_dok']],
-		])->first();
-		
-		if ($penomoran != null) {
-			// Update existing number
-			$penomoran->update([
-				'nomor_terakhir' => $dokumen['no_dok']
-			]);
-		} else {
-			// Create new agenda
-			Penomoran::create([
-				'tipe_dokumen' =>  $dokumen->tipe_dokumen,
-				'agenda' =>  $dokumen['agenda_dok'],
-				'tahun' =>  $dokumen['thn_dok'],
-				'nomor_terakhir' => $dokumen['no_dok'],
-			]);
-		}
-		
+		Penomoran::upsert([
+			'tipe_dokumen' =>  $dokumen->tipe_dokumen,
+			'agenda' =>  $dokumen['agenda_dok'],
+			'tahun' =>  $dokumen['thn_dok'],
+			'nomor_terakhir' => $dokumen['no_dok'],
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 	}
 
 	protected function setLatestChainStatus($dokumen)

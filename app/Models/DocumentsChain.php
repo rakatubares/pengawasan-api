@@ -44,10 +44,10 @@ class DocumentsChain extends Model
 	public $doc_types = [
 		'lppi', 'lkai', 'nhi', 'ni',
 		'lppin', 'lkain', 'nhin', 'nin',
-		'li', 'lap', 
+		'li', 'lap', 'lapn',
 		'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
-		'sbp', 'tolak1', 'tolak2', 'lptp', 'lphp', 'lp',
-		'lapn', 'sbpn', 'lptpn',
+		'sbp', 'sbpn', 'tolak1', 'tolak2', 
+		'lptp', 'lptpn', 'lphp', 'lp',
 		'pengaman', 'buka_pengaman',
 	];
 
@@ -130,26 +130,11 @@ class DocumentsChain extends Model
 	}
 
 	public function tolak1() {
-		return $this->hasOneThrough(
-			DokTolakSbp1::class, 
-			DokSbp::class,
-			'chain_id',
-			'parent_id',
-			'id',
-			'id',
-		)->where('parent_type', 'sbp');
+		return $this->hasOne(DokTolakSbp1::class, 'chain_id');
 	}
 
 	public function tolak2() {
-		$tolak1 = new DokTolakSbp1();
-		$tolak2 = new DokTolakSbp2();
-
-		$tolak1_table = $tolak1->getTable();
-		$tolak2_table = $tolak2->getTable();
-
-		return $this->tolak1()
-			->join($tolak2_table, $tolak2_table.'.tolak1_id', '=', $tolak1_table.'.id')
-			->select($tolak2_table.'.*');
+		return $this->hasOne(DokTolakSbp2::class, 'chain_id');
 	}
 
 	public function lptp() {

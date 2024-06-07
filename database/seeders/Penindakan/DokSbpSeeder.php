@@ -394,69 +394,67 @@ class DokSbpSeeder extends Seeder
 		 */
 
 		// SBP
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $sbp->tipe_dokumen,
 			'agenda' => $sbp->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_sbp,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// Tolak 1
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $tolak1->tipe_dokumen,
 			'agenda' => $tolak1->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_tolak1,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// Tolak 2
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $tolak2->tipe_dokumen,
 			'agenda' => $tolak2->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_tolak2,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// LPTP
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $lptp->tipe_dokumen,
 			'agenda' => $lptp->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_lptp,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// BA Pemeriksaan Badan
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $riksa_badan->tipe_dokumen,
 			'agenda' => $riksa_badan->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_riksa_badan,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// BA Pemeriksaan
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $riksa->tipe_dokumen,
 			'agenda' => $riksa->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_riksa,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// BA Penegahan
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $tegah->tipe_dokumen,
 			'agenda' => $tegah->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_tegah,
-		]);
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
 
 		// BA Penyegelan
-		Penomoran::create([
+		Penomoran::upsert([
 			'tipe_dokumen' => $segel->tipe_dokumen,
 			'agenda' => $segel->agenda_dokumen,
 			'tahun' => $year,
 			'nomor_terakhir' => $crn_segel,
-		]);
-
-		
+		], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
     }
 }

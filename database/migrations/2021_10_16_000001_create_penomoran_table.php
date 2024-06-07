@@ -21,7 +21,7 @@ class CreatePenomoranTable extends Migration
 			$table->integer('nomor_terakhir');
             $table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index(['tipe_dokumen', 'agenda', 'tahun']);
+			$table->unique(['tipe_dokumen', 'agenda', 'tahun']);
 			$table->index('deleted_at');
         });
     }
