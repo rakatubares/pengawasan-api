@@ -172,6 +172,8 @@ class DokSbpSeeder extends Seeder
 			$lptp->chain_id = $chain->id;
 			$lptp->catatan = $faker->sentence($nbWOrds = 10);
 			$lptp->kode_status = 'terbit';
+			$lptp->created_by = $creator;
+			$lptp->updated_by = $creator;
 			$lptp->saveQuietly();
 
 			// Atasan

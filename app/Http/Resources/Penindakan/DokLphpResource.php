@@ -18,7 +18,8 @@ class DokLphpResource extends JsonResource
 	{
 		$array = $this->lphpArray();
 
-		$lptp = $this->chain->lptp;
+		$kode_lptp = $this->kode_lptp;
+		$lptp = $this->chain->$kode_lptp;
 		$array['lptp_id'] = $lptp != null ? $lptp->id : null;
 		$array['nomor_lptp'] = $lptp != null ? $lptp->no_dok_lengkap : null;
 		$array['tanggal_lptp'] = $lptp != null ? $lptp->tanggal_dokumen->format('d-m-Y') : null;

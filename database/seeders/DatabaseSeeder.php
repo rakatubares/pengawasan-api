@@ -15,6 +15,7 @@ use Database\Seeders\Penindakan\DokBukaSegelSeeder;
 use Database\Seeders\Penindakan\DokLapNSeeder;
 use Database\Seeders\Penindakan\DokLapSeeder;
 use Database\Seeders\Penindakan\DokLiSeeder;
+use Database\Seeders\Penindakan\DokLphpNSeeder;
 use Database\Seeders\Penindakan\DokLphpSeeder;
 use Database\Seeders\Penindakan\DokLpSeeder;
 use Database\Seeders\Penindakan\DokPengamanSeeder;
@@ -88,6 +89,7 @@ class DatabaseSeeder extends Seeder
 
 			DokLapNSeeder::class,
 			DokSbpNSeeder::class,
+			DokLphpNSeeder::class,
 			
 			DokBukaSegelSeeder::class,
 			DokPengamanSeeder::class,

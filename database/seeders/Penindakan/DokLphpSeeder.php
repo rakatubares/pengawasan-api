@@ -9,10 +9,10 @@ use Illuminate\Database\Seeder;
 
 class DokLphpSeeder extends Seeder
 {
+	protected $kode_dokumen = 'lphp';
 
-	public function __construct($kode_dokumen='lphp')
+	public function __construct()
 	{
-		$this->kode_dokumen = $kode_dokumen;
 		$this->model_lphp = Relation::getMorphedModel($this->kode_dokumen);
 		$lphp = new $this->model_lphp;
 		$this->kode_lptp = $lphp->kode_lptp;

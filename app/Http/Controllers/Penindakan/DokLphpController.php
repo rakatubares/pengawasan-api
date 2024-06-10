@@ -9,6 +9,13 @@ class DokLphpController extends DokController
 {
 	protected $doc_type = 'lphp';
 
+	public function __construct()
+	{
+		parent::__construct();
+		$doc = new $this->model;
+		$this->kode_lptp = $doc->kode_lptp;
+	}
+
 	/*
 	 |--------------------------------------------------------------------------
 	 | Data modify functions
@@ -52,7 +59,8 @@ class DokLphpController extends DokController
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
-		$lptp = $this->attachTo('lptp', $request->lptp_id);
+		$kode_lptp = $this->kode_lptp;
+		$lptp = $this->attachTo($kode_lptp, $request->lptp_id);
 		$data['chain_id'] = $lptp->chain->id;
 
 		return $data;
@@ -60,16 +68,17 @@ class DokLphpController extends DokController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
+		$kode_lptp = $this->kode_lptp;
 		$chain = $this->doc->chain;
-		$existing_lptp_id = $this->doc->chain->lptp->id;
+		$existing_lptp_id = $this->doc->chain->$kode_lptp->id;
 
 		// Change LPTP if lptp_id different from previous data
 		if ($request->lptp_id != $existing_lptp_id) {
 			// Detach from previous LPTP
-			$this->detachFrom('lptp', $existing_lptp_id);
+			$this->detachFrom($kode_lptp, $existing_lptp_id);
 
 			// Attach to new LPTP
-			$lptp = $this->attachTo('lptp', $request->lptp_id);
+			$lptp = $this->attachTo($kode_lptp, $request->lptp_id);
 			$chain = $lptp->chain;
 		}
 

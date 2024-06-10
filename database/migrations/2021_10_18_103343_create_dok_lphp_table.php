@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLphpTable extends Migration
 {
-	public function __construct()
-	{
-		$this->table_name = 'dok_lphp';
-	}
+	protected $table_name = 'dok_lphp';
 
 	/**
 	 * Run the migrations.

@@ -98,6 +98,7 @@ trait DocumentTrait
 			'lapn' => DokLapResource::class,
 			'sbpn' => DokSbpResource::class,
 			'lptpn' => DokLptpResource::class,
+			'lphpn' => DokLphpResource::class,
 
 			'pengaman' => DokPengamanResource::class,
 			'buka_pengaman' => DokBukaPengamanResource::class,
@@ -141,6 +142,7 @@ trait DocumentTrait
 
 			'lapn' => DokLapTableResource::class,
 			'sbpn' => DokSbpTableResource::class,
+			'lphpn' => DokLphpTableResource::class,
 
 			'pengaman' => DokPengamanTableResource::class,
 			'buka_pengaman' => DokBukaPengamanTableResource::class,
