@@ -2,21 +2,14 @@
 
 namespace Database\Seeders\Penindakan;
 
+use App\Models\Penindakan\DokLp;
+use App\Models\Penindakan\DokLphp;
 use App\Models\Penomoran;
 use Faker\Factory as Faker;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 
 class DokLpSeeder extends Seeder
 {
-	public function __construct($kode_dokumen='lp')
-	{
-		$this->kode_dokumen = $kode_dokumen;
-		$this->model_lp = Relation::getMorphedModel($this->kode_dokumen);
-		$lp = new $this->model_lp;
-		$this->kode_lphp = $lp->kode_lphp;
-	}
-
 	/**
 	 * Run the database seeds.
 	 *
@@ -27,8 +20,7 @@ class DokLpSeeder extends Seeder
 		$faker = Faker::create();
 
 		// Get LPHP ids
-		$model_lphp = Relation::getMorphedModel($this->kode_lphp);
-		$max_lphp_id = $model_lphp::max('id');
+		$max_lphp_id = DokLphp::max('id');
 		$available_lphp_id = range(1, $max_lphp_id);
 
 		// Current year
@@ -39,7 +31,7 @@ class DokLpSeeder extends Seeder
 			$lphp_id = $faker->randomElement($available_lphp_id);
 			$key = array_search($lphp_id, $available_lphp_id);
 			unset($available_lphp_id[$key]);
-			$lphp = $model_lphp::find($lphp_id);
+			$lphp = DokLphp::find($lphp_id);
 			$chain = $lphp->chain;
 			$lphp->update(['status_tindak_lanjut' => true]);
 
@@ -48,13 +40,13 @@ class DokLpSeeder extends Seeder
 			 */
 			
 			// Get current number for LP
-			$max_lp = $this->model_lp::max('no_dok');
+			$max_lp = DokLp::max('no_dok');
 			$crn_lp = $max_lp + 1;
 
 			// Create LP
 			$creator = $faker->randomElement(['123456', '665544']);
 
-			$lp = new $this->model_lp;
+			$lp = new DokLp();
 			$lp->no_dok = $crn_lp;
 			$lp->agenda_dok = $lp->agenda_dokumen;
 			$lp->thn_dok = $year;

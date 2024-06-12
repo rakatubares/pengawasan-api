@@ -23,9 +23,9 @@ class CreateDokLpNTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
-			$table->integer('sprint_id')->index();
+			$table->integer('sprint_id')->nullable()->index();
 			$table->text('kesimpulan')->nullable();
-			$table->integer('kode_status')->index();
+			$table->string('kode_status')->index();
 			$table->boolean('status_tindak_lanjut')->default(false)->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);

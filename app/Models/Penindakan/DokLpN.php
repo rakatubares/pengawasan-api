@@ -3,6 +3,7 @@
 namespace App\Models\Penindakan;
 
 use App\Models\Dokumen;
+use App\Models\Sprint;
 
 class DokLpN extends Dokumen
 {
@@ -27,4 +28,12 @@ class DokLpN extends Dokumen
 	protected $casts = [
 		'tanggal_dokumen' => 'date'
 	];
+
+	/**
+	 * Surat perintah
+	 */
+	public function sprint()
+	{
+		return $this->belongsTo(Sprint::class, 'sprint_id');
+	}
 }

@@ -25,6 +25,7 @@ use App\Http\Resources\Penindakan\DokLiResource;
 use App\Http\Resources\Penindakan\DokLiTableResource;
 use App\Http\Resources\Penindakan\DokLphpResource;
 use App\Http\Resources\Penindakan\DokLphpTableResource;
+use App\Http\Resources\Penindakan\DokLpNResource;
 use App\Http\Resources\Penindakan\DokLpResource;
 use App\Http\Resources\Penindakan\DokLpTableResource;
 use App\Http\Resources\Penindakan\DokLptpResource;
@@ -99,6 +100,7 @@ trait DocumentTrait
 			'sbpn' => DokSbpResource::class,
 			'lptpn' => DokLptpResource::class,
 			'lphpn' => DokLphpResource::class,
+			'lpn' => DokLpNResource::class,
 
 			'pengaman' => DokPengamanResource::class,
 			'buka_pengaman' => DokBukaPengamanResource::class,
@@ -143,6 +145,7 @@ trait DocumentTrait
 			'lapn' => DokLapTableResource::class,
 			'sbpn' => DokSbpTableResource::class,
 			'lphpn' => DokLphpTableResource::class,
+			'lpn' => DokLpTableResource::class,
 
 			'pengaman' => DokPengamanTableResource::class,
 			'buka_pengaman' => DokBukaPengamanTableResource::class,

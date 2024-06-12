@@ -35,6 +35,7 @@ use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLp;
 use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLphpN;
+use App\Models\Penindakan\DokLpN;
 use App\Models\Penindakan\DokLptp;
 use App\Models\Penindakan\DokLptpN;
 use App\Models\Penindakan\DokPengaman;
@@ -155,6 +156,7 @@ class AppServiceProvider extends ServiceProvider
 			'sbpn' => DokSbpN::class,
 			'lptpn' => DokLptpN::class,
 			'lphpn' => DokLphpN::class,
+			'lpn' => DokLpN::class,
 
 			'pengaman' => DokPengaman::class,
 			'buka_pengaman' => DokBukaPengaman::class,
@@ -196,6 +198,7 @@ class AppServiceProvider extends ServiceProvider
 		DokSbpN::observe(DokSbpObserver::class);
 		DokLptpN::observe(DokLptpObserver::class);
 		DokLphpN::observe(DokLphpObserver::class);
+		DokLpN::observe(DokLpObserver::class);
 
 		DokPengaman::observe(DokPengamanObserver::class);
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);

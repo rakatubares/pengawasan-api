@@ -9,6 +9,13 @@ class DokLpController extends DokController
 {
 	protected $doc_type = 'lp';
 
+	public function __construct()
+	{
+		parent::__construct();
+		$doc = new $this->model;
+		$this->kode_lphp = $doc->kode_lphp;
+	}
+
 	/**
 	 * Validate request
 	 * 
@@ -46,7 +53,7 @@ class DokLpController extends DokController
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
-		$lphp = $this->attachTo('lphp', $request->lphp_id);
+		$lphp = $this->attachTo($this->kode_lphp, $request->lphp_id);
 		$data['chain_id'] = $lphp->chain->id;
 
 		return $data;
@@ -55,15 +62,16 @@ class DokLpController extends DokController
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
 		$chain = $this->doc->chain;
-		$existing_lphp_id = $this->doc->chain->lphp->id;
+		$kode_lphp = $this->kode_lphp;
+		$existing_lphp_id = $this->doc->chain->$kode_lphp->id;
 
 		// Change LPHP if lptp_id different from previous data
 		if ($request->lphp_id != $existing_lphp_id) {
 			// Detach from previous LPHP
-			$this->detachFrom('lphp', $existing_lphp_id);
+			$this->detachFrom($kode_lphp, $existing_lphp_id);
 
 			// Attach to new LPHP
-			$lphp = $this->attachTo('lphp', $request->lphp_id);
+			$lphp = $this->attachTo($kode_lphp, $request->lphp_id);
 			$chain = $lphp->chain;
 		}
 

@@ -18,6 +18,7 @@ use App\Models\Penindakan\DokLi;
 use App\Models\Penindakan\DokLp;
 use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLphpN;
+use App\Models\Penindakan\DokLpN;
 use App\Models\Penindakan\DokLptp;
 use App\Models\Penindakan\DokLptpN;
 use App\Models\Penindakan\DokPengaman;
@@ -48,7 +49,7 @@ class DocumentsChain extends Model
 		'li', 'lap', 'lapn',
 		'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
 		'sbp', 'sbpn', 'tolak1', 'tolak2', 
-		'lptp', 'lptpn', 'lphp', 'lphpn', 'lp',
+		'lptp', 'lptpn', 'lphp', 'lphpn', 'lp', 'lpn',
 		'pengaman', 'buka_pengaman',
 	];
 
@@ -164,6 +165,10 @@ class DocumentsChain extends Model
 
 	public function lphpn() {
 		return $this->hasOne(DokLphpN::class, 'chain_id');
+	}
+
+	public function lpn() {
+		return $this->hasOne(DokLpN::class, 'chain_id');
 	}
 
 	public function pengaman() {
