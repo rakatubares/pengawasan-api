@@ -36,6 +36,7 @@ use App\Models\Penindakan\DokLp;
 use App\Models\Penindakan\DokLphp;
 use App\Models\Penindakan\DokLphpN;
 use App\Models\Penindakan\DokLpN;
+use App\Models\Penindakan\DokLpt;
 use App\Models\Penindakan\DokLptp;
 use App\Models\Penindakan\DokLptpN;
 use App\Models\Penindakan\DokPengaman;
@@ -60,6 +61,7 @@ use App\Observers\Penindakan\DokLapObserver;
 use App\Observers\Penindakan\DokLiObserver;
 use App\Observers\Penindakan\DokLphpObserver;
 use App\Observers\Penindakan\DokLpObserver;
+use App\Observers\Penindakan\DokLptObserver;
 use App\Observers\Penindakan\DokLptpObserver;
 use App\Observers\Penindakan\DokPengamanObserver;
 use App\Observers\Penindakan\DokRiksaBadanObserver;
@@ -149,6 +151,7 @@ class AppServiceProvider extends ServiceProvider
 			'tolak1' => DokTolakSbp1::class,
 			'tolak2' => DokTolakSbp2::class,
 			'lptp' => DokLptp::class,
+			'lpt' => DokLpt::class,
 			'lphp' => DokLphp::class,
 			'lp' => DokLp::class,
 
@@ -191,6 +194,7 @@ class AppServiceProvider extends ServiceProvider
 		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
 		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
 		DokLptp::observe(DokLptpObserver::class);
+		DokLpt::observe(DokLptObserver::class);
 		DokLphp::observe(DokLphpObserver::class);
 		DokLp::observe(DokLpObserver::class);
 

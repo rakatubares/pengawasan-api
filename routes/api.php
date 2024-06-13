@@ -26,6 +26,7 @@ use App\Http\Controllers\Penindakan\DokLpController;
 use App\Http\Controllers\Penindakan\DokLphpController;
 use App\Http\Controllers\Penindakan\DokLphpNController;
 use App\Http\Controllers\Penindakan\DokLpNController;
+use App\Http\Controllers\Penindakan\DokLptController;
 use App\Http\Controllers\Penindakan\DokLptpController;
 use App\Http\Controllers\Penindakan\DokLptpNController;
 use App\Http\Controllers\Penindakan\DokPengamanController;
@@ -102,6 +103,7 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'tolak1' => DokTolakSbp1Controller::class,
 		'tolak2' => DokTolakSbp2Controller::class,
 		'lptp' => DokLptpController::class,
+		'lpt' => DokLptController::class,
 		'lphp' => DokLphpController::class,
 		'lp' => DokLpController::class,
 

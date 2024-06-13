@@ -23,6 +23,7 @@ class DokSbp extends Dokumen
 		'kode_status',
 		'status_tindak_lanjut',
 		'status_tolak',
+		'status_lpt',
 	];
 
 	protected $casts = [

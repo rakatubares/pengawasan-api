@@ -4,32 +4,34 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDokSbpTable extends Migration
+class CreateDokLptTable extends Migration
 {
-	protected $table_name = 'dok_sbp';
-
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create($this->table_name, function (Blueprint $table) {
-            $table->id();
+	public function __construct()
+	{
+		$this->table_name = 'dok_lpt';
+	}
+	
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create($this->table_name, function (Blueprint $table) {
+			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
 			$table->integer('thn_dok')->nullable()->index();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
+			$table->string('barang')->nullable();
+			$table->string('sarpras')->nullable();
+			$table->text('kronologi')->nullable();
 			$table->string('kode_status')->index();
 			$table->boolean('status_tindak_lanjut')->default(false)->index();
-			$table->boolean('status_tolak')->default(false)->index();
-			if ($this->table_name == 'dok_sbp') {
-				$table->boolean('status_lpt')->default(false)->index();
-			}
-            $table->timestamps();
+			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
 			$table->string('created_by')->nullable()->index();
 			$table->string('updated_by')->nullable();
@@ -37,16 +39,16 @@ class CreateDokSbpTable extends Migration
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');
-        });
-    }
+		});
+	}
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists($this->table_name);
-    }
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::dropIfExists($this->table_name);
+	}
 }
