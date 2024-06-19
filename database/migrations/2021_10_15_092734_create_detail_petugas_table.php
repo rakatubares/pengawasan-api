@@ -15,13 +15,15 @@ class CreateDetailPetugasTable extends Migration
 	{
 		Schema::create('detail_petugas', function (Blueprint $table) {
 			$table->id();
-			$table->string('officerable_type');
-			$table->integer('officerable_id');
-			$table->string('position');
-			$table->integer('petugas_id');
+			$table->morphs('officerable');
+			$table->string('posisi');
+			$table->boolean('flag_pejabat');
+			$table->string('kode_jabatan')->nullable();
+			$table->string('tipe_ttd')->nullable();
+			$table->string('nip');
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index(['officerable_type', 'officerable_id', 'position']);
+			$table->index(['officerable_type', 'officerable_id', 'posisi']);
 			$table->index('deleted_at');
 		});
 	}

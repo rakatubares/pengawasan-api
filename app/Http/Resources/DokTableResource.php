@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Http\Resources\References\RefKodeDokumenResource;
+use App\Http\Resources\References\RefStatusResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DokTableResource extends JsonResource
+{
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
+	{
+		return $this->makeBasicArray();
+	}
+
+	protected function makeBasicArray() {
+		$document_status = new RefStatusResource($this->status);
+		$chain_status = new RefKodeDokumenResource($this->chain->status);
+
+		if (in_array($document_status->kode_status, ['draft', 'booking-nomor', 'rollback', 'aju-batal', 'batal', 'dihapus'])) {
+			$status = $document_status->kode_status;
+		} else {
+			$status = $chain_status->short_title;
+		}
+
+		$array = [
+			'id' => $this->id,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tanggal_dokumen' => $this->tanggal_dokumen 
+				? $this->tanggal_dokumen->format('d-m-Y') 
+				: '-',
+			'status' => $status,
+			'status_color' => $document_status->color,
+			'status_dokumen' => $this->kode_status,
+			'creator_name' => $this->creator['name'],
+			'creator_id' => $this->creator['nip'],
+		];
+
+		return $array;
+	}
+}

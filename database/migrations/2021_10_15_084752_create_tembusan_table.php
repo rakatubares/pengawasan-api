@@ -15,8 +15,7 @@ class CreateTembusanTable extends Migration
     {
         Schema::create('tembusan', function (Blueprint $table) {
             $table->id();
-			$table->string('cc_able_type')->index();
-			$table->integer('cc_able_id')->index();
+			$table->morphs('cc_able');
 			$table->integer('tembusan_id')->index();
 			$table->integer('no_urut');
             $table->timestamps();

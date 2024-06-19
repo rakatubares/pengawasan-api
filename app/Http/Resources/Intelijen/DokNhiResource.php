@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Resources\Intelijen;
+
+use App\Http\Resources\ListPosisiPegawaiResource;
+use App\Http\Resources\References\RefKantorBCResource;
+use App\Http\Resources\RefUserResource;
+use App\Http\Resources\TembusanResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DokNhiResource extends JsonResource
+{
+	/**
+	 * Transform the resource into an array for display.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+	 */
+	public function toArray($request)
+	{
+		$array = $this->nhiArray();
+		
+		$lkai = $this->chain->lkai;
+		$array['lkai_id'] = $lkai != null ? $lkai->id : null;
+		$array['nomor_lkai'] = $lkai != null ? $lkai->no_dok_lengkap : null;
+		$array['tanggal_lkai'] = $lkai != null ? $lkai->tanggal_dokumen->format('d-m-Y') : null;
+
+		return $array;
+	}
+
+	protected function nhiArray() {
+		$array = [
+			'id' => $this->id,
+			'no_dok' => $this->no_dok,
+			'agenda_dok' => $this->agenda_dok,
+			'thn_dok' => $this->thn_dok,
+			'no_dok_lengkap' => $this->no_dok_lengkap,
+			'tanggal_dokumen' => $this->tanggal_dokumen
+				? $this->tanggal_dokumen->format('d-m-Y') 
+				: null,
+			'sifat' => $this->sifat,
+			'klasifikasi' => $this->klasifikasi,
+			'tujuan' => $this->tujuan,
+			'tempat_indikasi' => $this->tempat_indikasi,
+			'tanggal_indikasi' => $this->tanggal_indikasi != null 
+				? $this->tanggal_indikasi->format('d-m-Y') 
+				: null,
+			'waktu_indikasi' => $this->waktu_indikasi,
+			'zona_waktu' => $this->zona_waktu,
+			'kantor' => new RefKantorBCResource($this->kantor),
+			'detail' => new DokNhiDetailResource($this->detail, $this->detail_type),
+			'indikasi' => $this->indikasi,
+			'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
+			'tembusan' => TembusanResource::collection($this->tembusan),
+			'kode_status' => $this->kode_status,
+			'created_by' => new RefUserResource($this->creator),
+		];
+
+		return $array;
+	}
+}

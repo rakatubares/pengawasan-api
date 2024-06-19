@@ -1,0 +1,127 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\DetailDokumen;
+use App\Models\DokBast;
+use App\Traits\SwitcherTrait;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class DokBastSeeder extends Seeder
+{
+	use SwitcherTrait;
+	use DetailSeederTrait;
+
+	public function __construct()
+	{
+		$this->faker = Faker::create();
+		$this->tipe_dok = 'bast';
+		$this->tipe_surat = $this->switchObject($this->tipe_dok, 'tipe_dok');
+		$this->agenda = $this->switchObject($this->tipe_dok, 'agenda');
+	}
+
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+		for ($i=1; $i < 21; $i++) { 
+			DB::beginTransaction();
+
+			try {
+				$yang_menerima_type = $this->faker->randomElement(['orang', 'pegawai']);
+				if ($yang_menerima_type == 'orang') {
+					$yang_menerima_id = $this->faker->numberBetween(1,100);
+					$yang_menerima_an = $this->faker->company();
+					$yang_menyerahkan_type = 'pegawai';
+					$yang_menyerahkan_id = 1;
+					$yang_menyerahkan_an = 'KPU BC Soekarno Hatta';
+				} else {
+					$yang_menerima_id = 1;
+					$yang_menerima_an = 'KPU BC Soekarno Hatta';
+					$yang_menyerahkan_type = $this->faker->randomElement(['orang', 'pegawai']);
+					if ($yang_menyerahkan_type == 'orang') {
+						$yang_menyerahkan_id = $this->faker->numberBetween(1,100);
+						$yang_menyerahkan_an = $this->faker->company();
+					} else {
+						$yang_menyerahkan_id = 2;
+						$yang_menyerahkan_an = 'KPU BC Soekarno Hatta';
+					}
+				}
+
+				$max_bast = DokBast::max('no_dok');
+				$crn_bast = $max_bast + 1;
+				$bast = DokBast::create([
+					'no_dok' => $crn_bast,
+					'agenda_dok' => $this->agenda,
+					'thn_dok' => date("Y"),
+					'no_dok_lengkap' => $this->tipe_surat . '-' . $crn_bast . $this->agenda . date("Y"),
+					'tanggal_dokumen' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
+					'yang_menerima_type' => $yang_menerima_type,
+					'yang_menerima_id' => $yang_menerima_id,
+					'atas_nama_yang_menerima' => $yang_menerima_an,
+					'yang_menyerahkan_type' => $yang_menyerahkan_type,
+					'yang_menyerahkan_id' => $yang_menyerahkan_id,
+					'atas_nama_yang_menyerahkan' => $yang_menyerahkan_an,
+					'dalam_rangka' => $this->faker->sentence($nbWOrds = 20),
+					'kode_status' => 200,
+				]);
+
+				$objek_bast = $this->faker->randomElement(['sarkut', 'barang', 'dokumen', 'orang']);
+
+				switch ($objek_bast) {
+					case 'sarkut':
+						$object = $this->createSarkut();
+						$object_id = $object->id;
+						break;
+
+					case 'barang':
+						$object = $this->createBarang();
+						$object_id = $object->id;
+						break;
+
+					case 'dokumen':
+						$object = $this->createDokumen($bast->id);
+						$object_id = $object->id;
+						break;
+
+					case 'orang':
+						$object_id = $this->faker->numberBetween(1,100);
+					
+					default:
+						# code...
+						break;
+				}
+
+				$bast->update([
+					'object_type' => $objek_bast,
+					'object_id' => $object_id
+				]);
+
+				DB::commit();
+
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		}
+		
+    }
+
+	private function createDokumen($bast_id)
+	{
+		$dokumen = DetailDokumen::create([
+			'parent_type' => 'bast',
+			'parent_id' => $bast_id,
+			'jns_dok' => $this->faker->regexify('[A-Z]{3}'),
+			'no_dok' => $this->faker->numberBetween(1, 999999),
+			'tgl_dok' => $this->faker->date()
+		]);
+
+		return $dokumen;
+	}
+}

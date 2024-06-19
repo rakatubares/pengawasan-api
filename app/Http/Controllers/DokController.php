@@ -2,105 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ObjectRelation;
-use App\Traits\SwitcherTrait;
+use App\Traits\DocumentsChainTrait;
+use App\Traits\DocumentTrait;
+use App\Traits\PetugasTrait;
+use App\Traits\TembusanTrait;
+use App\Traits\UserTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DokController extends Controller
 {
-	use SwitcherTrait;
+	use DocumentsChainTrait;
+	use DocumentTrait;
+	use PetugasTrait;
+	use TembusanTrait;
+	use UserTrait;
 
-	protected $doc = null;
 	protected $doc_type = null;
 	protected $model = null;
-	protected $tipe_surat = null;
-	protected $agenda_dok = null;
 	protected $resource = null;
 	protected $table_resource = null;
 	protected $date = null;
 	protected $year = null;
-	protected $unpublished_status = [100, 101];
 
-	public function __construct($doc_type)
+	public function __construct()
 	{
-		$this->doc_type = $doc_type;
-		$this->model = $this->switchObject($this->doc_type, 'model');
-		$this->tipe_surat = $this->switchObject($this->doc_type, 'tipe_dok');
-		$this->agenda_dok = $this->switchObject($this->doc_type, 'agenda');
-		$this->resource = $this->switchObject($this->doc_type, 'resource');
-		$this->table_resource = $this->switchObject($this->doc_type, 'table_resource');
-	}
-
-	/*
-	 |--------------------------------------------------------------------------
-	 | Document functions
-	 |--------------------------------------------------------------------------
-	 */
-	
-	/**
-	 * Get specific document by ID
-	 * 
-	 * @param int $doc_id
-	 */
-	protected function getDocument($doc_id, $doc_type=null)
-	{
-		if ($doc_type==null) {
-			$this->doc = $this->model::findOrFail($doc_id);
-		} else {
-			$model = $this->switchObject($doc_type, 'model');
-			$doc = $model::findOrFail($doc_id);
-			return $doc;
-		}
-	}
-
-	/**
-	 * Get current date and year
-	 */
-	protected function getCurrentDate()
-	{
-		$this->date = date('Y-m-d') ;
-		$this->year = date('Y') ;
-	}
-
-	/**
-	 * Get new number
-	 * 
-	 * @return int
-	 */
-	private function getNewDocNumber($doc, $model)
-	{
-		// Ambil nomor terakhir berdasarkan skema, agenda, dan tahun
-		$agenda_dok = $doc->agenda_dok;
-		$latest_number = $model::select('no_dok')
-			->where('agenda_dok', $agenda_dok)
-			->where('thn_dok', $this->year)
-			->orderByDesc('no_dok')
-			->first();
-
-		// Buat nomor baru
-		try {
-			$number = ($latest_number->no_dok) + 1;
-		} catch (\Throwable $th) {
-			$number = 1;
-		}
-		
-		return $number;
-	}
-
-	/**
-	 * Check if document is unpublished
-	 * 
-	 * @return boolean
-	 */
-	public function checkUnpublished($doc=null)
-	{
-		if ($doc==null) {$doc = $this->doc;}
-
-		// Return TRUE if document is unpublished
-		$kode_status = $doc->kode_status;
-		$is_unpublished = (in_array($kode_status, $this->unpublished_status)) ? true : false;
-		return $is_unpublished;
+		$this->model = $this->getModel($this->doc_type);
+		$this->resource = $this->getResource($this->doc_type);
+		$this->table_resource = $this->getTableResource($this->doc_type);
 	}
 
 	/*
@@ -114,13 +43,20 @@ class DokController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$all_docs = $this->model::orderBy('created_at', 'desc')
-			->orderBy('no_dok', 'desc')
-			->get();
-		$docs_list = $this->table_resource::collection($all_docs);
-		return $docs_list;
+		$permission = 'view-' . $this->doc_type;
+		$permitted = $this->checkPermission($permission, $request->bearerToken());
+
+		if ($permitted) {
+			$all_docs = $this->model::orderBy('created_at', 'desc')
+				->orderBy('no_dok', 'desc')
+				->get();
+			$docs_list = $this->table_resource::collection($all_docs);
+			return $docs_list;
+		} else {
+			return response()->json(['error' => 'Unauthorized'], 401);
+		}
 	}
 
 	/**
@@ -129,110 +65,240 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show($id)
+	public function show(Request $request, $id)
 	{
-		$doc = new $this->resource($this->model::findOrFail($id));
-		return $doc;
+		$permission = 'view-' . $this->doc_type;
+		$permitted = $this->checkPermission($permission, $request->bearerToken());
+		
+		if ($permitted) {
+			return new $this->resource($this->model::findOrFail($id));
+		} else {
+			return response()->json(['error' => 'Unauthorized'], 401);
+		}
 	}
 
 	/**
-	 * Display data for detail page.
+	 * Display search result.
 	 *
-	 * @param  int  $id
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  string  $doc_type
 	 * @return \Illuminate\Http\Response
 	 */
-	public function display($id)
+	public function search(Request $request, $doc_type) 
 	{
-		$doc = new $this->resource($this->model::findOrFail($id), 'display');
-		return $doc;
-	}
+		if ($this->doc_type == null) {
+			$this->doc_type = $doc_type;
+			$this->__construct();
+		}
 
+		$src = $request->src;
+		$flt = $request->flt;
+		$exc = $request->exc;
+		$search = '%' . $src . '%';
+
+		$search_result = $this->model::where(function ($query) use ($search, $flt) 
+			{
+				$query->where('no_dok_lengkap', 'like', $search)
+					->when($flt != null, function ($query) use ($flt)
+					{
+						foreach ($flt as $column => $value) {
+							if (is_array($value)) {
+								$query->whereIn($column, $value);
+							} else if ($value == null) {
+								$query->where($column, $value);
+							} else {
+								$search_value = '%' . $value . '%';
+								$query->where($column, 'like', $search_value);
+							}
+						}
+						return $query;
+					});
+			})
+			->when($exc != null, function ($query) use ($exc)
+			{
+				return $query->orWhere('id', $exc);
+			})
+			->orderBy('created_at', 'desc')
+			->orderBy('id', 'desc')
+			->take(5)
+			->get();
+		$search_list = $this->table_resource::collection($search_result);
+		return $search_list;
+	}
 
 	/**
-	 * List of related documents.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * Validate request
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
 	 */
-	public function docs($id)
-	{
-		return $this->getRelatedDocuments($id);
-	}
+	protected function validateData(Request $request) {}
 
 	/**
-	 * Display data for pdf.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
+	 * Prepare data SBP from request to array
+	 * 
+	 * @param Request $request
+	 * @return Array
 	 */
-	public function pdf($id)
-	{
-		$doc = new $this->resource($this->model::findOrFail($id), 'pdf');
-		return $doc;
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function form($id)
-	{
-		$doc = new $this->resource($this->model::findOrFail($id), 'form');
-		return $doc;
-	}
-
-	/**
-	 * Display document's object.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function objek($id)
-	{
-		$doc = new $this->resource($this->model::findOrFail($id), 'objek');
-		return $doc;
-	}
+	protected function prepareData(Request $request) { return []; }
 
 	/*
 	 |--------------------------------------------------------------------------
-	 | Data modify functions
+	 | Create functions
 	 |--------------------------------------------------------------------------
 	 */
 	
 	/**
-	 * Save data
-	 * 
+	 * Store a newly created resource in storage.
+	 *
 	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
 	 */
-	protected function saveData(Request $request)
+	protected function store(Request $request)
 	{
-		$this->validateData($request);
-		$data = $this->prepareData($request, 'insert');
-		$this->doc = $this->model::create($data);
+		$permission = 'create-' . $this->doc_type;
+		$permitted = $this->checkPermission($permission, $request->bearerToken());
+
+		if ($permitted) {
+			DB::beginTransaction();
+			try {
+				// Pre-creation operation
+				$data = $this->storing($request);
+
+				// Save document to database
+				$this->doc = $this->model::create($data);
+
+				// Post-creation operation
+				$this->stored($request);
+				
+				// Commit query
+				DB::commit();
+
+				// Return data resource
+				$resource = $this->show($request, $this->doc->id);
+				return $resource;
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		} else {
+			return response()->json(['error' => 'Unauthorized'], 401);
+		}
 	}
 
+	protected function storing(Request $request) { 
+		$this->validateData($request);
+		$data = $this->prepareData($request);
+		return $data; 
+	}
+
+	protected function stored(Request $request) {
+		// Save details if exist
+		if ($request->has('petugas')) {$this->savePetugas($request->petugas, $this->doc);}
+		if ($request->has('tembusan')) {$this->setTembusan($request->tembusan, $this->doc);}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Update functions
+	 |--------------------------------------------------------------------------
+	 */
+
 	/**
-	 * Publish document.
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	protected function update(Request $request, $doc_id)
+	{
+		// Check if document is not published yet
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_unpublished = $this->checkUnpublished($this->doc);
+
+		if ($is_unpublished) {
+			$permission = 'create-' . $this->doc_type;
+			$user = $this->getUserInfo($request->bearerToken());
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+			$match_user = $user['nip'] == $this->doc->created_by;
+
+			if ($match_user && $permitted) {
+				DB::beginTransaction();
+				try {
+					// Pre-update operation
+					$data = $this->updating($request);
+
+					// Update data on database
+					$this->doc->edit($data);
+
+					// Post-update operation
+					$this->updated($request);
+
+					// Commit query
+					DB::commit();
+		
+					// Return data
+					$resource = $this->show($request, $this->doc->id);
+					return $resource;
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
+			return $result;
+		}
+	}
+
+	protected function updating(Request $request) { 
+		$this->validateData($request);
+		$data = $this->prepareData($request, 'update');
+		return $data; 
+	}
+
+	protected function updated(Request $request) {
+		// Update details if exist
+		if ($request->has('petugas')) { $this->updatePetugas($request->petugas, $this->doc);}
+		if ($request->has('tembusan')) {$this->setTembusan($request->tembusan, $this->doc);}
+	}
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Booking number functions
+	 |--------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Book document number.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish($id)
+	public function book(Request $request, $doc_id) 
 	{
-		$this->getDocument($id);
-		$is_unpublished = $this->checkUnpublished();
-		if ($is_unpublished) {
-			DB::beginTransaction();
-			try {
-				$this->publishing($id);
-				$this->publishDocument();
-				$this->published();
-				DB::commit();
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_draft = $this->doc->kode_status == 'draft';
+
+		if ($is_draft) {
+			$permission = 'create-' . $this->doc_type;
+			$user = $this->getUserInfo($request->bearerToken());
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+			$match_user = $user['nip'] == $this->doc->created_by;
+
+			if ($match_user && $permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->book();
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
@@ -240,76 +306,44 @@ class DokController extends Controller
 		}
 	}
 
-	/**
-	 * Update document's date before being published
+	/*
+	 |--------------------------------------------------------------------------
+	 | Publish functions
+	 |--------------------------------------------------------------------------
 	 */
-	protected function publishing($id)
-	{
-		$this->getCurrentDate();
-		$this->updateDocDate();
-		$this->updateDocYear();
-	}
 
 	/**
-	 * Update document's number and status
+	 * Publish document.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
 	 */
-	protected function publishDocument($doc_type=null, $doc_id=null)
+	public function publish(Request $request, $doc_id)
 	{
-		// If document and model objects are not specified, use default objects
-		if ($doc_type==null) {
-			$model = $this->model;
-			$doc = $this->doc;
-			$tipe_surat = $this->tipe_surat;
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_unpublished = $this->checkUnpublished($this->doc);
+		if ($is_unpublished) {
+			$permission = 'create-' . $this->doc_type;
+			$user = $this->getUserInfo($request->bearerToken());
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+			$match_user = $user['nip'] == $this->doc->created_by;
+
+			if ($match_user && $permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->publish();
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
+			}
 		} else {
-			$model = $this->switchObject($doc_type, 'model');
-			$doc = $model::find($doc_id);
-			$tipe_surat = $this->switchObject($doc_type, 'tipe_dok');
+			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
+			return $result;
 		}
-
-		$number = $this->getNewDocNumber($doc, $model);
-		$this->updateDocNumber($number, $doc, $tipe_surat);
-		$doc->kode_status = 200;
-		$doc->save();
-	}
-
-	/**
-	 * Perform any actions required after document is published.
-	 */
-	protected function published()
-	{
-		// 
-	}
-
-	/**
-	 * Update doc number
-	 * 
-	 * @param int $number
-	 */
-	protected function updateDocNumber($number, $doc, $tipe_surat)
-	{
-		// Construct full document number
-		$no_dok_lengkap = $tipe_surat 
-			. '-' 
-			. $number 
-			. $doc->agenda_dok 
-			. $this->year;
-
-		// Set new values then update
-		$doc->no_dok = $number;
-		$doc->no_dok_lengkap = $no_dok_lengkap;
-	}
-
-	/**
-	 * Update doc date
-	 */
-	protected function updateDocDate()
-	{
-		$this->doc->tanggal_dokumen = $this->date;
-	}
-
-	protected function updateDocYear()
-	{
-		$this->doc->thn_dok = $this->year;
 	}
 
 	/*
@@ -324,19 +358,28 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request, $doc_id)
 	{
-		$this->getDocument($id);
-		$is_unpublished = $this->checkUnpublished();
-		if ($is_unpublished) {
-			DB::beginTransaction();
-			try {
-				$this->model::find($id)->delete();
-				
-				DB::commit();
-			} catch (\Throwable $th) {
-				DB::rollBack();
-				throw $th;
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_draft = $this->doc->kode_status == 'draft';
+
+		if ($is_draft) {
+			$permission = 'delete-' . $this->doc_type;
+			$user = $this->getUserInfo($request->bearerToken());
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+			$match_user = $user['nip'] == $this->doc->created_by;
+
+			if ($match_user && $permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->delete();	
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
 			}
 		} else {
 			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
@@ -346,51 +389,57 @@ class DokController extends Controller
 
 	/*
 	 |--------------------------------------------------------------------------
-	 | Relation & status functions
+	 | Rollback functions
 	 |--------------------------------------------------------------------------
 	 */
 
 	/**
-	 * Update document's status
+	 * Rollback published document status for editing.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
 	 */
-	protected function updateStatus($doc, $status)
-	{
-		$doc->update(['kode_status' => $status]);
-	}
-	
-	/**
-	 * Create document relation
-	 * 
-	 * @param String $doc1_type
-	 * @param Int $doc1_id
-	 * @param String $doc2_type
-	 * @param Int $doc2_id
-	 */
-	protected function createRelation($object1_type, $object1_id, $object2_type, $object2_id)
-	{
-		ObjectRelation::create([
-			'object1_type' => $object1_type,
-			'object1_id' => $object1_id,
-			'object2_type' => $object2_type,
-			'object2_id' => $object2_id,
-		]);
+	public function rollback(Request $request, $doc_id) {
+		// Check if document is already published
+		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$is_published = !$this->checkUnpublished($this->doc);
+
+		if ($is_published) {
+			$permission = 'rollback-' . $this->doc_type;
+			$permitted = $this->checkPermission($permission, $request->bearerToken());
+
+			if ($permitted) {
+				DB::beginTransaction();
+				try {
+					$this->doc->rollback($request->keterangan);
+					DB::commit();
+				} catch (\Throwable $th) {
+					DB::rollBack();
+					throw $th;
+				}
+			} else {
+				return response()->json(['error' => 'Unauthorized'], 401);
+			}
+		} else {
+			$result = response()->json(['error' => 'Dokumen belum diterbitkan.'], 422);
+			return $result;
+		}
 	}
 
-	/**
-	 * Delete document relation
-	 * 
-	 * @param String $doc1_type
-	 * @param Int $doc1_id
-	 * @param String $doc2_type
-	 * @param Int $doc2_id
+	/*
+	 |--------------------------------------------------------------------------
+	 | Relation functions
+	 |--------------------------------------------------------------------------
 	 */
-	protected function deleteRelation($object1_type, $object1_id, $object2_type, $object2_id)
-	{
-		ObjectRelation::where([
-			'object1_type' => $object1_type,
-			'object1_id' => $object1_id,
-			'object2_type' => $object2_type,
-			'object2_id' => $object2_id
-		])->delete();
+
+	protected function attachTo($doc_type, $doc_id, $column_name=null) {
+		$related_doc = $this->getDocument($doc_type, $doc_id);
+		$related_doc->followedUp($column_name);
+		return $related_doc;
+	}
+
+	protected function detachFrom($doc_type, $doc_id, $column_name=null) {
+		$related_doc = $this->getDocument($doc_type, $doc_id);
+		$related_doc->unFollowedUp($column_name);
 	}
 }

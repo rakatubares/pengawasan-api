@@ -50,41 +50,49 @@ class RefStatusSeeder extends Seeder
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 131, 
-				'short_status' => 'draft lpp',
-				'uraian_status' => 'Pembuatan draft LPP',
+				'kode_status' => 104, 
+				'short_status' => 'draft buka pengaman',
+				'uraian_status' => 'Pembuatan draft BA Pebukaan Tanda Pengaman',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 132, 
-				'short_status' => 'draft lpf',
-				'uraian_status' => 'Pembuatan draft LPF',
+				'kode_status' => 105, 
+				'short_status' => 'draft titip',
+				'uraian_status' => 'Pembuatan draft BA Penitipan',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 106, 
+				'short_status' => 'draft lap',
+				'uraian_status' => 'Pembuatan draft LAP',
+				'color' => 'warning',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 107, 
+				'short_status' => 'draft sbp',
+				'uraian_status' => 'Pembuatan draft SBP',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 133, 
-				'short_status' => 'draft split',
-				'uraian_status' => 'Pembuatan draft SPLIT',
+				'kode_status' => 111, 
+				'short_status' => 'draft lkai',
+				'uraian_status' => 'Pembuatan draft LKAI',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 134, 
-				'short_status' => 'draft lhp',
-				'uraian_status' => 'Pembuatan draft LHP',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 135, 
-				'short_status' => 'draft lrp',
-				'uraian_status' => 'Pembuatan draft LRP',
+				'kode_status' => 112, 
+				'short_status' => 'draft nhi',
+				'uraian_status' => 'Pembuatan draft NHI',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
@@ -121,42 +129,50 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
-			[
-				'kode_status' => 231,
-				'short_status' => 'lpp',
-				'uraian_status' => 'Penerbitan LPP',
+			[ 
+				'kode_status' => 204, 
+				'short_status' => 'buka pengaman',
+				'uraian_status' => 'Penerbitan BA Tanda Pengaman',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 232,
-				'short_status' => 'lpf',
-				'uraian_status' => 'Penerbitan LPF',
+				'kode_status' => 205, 
+				'short_status' => 'titip',
+				'uraian_status' => 'Penerbitan BA Penitipan',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 233,
-				'short_status' => 'split',
-				'uraian_status' => 'Penerbitan SPLIT',
+				'kode_status' => 206, 
+				'short_status' => 'lap',
+				'uraian_status' => 'Penerbitan LAP',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
-				'kode_status' => 234,
-				'short_status' => 'lhp',
-				'uraian_status' => 'Penerbitan LHP',
+				'kode_status' => 207, 
+				'short_status' => 'sbp',
+				'uraian_status' => 'Penerbitan SBP',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
-			[
-				'kode_status' => 235,
-				'short_status' => 'lrp',
-				'uraian_status' => 'Penerbitan LRP',
+			[ 
+				'kode_status' => 211, 
+				'short_status' => 'lkai',
+				'uraian_status' => 'Penerbitan LKAI',
+				'color' => 'success',
+				'created_at' => $now,
+				'updated_at' => $now
+			],
+			[ 
+				'kode_status' => 212, 
+				'short_status' => 'nhi',
+				'uraian_status' => 'Penerbitan NHI',
 				'color' => 'success',
 				'created_at' => $now,
 				'updated_at' => $now
