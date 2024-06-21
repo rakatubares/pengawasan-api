@@ -29,6 +29,19 @@ class UserAuthentication
 
 			// Check if token is valid
 			$userInfo = $sso->getUserInfo();
+			RefUserCache::updateOrCreate(
+				['user_id' => $userInfo['user_id']],
+				[
+					'user_id' => $userInfo['user_id'],
+					'username' => $userInfo['username'],
+					'name' => $userInfo['name'],
+					'nip' => $userInfo['nip'],
+					'pangkat' => $userInfo['pangkat'],
+					'penempatan' => $userInfo['kode'],
+					'pejabat' => $userInfo['pejabat'],
+					'status' => $userInfo['status'],
+				]
+			);
 			if (gettype($userInfo) == 'array') {
 				// Set user as authenticated user
 				$user = RefUserCache::where('user_id', $userInfo['user_id'])->first();
