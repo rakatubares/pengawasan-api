@@ -58,7 +58,7 @@ class DokSbpSeeder extends Seeder
 
 		// References
 		$lokasi = RefLokasi::select('lokasi')->get();
-		$list_kategori_pelanggaran = RefKategoriPelanggaran::all('id')->toArray();
+		$list_kategori_pelanggaran = RefKategoriPelanggaran::select('id')->get();
 
 		// Current year
 		$year = date("Y");
@@ -96,8 +96,7 @@ class DokSbpSeeder extends Seeder
 				$kategori_pelanggaran_id = $chain->$kode_lap->dugaan_pelanggaran_id;
 			} else {
 				$lokasi_penindakan = $faker->randomElement($lokasi)->lokasi;
-				$kategori_pelanggaran = $faker->randomElement($list_kategori_pelanggaran);
-				$kategori_pelanggaran_id = $kategori_pelanggaran['id'];
+				$kategori_pelanggaran_id = $faker->randomElement($list_kategori_pelanggaran)->id;
 			}
 
 			$penindakan = new Penindakan();

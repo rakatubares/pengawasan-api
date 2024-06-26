@@ -30,7 +30,7 @@ class PenindakanResource extends JsonResource
 				: null,
 			'waktu_selesai_penindakan' => $this->waktu_selesai_penindakan,
 			'lokasi_penindakan' => $this->lokasi_penindakan,
-			'kategori_penindakan' => new RefKategoriPelanggaranResource($this->kategori_penindakn),
+			'kategori_penindakan' => new RefKategoriPelanggaranResource($this->kategori_penindakan),
 			'uraian_penindakan' => $this->uraian_penindakan,
 			'alasan_penindakan' => $this->alasan_penindakan,
 			'jenis_pelanggaran' => $this->jenis_pelanggaran,

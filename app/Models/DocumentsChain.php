@@ -32,6 +32,8 @@ use App\Models\Penindakan\DokTegah;
 use App\Models\Penindakan\DokTolakSbp1;
 use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
+use App\Models\Penyidikan\DokLpp;
+use App\Models\Penyidikan\Penyidikan;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -52,6 +54,7 @@ class DocumentsChain extends Model
 		'sbp', 'sbpn', 'tolak1', 'tolak2', 'lpt',
 		'lptp', 'lptpn', 'lphp', 'lphpn', 'lp', 'lpn',
 		'pengaman', 'buka_pengaman',
+		'lpp',
 	];
 
 	public function status() {
@@ -182,5 +185,16 @@ class DocumentsChain extends Model
 
 	public function buka_pengaman() {
 		return $this->hasOne(DokBukaPengaman::class, 'chain_id');
+	}
+
+	/**
+	 * Penyidikan
+	 */
+	public function penyidikan() {
+		return $this->hasOne(Penyidikan::class, 'chain_id');
+	}
+
+	public function lpp() {
+		return $this->hasOne(DokLpp::class, 'chain_id');
 	}
 }

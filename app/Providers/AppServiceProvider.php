@@ -4,21 +4,12 @@ namespace App\Providers;
 
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
-// use App\Models\DetailBarangItem;
 use App\Models\DokLhp;
-use App\Models\DokLpf;
-use App\Models\DokLpp;
 use App\Models\DokLrp;
 use App\Models\DokSplit;
-use App\Observers\DokLhpObserver;
-use App\Observers\DokLpfObserver;
-use App\Observers\DokLppObserver;
-use App\Observers\DokLrpObserver;
-use App\Observers\DokSplitObserver;
 use App\Models\DetailDokumen;
 use App\Models\DokBast;
 use App\Models\DokTitip;
-// use App\Models\RefEntitas;
 use App\Models\RefUserCache;
 use App\Observers\DokTitipObserver;
 use App\Models\Entitas\EntitasBadanHukum;
@@ -60,6 +51,9 @@ use App\Models\Penindakan\DokTolakSbp1;
 use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
 use App\Models\Penindakan\PenindakanBarang;
+use App\Models\Penyidikan\DokLpp;
+use App\Models\Penyidikan\Penyidikan;
+use App\Models\Penyidikan\PenyidikanBhp;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
 use App\Observers\Intelijen\DokNhiNEximObserver;
@@ -81,6 +75,7 @@ use App\Observers\Penindakan\DokSegelObserver;
 use App\Observers\Penindakan\DokTegahObserver;
 use App\Observers\Penindakan\DokTolakSbp1Observer;
 use App\Observers\Penindakan\DokTolakSbp2Observer;
+use App\Observers\Penyidikan\DokLppObserver;
 use App\Services\ResourceRegistrar;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -128,7 +123,6 @@ class AppServiceProvider extends ServiceProvider
 			'entitas-badan-hukum' => EntitasBadanHukum::class,
 			'entitas-orang' => EntitasOrang::class,
 			'pegawai' => RefUserCache::class,
-			// 'item_barang' => DetailBarangItem::class,
 
 			// Intelijen
 			'lppi' => DokLppi::class,
@@ -174,9 +168,11 @@ class AppServiceProvider extends ServiceProvider
 			'buka_pengaman' => DokBukaPengaman::class,
 
 			// Penyidikan
+			'penyidikan' => Penyidikan::class,
+			'penyidikan-bhp' => PenyidikanBhp::class,
+			'lpp' => DokLpp::class,
 			'lhp' => DokLhp::class,
 			'lrp' => DokLrp::class,
-			// 'orang' => RefEntitas::class,
 			'split' => DokSplit::class,
 		]);
 
@@ -223,9 +219,6 @@ class AppServiceProvider extends ServiceProvider
 		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 
 		// Penyidikan
-		DokLpf::observe(DokLpfObserver::class);
 		DokLpp::observe(DokLppObserver::class);
-		DokLrp::observe(DokLrpObserver::class);
-		DokSplit::observe(DokSplitObserver::class);
     }
 }

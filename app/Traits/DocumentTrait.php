@@ -47,6 +47,8 @@ use App\Http\Resources\Penindakan\DokTolakSbp1Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp1TableResource;
 use App\Http\Resources\Penindakan\DokTolakSbp2Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp2TableResource;
+use App\Http\Resources\Penyidikan\DokLppResource;
+use App\Http\Resources\Penyidikan\DokLppTableResource;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
@@ -107,6 +109,9 @@ trait DocumentTrait
 
 			'pengaman' => DokPengamanResource::class,
 			'buka_pengaman' => DokBukaPengamanResource::class,
+
+			// Penyidikan
+			'lpp' => DokLppResource::class,
 		];
 
 		try {
@@ -153,6 +158,9 @@ trait DocumentTrait
 
 			'pengaman' => DokPengamanTableResource::class,
 			'buka_pengaman' => DokBukaPengamanTableResource::class,
+
+			// Penyidikan
+			'lpp' => DokLppTableResource::class,
 		];
 
 		try {

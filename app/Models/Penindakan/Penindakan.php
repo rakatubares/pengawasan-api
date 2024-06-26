@@ -57,7 +57,7 @@ class Penindakan extends Model
 	/**
 	 * Kategori pelanggaran
 	 */
-	public function kategori_penindakn()
+	public function kategori_penindakan()
 	{
 		return $this->belongsTo(RefKategoriPelanggaran::class, 'kategori_penindakan_id');
 	}
