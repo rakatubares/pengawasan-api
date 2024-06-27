@@ -60,4 +60,16 @@ class SprintController extends Controller
 
 		return $insert_result;
 	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$sprint = new SprintResource(Sprint::find($id));
+		return $sprint;
+	}
 }
