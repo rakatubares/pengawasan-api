@@ -45,6 +45,7 @@ use App\Http\Controllers\Penindakan\DokTolakSbp1Controller;
 use App\Http\Controllers\Penindakan\DokTolakSbp2Controller;
 use App\Http\Controllers\Penindakan\PenindakanController;
 use App\Http\Controllers\Penyidikan\BhpController;
+use App\Http\Controllers\Penyidikan\DokLpfController;
 use App\Http\Controllers\Penyidikan\DokLppController;
 use App\Http\Controllers\References\RefBandaraController;
 use App\Http\Controllers\References\RefJabatanController;
@@ -125,6 +126,7 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 
 		// Penyidikan
 		'lpp' => DokLppController::class,
+		'lpf' => DokLpfController::class,
 	]);	
 
 	Route::post('/{doc_type}/search', [DokController::class, 'search']);

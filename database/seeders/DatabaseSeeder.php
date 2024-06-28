@@ -23,6 +23,7 @@ use Database\Seeders\Penindakan\DokLptSeeder;
 use Database\Seeders\Penindakan\DokPengamanSeeder;
 use Database\Seeders\Penindakan\DokSbpNSeeder;
 use Database\Seeders\Penindakan\DokSbpSeeder;
+use Database\Seeders\Penyidikan\DokLpfSeeder;
 use Database\Seeders\Penyidikan\DokLppSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
@@ -102,6 +103,7 @@ class DatabaseSeeder extends Seeder
 
 			// Penyidikan
 			DokLppSeeder::class,
+			DokLpfSeeder::class,
 
 			// DokRiksaSeeder::class,
 			// DokRiksaBadanSeeder::class,

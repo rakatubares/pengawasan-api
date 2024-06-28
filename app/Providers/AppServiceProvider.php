@@ -51,6 +51,7 @@ use App\Models\Penindakan\DokTolakSbp1;
 use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
 use App\Models\Penindakan\PenindakanBarang;
+use App\Models\Penyidikan\DokLpf;
 use App\Models\Penyidikan\DokLpp;
 use App\Models\Penyidikan\Penyidikan;
 use App\Models\Penyidikan\PenyidikanBhp;
@@ -75,6 +76,7 @@ use App\Observers\Penindakan\DokSegelObserver;
 use App\Observers\Penindakan\DokTegahObserver;
 use App\Observers\Penindakan\DokTolakSbp1Observer;
 use App\Observers\Penindakan\DokTolakSbp2Observer;
+use App\Observers\Penyidikan\DokLpfObserver;
 use App\Observers\Penyidikan\DokLppObserver;
 use App\Services\ResourceRegistrar;
 use App\Services\SSO;
@@ -171,6 +173,7 @@ class AppServiceProvider extends ServiceProvider
 			'penyidikan' => Penyidikan::class,
 			'penyidikan-bhp' => PenyidikanBhp::class,
 			'lpp' => DokLpp::class,
+			'lpf' => DokLpf::class,
 			'lhp' => DokLhp::class,
 			'lrp' => DokLrp::class,
 			'split' => DokSplit::class,
@@ -220,5 +223,6 @@ class AppServiceProvider extends ServiceProvider
 
 		// Penyidikan
 		DokLpp::observe(DokLppObserver::class);
+		DokLpf::observe(DokLpfObserver::class);
     }
 }

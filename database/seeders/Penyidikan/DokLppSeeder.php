@@ -14,7 +14,7 @@ use Illuminate\Database\Seeder;
 
 class DokLppSeeder extends Seeder
 {
-	protected $kode_dokumen = 'lap';
+	protected $kode_dokumen = 'lpp';
 
 	/**
 	 * Run the database seeds.
@@ -127,7 +127,6 @@ class DokLppSeeder extends Seeder
 			$lpp->jenis_perkara_id = $faker->randomElement($list_kategori_pelanggaran)->id;
 			$lpp->catatan = $faker->sentence($nbWOrds = 20);
 			$lpp->kode_status = 'terbit';
-			$lpp->status_tindak_lanjut = true;
 			$lpp->created_by = $creator;
 			$lpp->updated_by = $creator;
 			$lpp->saveQuietly();

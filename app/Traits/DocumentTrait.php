@@ -47,6 +47,8 @@ use App\Http\Resources\Penindakan\DokTolakSbp1Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp1TableResource;
 use App\Http\Resources\Penindakan\DokTolakSbp2Resource;
 use App\Http\Resources\Penindakan\DokTolakSbp2TableResource;
+use App\Http\Resources\Penyidikan\DokLpfResource;
+use App\Http\Resources\Penyidikan\DokLpfTableResource;
 use App\Http\Resources\Penyidikan\DokLppResource;
 use App\Http\Resources\Penyidikan\DokLppTableResource;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -112,6 +114,7 @@ trait DocumentTrait
 
 			// Penyidikan
 			'lpp' => DokLppResource::class,
+			'lpf' => DokLpfResource::class,
 		];
 
 		try {
@@ -161,6 +164,7 @@ trait DocumentTrait
 
 			// Penyidikan
 			'lpp' => DokLppTableResource::class,
+			'lpf' => DokLpfTableResource::class,
 		];
 
 		try {

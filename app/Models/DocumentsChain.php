@@ -32,6 +32,7 @@ use App\Models\Penindakan\DokTegah;
 use App\Models\Penindakan\DokTolakSbp1;
 use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
+use App\Models\Penyidikan\DokLpf;
 use App\Models\Penyidikan\DokLpp;
 use App\Models\Penyidikan\Penyidikan;
 use App\Models\References\RefKodeDokumen;
@@ -54,7 +55,7 @@ class DocumentsChain extends Model
 		'sbp', 'sbpn', 'tolak1', 'tolak2', 'lpt',
 		'lptp', 'lptpn', 'lphp', 'lphpn', 'lp', 'lpn',
 		'pengaman', 'buka_pengaman',
-		'lpp',
+		'lpp', 'lpf',
 	];
 
 	public function status() {
@@ -196,5 +197,9 @@ class DocumentsChain extends Model
 
 	public function lpp() {
 		return $this->hasOne(DokLpp::class, 'chain_id');
+	}
+
+	public function lpf() {
+		return $this->hasOne(DokLpf::class, 'chain_id');
 	}
 }
