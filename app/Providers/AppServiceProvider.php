@@ -4,9 +4,6 @@ namespace App\Providers;
 
 use App\Models\DetailBangunan;
 use App\Models\DetailBarang;
-use App\Models\DokLhp;
-use App\Models\DokLrp;
-use App\Models\DokSplit;
 use App\Models\DetailDokumen;
 use App\Models\DokBast;
 use App\Models\DokTitip;
@@ -53,6 +50,7 @@ use App\Models\Penindakan\Penindakan;
 use App\Models\Penindakan\PenindakanBarang;
 use App\Models\Penyidikan\DokLpf;
 use App\Models\Penyidikan\DokLpp;
+use App\Models\Penyidikan\DokSplit;
 use App\Models\Penyidikan\Penyidikan;
 use App\Models\Penyidikan\PenyidikanBhp;
 use App\Observers\Intelijen\DokLkaiObserver;
@@ -78,6 +76,7 @@ use App\Observers\Penindakan\DokTolakSbp1Observer;
 use App\Observers\Penindakan\DokTolakSbp2Observer;
 use App\Observers\Penyidikan\DokLpfObserver;
 use App\Observers\Penyidikan\DokLppObserver;
+use App\Observers\Penyidikan\DokSplitObserver;
 use App\Services\ResourceRegistrar;
 use App\Services\SSO;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -174,8 +173,6 @@ class AppServiceProvider extends ServiceProvider
 			'penyidikan-bhp' => PenyidikanBhp::class,
 			'lpp' => DokLpp::class,
 			'lpf' => DokLpf::class,
-			'lhp' => DokLhp::class,
-			'lrp' => DokLrp::class,
 			'split' => DokSplit::class,
 		]);
 
@@ -224,5 +221,6 @@ class AppServiceProvider extends ServiceProvider
 		// Penyidikan
 		DokLpp::observe(DokLppObserver::class);
 		DokLpf::observe(DokLpfObserver::class);
+		DokSplit::observe(DokSplitObserver::class);
     }
 }

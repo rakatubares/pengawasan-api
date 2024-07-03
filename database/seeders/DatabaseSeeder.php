@@ -25,6 +25,7 @@ use Database\Seeders\Penindakan\DokSbpNSeeder;
 use Database\Seeders\Penindakan\DokSbpSeeder;
 use Database\Seeders\Penyidikan\DokLpfSeeder;
 use Database\Seeders\Penyidikan\DokLppSeeder;
+use Database\Seeders\Penyidikan\DokSplitSeeder;
 use Database\Seeders\References\RefBandaraSeeder;
 use Database\Seeders\References\RefJabatanSeeder;
 use Database\Seeders\References\RefKantorBCSeeder;
@@ -104,6 +105,7 @@ class DatabaseSeeder extends Seeder
 			// Penyidikan
 			DokLppSeeder::class,
 			DokLpfSeeder::class,
+			DokSplitSeeder::class,
 
 			// DokRiksaSeeder::class,
 			// DokRiksaBadanSeeder::class,

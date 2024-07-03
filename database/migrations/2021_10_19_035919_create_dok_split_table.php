@@ -20,15 +20,17 @@ class CreateDokSplitTable extends Migration
 			$table->integer('thn_dok')->nullable();
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
+			$table->integer('chain_id')->index();
 			$table->text('dugaan_pelanggaran')->nullable();
-			$table->string('kode_jabatan');
-			$table->boolean('plh')->nullable();
-			$table->integer('pejabat_id')->index();
-			$table->integer('kode_status')->index();
+			$table->string('kode_status')->index();
+			$table->boolean('status_tindak_lanjut')->default(false)->index();
 			$table->timestamps();
 			$table->softDeletes($column = 'deleted_at', $precision = 0);
-			$table->index(['agenda_dok', 'thn_dok', 'no_dok']);
+			$table->string('created_by')->nullable()->index();
+			$table->string('updated_by')->nullable();
+			$table->string('deleted_by')->nullable();
 			$table->index('created_at');
+			$table->index('updated_at');
 			$table->index('deleted_at');
 		});
 	}

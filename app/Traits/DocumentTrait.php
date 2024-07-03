@@ -51,6 +51,8 @@ use App\Http\Resources\Penyidikan\DokLpfResource;
 use App\Http\Resources\Penyidikan\DokLpfTableResource;
 use App\Http\Resources\Penyidikan\DokLppResource;
 use App\Http\Resources\Penyidikan\DokLppTableResource;
+use App\Http\Resources\Penyidikan\DokSplitResource;
+use App\Http\Resources\Penyidikan\DokSplitTableResource;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
@@ -115,6 +117,7 @@ trait DocumentTrait
 			// Penyidikan
 			'lpp' => DokLppResource::class,
 			'lpf' => DokLpfResource::class,
+			'split' => DokSplitResource::class,
 		];
 
 		try {
@@ -165,6 +168,7 @@ trait DocumentTrait
 			// Penyidikan
 			'lpp' => DokLppTableResource::class,
 			'lpf' => DokLpfTableResource::class,
+			'split' => DokSplitTableResource::class,
 		];
 
 		try {

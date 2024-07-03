@@ -35,8 +35,10 @@ trait PetugasTrait
 		}
 	}
 
-	protected function saveNonPejabat($posisi, $petugas) 
+	protected function saveNonPejabat($posisi, $petugas, $doc=null) 
 	{
+		if ($doc) { $this->setDocument($doc); }
+
 		$data = [
 			'posisi' => $posisi, 
 			'flag_pejabat' => false, 
@@ -45,8 +47,10 @@ trait PetugasTrait
 		$this->document->detail_petugas()->create($data);
 	}
 
-	protected function savePejabat($posisi, $petugas) 
+	protected function savePejabat($posisi, $petugas, $doc=null) 
 	{
+		if ($doc) { $this->setDocument($doc); }
+
 		$data = [
 			'posisi' => $posisi, 
 			'flag_pejabat' => true, 

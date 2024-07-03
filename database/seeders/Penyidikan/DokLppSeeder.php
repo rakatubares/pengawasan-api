@@ -145,7 +145,7 @@ class DokLppSeeder extends Seeder
 
 			// Atasan 1
 			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
-			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '2222', '147', '111']) : '74158';
+			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '2222', '147', '111']) : '156748';
 			$pejabat = [
 				'posisi' => 'atasan1', 
 				'flag_pejabat' => true, 
@@ -157,7 +157,7 @@ class DokLppSeeder extends Seeder
 
 			// Atasan 2
 			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
-			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '2222', '147', '111']) : '555';
+			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '2222', '147', '111', '156748']) : '555';
 			$pejabat = [
 				'posisi' => 'atasan2', 
 				'flag_pejabat' => true, 

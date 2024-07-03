@@ -34,6 +34,7 @@ use App\Models\Penindakan\DokTolakSbp2;
 use App\Models\Penindakan\Penindakan;
 use App\Models\Penyidikan\DokLpf;
 use App\Models\Penyidikan\DokLpp;
+use App\Models\Penyidikan\DokSplit;
 use App\Models\Penyidikan\Penyidikan;
 use App\Models\References\RefKodeDokumen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,7 +56,7 @@ class DocumentsChain extends Model
 		'sbp', 'sbpn', 'tolak1', 'tolak2', 'lpt',
 		'lptp', 'lptpn', 'lphp', 'lphpn', 'lp', 'lpn',
 		'pengaman', 'buka_pengaman',
-		'lpp', 'lpf',
+		'lpp', 'lpf', 'split',
 	];
 
 	public function status() {
@@ -201,5 +202,9 @@ class DocumentsChain extends Model
 
 	public function lpf() {
 		return $this->hasOne(DokLpf::class, 'chain_id');
+	}
+
+	public function split() {
+		return $this->hasOne(DokSplit::class, 'chain_id');
 	}
 }
