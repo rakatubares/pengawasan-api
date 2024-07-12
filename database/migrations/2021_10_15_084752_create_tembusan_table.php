@@ -19,7 +19,7 @@ class CreateTembusanTable extends Migration
 			$table->integer('tembusan_id')->index();
 			$table->integer('no_urut');
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
         });
     }

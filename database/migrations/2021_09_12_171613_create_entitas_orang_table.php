@@ -28,7 +28,7 @@ class CreateEntitasOrangTable extends Migration
 			$table->string('nomor_telepon')->nullable();
 			$table->string('email')->nullable();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
         });
     }

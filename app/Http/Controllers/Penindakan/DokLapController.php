@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class DokLapController extends DokController
 {
-	protected $doc_type = 'lap';
+	protected $docType = 'lap';
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ class DokLapController extends DokController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
@@ -55,7 +55,7 @@ class DokLapController extends DokController
 		) {
 			$request->jenis_sumber = null;
 			$request->nomor_sumber = null;
-			$request->tanggal_sumber = null;	
+			$request->tanggal_sumber = null;
 		}
 
 		$thn_dok = $request->tanggal_dokumen != null ? date('Y', strtotime($request->tanggal_dokumen)) : null;
@@ -64,7 +64,7 @@ class DokLapController extends DokController
 		$skema_penindakan_id = $request->skema_penindakan != null ? $request->skema_penindakan['id'] : null;
 		$keterangan_skema_penindakan = $request->skema_penindakan != null ? $request->keterangan_skema_penindakan : null;
 
-		$data_lap = [
+		return [
 			'thn_dok' => $thn_dok,
 			'tanggal_dokumen' => $tanggal_dokumen,
 			'jenis_sumber' => $request->jenis_sumber,
@@ -94,8 +94,6 @@ class DokLapController extends DokController
 			'keterangan_patroli' => $request->keterangan_patroli,
 			'kesimpulan' => $request->kesimpulan,
 		];
-
-		return $data_lap;
 	}
 
 	protected function storing(Request $request) {
@@ -139,8 +137,8 @@ class DokLapController extends DokController
 			) {
 				$new_source = $this->getDocument($request->jenis_sumber, $request->sumber_id);
 				if ($new_source != $existing_source) {
-					// Detach from previous chain and attach to new chain 
-					// when new source is available and different from previous one 
+					// Detach from previous chain and attach to new chain
+					// when new source is available and different from previous one
 					$this->detachFrom($existing_jenis_sumber, $existing_source->id);
 					$source = $this->attachTo($new_jenis_sumber, $request->sumber_id);
 					$data['chain_id'] = $source->chain_id;
@@ -148,7 +146,7 @@ class DokLapController extends DokController
 					$data['tanggal_sumber'] = $source->tanggal_dokumen;
 				}
 			} else {
-				// Detach from previous chain and create new chain 
+				// Detach from previous chain and create new chain
 				// when new source is not available
 				$this->detachFrom($existing_jenis_sumber, $existing_source->id);
 				$chain = $this->createChain();
@@ -159,7 +157,7 @@ class DokLapController extends DokController
 				($new_jenis_sumber != 'lainnya') &
 				($new_jenis_sumber != null)
 			) {
-				// Delete previous chain and attach to new chain 
+				// Delete previous chain and attach to new chain
 				// when new source is available
 				$existing_chain = $this->doc->chain;
 				$existing_chain->delete();

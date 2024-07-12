@@ -13,7 +13,7 @@ class DokLphpObserver extends DokObserver
 	 * @return void
 	 */
 	public function deleted($dokLphp) {
-		$kode_lptp = $dokLphp->kode_lptp;
-		$dokLphp->chain->$kode_lptp->unFollowedUp();
+		$kodeLptp = $dokLphp->kodeLptp;
+		$dokLphp->chain->$kodeLptp->unFollowedUp();
 	}
 }

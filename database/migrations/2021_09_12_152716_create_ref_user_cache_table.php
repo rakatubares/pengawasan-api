@@ -19,9 +19,10 @@ class CreateRefUserCacheTable extends Migration
 			$table->string('username')->index();
 			$table->string('name')->index();
 			$table->string('nip')->index();
-			$table->string('pangkat')->index();
+			$table->string('pangkat');
 			$table->string('penempatan')->index();
 			$table->string('pejabat')->index();
+			$table->string('jabatan')->nullable();
 			$table->string('status')->index();
             $table->timestamps();
 			$table->index('created_at');

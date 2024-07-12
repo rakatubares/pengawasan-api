@@ -17,7 +17,7 @@ class DokLppResource extends JsonResource
 	*/
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
@@ -55,6 +55,5 @@ class DokLppResource extends JsonResource
 			'kode_status' => $this->kode_status,
 			'created_by' => new RefUserResource($this->creator),
 		];
-		return $array;
 	}
 }

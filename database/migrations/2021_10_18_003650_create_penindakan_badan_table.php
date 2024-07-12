@@ -32,7 +32,7 @@ class CreatePenindakanBadanTable extends Migration
 			$table->text('uraian_pemeriksaan')->nullable();
 			$table->text('hasil_pemeriksaan')->nullable();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();

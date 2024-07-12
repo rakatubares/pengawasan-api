@@ -25,7 +25,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'I/c',
 				'penempatan' => 'bd.0503',
 				'pejabat' => 'T',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -37,7 +38,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'II/b',
 				'penempatan' => 'bd.0504',
 				'pejabat' => 'T',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -49,7 +51,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/e',
 				'penempatan' => 'bd.05',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -61,7 +64,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/a',
 				'penempatan' => 'bd.0503',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -73,7 +77,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/b',
 				'penempatan' => 'bd.0504',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -85,7 +90,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/c',
 				'penempatan' => 'bd.0501',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -97,7 +103,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/d',
 				'penempatan' => 'bd.0502',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
@@ -109,7 +116,8 @@ class RefUserCacheSeeder extends Seeder
 				'pangkat' => 'IV/c',
 				'penempatan' => 'bd.0505',
 				'pejabat' => 'Y',
-				'status' => 1,
+				'jabatan' => null,
+				'status' => 'enabled',
 				'created_at' => $now,
 				'updated_at' => $now
 			],

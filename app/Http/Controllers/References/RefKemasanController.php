@@ -17,8 +17,7 @@ class RefKemasanController extends Controller
 	 */
 	public function show($id)
 	{
-		$kemasan = new RefKemasanResource(RefKemasan::find($id));
-		return $kemasan;
+		return new RefKemasanResource(RefKemasan::find($id));
 	}
 
 	/**
@@ -33,7 +32,7 @@ class RefKemasanController extends Controller
 	
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -45,7 +44,6 @@ class RefKemasanController extends Controller
 		$middle_query = RefKemasan::where('kemasan', 'like', '%'.$s.'%');
 		$search_result = $start_query->union($middle_query)->take(5)->get();
 
-		$search_list = RefKemasanResource::collection($search_result);
-		return $search_list;
+		return RefKemasanResource::collection($search_result);
 	}
 }

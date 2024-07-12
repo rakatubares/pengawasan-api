@@ -8,8 +8,8 @@ use App\Models\References\RefKategoriPelanggaran;
 class DokLpp extends Dokumen
 {
 	protected $table = 'dok_lpp';
-	public $kode_dokumen = 'lpp';
-	public $tipe_dokumen = 'LPP';
+	public $kodeDokumen = 'lpp';
+	public $tipeDokumen = 'LPP';
 
 	protected $fillable = [
 		'no_dok',

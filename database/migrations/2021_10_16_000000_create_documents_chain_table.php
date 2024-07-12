@@ -17,7 +17,7 @@ class CreateDocumentsChainTable extends Migration
 			$table->id();
 			$table->string('latest_document')->nullable()->index();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

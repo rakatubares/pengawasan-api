@@ -14,7 +14,7 @@ class DokNhiBkcResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'tempat_penimbunan' => $this->tempat_penimbunan,
 			'penyalur' => $this->penyalur,
 			'tempat_penjualan' => $this->tempat_penjualan,
@@ -23,7 +23,5 @@ class DokNhiBkcResource extends JsonResource
 			'nomor_sarkut' => $this->nomor_sarkut,
 			'data_lain' => $this->data_lain,
 		];
-		
-		return $array;
 	}
 }

@@ -30,7 +30,7 @@ class CreateDokSegelTable extends Migration
 			$table->boolean('status_titip')->default(false)->index();
 			$table->boolean('status_buka')->default(false)->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable()->index();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();

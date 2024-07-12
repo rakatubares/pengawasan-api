@@ -19,7 +19,7 @@ class CreateRefNegaraTable extends Migration
 			$table->string('kode_3')->unique();
 			$table->string('nama_negara')->index();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

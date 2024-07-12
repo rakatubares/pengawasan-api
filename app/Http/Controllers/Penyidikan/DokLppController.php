@@ -9,21 +9,19 @@ use Illuminate\Http\Request;
 
 class DokLppController extends DokController
 {
-	protected $doc_type = 'lpp';
+	protected $docType = 'lpp';
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'asal_perkara' => $request->asal_perkara,
 			'jenis_penindakan' => $request->jenis_penindakan,
 			'jenis_perkara_id' => $request->jenis_perkara['id'],
 			'catatan' => $request->catatan,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 
@@ -37,13 +35,13 @@ class DokLppController extends DokController
 		return $data;
 	}
 
-	protected function stored(Request $request) 
+	protected function stored(Request $request)
 	{
 		$this->createPenyidikan($request);
 		parent::stored($request);
 	}
 
-	protected function updating(Request $request) 
+	protected function updating(Request $request)
 	{
 		$data = parent::updating($request);
 
@@ -79,7 +77,7 @@ class DokLppController extends DokController
 		return $data;
 	}
 
-	private function createPenyidikan(Request $request, $chain_id=null) 
+	private function createPenyidikan(Request $request, $chain_id=null)
 	{
 		$chain_id = $chain_id ? $chain_id : $this->doc->chain->id;
 
@@ -101,6 +99,12 @@ class DokLppController extends DokController
 		$lp = $this->getDocument($lp_type, $lp_id);
 		$penindakan = $lp->chain->penindakan;
 
+		// Create BHP
+		$this->createBhp($penindakan, $penyidikan);
+	}
+
+	private function createBhp($penindakan, $penyidikan)
+	{
 		// Create BHP
 		$barang = $penindakan->barang;
 		$sarkut = $penindakan->sarkut;

@@ -6,29 +6,27 @@ use Illuminate\Http\Request;
 
 class DokSegelController extends PenindakanController
 {
-	protected $doc_type = 'segel';
+	protected $docType = 'segel';
 
-	protected function validateData(Request $request) 
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'jenis_segel' => 'required',
 		]);
 	}
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'jenis_segel' => $request->jenis_segel,
 			'jumlah_segel' => $request->jumlah_segel,
 			'satuan_segel' => $request->satuan_segel,
 			'tempat_segel' => $request->tempat_segel,
 			'nomor_segel' => $request->nomor_segel,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 		$chain = $this->createChain();

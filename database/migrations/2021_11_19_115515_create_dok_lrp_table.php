@@ -40,7 +40,7 @@ class CreateDokLrpTable extends Migration
 			$table->integer('pejabat2_id')->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index(['agenda_dok', 'thn_dok', 'no_dok']);
 			$table->index('created_at');
 			$table->index('deleted_at');

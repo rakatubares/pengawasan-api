@@ -8,9 +8,9 @@ use App\Models\Sprint;
 class DokLpN extends Dokumen
 {
 	protected $table = 'dok_lpn';
-	public $kode_dokumen = 'lpn';
-	public $tipe_dokumen = 'LP-N';
-	public $kode_lphp = 'lphpn';
+	public $kodeDokumen = 'lpn';
+	public $tipeDokumen = 'LP-N';
+	public $kodeLphp = 'lphpn';
 
 	protected $fillable = [
 		'no_dok',

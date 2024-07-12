@@ -17,14 +17,14 @@ class RefStatusSeeder extends Seeder
 	{
 		$now = Carbon::now('utc')->toDateTimeString();
 		$data = [
-			[ 
+			[
 				'kode_status' => 'draft',
 				'uraian_status' => 'Buat draft dokumen',
 				'color' => 'warning',
 				'created_at' => $now,
 				'updated_at' => $now
 			],
-			[ 
+			[
 				'kode_status' => 'edit-draft',
 				'uraian_status' => 'Edit draft',
 				'color' => 'warning',
@@ -38,7 +38,7 @@ class RefStatusSeeder extends Seeder
 				'created_at' => $now,
 				'updated_at' => $now
 			],
-			[ 
+			[
 				'kode_status' => 'terbit',
 				'uraian_status' => 'Penerbitan',
 				'color' => 'success',

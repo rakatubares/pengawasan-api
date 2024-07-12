@@ -17,7 +17,7 @@ class CreateRefLokasiTable extends Migration
 			$table->id();
 			$table->string('lokasi')->unique();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

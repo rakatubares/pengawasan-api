@@ -61,7 +61,7 @@ class DokLkaiResource extends JsonResource
 		$array['thn_dok'] = $this->thn_dok;
 		$array['no_dok_lengkap'] = $this->no_dok_lengkap;
 		$array['tanggal_dokumen'] = $this->tanggal_dokumen
-			? $this->tanggal_dokumen->format('d-m-Y') 
+			? $this->tanggal_dokumen->format('d-m-Y')
 			: null;
 		$array['informasi'] = $this->informasi;
 		$array['prosedur'] = $this->prosedur;

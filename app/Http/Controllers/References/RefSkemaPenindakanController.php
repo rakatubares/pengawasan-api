@@ -16,7 +16,6 @@ class RefSkemaPenindakanController extends Controller
 	public function index()
 	{
 		$skema = RefSkemaPenindakan::orderBy('id')->get();
-		$list_skema = RefSkemaPenindakanResource::collection($skema);
-		return $list_skema;
+		return RefSkemaPenindakanResource::collection($skema);
 	}
 }

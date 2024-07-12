@@ -11,7 +11,7 @@ class RefKantorBCController extends Controller
 {
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -24,8 +24,7 @@ class RefKantorBCController extends Controller
 			->orWhere('nama_kantor_panjang', 'like', '%'.$s.'%')
 			->take(5)->get();
 
-		$search_list = RefKantorBCResource::collection($search_result);
-		return $search_list;
+		return RefKantorBCResource::collection($search_result);
 	}
 
 	/**
@@ -36,7 +35,6 @@ class RefKantorBCController extends Controller
 	 */
 	public function getDataByCode($kode_kantor)
 	{
-		$kantor = new RefKantorBCResource(RefKantorBC::where('kode_kantor', $kode_kantor)->first());
-		return $kantor;
+		return new RefKantorBCResource(RefKantorBC::where('kode_kantor', $kode_kantor)->first());
 	}
 }

@@ -19,61 +19,61 @@ class RefKategoriPelanggaranSeeder extends Seeder
 		$data = [
 			[
 				'kategori' => 'Impor Umum',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Impor Fasilitas',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Impor BKC',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Cukai HT',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Cukai EA/MMEA',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Ekspor',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Barang Larangan Pembatasan',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Barang Tertentu',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Barang Penumpang',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'kategori' => 'Barang Kiriman/Pos',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],

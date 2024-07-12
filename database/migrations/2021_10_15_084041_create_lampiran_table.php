@@ -21,7 +21,7 @@ class CreateLampiranTable extends Migration
 			$table->string('filename')->index();
 			$table->string('description')->nullable();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

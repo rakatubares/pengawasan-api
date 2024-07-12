@@ -16,7 +16,7 @@ class DokNhiNOrangResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'entitas' => new EntitasOrangResource($this->entitas),
 			'nomor_sarkut' => $this->nomor_sarkut,
 			'pelabuhan_asal' => new RefBandaraResource($this->pelabuhan_asal),
@@ -31,7 +31,5 @@ class DokNhiNOrangResource extends JsonResource
 			'waktu_datang' => $this->waktu_datang,
 			'data_lain' => $this->data_lain,
 		];
-
-		return $array;
 	}
 }

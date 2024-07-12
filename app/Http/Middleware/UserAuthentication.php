@@ -42,6 +42,7 @@ class UserAuthentication
 						'pangkat' => $userInfo['pangkat'],
 						'penempatan' => $userInfo['kode'],
 						'pejabat' => $userInfo['pejabat'],
+						'posisi' => $userInfo['posisi'],
 						'status' => $userInfo['status'],
 					]
 				);

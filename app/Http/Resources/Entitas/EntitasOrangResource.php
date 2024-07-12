@@ -15,7 +15,7 @@ class EntitasOrangResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'nama' => $this->nama,
 			'alias' => $this->alias,
@@ -31,8 +31,6 @@ class EntitasOrangResource extends JsonResource
 			'email' => $this->email,
 			'identitas' => EntitasIdentitasResource::collection($this->identitas),
 		];
-
-		return $array;
 	}
 
 	private function chooseGender()

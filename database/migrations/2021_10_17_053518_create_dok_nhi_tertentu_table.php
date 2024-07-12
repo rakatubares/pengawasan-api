@@ -4,13 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDokNhiEximTable extends Migration
+class CreateDokNhiTertentuTable extends Migration
 {
-	public function __construct()
-	{
-		$this->table_name = 'dok_nhi_exim';
-	}
-
 	/**
 	 * Run the migrations.
 	 *
@@ -18,9 +13,8 @@ class CreateDokNhiEximTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create($this->table_name, function (Blueprint $table) {
+		Schema::create('dok_nhi_tertentu', function (Blueprint $table) {
 			$table->id();
-			$table->string('tipe')->nullable();
 			$table->string('jenis_dok')->nullable();
 			$table->string('nomor_dok')->nullable();
 			$table->date('tanggal_dok')->nullable();
@@ -33,7 +27,7 @@ class CreateDokNhiEximTable extends Migration
 			$table->integer('entitas_id')->nullable();
 			$table->text('data_lain')->nullable();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();
@@ -49,6 +43,6 @@ class CreateDokNhiEximTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists($this->table_name);
+		Schema::dropIfExists('dok_nhi_tertentu');
 	}
 }

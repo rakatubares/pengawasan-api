@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokTolakSbp1 extends Dokumen
 {
 	protected $table = 'dok_tolak_sbp1';
-	public $kode_dokumen = 'tolak1';
-	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Tolak 1/KPU.305/';
+	public $kodeDokumen = 'tolak1';
+	public $tipeDokumen = 'BA';
+	public $agendaDokumen = '/Tolak 1/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',
@@ -29,12 +29,12 @@ class DokTolakSbp1 extends Dokumen
 		'tanggal_dokumen' => 'date'
 	];
 
-	public function tolakable() 
+	public function tolakable()
 	{
 		return $this->morphTo(__FUNCTION__, 'parent_type', 'parent_id');
 	}
 
-	public function tolak2() 
+	public function tolak2()
 	{
 		return $this->hasOne(DokTolakSbp2::class, 'tolak1_id');
 	}

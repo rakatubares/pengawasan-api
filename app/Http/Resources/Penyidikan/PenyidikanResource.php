@@ -15,7 +15,7 @@ class PenyidikanResource extends JsonResource
      */
     public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'jenis_pelanggaran' => $this->jenis_pelanggaran,
 			'pasal' => $this->pasal,
@@ -29,6 +29,5 @@ class PenyidikanResource extends JsonResource
 			'tertangkap_tangan' => $this->tertangkap_tangan,
 			'bhp' => new PenyidikanBhpResource($this->bhp),
 		];
-		return $array;
 	}
 }

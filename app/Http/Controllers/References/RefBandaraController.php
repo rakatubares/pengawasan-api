@@ -17,13 +17,12 @@ class RefBandaraController extends Controller
 	 */
 	public function show($code)
 	{
-		$port = new RefBandaraResource(RefBandara::where('iata_code', $code)->first());
-		return $port;
+		return new RefBandaraResource(RefBandara::where('iata_code', $code)->first());
 	}
 
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -40,7 +39,6 @@ class RefBandaraController extends Controller
 
 		$search_result = $start_query->union($middle_query)->take(5)->get();
 
-		$search_list = RefBandaraResource::collection($search_result);
-		return $search_list;
+		return RefBandaraResource::collection($search_result);
 	}
 }

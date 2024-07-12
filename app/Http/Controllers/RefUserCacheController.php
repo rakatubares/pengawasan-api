@@ -14,7 +14,7 @@ class RefUserCacheController extends Controller
 	
 	/**
 	 * Initiate SSO
-	 * 
+	 *
 	 * @param SSO $sso
 	 */
 	public function __construct(SSO $sso)
@@ -28,15 +28,13 @@ class RefUserCacheController extends Controller
 	 * @param  \Illuminate\Http\Request $r
 	 * @return \Illuminate\Http\Response
 	 */
-	function search(Request $request) {
-		// return $request;
+	public function search(Request $request) {
 		$token = $request->bearerToken();
         $this->sso->setToken($token);
 
 		$query = $request['query'];
 
-		$data = $this->sso->getUserByNameNip($query);
-		return $data;
+		return $this->sso->getUserByNameNip($query);
 	}
 
 	/**
@@ -52,8 +50,7 @@ class RefUserCacheController extends Controller
 
 		$nip = $request->nip;
 
-		$data = $this->sso->getUserByNip($nip, false);
-		return $data;
+		return $this->sso->getUserByNip($nip, false);
 	}
 
 	/**
@@ -64,17 +61,12 @@ class RefUserCacheController extends Controller
 	 */
 	public function role(Request $request)
 	{
-		// $roles = [
-		// 	'penindakan' => 'p2vue.penindakan'
-		// ];
-
 		$token = $request->bearerToken();
         $this->sso->setToken($token);
 
 		$roles = $request->roles;
 
-		$data = $this->sso->getUserByRole($roles, false);
-		return $data;
+		return $this->sso->getUserByRole($roles, false);
 	}
 
 	/**
@@ -90,8 +82,7 @@ class RefUserCacheController extends Controller
 
 		$positions = $request->positions;
 
-		$data = $this->sso->getUserByPosition($positions, true);
-		return $data;
+		return $this->sso->getUserByPosition($positions, true);
 	}
 
 	/**
@@ -103,8 +94,7 @@ class RefUserCacheController extends Controller
 	public function listJabatan(Request $request)
 	{
 		$results = RefJabatan::whereIn('kode', $request->positions)->get();
-		$jabatan = JabatanResource::collection($results);
-		return $jabatan;
+		return JabatanResource::collection($results);
 	}
 
 	/**
@@ -122,7 +112,7 @@ class RefUserCacheController extends Controller
 			'nip' => 'required',
 		]);
 
-		$upsert_result = RefUserCache::updateOrCreate(
+		return RefUserCache::updateOrCreate(
 			['user_id' => $request->user_id],
 			[
 				'user_id' => $request->user_id,
@@ -132,11 +122,10 @@ class RefUserCacheController extends Controller
 				'pangkat' => $request->pangkat,
 				'penempatan' => $request->penempatan,
 				'pejabat' => $request->pejabat,
+				'jabatan' => $request->jabatan,
 				'status' => $request->status,
 			]
 		);
-
-		return $upsert_result;
 	}
 
 	/**
@@ -150,8 +139,7 @@ class RefUserCacheController extends Controller
 		$token = $request->bearerToken();
         $this->sso->setToken($token);
 
-		$data = $this->sso->getUserById($id);
-		return $data;
+		return $this->sso->getUserById($id);
 	}
 
 	/**

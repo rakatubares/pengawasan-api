@@ -7,8 +7,8 @@ use App\Models\Dokumen;
 class DokSplit extends Dokumen
 {
 	protected $table = 'dok_split';
-	public $kode_dokumen = 'split';
-	public $tipe_dokumen = 'SPLIT';
+	public $kodeDokumen = 'split';
+	public $tipeDokumen = 'SPLIT';
 
 	protected $fillable = [
 		'no_dok',

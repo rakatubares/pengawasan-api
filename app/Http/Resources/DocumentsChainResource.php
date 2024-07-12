@@ -16,11 +16,11 @@ class DocumentsChainResource extends JsonResource
 	{
 		$data = [];
 
-		foreach ($this->doc_types as $doc_type) {
-			$doc = $this->$doc_type;
+		foreach ($this->docTypes as $docType) {
+			$doc = $this->$docType;
 			if ($doc) {
 				$data[] = [
-					'doc_type' => $doc_type,
+					'doc_type' => $docType,
 					'doc_id' => $doc->id,
 				];
 			}

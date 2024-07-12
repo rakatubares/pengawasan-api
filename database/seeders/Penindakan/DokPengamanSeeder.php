@@ -3,22 +3,15 @@
 namespace Database\Seeders\Penindakan;
 
 use App\Models\DocumentsChain;
-use App\Models\Penindakan\DokPengaman;
 use App\Models\Penindakan\Penindakan;
-use App\Models\Penomoran;
 use App\Models\References\RefLokasi;
-use Faker\Factory as Faker;
+use Database\Seeders\DokSeeder;
 
-use Illuminate\Database\Seeder;
-
-class DokPengamanSeeder extends Seeder
+class DokPengamanSeeder extends DokSeeder
 {
 	use ObjekPenindakanSeederTrait;
 
-	public function __construct($kode_dokumen='pengaman')
-	{
-		$this->kode_dokumen = $kode_dokumen;
-	}
+	protected $docCode = 'pengaman';
 
     /**
      * Run the database seeds.
@@ -27,100 +20,79 @@ class DokPengamanSeeder extends Seeder
      */
     public function run()
     {
-		$faker = Faker::create();
-
-		// Current year
-		$year = date("Y");
-
 		// References
-		$lokasi = RefLokasi::select('lokasi')->get();
+		$this->lokasi = RefLokasi::select('lokasi')->get();
 
-        for ($i=1; $i < 21; $i++) { 
-			$chain = DocumentsChain::create();
+        for ($i=1; $i < 21; $i++) {
+			// New Number
+			$this->currentNumber = $this->getNewNumber();
 
-			/**
-			 * Penindakan
-			 */
+			// Create chain
+			$this->chain = DocumentsChain::create();
 
 			// Create penindakan
-			$penindakan = new Penindakan();
-			$penindakan->sprint_id = $faker->numberBetween(1,10);
-			$penindakan->chain_id = $chain->id;
-			$penindakan->tanggal_selesai_penindakan = $faker->dateTimeThisYear()->format('Y-m-d');
-			$penindakan->lokasi_penindakan = $faker->randomElement($lokasi)->lokasi;
-			$penindakan->saksi_id = $faker->numberBetween(1,100);
-			$penindakan->save();
-
-			// Petugas
-			$petugas1 = [
-				'posisi' => 'petugas1', 
-				'flag_pejabat' => false, 
-				'nip' => '123456',
-			];
-			$penindakan->detail_petugas()->create($petugas1);
-
-			$with_petugas2 = $faker->boolean();
-			if ($with_petugas2) {
-				$petugas2 = [
-					'posisi' => 'petugas2', 
-					'flag_pejabat' => false, 
-					'nip' => '665544',
-				];
-				$penindakan->detail_petugas()->create($petugas2);
-			}
-
-			// Sarkut
-			$with_sarkut = $faker->boolean();
-			if ($with_sarkut) {
-				$this->createSarkut($penindakan);
-			}
-
-			// Barang
-			$with_barang = $faker->boolean();
-			if ($with_barang) {
-				$this->createBarang($penindakan);
-			}
-
-			/**
-			 * BA Pengaman
-			 */
+			$this->createPenindakan();
 
 			// Create BA Pengaman
-			$creator = $faker->randomElement(['123456', '665544']);
+			$creator = $this->choosePelaksana();
 
-			$max_pengaman = DokPengaman::max('no_dok');
-			$no_current = $max_pengaman + 1;
-
-			$pengaman = new DokPengaman();
-			$pengaman->no_dok = $no_current;
-			$pengaman->agenda_dok = $pengaman->agenda_dokumen;
-			$pengaman->thn_dok = $year;
-			$pengaman->no_dok_lengkap = "{$pengaman->tipe_dokumen}-{$no_current}{$pengaman->agenda_dokumen}{$year}";
-			$pengaman->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
-			$pengaman->chain_id = $chain->id;
-			$pengaman->alasan_pengamanan =  $faker->sentence($nbWOrds = 20);
-			$pengaman->keterangan =  $faker->sentence($nbWOrds = 20);
-			$pengaman->jenis_pengaman =  $faker->randomElement(['Kertas', 'Timah', 'Gembok']);
-			$pengaman->jumlah_pengaman =  $faker->numberBetween(1,5);
-			$pengaman->satuan_pengaman =  $faker->randomElement(['lembar', 'buah']);
-			$pengaman->nomor_pengaman =  "{$pengaman->tipe_dokumen}-{$no_current}{$pengaman->agenda_dokumen}{$year}";
-			$pengaman->tempat_pengaman =  $faker->word();
+			$pengaman = new $this->model;
+			$pengaman->no_dok = $this->currentNumber;
+			$pengaman->agenda_dok = $this->agendaDokumen;
+			$pengaman->thn_dok = $this->year;
+			$pengaman->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$pengaman->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$pengaman->chain_id = $this->chain->id;
+			$pengaman->alasan_pengamanan =  $this->faker->sentence(20);
+			$pengaman->keterangan =  $this->faker->sentence(20);
+			$pengaman->jenis_pengaman =  $this->faker->randomElement(['Kertas', 'Timah', 'Gembok']);
+			$pengaman->jumlah_pengaman =  $this->faker->numberBetween(1,5);
+			$pengaman->satuan_pengaman =  $this->faker->randomElement(['lembar', 'buah']);
+			$pengaman->nomor_pengaman = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$pengaman->tempat_pengaman =  $this->faker->word();
 			$pengaman->kode_status = 'terbit';
 			$pengaman->created_by = $creator;
 			$pengaman->updated_by = $creator;
 			$pengaman->saveQuietly();
 
-			/**
-			 * Documents chain
-			 */
-			$chain->update(['latest_document' => $pengaman->kode_dokumen]);
+			// Documents chain
+			$this->chain->update(['latest_document' => $pengaman->kodeDokumen]);
 		}
 
-		Penomoran::create([
-			'tipe_dokumen' => $pengaman->tipe_dokumen,
-			'agenda' => $pengaman->agenda_dokumen,
-			'tahun' => $year,
-			'nomor_terakhir' => $no_current,
-		]);
+		$this->createPenomoran();
     }
+
+	protected function createPenindakan()
+	{
+		// Create penindakan
+		$penindakan = new Penindakan();
+		$penindakan->sprint_id = $this->faker->numberBetween(1,10);
+		$penindakan->chain_id = $this->chain->id;
+		$penindakan->tanggal_selesai_penindakan = $this->faker->dateTimeThisYear()->format('Y-m-d');
+		$penindakan->lokasi_penindakan = $this->faker->randomElement($this->lokasi)->lokasi;
+		$penindakan->saksi_id = $this->faker->numberBetween(1,100);
+		$penindakan->save();
+
+		// Petugas
+		$availableNip = $this->nipPelaksana;
+		$nip = $this->createPetugas($penindakan, 'petugas1', $availableNip);
+
+		$withPetugas2 = $this->faker->boolean();
+		if ($withPetugas2) {
+			$availableNip = array_diff($availableNip, [$nip]);
+			$this->createPetugas($penindakan, 'petugas2', $availableNip);
+		}
+
+		// Sarkut
+		$withSarkut = $this->faker->boolean();
+		if ($withSarkut) {
+			$this->createSarkut($penindakan);
+		}
+
+		// Barang
+		$withBarang = $this->faker->boolean();
+		if ($withBarang) {
+			$this->createBarang($penindakan);
+		}
+	}
 }

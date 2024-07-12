@@ -16,14 +16,14 @@ class PenyidikanBhpResource extends JsonResource
      */
     public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'jumlah_kemasan' => $this->jumlah_kemasan,
 			'kemasan' => new RefKemasanResource($this->kemasan),
 			'nomor_kemasan' => $this->nomor_kemasan,
 			'jenis_dokumen' => $this->jenis_dokumen,
 			'nomor_dokumen' => $this->nomor_dokumen,
-			'tanggal_dokumen' => $this->tanggal_dokumen 
+			'tanggal_dokumen' => $this->tanggal_dokumen
 				? $this->tanggal_dokumen->format('d-m-Y')
 				: null,
 			'nama_sarkut' => $this->nama_sarkut,
@@ -34,7 +34,5 @@ class PenyidikanBhpResource extends JsonResource
 			'ukuran_kontainer' => $this->ukuran_kontainer,
 			'item' => BarangResource::collection($this->barang),
 		];
-
-		return $array;
 	}
 }

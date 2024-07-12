@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokPengaman extends Dokumen
 {
 	protected $table = 'dok_pengaman';
-	public $kode_dokumen = 'pengaman';
-	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Tanda Pengaman/KPU.305/';
+	public $kodeDokumen = 'pengaman';
+	public $tipeDokumen = 'BA';
+	public $agendaDokumen = '/Tanda Pengaman/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',

@@ -2,23 +2,24 @@
 
 namespace Database\Seeders\Intelijen;
 
-use App\Models\Entitas\EntitasBadanHukum;
-use App\Models\Entitas\EntitasOrang;
-use App\Models\Intelijen\DokLkai;
-use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiBkc;
 use App\Models\Intelijen\DokNhiExim;
 use App\Models\Intelijen\DokNhiTertentu;
-use App\Models\Penomoran;
 use App\Models\References\RefLokasi;
-use App\Models\References\RefTembusan;
 use App\Traits\BarangTrait;
-use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
+use Database\Seeders\DokSeeder;
 
-class DokNhiSeeder extends Seeder
+class DokNhiSeeder extends DokSeeder
 {
 	use BarangTrait;
+
+	protected $docCode = 'nhi';
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->kodeLkai = $this->doc->kodeLkai;
+	}
 
 	/**
 	 * Run the database seeds.
@@ -27,155 +28,124 @@ class DokNhiSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$faker = Faker::create();
-		
 		// Get LKAI ids
-		$max_lkai_id = DokLkai::max('id');
-		$available_lkai_id = range(1, $max_lkai_id);
+		$this->available_lkai_id = $this->getAvailableDocIds($this->kodeLkai);
 
 		// Get locations reference
 		$lokasi = RefLokasi::select('lokasi')->get();
 
-		// Current year
-		$year = date("Y");
+		for ($d=1; $d < 21; $d++) {
+			// New Number
+			$this->currentNumber = $this->getNewNumber();
 
-		for ($d=1; $d < 21; $d++) { 
-			$max_nhi = DokNhi::max('no_dok');
-			$crn_nhi = $max_nhi + 1;
-
-			// LKAI
-			$lkai_id = $faker->randomElement($available_lkai_id);
-			$key = array_search($lkai_id, $available_lkai_id);
-			unset($available_lkai_id[$key]);
-			$lkai = DokLkai::find($lkai_id);
-			$lkai->update(['status_tindak_lanjut' => true]);
-			$chain = $lkai->chain;
+			// Chain from LKAI
+			$chain = $this->chooseLkai();
 
 			// Create NHI header data
-			$creator = $faker->randomElement(['123456', '665544']);
+			$creator = $this->choosePelaksana();
 
-			$nhi = new DokNhi();
-			$nhi->no_dok = $crn_nhi;
-			$nhi->agenda_dok = $nhi->agenda_dokumen;
-			$nhi->thn_dok = date("Y");
-			$nhi->no_dok_lengkap = "{$nhi->tipe_dokumen}-{$crn_nhi}{$nhi->agenda_dokumen}{$year}";
-			$nhi->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
+			$nhi = new $this->model;
+			$nhi->no_dok = $this->currentNumber;
+			$nhi->agenda_dok = $this->agendaDokumen;
+			$nhi->thn_dok = $this->year;
+			$nhi->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$nhi->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
 			$nhi->chain_id = $chain->id;
-			$nhi->sifat = $faker->randomElement(['segera', 'sangat segera']);
-			$nhi->klasifikasi = $faker->randomElement(['rahasia', 'sangat rahasia']);
-			$nhi->tujuan = $faker->randomElement(['Kepala Seksi Patroli dan Operasi I', 'Kepala Seksi Patroli dan Operasi II']);
-			$nhi->tempat_indikasi = $faker->randomElement($lokasi)->lokasi;
-			$nhi->tanggal_indikasi = $faker->dateTimeThisYear()->format('Y-m-d');
-			$nhi->waktu_indikasi = $faker->time();
+			$nhi->sifat = $this->faker->randomElement(['segera', 'sangat segera']);
+			$nhi->klasifikasi = $this->faker->randomElement(['rahasia', 'sangat rahasia']);
+			$nhi->tujuan = $this->faker->randomElement(['Kepala Seksi Patroli dan Operasi I', 'Kepala Seksi Patroli dan Operasi II']);
+			$nhi->tempat_indikasi = $this->faker->randomElement($lokasi)->lokasi;
+			$nhi->tanggal_indikasi = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$nhi->waktu_indikasi = $this->faker->time();
 			$nhi->zona_waktu = 'WIB';
 			$nhi->kode_kantor = '050100';
-			$nhi->indikasi = $faker->text();
+			$nhi->indikasi = $this->faker->text();
 			$nhi->kode_status = 'terbit';
 			$nhi->created_by = $creator;
 			$nhi->updated_by = $creator;
 			$nhi->saveQuietly();
 
 			// Create kegiatan data
-			$kegiatan = $faker->randomElement(['exim', 'bkc', 'tertentu']);
+			$kegiatan = $this->faker->randomElement(['exim', 'bkc', 'tertentu']);
 			if ($kegiatan == 'exim') {
-				$detail_nhi = DokNhiExim::create([
-					'tipe' => $faker->randomElement(['Impor', 'Ekspor', 'PJT', 'Penumpang']),
-					'jenis_dok' => $faker->randomElement(['PIB', 'PEB', 'AWB']),
-					'nomor_dok' => $faker->numberBetween(1, 999999),
-					'tanggal_dok' => $faker->date(),
-					'nama_sarkut' => $faker->company(),
-					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'nomor_awb' => $faker->regexify('[A-Z]{3}[0-9]{10}'),
-					'tanggal_awb' => $faker->date(),
-					'merek_koli' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'data_lain' => $faker->text(),
-				]);
-
-				$tipe_entitas = $faker->randomElement(['orang', 'badan-hukum']);
-				if ($tipe_entitas=='orang') {
-					$entitas = EntitasOrang::find($faker->numberBetween(1,100));
-				} else {
-					$entitas = EntitasBadanHukum::find($faker->numberBetween(1,100));
-				}
-				$detail_nhi->entitas()->associate($entitas)->save();
-			} else if ($kegiatan == 'bkc') {
-				$detail_nhi = DokNhiBkc::create([
-					'tempat_penimbunan' => $faker->address(),
-					'penyalur' => $faker->company(),
-					'tempat_penjualan' => $faker->address(),
-					'nppbkc' => $faker->regexify('[0-9]{15}'),
-					'nama_sarkut' => $faker->company(),
-					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'data_lain' => $faker->text(),
-				]);
-			} else if ($kegiatan == 'tertentu') {
-				$detail_nhi = DokNhiTertentu::create([
-					'jenis_dok' => $faker->randomElement(['PIB', 'PEB']),
-					'nomor_dok' => $faker->numberBetween(1, 999999),
-					'tanggal_dok' => $faker->date(),
-					'nama_sarkut' => $faker->company(),
-					'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'nomor_awb' => $faker->regexify('[A-Z]{3}[0-9]{10}'),
-					'tanggal_awb' => $faker->date(),
-					'merek_koli' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
-					'data_lain' => $faker->text(),
-				]);
-
-				$tipe_entitas = $faker->randomElement(['orang', 'badan-hukum']);
-				if ($tipe_entitas=='orang') {
-					$entitas = EntitasOrang::find($faker->numberBetween(1,100));
-				} else {
-					$entitas = EntitasBadanHukum::find($faker->numberBetween(1,100));
-				}
-				$detail_nhi->entitas()->associate($entitas)->save();
+				$detail_nhi = $this->createExim();
+			} elseif ($kegiatan == 'bkc') {
+				$detail_nhi = $this->createBkc();
+			} elseif ($kegiatan == 'tertentu') {
+				$detail_nhi = $this->createTertentu();
 			}
-
 			$nhi->detail()->associate($detail_nhi)->save();
 			
-
-			/**
-			 * Petugas
-			 */
-			// Pejabat
-			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
-			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['147', '258', '111', '2222']) : '555';
-			$pejabat = ['posisi' => 'penerbit', 'flag_pejabat' => true, 'kode_jabatan' => 'bd.05', 'tipe_ttd' => $tipe_ttd, 'nip' => $nip_pejabat];
-			$nhi->detail_petugas()->create($pejabat);
-
-			/**
-			 * Documents chain
-			 */
-			$chain->update(['latest_document' => $nhi->kode_dokumen]);
+			// Petugas
+			$this->createPejabat($nhi, 'penerbit', 'bd.05', '555');
 
 			// Create barang
 			$this->seedBarang($nhi);
 
 			// Create tembusan
-			$cc_sample = ['Direktur P2', 'Kasubdit Intelijen', 'Kepala Kantor', 'PDTA', 'Kabid PFPC'];
-			$cc_count = rand(0,3);
+			$this->createTembusan($nhi);
 
-			for ($x = 1; $x <= $cc_count; $x++) {
-				// Choose CC
-				$cc = $faker->randomElement($cc_sample);
-				$key = array_search($cc, $cc_sample);
-				unset($cc_sample[$key]);
-
-				// Check if CC exists in reference
-				$cc_data = RefTembusan::where('uraian', $cc)->first();
-				if ($cc_data == null) {
-					$cc_data = RefTembusan::create(['uraian' => $cc]);
-				}
-
-				// Write tembusan
-				$nhi->tembusan()->attach([$cc_data->id => ['no_urut' => $x]]);
-			} 
+			// Document chain
+			$chain->update(['latest_document' => $nhi->kodeDokumen]);
 		}
 
-		Penomoran::create([
-			'tipe_dokumen' => $nhi->tipe_dokumen,
-			'agenda' => $nhi->agenda_dokumen,
-			'tahun' => date('Y'),
-			'nomor_terakhir' => $crn_nhi,
+		$this->createPenomoran();
+	}
+
+	protected function chooseLkai()
+	{
+		$lkai = $this->chooseDocSource($this->kodeLkai, $this->available_lkai_id);
+		$this->available_lkai_id = array_diff($this->available_lkai_id, [$lkai->id]);
+		return $lkai->chain;
+	}
+
+	protected function createExim()
+	{
+		$detail_nhi = DokNhiExim::create([
+			'tipe' => $this->faker->randomElement(['Impor', 'Ekspor', 'PJT', 'Penumpang']),
+			'jenis_dok' => $this->faker->randomElement(['PIB', 'PEB', 'AWB']),
+			'nomor_dok' => $this->faker->numberBetween(1, 999999),
+			'tanggal_dok' => $this->faker->date(),
+			'nama_sarkut' => $this->faker->company(),
+			'nomor_sarkut' => $this->faker->regexify($this->reNoSarkut),
+			'nomor_awb' => $this->faker->regexify($this->reNoAwb),
+			'tanggal_awb' => $this->faker->date(),
+			'merek_koli' => $this->faker->regexify($this->reMerkKoli),
+			'data_lain' => $this->faker->text(),
 		]);
+		$this->createEntity($detail_nhi);
+
+		return $detail_nhi;
+	}
+
+	protected function createBkc()
+	{
+		return DokNhiBkc::create([
+			'tempat_penimbunan' => $this->faker->address(),
+			'penyalur' => $this->faker->company(),
+			'tempat_penjualan' => $this->faker->address(),
+			'nppbkc' => $this->faker->regexify('[0-9]{15}'),
+			'nama_sarkut' => $this->faker->company(),
+			'nomor_sarkut' => $this->faker->regexify($this->reNoSarkut),
+			'data_lain' => $this->faker->text(),
+		]);
+	}
+
+	protected function createTertentu()
+	{
+		$detail_nhi = DokNhiTertentu::create([
+			'jenis_dok' => $this->faker->randomElement(['PIB', 'PEB']),
+			'nomor_dok' => $this->faker->numberBetween(1, 999999),
+			'tanggal_dok' => $this->faker->date(),
+			'nama_sarkut' => $this->faker->company(),
+			'nomor_sarkut' => $this->faker->regexify($this->reNoSarkut),
+			'nomor_awb' => $this->faker->regexify($this->reNoAwb),
+			'tanggal_awb' => $this->faker->date(),
+			'merek_koli' => $this->faker->regexify($this->reMerkKoli),
+			'data_lain' => $this->faker->text(),
+		]);
+		$this->createEntity($detail_nhi);
+
+		return $detail_nhi;
 	}
 }

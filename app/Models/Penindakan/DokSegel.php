@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokSegel extends Dokumen
 {
 	protected $table = 'dok_segel';
-	public $kode_dokumen = 'segel';
-	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Segel/KPU.305/';
+	public $kodeDokumen = 'segel';
+	public $tipeDokumen = 'BA';
+	public $agendaDokumen = '/Segel/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',

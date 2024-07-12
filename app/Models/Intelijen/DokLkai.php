@@ -7,15 +7,15 @@ use App\Models\Dokumen;
 class DokLkai extends Dokumen
 {
 	protected $table = 'dok_lkai';
-	public $kode_dokumen = 'lkai';
-	public $tipe_dokumen = 'LKAI';
-	public $kode_lppi = 'lppi';
-	public $kode_lpti = 'lpti';
-	public $tipe_lpti = 'LPTI';
-	public $kode_npi = 'npi';
-	public $tipe_npi = 'NPI';
-	public $kode_nhi = 'nhi';
-	public $kode_ni = 'ni';
+	public $kodeDokumen = 'lkai';
+	public $tipeDokumen = 'LKAI';
+	public $kodeLppi = 'lppi';
+	public $kodeLpti = 'lpti';
+	public $tipeLpti = 'LPTI';
+	public $kodeNpi = 'npi';
+	public $tipeNpi = 'NPI';
+	public $kodeNhi = 'nhi';
+	public $kodeNi = 'ni';
 
 	protected $fillable = [
 		'no_dok',

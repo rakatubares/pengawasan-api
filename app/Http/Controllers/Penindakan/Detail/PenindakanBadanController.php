@@ -16,7 +16,7 @@ class PenindakanBadanController extends Controller
 	}
 
 	private function prepareData(Request $request) {
-		$data_badan = [
+		return [
 			'entitas_id' => $request->entitas['id'],
 			'asal' => $request->asal,
 			'tujuan' => $request->tujuan,
@@ -33,8 +33,6 @@ class PenindakanBadanController extends Controller
 			'uraian_pemeriksaan' => $request->uraian_pemeriksaan,
 			'hasil_pemeriksaan' => $request->hasil_pemeriksaan,
 		];
-
-		return $data_badan;
 	}
 
 	public function show($penindakan_id) {
@@ -79,7 +77,7 @@ class PenindakanBadanController extends Controller
 			return new PenindakanBadanResource($new_badan);
 		} else {
 			if ($penindakan->badan) {
-				// Delete previous data 
+				// Delete previous data
 				$penindakan->badan()->delete();
 			}
 

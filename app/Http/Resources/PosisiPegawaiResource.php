@@ -14,8 +14,7 @@ class PosisiPegawaiResource extends JsonResource
      */
     public function toArray($request)
     {
-        $array = $this->createArray();
-		return $array;
+        return $this->createArray();
     }
 
 	private function createArray() {
@@ -26,6 +25,7 @@ class PosisiPegawaiResource extends JsonResource
 			'name' => $this->petugas->name,
 			'pangkat' => $this->petugas->pangkat,
 			'user_id' => $this->petugas->user_id,
+			'jabatan_petugas' => $this->petugas->jabatan,
 			'flag_pejabat' => $this->flag_pejabat,
 		];
 

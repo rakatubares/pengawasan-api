@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokLp extends Dokumen
 {
 	protected $table = 'dok_lp';
-	public $kode_dokumen = 'lp';
-	public $tipe_dokumen = 'LP';
-	public $kode_lphp = 'lphp';
+	public $kodeDokumen = 'lp';
+	public $tipeDokumen = 'LP';
+	public $kodeLphp = 'lphp';
 
 	protected $fillable = [
 		'no_dok',

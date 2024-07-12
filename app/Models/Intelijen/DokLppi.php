@@ -7,8 +7,8 @@ use App\Models\Dokumen;
 class DokLppi extends Dokumen
 {
 	protected $table = 'dok_lppi';
-	public $kode_dokumen = 'lppi';
-	public $tipe_dokumen = 'LPPI';
+	public $kodeDokumen = 'lppi';
+	public $tipeDokumen = 'LPPI';
 
 	protected $fillable = [
 		'no_dok',

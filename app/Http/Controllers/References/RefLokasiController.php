@@ -11,7 +11,7 @@ class RefLokasiController extends Controller
 {
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -25,11 +25,10 @@ class RefLokasiController extends Controller
 			->take(5)
 			->get();
 
-		$search_list = RefLokasiResource::collection($search_result);
-		return $search_list;
+		return RefLokasiResource::collection($search_result);
 	}
 
-	public function save($lokasi) 
+	public function save($lokasi)
 	{
 		$lokasi = trim(strtoupper($lokasi));
 		$is_exist = $this->checkLokasi($lokasi);

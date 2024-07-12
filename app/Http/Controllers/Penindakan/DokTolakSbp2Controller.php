@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class DokTolakSbp2Controller extends DokController
 {
-	protected $doc_type = 'tolak2';
+	protected $docType = 'tolak2';
 
-	protected function validateData(Request $request) 
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'alasan' => 'required',
@@ -17,18 +17,16 @@ class DokTolakSbp2Controller extends DokController
 		]);
 	}
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'alasan' => $request->alasan,
 			'tolak1_id' => $request->tolak1['id'],
 			'saksi_id' => $request->saksi['id'],
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 
@@ -43,7 +41,7 @@ class DokTolakSbp2Controller extends DokController
 		return $data;
 	}
 
-	protected function updating(Request $request) 
+	protected function updating(Request $request)
 	{
 		$data = parent::updating($request);
 

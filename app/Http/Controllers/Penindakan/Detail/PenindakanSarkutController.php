@@ -18,7 +18,7 @@ class PenindakanSarkutController extends Controller
 	}
 
 	private function prepareData(Request $request) {
-		$data_sarkut = [
+		return [
 			'nama_sarkut' => $request->nama_sarkut,
 			'jenis_sarkut' => $request->jenis_sarkut,
 			'nomor_sarkut' => $request->nomor_sarkut,
@@ -28,8 +28,6 @@ class PenindakanSarkutController extends Controller
 			'bendera_sarkut' => $request->bendera ? $request->bendera['kode_2'] : null,
 			'registrasi_sarkut' => $request->registrasi_sarkut,
 		];
-
-		return $data_sarkut;
 	}
 
 	public function show($penindakan_id) {
@@ -74,7 +72,7 @@ class PenindakanSarkutController extends Controller
 			return new PenindakanSarkutResource($new_sarkut);
 		} else {
 			if ($penindakan->sarkut) {
-				// Delete previous data 
+				// Delete previous data
 				$penindakan->sarkut()->delete();
 			}
 

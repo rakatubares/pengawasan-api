@@ -26,7 +26,7 @@ class CreateBarangTable extends Migration
 			$table->integer('kategori_id')->nullable()->index();
 			$table->float('berat')->nullable();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
         });
     }

@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class DokLpfController extends DokController
 {
-	protected $doc_type = 'lpf';
+	protected $docType = 'lpf';
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'saksi_id' => $request->saksi ? $request->saksi['id'] : null,
 			'tanggal_bap_saksi' => $request->tanggal_bap_saksi,
 			'tersangka_id' => $request->tersangka ? $request->tersangka['id'] : null,
@@ -25,11 +25,9 @@ class DokLpfController extends DokController
 			'usulan' => $request->usulan,
 			'catatan' => $request->catatan,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 
@@ -43,7 +41,7 @@ class DokLpfController extends DokController
 		return $data;
 	}
 
-	protected function updating(Request $request) 
+	protected function updating(Request $request)
 	{
 		$data = parent::updating($request);
 
@@ -51,7 +49,7 @@ class DokLpfController extends DokController
 		$existing_source_id = $this->doc->chain->lpp->id;
 
 		// Change chain
-		if ($existing_source_id != $request->lpp['id']) 
+		if ($existing_source_id != $request->lpp['id'])
 		{
 			// Detach from previous LP
 			$this->detachFrom('lpp', $existing_source_id);

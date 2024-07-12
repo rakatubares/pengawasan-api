@@ -54,11 +54,9 @@ class DokNhiDetailResource extends JsonResource
 				break;
 		}
 
-		$array = [
+		return [
 			'type' => $this->type,
 			'data' => $detail,
 		];
-
-		return $array;
 	}
 }

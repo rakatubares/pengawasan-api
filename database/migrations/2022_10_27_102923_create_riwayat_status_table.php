@@ -21,7 +21,7 @@ class CreateRiwayatStatusTable extends Migration
 			$table->text('keterangan')->nullable();
 			$table->text('nip_pegawai')->nullable();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index(['historyable_type', 'historyable_id']);
 			$table->index('created_at');
 			$table->index('updated_at');

@@ -10,15 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class EntitasOrangController extends Controller
 {
-	public function search(Request $request) 
+	public function search(Request $request)
 	{
 		$search = "%{$request->search}%";
 		$search_result = EntitasOrang::where('nama', 'like', $search)
 			->orderBy('nama')
 			->take(5)
 			->get();
-		$search_list = EntitasOrangResource::collection($search_result);
-		return $search_list;
+		return EntitasOrangResource::collection($search_result);
 	}
 
 	public function show($entity_id) {
@@ -34,7 +33,7 @@ class EntitasOrangController extends Controller
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	public function validateData(Request $request) {
@@ -47,7 +46,7 @@ class EntitasOrangController extends Controller
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	public function prepareData(Request $request) {
@@ -74,8 +73,6 @@ class EntitasOrangController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
-		// return $request;
-		
 		DB::beginTransaction();
 		try {
 			$this->validateData($request);

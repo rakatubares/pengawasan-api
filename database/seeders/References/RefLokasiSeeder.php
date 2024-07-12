@@ -48,7 +48,7 @@ class RefLokasiSeeder extends Seeder
 			'GUDANG ARAMEX',
 			'GUDANG TABHITA EXPRESS',
 			'GUDANG PT SCHENKER PETROLOG UTAMA',
-			'GUDANG EKSPOR PT POS INDONESIA',			
+			'GUDANG EKSPOR PT POS INDONESIA',
 		];
 
 		$now = Carbon::now('utc')->toDateTimeString();

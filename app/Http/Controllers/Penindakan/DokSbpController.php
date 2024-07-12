@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 
 class DokSbpController extends PenindakanController
 {
-	protected $doc_type = 'sbp';
+	protected $docType = 'sbp';
 
 	public function __construct()
 	{
 		parent::__construct();
 		$doc = new $this->model;
-		$this->kode_nhi = $doc->kode_nhi;
-		$this->kode_lap = $doc->kode_lap;
-		$this->kode_lptp = $doc->kode_lptp;
+		$this->kodeNhi = $doc->kodeNhi;
+		$this->kodeLap = $doc->kodeLap;
+		$this->kodeLptp = $doc->kodeLptp;
 	}
 
 	/*
@@ -23,7 +23,7 @@ class DokSbpController extends PenindakanController
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 
@@ -33,12 +33,12 @@ class DokSbpController extends PenindakanController
 			$chain = $source->chain;
 
 			// Get related document code
-			$kode_nhi = $this->kode_nhi;
-			$kode_lap = $this->kode_lap;
+			$kodeNhi = $this->kodeNhi;
+			$kodeLap = $this->kodeLap;
 
 			// Attach to chain's documents if exist
-			if ($chain->$kode_nhi) { $chain->$kode_nhi->followedUp('status_sbp'); }
-			if ($chain->$kode_lap) { $chain->$kode_lap->followedUp(); }
+			if ($chain->$kodeNhi) { $chain->$kodeNhi->followedUp('status_sbp'); }
+			if ($chain->$kodeLap) { $chain->$kodeLap->followedUp(); }
 		} else {
 			// Create new chain when source is not available
 			$chain = $this->createChain();
@@ -53,72 +53,89 @@ class DokSbpController extends PenindakanController
 		$this->createPenindakan($request);
 
 		// Save data LPTP
-		$data_lptp = $request->lptp;
-		$data_lptp['chain_id'] = $this->doc->chain->id;
-		$model_lptp = $this->getModel($this->kode_lptp);
-		$lptp = $model_lptp::create($data_lptp);
+		$dataLptp = $request->lptp;
+		$dataLptp['chain_id'] = $this->doc->chain->id;
+		$modelLptp = $this->getModel($this->kodeLptp);
+		$lptp = $modelLptp::create($dataLptp);
 		$this->savePetugas($request->lptp['petugas'], $lptp);
 		
 		parent::stored($request);
 	}
 
-	protected function updating(Request $request) 
+	protected function updating(Request $request)
 	{
 		$data = parent::updating($request);
-		$old_chain = $this->doc->chain;
-		$old_chain_id = $old_chain->id;
+		$oldChain = $this->doc->chain;
+		$oldChainId = $oldChain->id;
 
 		// Get related document code
-		$kode_nhi = $this->kode_nhi;
-		$kode_lap = $this->kode_lap;
+		$kodeNhi = $this->kodeNhi;
+		$kodeLap = $this->kodeLap;
 
 		if ($request->sumber_id) {
-			$new_source = $this->getDocument($request->jenis_sumber, $request->sumber_id);
-			$new_chain = $new_source->chain;
-			$new_chain_id = $new_chain->id;
+			$newSource = $this->getDocument($request->jenis_sumber, $request->sumber_id);
+			$newChain = $newSource->chain;
+			$newChainId = $newChain->id;
 
-			if ($old_chain_id != $new_chain_id) {
+			if ($oldChainId != $newChainId) {
 				// Rollback previous chain connection if exist
-				if ($old_chain->$kode_nhi) { $old_chain->$kode_nhi->unFollowedUp('status_sbp'); }
-				if ($old_chain->$kode_lap) { $old_chain->$kode_lap->unFollowedUp(); }
+				$this->rollbackChainDocument($oldChain);
 
 				// Remove chain if no cannected document available
-				if (!$old_chain->$kode_nhi && !$old_chain->$kode_lap) { $old_chain->delete(); }
+				if (!$oldChain->$kodeNhi && !$oldChain->$kodeLap) { $oldChain->delete(); }
 				
 				// Change chain
-				$data['chain_id'] = $new_chain_id;
-				$this->changeChain($new_chain_id);
+				$data['chain_id'] = $newChainId;
+				$this->changeChain($newChainId);
 
 				// Attach to chain's documents if exist
-				if ($new_chain->$kode_nhi) { $new_chain->$kode_nhi->followedUp('status_sbp'); }
-				if ($new_chain->$kode_lap) { $new_chain->$kode_lap->followedUp(); }
+				$this->attachChainDocument($newChain);
 			}
 		} else {
 			// Rollback previous chain connection if exist
-			if ($old_chain->$kode_nhi) { $old_chain->$kode_nhi->unFollowedUp('status_sbp'); }
-			if ($old_chain->$kode_lap) { $old_chain->$kode_lap->unFollowedUp(); } 
+			$this->rollbackChainDocument($oldChain);
 
 			// Create new chain if previous chain has connected document
-			if ($old_chain->$kode_nhi || $old_chain->$kode_lap) 
+			if ($oldChain->$kodeNhi || $oldChain->$kodeLap)
 			{
-				$new_chain = $this->createChain();
-				$data['chain_id'] = $new_chain->id;
-				$this->changeChain($new_chain->id);
+				$newChain = $this->createChain();
+				$data['chain_id'] = $newChain->id;
+				$this->changeChain($newChain->id);
 			}
 		}
 		
 		return $data;
 	}
 
-	protected function updated($request) 
+	private function rollbackChainDocument($chain)
+	{
+		// Get related document code
+		$kodeNhi = $this->kodeNhi;
+		$kodeLap = $this->kodeLap;
+
+		if ($chain->$kodeNhi) { $chain->$kodeNhi->unFollowedUp('status_sbp'); }
+		if ($chain->$kodeLap) { $chain->$kodeLap->unFollowedUp(); }
+	}
+
+	private function attachChainDocument($chain)
+	{
+		// Get related document code
+		$kodeNhi = $this->kodeNhi;
+		$kodeLap = $this->kodeLap;
+
+		if ($chain->$kodeNhi) { $chain->$kodeNhi->followedUp('status_sbp'); }
+		if ($chain->$kodeLap) { $chain->$kodeLap->followedUp(); }
+	}
+
+	protected function updated($request)
 	{
 		$this->updatePenindakan($request);
 
 		// Update LPTP
-		$kode_lptp = $this->kode_lptp;
-		$data_lptp = $request->lptp;
-		$lptp = $this->doc->chain->$kode_lptp;
-		$lptp->update($data_lptp);
+		$kodeLptp = $this->kodeLptp;
+		$dataLptp = $request->lptp;
+		$lptp = $this->doc->chain->$kodeLptp;
+		$lptp->update($dataLptp);
 		$this->updatePetugas($request->lptp['petugas'], $lptp);
 
 		parent::updated($request);

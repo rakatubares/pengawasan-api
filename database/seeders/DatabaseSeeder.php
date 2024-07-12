@@ -10,6 +10,7 @@ use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiNSeeder;
 use Database\Seeders\Intelijen\DokNiSeeder;
+use Database\Seeders\Intelijen\DokStiSeeder;
 use Database\Seeders\Penindakan\DokBukaPengamanSeeder;
 use Database\Seeders\Penindakan\DokBukaSegelSeeder;
 use Database\Seeders\Penindakan\DokLapNSeeder;
@@ -52,7 +53,6 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run()
 	{
-		// \App\Models\User::factory(10)->create();
 		$this->call([
 			RefKodeDokumenSeeder::class,
 			RefStatusSeeder::class,
@@ -75,6 +75,7 @@ class DatabaseSeeder extends Seeder
 			SprintSeeder::class,
 			
 			// Intelijen
+			DokStiSeeder::class,
 			DokLppiSeeder::class,
 			DokLkaiSeeder::class,
 			DokNhiSeeder::class,

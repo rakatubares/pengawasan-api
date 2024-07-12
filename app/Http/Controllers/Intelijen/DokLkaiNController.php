@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 class DokLkaiNController extends DokLkaiController
 {
-	protected $doc_type = 'lkain';
+	protected $docType = 'lkain';
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -27,7 +27,7 @@ class DokLkaiNController extends DokLkaiController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array

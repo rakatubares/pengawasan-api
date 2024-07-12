@@ -12,7 +12,7 @@ class BarangController extends Controller
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -28,7 +28,7 @@ class BarangController extends Controller
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array

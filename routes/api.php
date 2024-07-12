@@ -1,10 +1,5 @@
 <?php
 
-// use App\Http\Controllers\DokLhpController;
-// use App\Http\Controllers\DokLpfController;
-// use App\Http\Controllers\DokLppController;
-// use App\Http\Controllers\DokLrpController;
-// use App\Http\Controllers\DokSplitController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DocumentsChainController;
 use App\Http\Controllers\DokController;
@@ -18,6 +13,7 @@ use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
 use App\Http\Controllers\Intelijen\DokNiNController;
+use App\Http\Controllers\Intelijen\DokStiController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBadanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBangunanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBarangController;
@@ -90,6 +86,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 	Route::docResources([
 		// Intelijen
+		'sti' => DokStiController::class,
 		'lppi' => DokLppiController::class,
 		'lkai' => DokLkaiController::class,
 		'nhi' => DokNhiController::class,
@@ -129,63 +126,11 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 		'lpp' => DokLppController::class,
 		'lpf' => DokLpfController::class,
 		'split' => DokSplitController::class,
-	]);	
+	]);
 
 	Route::post('/{doc_type}/search', [DokController::class, 'search']);
 	Route::get('/{doc_type}/{doc_id}/chain', [DocumentsChainController::class, 'show']);
 });
-
-// /*
-//  |--------------------------------------------------------------------------
-//  | Penyidikan routes
-//  |--------------------------------------------------------------------------
-//  */
-
-// /**
-//  * API for LPF
-//  */
-// Route::apiResource('lpf', DokLpfController::class);
-// Route::get('/lpf/{lpf_id}/display', [DokLpfController::class, 'display']);
-// Route::get('/lpf/{lpf_id}/form', [DokLpfController::class, 'form']);
-// Route::get('/lpf/{lpf_id}/docs', [DokLpfController::class, 'docs']);
-// Route::get('/lpf/{lpf_id}/pdf', [DokLpfController::class, 'pdf']);
-// Route::get('/lpf/{lpf_id}/bhp', [DokLpfController::class, 'bhp']);
-// Route::put('/lpf/{lpf_id}/publish', [DokLpfController::class, 'publish']);
-// Route::post('/lpf/search', [DokLpfController::class, 'search']);
-
-// /**
-//  * API for SPLIT
-//  */
-// Route::apiResource('split', DokSplitController::class);
-// Route::get('/split/{split_id}/display', [DokSplitController::class, 'display']);
-// Route::get('/split/{split_id}/form', [DokSplitController::class, 'form']);
-// Route::get('/split/{split_id}/docs', [DokSplitController::class, 'docs']);
-// Route::get('/split/{split_id}/pdf', [DokSplitController::class, 'pdf']);
-// Route::put('/split/{split_id}/publish', [DokSplitController::class, 'publish']);
-// Route::post('/split/search', [DokSplitController::class, 'search']);
-
-// /**
-//  * API for LHP
-//  */
-// Route::apiResource('lhp', DokLhpController::class);
-// Route::get('/lhp/{lhp_id}/display', [DokLhpController::class, 'display']);
-// Route::get('/lhp/{lhp_id}/form', [DokLhpController::class, 'form']);
-// Route::get('/lhp/{lhp_id}/docs', [DokLhpController::class, 'docs']);
-// Route::get('/lhp/{lhp_id}/pdf', [DokLhpController::class, 'pdf']);
-// Route::get('/lhp/{lhp_id}/bhp', [DokLhpController::class, 'bhp']);
-// Route::put('/lhp/{lhp_id}/publish', [DokLhpController::class, 'publish']);
-// Route::post('/lhp/search', [DokLhpController::class, 'search']);
-
-// /**
-//  * API for LRP
-//  */
-// Route::apiResource('lrp', DokLrpController::class);
-// Route::get('/lrp/{lrp_id}/display', [DokLrpController::class, 'display']);
-// Route::get('/lrp/{lrp_id}/form', [DokLrpController::class, 'form']);
-// Route::get('/lrp/{lrp_id}/docs', [DokLrpController::class, 'docs']);
-// Route::get('/lrp/{lrp_id}/pdf', [DokLrpController::class, 'pdf']);
-// Route::get('/lrp/{lrp_id}/bhp', [DokLrpController::class, 'bhp']);
-// Route::put('/lrp/{lrp_id}/publish', [DokLrpController::class, 'publish']);
 
 /*
  |--------------------------------------------------------------------------
@@ -256,16 +201,6 @@ Route::post('/entitas/badanhukum/search', [EntitasBadanHukumController::class, '
  * API for Jabatan
  */
 Route::apiResource('jabatan', RefJabatanController::class);
-
-// /**
-//  * API for Kategori Pelanggaran
-//  */
-// Route::apiResource('pelanggaran', RefKategoriPelanggaranController::class);
-
-// /**
-//  * API for Skema Penindakan
-//  */
-// Route::apiResource('penindakan', RefSkemaPenindakanController::class);
 
 /**
  * API for Grup Lokasi

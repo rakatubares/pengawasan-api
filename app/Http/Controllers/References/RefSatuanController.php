@@ -17,8 +17,7 @@ class RefSatuanController extends Controller
 	 */
 	public function show($id)
 	{
-		$satuan = new RefSatuanResource(RefSatuan::find($id));
-		return $satuan;
+		return new RefSatuanResource(RefSatuan::find($id));
 	}
 
 	/**
@@ -33,7 +32,7 @@ class RefSatuanController extends Controller
 	
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -45,7 +44,6 @@ class RefSatuanController extends Controller
 		$middle_query = RefSatuan::where('satuan', 'like', '%'.$s.'%');
 		$search_result = $start_query->union($middle_query)->take(5)->get();
 
-		$search_list = RefSatuanResource::collection($search_result);
-		return $search_list;
+		return RefSatuanResource::collection($search_result);
 	}
 }

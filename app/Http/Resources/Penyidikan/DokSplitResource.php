@@ -17,7 +17,7 @@ class DokSplitResource extends JsonResource
 	*/
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
@@ -45,15 +45,14 @@ class DokSplitResource extends JsonResource
 				'no_dok_lengkap' => $this->chain->lpf->no_dok_lengkap,
 				'tanggal_dokumen' => $this->chain->lpf->tanggal_dokumen->format('d-m-Y'),
 			],
-			'petugas' => $this->list_petugas(),
+			'petugas' => $this->listPetugas(),
 			'tembusan' => TembusanResource::collection($this->tembusan),
 			'kode_status' => $this->kode_status,
 			'created_by' => new RefUserResource($this->creator),
 		];
-		return $array;
 	}
 
-	private function list_petugas()
+	private function listPetugas()
 	{
 		$list_petugas = [];
 		$list_pelaksana = [];

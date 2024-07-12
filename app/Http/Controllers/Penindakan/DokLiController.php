@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class DokLiController extends DokController
 {
-	protected $doc_type = 'li';
+	protected $docType = 'li';
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -28,21 +28,19 @@ class DokLiController extends DokController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
 	 */
 	protected function prepareData(Request $request, $state='insert')
 	{
-		$data = [
+		return [
 			'sumber' => $request->sumber,
 			'informasi' => $request->informasi,
 			'tindak_lanjut' => $request->tindak_lanjut,
 			'catatan' => $request->catatan,
 		];
-
-		return $data;
 	}
 
 	protected function storing(Request $request) {

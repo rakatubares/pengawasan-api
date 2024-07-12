@@ -14,14 +14,12 @@ class EntitasIdentitasResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'jenis' => $this->jenis,
 			'nomor' => $this->nomor,
 			'pejabat_penerbit' => $this->pejabat_penerbit,
 			'tempat_penerbitan' => $this->tempat_penerbitan,
 		];
-
-		return $array;
 	}
 }

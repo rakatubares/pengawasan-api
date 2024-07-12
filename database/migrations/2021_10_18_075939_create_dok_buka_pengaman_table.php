@@ -34,7 +34,7 @@ class CreateDokBukaPengamanTable extends Migration
 			$table->integer('saksi_id')->nullable()->index();
 			$table->string('kode_status')->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable()->index();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();

@@ -20,7 +20,7 @@ class CreateDokLppiInformasiTable extends Migration
 			$table->string('kode_kepercayaan')->index();
 			$table->integer('kode_validitas')->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();

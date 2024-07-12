@@ -24,7 +24,7 @@ class DokTolakSbp2Observer extends DokObserver
 	 * @param  \App\Models\Penindakan\DokTolakSbp2  $dokTolakSbp2
 	 * @return void
 	 */
-	public function published($dokumen) 
+	public function published($dokumen)
 	{
 		$this->updatePenomoran($dokumen);
 		$dokumen->status_history()

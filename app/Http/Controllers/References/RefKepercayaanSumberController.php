@@ -16,7 +16,6 @@ class RefKepercayaanSumberController extends Controller
 	public function index()
 	{
 		$klasifikasi = RefKepercayaanSumber::orderBy('klasifikasi')->get();
-		$list_klasifikasi = RefKepercayaanSumberResource::collection($klasifikasi);
-		return $list_klasifikasi;
+		return RefKepercayaanSumberResource::collection($klasifikasi);
 	}
 }

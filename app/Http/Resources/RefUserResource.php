@@ -14,7 +14,7 @@ class RefUserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $array = [
+        return [
 			'user_id' => $this->user_id,
 			'username' => $this->username,
 			'name' => $this->name,
@@ -24,7 +24,5 @@ class RefUserResource extends JsonResource
 			'pejabat' => $this->pejabat,
 			'status' => $this->status,
 		];
-
-		return $array;
     }
 }

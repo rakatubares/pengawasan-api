@@ -16,8 +16,8 @@ class RefSatuanSeeder extends Seeder
     public function run()
     {
 		$satuan = [
-			'BATANG', 'BOTOL', 'BOX', 'BUNGKUS', 'BUTIR', 'CARTON', 'CASE', 'EKOR', 'GRAM', 
-			'KALENG', 'KANTONG', 'KARUNG', 'KEMASAN', 'KG', 'KOLI', 'LEMBAR', 'LITER', 'METER', 
+			'BATANG', 'BOTOL', 'BOX', 'BUNGKUS', 'BUTIR', 'CARTON', 'CASE', 'EKOR', 'GRAM',
+			'KALENG', 'KANTONG', 'KARUNG', 'KEMASAN', 'KG', 'KOLI', 'LEMBAR', 'LITER', 'METER',
 			'PACKAGE', 'PALLET', 'PASANG', 'PCS', 'PK', 'PLASTIK', 'ROLLS', 'SET', 'TABLET', 'UNIT'
 		];
 

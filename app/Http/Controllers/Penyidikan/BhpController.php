@@ -19,7 +19,7 @@ class BhpController extends Controller
 	private function prepareData(Request $request) {
 		$tanggal_dokumen = $request->tanggal_dokumen != null ? date('Y-m-d', strtotime($request->tanggal_dokumen)) : null;
 
-		$data = [
+		return [
 			'jumlah_kemasan' => $request->jumlah_kemasan,
 			'jenis_kemasan_id' => $request->kemasan ? $request->kemasan['id'] : null,
 			'jenis_dokumen' => $request->jenis_dokumen,
@@ -32,8 +32,6 @@ class BhpController extends Controller
 			'nomor_kontainer' => $request->nomor_kontainer,
 			'ukuran_kontainer' => $request->ukuran_kontainer,
 		];
-
-		return $data;
 	}
 
 	public function update(Request $request, $bhp_id) {

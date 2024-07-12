@@ -20,7 +20,7 @@ class CreateRefBandaraTable extends Migration
 			$table->string('airport_name')->index();
 			$table->string('municipality');
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
         });
     }

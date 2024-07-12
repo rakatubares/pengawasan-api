@@ -6,5 +6,5 @@ use App\Observers\DokObserver;
 
 class DokRiksaObserver extends DokObserver
 {
-	// 
+	//
 }

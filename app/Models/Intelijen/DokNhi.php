@@ -10,9 +10,9 @@ use App\Models\References\RefKantorBC;
 class DokNhi extends Dokumen
 {
 	protected $table = 'dok_nhi';
-	public $kode_dokumen = 'nhi';
-	public $tipe_dokumen = 'NHI';
-	public $kode_lkai = 'lkai';
+	public $kodeDokumen = 'nhi';
+	public $tipeDokumen = 'NHI';
+	public $kodeLkai = 'lkai';
 
 	protected $fillable = [
 		'no_dok',

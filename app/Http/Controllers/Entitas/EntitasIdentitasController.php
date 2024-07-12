@@ -15,11 +15,7 @@ class EntitasIdentitasController extends Controller
 		$existing_identities = $entity->identitas;
 
 		// Get persisting identities id
-		$persisting_identities_id = array_map(function ($identity) {
-			if ($identity['id'] != null) {
-				return $identity['id'];
-			}
-		}, $new_identities);
+		$persisting_identities_id = $this->getPersistingIdentity($new_identities);
 
 		// Update existing identities
 		foreach ($existing_identities as $existing_identity) {
@@ -41,7 +37,7 @@ class EntitasIdentitasController extends Controller
 					->find($existing_identity->id)
 					->delete();
 			}
-		};
+		}
 
 		// Insert new identities
 		foreach ($new_identities as $new_identity) {
@@ -49,5 +45,14 @@ class EntitasIdentitasController extends Controller
 				$entity->identitas()->create($new_identity);
 			}
 		}
+	}
+
+	private function getPersistingIdentity($new_identities)
+	{
+		return array_map(function ($identity) {
+			if ($identity['id'] != null) {
+				return $identity['id'];
+			}
+		}, $new_identities);
 	}
 }

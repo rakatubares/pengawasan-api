@@ -19,31 +19,31 @@ class RefSkemaPenindakanSeeder extends Seeder
 		$data = [
 			[
 				'skema' => 'mandiri',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'skema' => 'dengan bantuan',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'skema' => 'pelimpahan',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'skema' => 'pelimpahan dengan bantuan',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],
 			[
 				'skema' => 'perbantuan dengan instansi lain',
-				'active' => TRUE,
+				'active' => true,
 				'created_at' => $now,
 				'updated_at' => $now
 			],

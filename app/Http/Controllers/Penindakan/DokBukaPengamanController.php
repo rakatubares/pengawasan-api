@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DokBukaPengamanController extends PenindakanController
 {
-	protected $doc_type = 'buka_pengaman';
+	protected $docType = 'buka_pengaman';
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ class DokBukaPengamanController extends PenindakanController
 		$tanggal_buka_pengaman = $request->tanggal_buka_pengaman
 			? date('Y-m-d', strtotime($request->tanggal_buka_pengaman))
 			: null;
-		$tanggal_pengaman = $request->tanggal_pengaman 
+		$tanggal_pengaman = $request->tanggal_pengaman
 			? date('Y-m-d', strtotime($request->tanggal_pengaman))
 			: null;
 		$asal_pengaman = (
@@ -41,30 +41,28 @@ class DokBukaPengamanController extends PenindakanController
 			) ? null : $request->asal_pengaman;
 		$saksi_id = $request->saksi ? $request->saksi['id'] : null;
 
-		$data = [
+		return [
 			'sprint_id' => $request->sprint['id'],
 			'tanggal_buka_pengaman' => $tanggal_buka_pengaman,
 			'asal_pengaman' => $asal_pengaman,
-			'nomor_pengaman' => $asal_pengaman != 'pengaman' 
+			'nomor_pengaman' => $asal_pengaman != 'pengaman'
 				? $request->nomor_pengaman : null,
-			'tanggal_pengaman' => $asal_pengaman != 'pengaman' 
+			'tanggal_pengaman' => $asal_pengaman != 'pengaman'
 				? $tanggal_pengaman : null,
-			'jenis_pengaman' => $asal_pengaman != 'pengaman' 
+			'jenis_pengaman' => $asal_pengaman != 'pengaman'
 				? $request->jenis_pengaman : null,
-			'jumlah_pengaman' => $asal_pengaman != 'pengaman' 
+			'jumlah_pengaman' => $asal_pengaman != 'pengaman'
 				? $request->jumlah_pengaman : null,
-			'satuan_pengaman' => $asal_pengaman != 'pengaman' 
+			'satuan_pengaman' => $asal_pengaman != 'pengaman'
 				? $request->satuan_pengaman : null,
-			'tempat_pengaman' => $asal_pengaman != 'pengaman' 
+			'tempat_pengaman' => $asal_pengaman != 'pengaman'
 				? $request->tempat_pengaman : null,
 			'dasar_pengamanan' => $request->dasar_pengamanan,
 			'saksi_id' => $saksi_id,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 

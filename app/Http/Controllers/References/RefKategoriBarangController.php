@@ -17,8 +17,7 @@ class RefKategoriBarangController extends Controller
 	public function index()
 	{
 		$active_categories = RefKategoriBarang::where(['active' => true])->orderBy('kategori')->get();
-		$category_list = RefKategoriBarangResource::collection($active_categories);
-		return $category_list;
+		return RefKategoriBarangResource::collection($active_categories);
 	}
 	
 	/**
@@ -29,13 +28,12 @@ class RefKategoriBarangController extends Controller
 	 */
 	public function show($id)
 	{
-		$kategori = new RefKategoriBarangResource(RefKategoriBarang::find($id));
-		return $kategori;
+		return new RefKategoriBarangResource(RefKategoriBarang::find($id));
 	}
 
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -48,7 +46,6 @@ class RefKategoriBarangController extends Controller
 			->take(5)
 			->get();
 
-		$search_list = RefKategoriBarangResource::collection($search_result);
-		return $search_list;
+		return RefKategoriBarangResource::collection($search_result);
 	}
 }

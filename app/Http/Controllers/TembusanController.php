@@ -10,7 +10,7 @@ class TembusanController extends Controller
 {
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -27,8 +27,7 @@ class TembusanController extends Controller
 			->take(5)
 			->get();
 
-		$search_list = TembusanResource::collection($search_result);
-		return $search_list;
+		return TembusanResource::collection($search_result);
 	}
 
 	public function setCc($doc_model, $doc_id, $cc_list)
@@ -59,7 +58,7 @@ class TembusanController extends Controller
 	}
 
 	private function getRefCc()
-	{	
+	{
 		$ref_data = RefTembusan::all()->toArray();
 		$refs = [];
 		foreach ($ref_data as $d) { $refs[strtolower($d['uraian'])] = $d['id']; }
@@ -69,7 +68,6 @@ class TembusanController extends Controller
 	private function getExistingCc($doc_model, $doc_id)
 	{
 		$existing_cc_data = $doc_model::find($doc_id)->tembusan->toArray();
-		$existing_cc = array_map(function($d) { return strtolower($d['uraian']); }, $existing_cc_data);
-		return $existing_cc;
+		return array_map(function($d) { return strtolower($d['uraian']); }, $existing_cc_data);
 	}
 }

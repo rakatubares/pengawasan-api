@@ -19,11 +19,11 @@ class RefPejabat extends Model
 	];
 
 
-	function petugas() {
+	public function petugas() {
 		return $this->hasOne(RefUserCache::class, 'nip', 'nip');
 	}
 
-	function jabatan() {
+	public function jabatan() {
 		return $this->hasOne(RefJabatan::class, 'kode', 'kode_jabatan');
 	}
 }

@@ -34,7 +34,7 @@ class CreateCacahTable extends Migration
 			$table->integer('petugas_penyidikan_2_id')->nullable()->index();
 			$table->integer('kode_status')->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');

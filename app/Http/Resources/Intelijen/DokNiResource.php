@@ -28,14 +28,14 @@ class DokNiResource extends JsonResource
 
 	public function niArray()
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tanggal_dokumen' => $this->tanggal_dokumen
-				? $this->tanggal_dokumen->format('d-m-Y') 
+				? $this->tanggal_dokumen->format('d-m-Y')
 				: null,
 			'sifat' => $this->sifat,
 			'klasifikasi' => $this->klasifikasi,
@@ -46,7 +46,5 @@ class DokNiResource extends JsonResource
 			'kode_status' => $this->kode_status,
 			'created_by' => new RefUserResource($this->creator),
 		];
-
-		return $array;
 	}
 }

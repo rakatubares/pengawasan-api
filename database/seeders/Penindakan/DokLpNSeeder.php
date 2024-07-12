@@ -2,14 +2,18 @@
 
 namespace Database\Seeders\Penindakan;
 
-use App\Models\Penindakan\DokLphpN;
-use App\Models\Penindakan\DokLpN;
-use App\Models\Penomoran;
-use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
+use Database\Seeders\DokSeeder;
 
-class DokLpNSeeder extends Seeder
+class DokLpNSeeder extends DokSeeder
 {
+	protected $docCode = 'lpn';
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->kodeLphp = $this->doc->kodeLphp;
+	}
+
 	/**
 	 * Run the database seeds.
 	 *
@@ -17,80 +21,48 @@ class DokLpNSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$faker = Faker::create();
+		// Get available LPHP-N ids
+		$this->available_lphpn_id = $this->getAvailableDocIds($this->kodeLphp);
 
-		// Get LPHP ids
-		$max_lphpn_id = DokLphpN::max('id');
-		$available_lphpn_id = range(1, $max_lphpn_id);
+		for ($i=1; $i < 21; $i++) {
+			// New Number
+			$this->currentNumber = $this->getNewNumber();
 
-		// Current year
-		$year = date("Y");
+			// Chain from LPHP-N
+			$chain = $this->chooseLphpN();
 
-		for ($i=1; $i < 21; $i++) { 
-			// Get data LPHP-N
-			$lphpn_id = $faker->randomElement($available_lphpn_id);
-			$key = array_search($lphpn_id, $available_lphpn_id);
-			unset($available_lphpn_id[$key]);
-			$lphpn = DokLphpN::find($lphpn_id);
-			$chain = $lphpn->chain;
-			$lphpn->update(['status_tindak_lanjut' => true]);
+			// Create LP-N
+			$creator = $this->choosePelaksana();
 
-			/**
-			 * Create LP-N
-			 */
-
-			// Get current number for LP-N
-			$max_lpn = DokLpN::max('no_dok');
-			$crn_lpn = $max_lpn + 1;
-
-			// Create LP
-			$creator = $faker->randomElement(['123456', '665544']);
-
-			$lpn = new DokLpN();
-			$lpn->no_dok = $crn_lpn;
-			$lpn->agenda_dok = $lpn->agenda_dokumen;
-			$lpn->thn_dok = $year;
-			$lpn->no_dok_lengkap = "{$lpn->tipe_dokumen}-{$crn_lpn}{$lpn->agenda_dokumen}{$year}";
-			$lpn->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
+			$lpn = new $this->model;
+			$lpn->no_dok = $this->currentNumber;
+			$lpn->agenda_dok = $this->agendaDokumen;
+			$lpn->thn_dok = $this->year;
+			$lpn->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$lpn->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
 			$lpn->chain_id = $chain->id;
-			$lpn->sprint_id = $faker->numberBetween(1,10);
-			$lpn->kesimpulan = $faker->sentence($nbWOrds = 20);
+			$lpn->sprint_id = $this->faker->numberBetween(1,10);
+			$lpn->kesimpulan = $this->faker->sentence(20);
 			$lpn->kode_status = 'terbit';
 			$lpn->created_by = $creator;
 			$lpn->updated_by = $creator;
 			$lpn->saveQuietly();
 
-			/**
-			 * Petugas
-			 */
+			// Petugas
+			$this->createPejabat($lpn, 'penyusun', 'bd.0502', '258');
+			$this->createPejabat($lpn, 'penerbit', 'bd.05', '555');
 
-			// Penyusun
-			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
-			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['111', '2222', '147']) : '258';
-			$pejabat = ['posisi' => 'penyusun', 'flag_pejabat' => true, 'kode_jabatan' => 'bd.0502', 'tipe_ttd' => $tipe_ttd, 'nip' => $nip_pejabat];
-			$lpn->detail_petugas()->create($pejabat);
-
-			// Atasan
-			$tipe_ttd = $faker->randomElement(['plh', 'plt', null]);
-			$nip_pejabat = $tipe_ttd != null ? $faker->randomElement(['258', '2222', '147', '111']) : '555';
-			$pejabat = ['posisi' => 'penerbit', 'flag_pejabat' => true, 'kode_jabatan' => 'bd.05', 'tipe_ttd' => $tipe_ttd, 'nip' => $nip_pejabat];
-			$lpn->detail_petugas()->create($pejabat);
-
-
-			/**
-			 * Update Chain
-			 */
-			$chain->update(['latest_document' => $lpn->kode_dokumen]);
+			// Update Chain
+			$chain->update(['latest_document' => $lpn->kodeDokumen]);
 		}
 
-		/**
-		 * Update penomoran
-		 */
-		Penomoran::create([
-			'tipe_dokumen' => $lpn->tipe_dokumen,
-			'agenda' => $lpn->agenda_dokumen,
-			'tahun' => $year,
-			'nomor_terakhir' => $crn_lpn,
-		]);
+		$this->createPenomoran();
+	}
+
+	protected function chooseLphpN()
+	{
+		$lphpn = $this->chooseDocSource($this->kodeLphp, $this->available_lphpn_id);
+		$this->available_lphpn_id = array_diff($this->available_lphpn_id, [$lphpn->id]);
+		return $lphpn->chain;
 	}
 }

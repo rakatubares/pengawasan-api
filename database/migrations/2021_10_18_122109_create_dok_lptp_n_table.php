@@ -2,5 +2,5 @@
 
 class CreateDokLptpNTable extends CreateDokLptpTable
 {
-	protected $table_name = 'dok_lptpn';
+	protected $tableName = 'dok_lptpn';
 }

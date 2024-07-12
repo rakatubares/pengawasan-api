@@ -17,7 +17,6 @@ class RefJabatanController extends Controller
     public function index()
     {
         $all_jabatan = RefJabatan::all();
-		$jabatan_list = RefJabatanResource::collection($all_jabatan);
-		return $jabatan_list;
+		return RefJabatanResource::collection($all_jabatan);
     }
 }

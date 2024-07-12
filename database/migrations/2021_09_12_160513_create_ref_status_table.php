@@ -19,7 +19,7 @@ class CreateRefStatusTable extends Migration
 			$table->string('uraian_status')->index();
 			$table->string('color')->index();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

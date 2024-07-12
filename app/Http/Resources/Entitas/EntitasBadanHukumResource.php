@@ -14,7 +14,7 @@ class EntitasBadanHukumResource extends JsonResource
      */
     public function toArray($request)
     {
-        $array = [
+        return [
 			'id' => $this->id,
 			'nama' => $this->nama,
 			'alamat' => $this->alamat,
@@ -22,7 +22,5 @@ class EntitasBadanHukumResource extends JsonResource
 			'nomor_telepon' => $this->nomor_telepon,
 			'identitas' => EntitasIdentitasResource::collection($this->identitas),
 		];
-
-		return $array;
     }
 }

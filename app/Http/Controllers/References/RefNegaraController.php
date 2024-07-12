@@ -17,13 +17,12 @@ class RefNegaraController extends Controller
 	 */
 	public function show($code)
 	{
-		$country = new RefNegaraResource(RefNegara::where('kode_2', $code)->first());
-		return $country;
+		return new RefNegaraResource(RefNegara::where('kode_2', $code)->first());
 	}
 
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -37,7 +36,6 @@ class RefNegaraController extends Controller
 			->take(5)
 			->get();
 
-		$search_list = RefNegaraResource::collection($search_result);
-		return $search_list;
+		return RefNegaraResource::collection($search_result);
 	}
 }

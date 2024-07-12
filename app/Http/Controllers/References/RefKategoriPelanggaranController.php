@@ -16,7 +16,6 @@ class RefKategoriPelanggaranController extends Controller
 	public function index()
 	{
 		$kategori = RefKategoriPelanggaran::orderBy('id')->get();
-		$list_kategori = RefKategoriPelanggaranResource::collection($kategori);
-		return $list_kategori;
+		return RefKategoriPelanggaranResource::collection($kategori);
 	}
 }

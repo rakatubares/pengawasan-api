@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokLpt extends Dokumen
 {
     protected $table = 'dok_lpt';
-	public $kode_dokumen = 'lpt';
-	public $tipe_dokumen = 'LPT';
-	public $agenda_dokumen = '/OPERASI/KPU.3053/';
+	public $kodeDokumen = 'lpt';
+	public $tipeDokumen = 'LPT';
+	public $agendaDokumen = '/OPERASI/KPU.3053/';
 
 	protected $fillable = [
 		'no_dok',

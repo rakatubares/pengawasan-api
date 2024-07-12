@@ -14,9 +14,9 @@ class DokLapObserver extends DokObserver
 	 */
 	public function deleted($dokLap) {
 		// Roll back NHI status if related
-		$kode_nhi = $dokLap->kode_nhi;
-		if ($dokLap->chain->$kode_nhi != null) {
-			$dokLap->chain->$kode_nhi->unFollowedUp();
+		$kodeNhi = $dokLap->kodeNhi;
+		if ($dokLap->chain->$kodeNhi != null) {
+			$dokLap->chain->$kodeNhi->unFollowedUp();
 		}
 
 		// Roll back LI-1 status if related

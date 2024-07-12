@@ -23,7 +23,7 @@ class CreateDokNhiBkcTable extends Migration
 			$table->string('nomor_sarkut')->nullable();
 			$table->text('data_lain')->nullable();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();

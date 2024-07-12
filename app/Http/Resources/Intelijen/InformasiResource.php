@@ -14,13 +14,11 @@ class InformasiResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'id' => $this->id,
 			'informasi' => $this->informasi,
 			'kode_kepercayaan' => $this->kode_kepercayaan,
 			'kode_validitas' => $this->kode_validitas,
 		];
-
-		return $array;
 	}
 }

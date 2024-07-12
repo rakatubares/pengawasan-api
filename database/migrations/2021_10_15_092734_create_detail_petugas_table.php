@@ -22,7 +22,7 @@ class CreateDetailPetugasTable extends Migration
 			$table->string('tipe_ttd')->nullable();
 			$table->string('nip');
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index(['officerable_type', 'officerable_id', 'posisi']);
 			$table->index('deleted_at');
 		});

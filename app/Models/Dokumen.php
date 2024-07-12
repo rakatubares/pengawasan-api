@@ -16,10 +16,10 @@ class Dokumen extends Model
 	use PetugasTrait;
 	use SoftDeletes;
 
-	public $agenda_dokumen = '/KPU.305/';
+	public $agendaDokumen = '/KPU.305/';
 
 	protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'amended'];
-	public $unpublished_status = ['draft', 'booking-nomor', 'rollback'];
+	public $unpublishedStatus = ['draft', 'booking-nomor', 'rollback'];
 
 	/**
 	 * Documents chain
@@ -39,7 +39,7 @@ class Dokumen extends Model
 	/**
 	 * Tembusan
 	 */
-	public function tembusan() 
+	public function tembusan()
 	{
 		return $this->morphToMany(RefTembusan::class, 'cc_able', 'tembusan', 'cc_able_id', 'tembusan_id')
 			->wherePivotNull('deleted_at')
@@ -65,26 +65,26 @@ class Dokumen extends Model
 	/**
 	 * Riwayat status dokumen
 	 */
-	public function status_history() 
+	public function status_history()
 	{
 		return $this->morphMany(RiwayatStatus::class, 'historyable');
 	}
 
-	public function edit($data) 
+	public function edit($data)
 	{
 		$this->fireModelEvent('editing');
 		$this->update($data);
 		$this->fireModelEvent('edited');
 	}
 
-	public function book() 
+	public function book()
 	{
 		$this->fireModelEvent('booking');
 		$this->update(['kode_status' => 'booking-nomor']);
 		$this->fireModelEvent('booked');
 	}
 
-	public function publish() 
+	public function publish()
 	{
 		$prePublishStatus = $this->kode_status;
 		$this->fireModelEvent('publishing');
@@ -96,7 +96,7 @@ class Dokumen extends Model
 		}
 	}
 
-	public function rollback($remark=null) 
+	public function rollback($remark=null)
 	{
 		// Rollback status
 		$this->update(['kode_status' => 'rollback']);
@@ -104,19 +104,19 @@ class Dokumen extends Model
 		// Add history
 		$this->status_history()
 			->create([
-				'kode_status' => 'rollback', 
+				'kode_status' => 'rollback',
 				'keterangan' => $remark,
 				'nip_pegawai' => Auth::user()->nip
 			]);
 	}
 
-	public function followedUp($status_name=null) 
+	public function followedUp($status_name=null)
 	{
 		$status = $status_name != null ? $status_name : 'status_tindak_lanjut';
 		$this->update([$status => true]);
 	}
 	
-	public function unFollowedUp($status_name=null) 
+	public function unFollowedUp($status_name=null)
 	{
 		$status = $status_name != null ? $status_name : 'status_tindak_lanjut';
 		$this->update([$status => false]);

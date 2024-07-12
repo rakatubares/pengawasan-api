@@ -12,7 +12,7 @@ class DokLppiController extends DokController
 	use ConverterTrait;
 	use IkhtisarInformasiTrait;
 
-	protected $doc_type = 'lppi';
+	protected $docType = 'lppi';
 
 	/*
 	 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class DokLppiController extends DokController
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -46,7 +46,7 @@ class DokLppiController extends DokController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
@@ -59,7 +59,6 @@ class DokLppiController extends DokController
 		$tgl_dok_info_eksternal = $this->dateFromText($request->tgl_dok_info_eksternal);
 		$tanggal_disposisi = $this->dateFromText($request->tanggal_disposisi);
 
-		// $data = parent::prepareData($request, $state);
 		$data = [];
 		$data['flag_info_internal'] = $request->flag_info_internal;
 		$data['media_info_internal'] = $request->media_info_internal;
@@ -79,30 +78,35 @@ class DokLppiController extends DokController
 		return $data;
 	}
 
-	protected function storing(Request $request) {
+	protected function storing(Request $request)
+	{
 		$data = parent::storing($request);
 		$chain = $this->createChain();
 		$data['chain_id'] = $chain->id;
 		return $data;
 	}
 
-	protected function stored(Request $request) {
+	protected function stored(Request $request)
+	{
 		$this->createInformasi($request->informasi);
 		parent::stored($request);
 	}
 
-	protected function updated(Request $request) {
+	protected function updated(Request $request)
+	{
 		$this->updateInformasi($request->informasi);
 		parent::updated($request);
 	}
 
-	private function createInformasi($new_infos) {
+	private function createInformasi($new_infos)
+	{
 		foreach ($new_infos as $info) {
 			$this->doc->informasi()->create($info);
 		}
 	}
 
-	private function updateInformasi($new_infos) {
+	private function updateInformasi($new_infos)
+	{
 		$old_infos = $this->doc->informasi;
 
 		// Update existing info or insert new info if the new ones more than old ones
@@ -117,7 +121,7 @@ class DokLppiController extends DokController
 
 		// Delete exceeding info if the old ones more than the new ones
 		if (sizeof($new_infos) < sizeof($old_infos)) {
-			for ($i=sizeof($new_infos); $i < sizeof($old_infos); $i++) { 
+			for ($i=sizeof($new_infos); $i < sizeof($old_infos); $i++) {
 				$info_id = $old_infos[$i]['id'];
 				$this->doc->informasi()->find($info_id)->delete($info);
 			}

@@ -15,7 +15,7 @@ class DokNhiNSarkutResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'nama_sarkut' => $this->nama_sarkut,
 			'jenis_sarkut' => $this->jenis_sarkut,
 			'nomor_sarkut' => $this->nomor_sarkut,
@@ -24,7 +24,5 @@ class DokNhiNSarkutResource extends JsonResource
 			'imo_mmsi' => $this->imo_mmsi,
 			'data_lain' => $this->data_lain,
 		];
-
-		return $array;
 	}
 }

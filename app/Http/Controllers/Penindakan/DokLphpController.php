@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 class DokLphpController extends DokController
 {
-	protected $doc_type = 'lphp';
+	protected $docType = 'lphp';
 
 	public function __construct()
 	{
 		parent::__construct();
 		$doc = new $this->model;
-		$this->kode_lptp = $doc->kode_lptp;
+		$this->kodeLptp = $doc->kodeLptp;
 	}
 
 	/*
@@ -24,7 +24,7 @@ class DokLphpController extends DokController
 	
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -37,7 +37,7 @@ class DokLphpController extends DokController
 
 	/**
 	 * Prepare data LPHP from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
@@ -47,20 +47,18 @@ class DokLphpController extends DokController
 		$thn_dok = $request->tanggal_dokumen != null ? date('Y', strtotime($request->tanggal_dokumen)) : null;
 		$tanggal_dokumen = $request->tanggal_dokumen != null ? date('Y-m-d', strtotime($request->tanggal_dokumen)) : null;
 
-		$data_lphp = [
+		return [
 			'thn_dok' => $thn_dok,
 			'tanggal_dokumen' => $tanggal_dokumen,
 			'analisa' => $request->analisa,
 			'catatan' => $request->catatan,
 		];
-
-		return $data_lphp;
 	}
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
-		$kode_lptp = $this->kode_lptp;
-		$lptp = $this->attachTo($kode_lptp, $request->lptp_id);
+		$kodeLptp = $this->kodeLptp;
+		$lptp = $this->attachTo($kodeLptp, $request->lptp_id);
 		$data['chain_id'] = $lptp->chain->id;
 
 		return $data;
@@ -68,17 +66,17 @@ class DokLphpController extends DokController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
-		$kode_lptp = $this->kode_lptp;
+		$kodeLptp = $this->kodeLptp;
 		$chain = $this->doc->chain;
-		$existing_lptp_id = $this->doc->chain->$kode_lptp->id;
+		$existing_lptp_id = $this->doc->chain->$kodeLptp->id;
 
 		// Change LPTP if lptp_id different from previous data
 		if ($request->lptp_id != $existing_lptp_id) {
 			// Detach from previous LPTP
-			$this->detachFrom($kode_lptp, $existing_lptp_id);
+			$this->detachFrom($kodeLptp, $existing_lptp_id);
 
 			// Attach to new LPTP
-			$lptp = $this->attachTo($kode_lptp, $request->lptp_id);
+			$lptp = $this->attachTo($kodeLptp, $request->lptp_id);
 			$chain = $lptp->chain;
 		}
 

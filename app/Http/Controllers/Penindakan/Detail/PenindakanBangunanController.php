@@ -17,13 +17,11 @@ class PenindakanBangunanController extends Controller
 	}
 
 	private function prepareData(Request $request) {
-		$data_bangunan = [
+		return [
 			'alamat' => $request->alamat,
 			'no_reg' => $request->no_reg,
 			'pemilik_id' => $request->pemilik ? $request->pemilik['id'] : null,
 		];
-
-		return $data_bangunan;
 	}
 
 	public function show($penindakan_id) {
@@ -68,7 +66,7 @@ class PenindakanBangunanController extends Controller
 			return new PenindakanBangunanResource($new_bangunan);
 		} else {
 			if ($penindakan->bangunan) {
-				// Delete previous bangunan data 
+				// Delete previous bangunan data
 				$penindakan->bangunan()->delete();
 			}
 

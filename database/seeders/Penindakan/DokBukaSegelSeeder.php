@@ -3,16 +3,14 @@
 namespace Database\Seeders\Penindakan;
 
 use App\Models\DocumentsChain;
-use App\Models\Penindakan\DokBukaSegel;
-use App\Models\Penindakan\DokSegel;
 use App\Models\Penindakan\Penindakan;
-use App\Models\Penomoran;
-use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
+use Database\Seeders\DokSeeder;
 
-class DokBukaSegelSeeder extends Seeder
+class DokBukaSegelSeeder extends DokSeeder
 {
 	use ObjekPenindakanSeederTrait;
+
+	protected $docCode = 'buka_segel';
 
     /**
      * Run the database seeds.
@@ -21,45 +19,34 @@ class DokBukaSegelSeeder extends Seeder
      */
     public function run()
     {
-		$faker = Faker::create();
-
-		// Current year
-		$year = date("Y");
-
-		// Get segel ids
-		$max_segel_id = DokSegel::max('id');
-		$available_segel_id = range(1, $max_segel_id);
+		// Get available BA Segel ids
+		$this->available_segel_id = $this->getAvailableDocIds('segel');
 			
-		for ($i=1; $i < 16; $i++) { 
-			// Get current number for buka segel
-			$max_buka_segel = DokBukaSegel::max('no_dok');
-			$no_current = $max_buka_segel + 1;
+		for ($i=1; $i < 16; $i++) {
+			// New Number
+			$this->currentNumber = $this->getNewNumber();
 				
 			// Create Buka Segel
-			$creator = $faker->randomElement(['123456', '665544']);
+			$creator = $this->choosePelaksana();
 
-			$buka_segel = new DokBukaSegel();
-			$buka_segel->no_dok = $no_current;
-			$buka_segel->agenda_dok = $buka_segel->agenda_dokumen;
-			$buka_segel->thn_dok = $year;
-			$buka_segel->no_dok_lengkap = "{$buka_segel->tipe_dokumen}-{$no_current}{$buka_segel->agenda_dokumen}{$year}";
-			$buka_segel->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
-			$buka_segel->sprint_id = $faker->numberBetween(1,10);
-			$buka_segel->tanggal_buka_segel = $faker->dateTimeThisYear()->format('Y-m-d');
-			$buka_segel->saksi_id = $faker->numberBetween(1,100);
+			$buka_segel = new $this->model;
+			$buka_segel->no_dok = $this->currentNumber;
+			$buka_segel->agenda_dok = $this->agendaDokumen;
+			$buka_segel->thn_dok = $this->year;
+			$buka_segel->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$buka_segel->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$buka_segel->sprint_id = $this->faker->numberBetween(1,10);
+			$buka_segel->tanggal_buka_segel = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$buka_segel->saksi_id = $this->faker->numberBetween(1,100);
 			$buka_segel->kode_status = 'terbit';
 			$buka_segel->created_by = $creator;
 			$buka_segel->updated_by = $creator;
 
-			$flag_segel = $faker->boolean();
+			$flag_segel = $this->faker->boolean();
 			if ($flag_segel) {
 				// Get data segel
-				$segel_id = $faker->randomElement($available_segel_id);
-				$key = array_search($segel_id, $available_segel_id);
-				unset($available_segel_id[$key]);
-				$segel = DokSegel::find($segel_id);
+				$segel = $this->chooseSegel();
 				$chain = $segel->chain;
-				$segel->update(['status_buka' => true]);
 
 				// Set Segel data
 				$buka_segel->chain_id = $chain->id;
@@ -73,7 +60,7 @@ class DokBukaSegelSeeder extends Seeder
 			} else {
 				// Create chain
 				$chain = DocumentsChain::create();
-				$chain->update(['latest_document' => $buka_segel->kode_dokumen]);
+				$chain->update(['latest_document' => $buka_segel->kodeDokumen]);
 
 				// Create penindakan
 				$penindakan = new Penindakan();
@@ -83,57 +70,51 @@ class DokBukaSegelSeeder extends Seeder
 				// Set Segel data
 				$buka_segel->chain_id = $chain->id;
 				$buka_segel->asal_segel = 'input';
-				$buka_segel->jenis_segel = $faker->randomElement(['Kertas', 'Timah', 'Lainnya']);
-				$buka_segel->jumlah_segel = $faker->numberBetween(1,5);
-				$buka_segel->satuan_segel = $faker->randomElement(['lembar', 'buah']);
-				$buka_segel->tempat_segel = $faker->word();
-				$buka_segel->nomor_segel = 'BA-' . $faker->numberBetween(1,100) . '/SEGEL/BC/' . date("Y");
-				$buka_segel->tanggal_segel = $faker->dateTimeThisYear()->format('Y-m-d');
+				$buka_segel->jenis_segel = $this->faker->randomElement(['Kertas', 'Timah', 'Lainnya']);
+				$buka_segel->jumlah_segel = $this->faker->numberBetween(1,5);
+				$buka_segel->satuan_segel = $this->faker->randomElement(['lembar', 'buah']);
+				$buka_segel->tempat_segel = $this->faker->word();
+				$buka_segel->nomor_segel = 'BA-' . $this->faker->numberBetween(1,100) . '/SEGEL/BC/' . date("Y");
+				$buka_segel->tanggal_segel = $this->faker->dateTimeThisYear()->format('Y-m-d');
 
 				// Objek penindakan
-				$with_sarkut = $faker->boolean();
-				if ($with_sarkut) {
+				$withSarkut = $this->faker->boolean();
+				if ($withSarkut) {
 					$this->createSarkut($penindakan);
 				}
 
 				// Barang
-				$with_barang = $faker->boolean();
-				if ($with_barang) {
+				$withBarang = $this->faker->boolean();
+				if ($withBarang) {
 					$this->createBarang($penindakan);
 				}
 
 				// Bangunan
-				$with_bangunan = $faker->boolean();
-				if ($with_bangunan) {
+				$withBangunan = $this->faker->boolean();
+				if ($withBangunan) {
 					$this->createBangunan($penindakan);
 				}
 			}
 			$buka_segel->saveQuietly();
 
 			// Petugas
-			$petugas1 = [
-				'posisi' => 'petugas1', 
-				'flag_pejabat' => false, 
-				'nip' => '123456',
-			];
-			$buka_segel->detail_petugas()->create($petugas1);
+			$availableNip = $this->nipPelaksana;
+			$nip = $this->createPetugas($buka_segel, 'petugas1', $availableNip);
 
-			$with_petugas2 = $faker->boolean();
+			$with_petugas2 = $this->faker->boolean();
 			if ($with_petugas2) {
-				$petugas2 = [
-					'posisi' => 'petugas2', 
-					'flag_pejabat' => false, 
-					'nip' => '665544',
-				];
-				$buka_segel->detail_petugas()->create($petugas2);
+				$availableNip = array_diff($availableNip, [$nip]);
+				$this->createPetugas($buka_segel, 'petugas2', $availableNip);
 			}
 		}
 
-		Penomoran::create([
-			'tipe_dokumen' => $buka_segel->tipe_dokumen,
-			'agenda' => $buka_segel->agenda_dokumen,
-			'tahun' => $year,
-			'nomor_terakhir' => $no_current,
-		]);
+		$this->createPenomoran();
     }
+
+	protected function chooseSegel()
+	{
+		$segel = $this->chooseDocSource('segel', $this->available_segel_id, 'status_buka');
+		$this->available_segel_id = array_diff($this->available_segel_id, [$segel->id]);
+		return $segel;
+	}
 }

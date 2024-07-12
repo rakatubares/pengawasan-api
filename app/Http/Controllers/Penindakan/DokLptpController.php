@@ -6,5 +6,5 @@ use App\Http\Controllers\DokController;
 
 class DokLptpController extends DokController
 {
-	protected $doc_type = 'lptp';
+	protected $docType = 'lptp';
 }

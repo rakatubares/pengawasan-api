@@ -52,7 +52,7 @@ class PenindakanController extends DokController
 			? $penindakan['hal_terjadi'] : null;
 		$saksi_id = $penindakan['saksi'] ? $penindakan['saksi']['id'] : null;
 
-		$data_penindakan = [
+		return [
 			'sprint_id' => $sprint_id,
 			'tanggal_mulai_penindakan' => $tanggal_mulai_penindakan,
 			'waktu_mulai_penindakan' => $waktu_mulai_penindakan,
@@ -66,8 +66,6 @@ class PenindakanController extends DokController
 			'hal_terjadi' => $hal_terjadi,
 			'saksi_id' => $saksi_id,
 		];
-
-		return $data_penindakan;
 	}
 
 	protected function createPenindakan($request) {
@@ -112,35 +110,35 @@ class PenindakanController extends DokController
 		if ($chain->segel) { $chain->segel->update(['chain_id' => $chain_id]); }
 		if ($chain->buka_segel) { $chain->buka_segel->update(['chain_id' => $chain_id]); }
 		
-		if ($chain->sbp) { 
-			$chain->sbp->update(['chain_id' => $chain_id]); 
+		if ($chain->sbp) {
+			$chain->sbp->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'sbp']);
 		} elseif ($chain->sbpn) {
-			$chain->sbpn->update(['chain_id' => $chain_id]); 
+			$chain->sbpn->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'sbpn']);
 		}
 
-		if ($chain->lptp) { 
-			$chain->lptp->update(['chain_id' => $chain_id]); 
+		if ($chain->lptp) {
+			$chain->lptp->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lptp']);
 		} elseif ($chain->lptpn) {
-			$chain->lptpn->update(['chain_id' => $chain_id]); 
+			$chain->lptpn->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lptpn']);
 		}
 
-		if ($chain->lphp) { 
-			$chain->lphp->update(['chain_id' => $chain_id]); 
+		if ($chain->lphp) {
+			$chain->lphp->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lphp']);
 		} elseif ($chain->lphpn) {
 			$chain->lphpn->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lphpn']);
 		}
 
-		if ($chain->lp) { 
-			$chain->lp->update(['chain_id' => $chain_id]); 
+		if ($chain->lp) {
+			$chain->lp->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lp']);
 		} elseif ($chain->lpn) {
-			$chain->lpn->update(['chain_id' => $chain_id]); 
+			$chain->lpn->update(['chain_id' => $chain_id]);
 			$new_chain->update(['latest_document' => 'lpn']);
 		}
 	}
@@ -154,9 +152,9 @@ class PenindakanController extends DokController
 		try {
 			// BA Riksa Badan
 			$existing_riksa_badan = $chain->riksa_badan;
-			if ($request->riksa_badan) { 
+			if ($request->riksa_badan) {
 				if (!$existing_riksa_badan) {
-					DokRiksaBadan::create($data); 
+					DokRiksaBadan::create($data);
 				}
 			} else {
 				if ($existing_riksa_badan) {
@@ -166,7 +164,7 @@ class PenindakanController extends DokController
 
 			// BA Riksa
 			$existing_riksa = $chain->riksa;
-			if ($request->riksa) { 
+			if ($request->riksa) {
 				if (!$existing_riksa) {
 					DokRiksa::create($data);
 				}
@@ -178,7 +176,7 @@ class PenindakanController extends DokController
 
 			// BA Tegah
 			$existing_tegah = $chain->tegah;
-			if ($request->tegah) { 
+			if ($request->tegah) {
 				if (!$existing_tegah) {
 					DokTegah::create($data);
 				}
@@ -190,7 +188,7 @@ class PenindakanController extends DokController
 
 			// BA Segel
 			$existing_segel = $chain->segel;
-			if ($request->segel) { 
+			if ($request->segel) {
 				$data_segel = $data;
 				$data_segel['jenis_segel'] = $request->data_segel['jenis_segel'];
 				$data_segel['jumlah_segel'] = $request->data_segel['jumlah_segel'];
@@ -199,7 +197,7 @@ class PenindakanController extends DokController
 				$data_segel['nomor_segel'] = $request->data_segel['nomor_segel'];
 
 				if (!$existing_segel) {
-					DokSegel::create($data_segel); 
+					DokSegel::create($data_segel);
 				} else {
 					$existing_segel->update($data_segel);
 				}

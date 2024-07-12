@@ -18,7 +18,7 @@ class CreateRefValiditasInformasiTable extends Migration
 			$table->string('klasifikasi')->unique();
 			$table->string('keterangan');
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

@@ -9,9 +9,9 @@ use App\Models\References\RefSkemaPenindakan;
 class DokLap extends Dokumen
 {
 	protected $table = 'dok_lap';
-	public $kode_dokumen = 'lap';
-	public $tipe_dokumen = 'LAP';
-	public $kode_nhi = 'nhi';
+	public $kodeDokumen = 'lap';
+	public $tipeDokumen = 'LAP';
+	public $kodeNhi = 'nhi';
 
 	protected $fillable = [
 		'no_dok',

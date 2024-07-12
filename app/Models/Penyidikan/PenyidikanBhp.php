@@ -39,7 +39,7 @@ class PenyidikanBhp extends Model
 	/**
 	 * Parent penyidikan
 	 */
-	public function penyidikan() 
+	public function penyidikan()
 	{
 		return $this->belongsTo(Penyidikan::class, 'penyidikan_id');
 	}

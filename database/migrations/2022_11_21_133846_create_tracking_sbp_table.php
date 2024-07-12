@@ -24,7 +24,7 @@ class CreateTrackingSbpTable extends Migration
 			$table->string('no_identitas');
 			$table->text('catatan')->nullable();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index(['no_dok', 'thn_dok']);
 			$table->index('deleted_at');
         });

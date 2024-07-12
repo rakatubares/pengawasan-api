@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 class DokNhiNController extends DokNhiController
 {
-	protected $doc_type = 'nhin';
+	protected $docType = 'nhin';
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)

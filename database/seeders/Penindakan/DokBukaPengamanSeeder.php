@@ -3,16 +3,14 @@
 namespace Database\Seeders\Penindakan;
 
 use App\Models\DocumentsChain;
-use App\Models\Penindakan\DokBukaPengaman;
-use App\Models\Penindakan\DokPengaman;
 use App\Models\Penindakan\Penindakan;
-use App\Models\Penomoran;
-use Faker\Factory as Faker;
-use Illuminate\Database\Seeder;
+use Database\Seeders\DokSeeder;
 
-class DokBukaPengamanSeeder extends Seeder
+class DokBukaPengamanSeeder extends DokSeeder
 {
 	use ObjekPenindakanSeederTrait;
+
+	protected $docCode = 'buka_pengaman';
 
 	/**
 	 * Run the database seeds.
@@ -21,47 +19,36 @@ class DokBukaPengamanSeeder extends Seeder
 	 */
 	public function run()
 	{
-		$faker = Faker::create();
+		// Get available BA Tanda Pengaman ids
+		$this->available_pengaman_id = $this->getAvailableDocIds('pengaman');
 
-		// Current year
-		$year = date("Y");
-
-		// Get pengaman ids
-		$max_pengaman_id = DokPengaman::max('id');
-		$available_pengaman_id = range(1, $max_pengaman_id);
-
-		for ($i=1; $i < 11; $i++) { 
-			// Get current number for buka pengaman
-			$max_buka_pengaman = DokBukaPengaman::max('no_dok');
-			$no_current = $max_buka_pengaman + 1;
+		for ($i=1; $i < 11; $i++) {
+			// New Number
+			$this->currentNumber = $this->getNewNumber();
 
 			// Create Buka pengaman
-			$creator = $faker->randomElement(['123456', '665544']);
+			$creator = $this->choosePelaksana();
 
-			$buka_pengaman = new DokBukaPengaman();
-			$buka_pengaman->no_dok = $no_current;
-			$buka_pengaman->agenda_dok = $buka_pengaman->agenda_dokumen;
-			$buka_pengaman->thn_dok = $year;
-			$buka_pengaman->no_dok_lengkap = "{$buka_pengaman->tipe_dokumen}-{$no_current}{$buka_pengaman->agenda_dokumen}{$year}";
-			$buka_pengaman->tanggal_dokumen = $faker->dateTimeThisYear()->format('Y-m-d');
-			$buka_pengaman->sprint_id = $faker->numberBetween(1,10);
-			$buka_pengaman->tanggal_buka_pengaman = $faker->dateTimeThisYear()->format('Y-m-d');
-			$buka_pengaman->saksi_id = $faker->numberBetween(1,100);
+			$buka_pengaman = new $this->model;
+			$buka_pengaman->no_dok = $this->currentNumber;
+			$buka_pengaman->agenda_dok = $this->agendaDokumen;
+			$buka_pengaman->thn_dok = $this->year;
+			$buka_pengaman->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+			$buka_pengaman->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$buka_pengaman->sprint_id = $this->faker->numberBetween(1,10);
+			$buka_pengaman->tanggal_buka_pengaman = $this->faker->dateTimeThisYear()->format('Y-m-d');
+			$buka_pengaman->saksi_id = $this->faker->numberBetween(1,100);
 			$buka_pengaman->kode_status = 'terbit';
 			$buka_pengaman->created_by = $creator;
 			$buka_pengaman->updated_by = $creator;
 
-			$flag_pengaman = $faker->boolean();
+			$flag_pengaman = $this->faker->boolean();
 			if ($flag_pengaman) {
-				// Get data segel
-				$pengaman_id = $faker->randomElement($available_pengaman_id);
-				$key = array_search($pengaman_id, $available_pengaman_id);
-				unset($available_pengaman_id[$key]);
-				$pengaman = DokPengaman::find($pengaman_id);
+				// Get data pengaman
+				$pengaman = $this->choosePengaman();
 				$chain = $pengaman->chain;
-				$pengaman->update(['status_buka' => true]);
 
-				// Set Segel data
+				// Set pengaman data
 				$buka_pengaman->chain_id = $chain->id;
 				$buka_pengaman->asal_pengaman = 'pengaman';
 				$buka_pengaman->jenis_pengaman = $pengaman->jenis_pengaman;
@@ -82,54 +69,48 @@ class DokBukaPengamanSeeder extends Seeder
 				// Set pengaman data
 				$buka_pengaman->chain_id = $chain->id;
 				$buka_pengaman->asal_pengaman = 'input';
-				$buka_pengaman->jenis_pengaman = $faker->randomElement(['Kertas', 'Timah', 'Lainnya']);
-				$buka_pengaman->jumlah_pengaman = $faker->numberBetween(1,5);
-				$buka_pengaman->satuan_pengaman = $faker->randomElement(['lembar', 'buah']);
-				$buka_pengaman->tempat_pengaman = $faker->word();
-				$buka_pengaman->nomor_pengaman = 'BA-' . $faker->numberBetween(1,100) . '/Tanda Pengaman/BC/' . date("Y");
-				$buka_pengaman->tanggal_pengaman = $faker->dateTimeThisYear()->format('Y-m-d');
+				$buka_pengaman->jenis_pengaman = $this->faker->randomElement(['Kertas', 'Timah', 'Lainnya']);
+				$buka_pengaman->jumlah_pengaman = $this->faker->numberBetween(1,5);
+				$buka_pengaman->satuan_pengaman = $this->faker->randomElement(['lembar', 'buah']);
+				$buka_pengaman->tempat_pengaman = $this->faker->word();
+				$buka_pengaman->nomor_pengaman = 'BA-' . $this->faker->numberBetween(1,100) . '/Tanda Pengaman/BC/' . date("Y");
+				$buka_pengaman->tanggal_pengaman = $this->faker->dateTimeThisYear()->format('Y-m-d');
 
 				// Objek penindakan
-				$with_sarkut = $faker->boolean();
-				if ($with_sarkut) {
+				$withSarkut = $this->faker->boolean();
+				if ($withSarkut) {
 					$this->createSarkut($penindakan);
 				}
 
 				// Barang
-				$with_barang = $faker->boolean();
-				if ($with_barang) {
+				$withBarang = $this->faker->boolean();
+				if ($withBarang) {
 					$this->createBarang($penindakan);
 				}
 			}
 			$buka_pengaman->saveQuietly();
 
 			// Update chain status
-			$chain->update(['latest_document' => $buka_pengaman->kode_dokumen]);
+			$chain->update(['latest_document' => $buka_pengaman->kodeDokumen]);
 
 			// Petugas
-			$petugas1 = [
-				'posisi' => 'petugas1', 
-				'flag_pejabat' => false, 
-				'nip' => '123456',
-			];
-			$buka_pengaman->detail_petugas()->create($petugas1);
+			$availableNip = $this->nipPelaksana;
+			$nip = $this->createPetugas($buka_pengaman, 'petugas1', $availableNip);
 
-			$with_petugas2 = $faker->boolean();
+			$with_petugas2 = $this->faker->boolean();
 			if ($with_petugas2) {
-				$petugas2 = [
-					'posisi' => 'petugas2', 
-					'flag_pejabat' => false, 
-					'nip' => '665544',
-				];
-				$buka_pengaman->detail_petugas()->create($petugas2);
+				$availableNip = array_diff($availableNip, [$nip]);
+				$this->createPetugas($buka_pengaman, 'petugas2', $availableNip);
 			}
 		}
 
-		Penomoran::create([
-			'tipe_dokumen' => $buka_pengaman->tipe_dokumen,
-			'agenda' => $buka_pengaman->agenda_dokumen,
-			'tahun' => $year,
-			'nomor_terakhir' => $no_current,
-		]);
+		$this->createPenomoran();
+	}
+
+	protected function choosePengaman()
+	{
+		$pengaman = $this->chooseDocSource('pengaman', $this->available_pengaman_id, 'status_buka');
+		$this->available_pengaman_id = array_diff($this->available_pengaman_id, [$pengaman->id]);
+		return $pengaman;
 	}
 }

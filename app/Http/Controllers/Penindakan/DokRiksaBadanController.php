@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class DokRiksaBadanController extends PenindakanController
 {
-	protected $doc_type = 'riksa_badan';
+	protected $docType = 'riksa_badan';
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
@@ -24,7 +24,7 @@ class DokRiksaBadanController extends PenindakanController
 		$data_badan['flag_badan'] = true;
 		$penindakanBadanController = new PenindakanBadanController();
 		$penindakanBadanController->store(
-			new Request($data_badan), 
+			new Request($data_badan),
 			$this->penindakan->id
 		);
 		parent::stored($request);
@@ -36,7 +36,7 @@ class DokRiksaBadanController extends PenindakanController
 		$data_badan['flag_badan'] = true;
 		$penindakanBadanController = new PenindakanBadanController();
 		$penindakanBadanController->update(
-			new Request($data_badan), 
+			new Request($data_badan),
 			$this->doc->chain->penindakan->id
 		);
 		parent::updated($request);

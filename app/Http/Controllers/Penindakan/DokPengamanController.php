@@ -6,18 +6,18 @@ use Illuminate\Http\Request;
 
 class DokPengamanController extends PenindakanController
 {
-	protected $doc_type = 'pengaman';
+	protected $docType = 'pengaman';
 
-	protected function validateData(Request $request) 
+	protected function validateData(Request $request)
 	{
 		$request->validate([
 			'jenis_pengaman' => 'required',
 		]);
 	}
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'alasan_pengamanan' => $request->alasan_pengamanan,
 			'keterangan' => $request->keterangan,
 			'jenis_pengaman' => $request->jenis_pengaman,
@@ -26,10 +26,8 @@ class DokPengamanController extends PenindakanController
 			'tempat_pengaman' => $request->tempat_pengaman,
 			'nomor_pengaman' => $request->nomor_pengaman,
 		];
-
-		return $data;
 	}
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 		$chain = $this->createChain();

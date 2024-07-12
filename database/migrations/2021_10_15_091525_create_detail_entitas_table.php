@@ -20,7 +20,7 @@ class CreateDetailEntitasTable extends Migration
 			$table->string('position');
 			$table->integer('entity_id');
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index(['entityable_type', 'entityable_id', 'position']);
 			$table->index('deleted_at');
 		});

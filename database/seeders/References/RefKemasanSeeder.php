@@ -16,7 +16,7 @@ class RefKemasanSeeder extends Seeder
 	public function run()
 	{
 		$kemasan = [
-			'BOTOL', 'BOX', 'BUNGKUS', 'CARTON', 'CASE', 'KOLI', 'KALENG', 'KARUNG', 
+			'BOTOL', 'BOX', 'BUNGKUS', 'CARTON', 'CASE', 'KOLI', 'KALENG', 'KARUNG',
 			'PACKAGE', 'KEMASAN', 'PALLET', 'KANTONG', 'PLASTIK'
 		];
 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DokRiksaController extends PenindakanController
 {
-	protected $doc_type = 'riksa';
+	protected $docType = 'riksa';
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);

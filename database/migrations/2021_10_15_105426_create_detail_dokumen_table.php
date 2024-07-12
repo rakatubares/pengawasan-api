@@ -20,7 +20,7 @@ class CreateDetailDokumenTable extends Migration
 			$table->string('no_dok')->index();
 			$table->date('tgl_dok')->nullable()->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
         });
     }

@@ -18,7 +18,7 @@ class CreateObjectRelationsTable extends Migration
 			$table->morphs('object1');
 			$table->morphs('object2');
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('object1_type');
 			$table->index('object1_id');
 			$table->index('object2_type');

@@ -18,7 +18,7 @@ class CreateRefKategoriPelanggaranTable extends Migration
 			$table->string('kategori')->unique();
 			$table->boolean('active')->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('created_at');
 			$table->index('updated_at');
 			$table->index('deleted_at');

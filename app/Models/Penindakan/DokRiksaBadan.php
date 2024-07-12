@@ -7,9 +7,9 @@ use App\Models\Dokumen;
 class DokRiksaBadan extends Dokumen
 {
 	protected $table = 'dok_riksa_badan';
-	public $kode_dokumen = 'riksa_badan';
-	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Badan/KPU.305/';
+	public $kodeDokumen = 'riksa_badan';
+	public $tipeDokumen = 'BA';
+	public $agendaDokumen = '/Badan/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',

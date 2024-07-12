@@ -7,8 +7,8 @@ use App\Models\Dokumen;
 class DokLi extends Dokumen
 {
 	protected $table = 'dok_li';
-	public $kode_dokumen = 'li';
-	public $tipe_dokumen = 'LI-1';
+	public $kodeDokumen = 'li';
+	public $tipeDokumen = 'LI-1';
 
 	protected $fillable = [
 		'no_dok',

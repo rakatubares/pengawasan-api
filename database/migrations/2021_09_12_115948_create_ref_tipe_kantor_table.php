@@ -17,7 +17,7 @@ class CreateRefTipeKantorTable extends Migration
 			$table->id();
 			$table->string('tipe_kantor')->index();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

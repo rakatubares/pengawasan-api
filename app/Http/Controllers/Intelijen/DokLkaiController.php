@@ -10,14 +10,14 @@ class DokLkaiController extends DokController
 {
 	use ConverterTrait;
 
-	protected $doc_type = 'lkai';
+	protected $docType = 'lkai';
 
 	public function __construct()
 	{
 		parent::__construct();
 		$doc = new $this->model;
-		$this->kode_lppi = $doc->kode_lppi;
-		$this->field_lppi_id = $this->kode_lppi . '_id';
+		$this->kodeLppi = $doc->kodeLppi;
+		$this->fieldLppiId = $this->kodeLppi . '_id';
 	}
 
 	/*
@@ -26,7 +26,7 @@ class DokLkaiController extends DokController
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function validateCommonData(Request $request) 
+	protected function validateCommonData(Request $request)
 	{
 		$request->validate([
 			'keputusan_pejabat' => 'boolean',
@@ -38,7 +38,7 @@ class DokLkaiController extends DokController
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -60,7 +60,7 @@ class DokLkaiController extends DokController
 		$data['hasil'] = $request->hasil;
 		$data['kesimpulan'] = $request->kesimpulan;
 		$data['rekomendasi_lain'] = $request->rekomendasi_lain;
-		if ($this->doc_type == 'lkai') {
+		if ($this->docType == 'lkai') {
 			$data['informasi_lain'] = $request->informasi_lain;
 		}
 		$data['tujuan'] = $request->tujuan;
@@ -75,7 +75,7 @@ class DokLkaiController extends DokController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
@@ -99,14 +99,14 @@ class DokLkaiController extends DokController
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
 
-		$field_lppi_id = $this->field_lppi_id;
+		$fieldLppiId = $this->fieldLppiId;
 		// Get chain ID
-		if ($request->$field_lppi_id == null) {
+		if ($request->$fieldLppiId == null) {
 			// Create new chain
 			$chain = $this->createChain();
 		} else {
 			// Get chain from existing LPPI
-			$lppi = $this->attachTo($this->kode_lppi, $request->$field_lppi_id);
+			$lppi = $this->attachTo($this->kodeLppi, $request->$fieldLppiId);
 			$chain = $lppi->chain;
 		}
 		$data['chain_id'] = $chain->id;
@@ -116,21 +116,21 @@ class DokLkaiController extends DokController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
-		$kode_lppi = $this->kode_lppi;
-		$field_lppi_id = $this->field_lppi_id;
-		$this->existing_lppi = $this->doc->chain->$kode_lppi;
+		$kodeLppi = $this->kodeLppi;
+		$fieldLppiId = $this->fieldLppiId;
+		$this->existing_lppi = $this->doc->chain->$kodeLppi;
 		if ($this->existing_lppi == null) {
-			if ($request->$field_lppi_id != null) {
-				$lppi = $this->attachTo($kode_lppi, $request->$field_lppi_id);
+			if ($request->$fieldLppiId != null) {
+				$lppi = $this->attachTo($kodeLppi, $request->$fieldLppiId);
 				$data['chain_id'] = $lppi->chain_id;
 			}
 		} else {
-			if ($request->$field_lppi_id == null) {
-				$this->detachFrom($kode_lppi, $this->existing_lppi->id);
+			if ($request->$fieldLppiId == null) {
+				$this->detachFrom($kodeLppi, $this->existing_lppi->id);
 				$data['chain_id'] = null;
-			} else if ($request->$field_lppi_id != $this->existing_lppi->id) {
-				$this->detachFrom($kode_lppi, $this->existing_lppi->id);
-				$lppi = $this->attachTo($kode_lppi, $request->$field_lppi_id);
+			} elseif ($request->$fieldLppiId != $this->existing_lppi->id) {
+				$this->detachFrom($kodeLppi, $this->existing_lppi->id);
+				$lppi = $this->attachTo($kodeLppi, $request->$fieldLppiId);
 				$data['chain_id'] = $lppi->chain_id;
 			}
 		}

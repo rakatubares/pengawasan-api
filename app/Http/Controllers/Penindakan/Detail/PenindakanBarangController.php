@@ -18,7 +18,7 @@ class PenindakanBarangController extends Controller
 	private function prepareData(Request $request) {
 		$tanggal_dokumen = $request->tanggal_dokumen != null ? date('Y-m-d', strtotime($request->tanggal_dokumen)) : null;
 
-		$data_barang = [
+		return [
 			'jumlah_kemasan' => $request->jumlah_kemasan,
 			'jenis_kemasan_id' => $request->kemasan ? $request->kemasan['id'] : null,
 			'nomor_kemasan' => $request->nomor_kemasan,
@@ -27,8 +27,6 @@ class PenindakanBarangController extends Controller
 			'tanggal_dokumen' => $tanggal_dokumen,
 			'pemilik_id' => $request->pemilik ? $request->pemilik['id'] : null,
 		];
-
-		return $data_barang;
 	}
 
 	public function show($penindakan_id) {
@@ -73,7 +71,7 @@ class PenindakanBarangController extends Controller
 			return new PenindakanBarangResource($new_barang);
 		} else {
 			if ($penindakan->barang) {
-				// Delete previous data 
+				// Delete previous data
 				$penindakan->barang()->delete();
 			}
 

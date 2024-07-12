@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class DokBukaSegelController extends PenindakanController
 {
-	protected $doc_type = 'buka_segel';
+	protected $docType = 'buka_segel';
 
 	/**
 	 * Validate request
@@ -26,7 +26,7 @@ class DokBukaSegelController extends PenindakanController
 		$tanggal_buka_segel = $request->tanggal_buka_segel
 			? date('Y-m-d', strtotime($request->tanggal_buka_segel))
 			: null;
-		$tanggal_segel = $request->tanggal_segel 
+		$tanggal_segel = $request->tanggal_segel
 			? date('Y-m-d', strtotime($request->tanggal_segel))
 			: null;
 		$asal_segel = (
@@ -35,29 +35,27 @@ class DokBukaSegelController extends PenindakanController
 			) ? null : $request->asal_segel;
 		$saksi_id = $request->saksi ? $request->saksi['id'] : null;
 
-		$data = [
+		return [
 			'sprint_id' => $request->sprint['id'],
 			'tanggal_buka_segel' => $tanggal_buka_segel,
 			'asal_segel' => $asal_segel,
-			'nomor_segel' => $asal_segel != 'segel' 
+			'nomor_segel' => $asal_segel != 'segel'
 				? $request->nomor_segel : null,
-			'tanggal_segel' => $asal_segel != 'segel' 
+			'tanggal_segel' => $asal_segel != 'segel'
 				? $tanggal_segel : null,
-			'jenis_segel' => $asal_segel != 'segel' 
+			'jenis_segel' => $asal_segel != 'segel'
 				? $request->jenis_segel : null,
-			'jumlah_segel' => $asal_segel != 'segel' 
+			'jumlah_segel' => $asal_segel != 'segel'
 				? $request->jumlah_segel : null,
-			'satuan_segel' => $asal_segel != 'segel' 
+			'satuan_segel' => $asal_segel != 'segel'
 				? $request->satuan_segel : null,
-			'tempat_segel' => $asal_segel != 'segel' 
+			'tempat_segel' => $asal_segel != 'segel'
 				? $request->tempat_segel : null,
 			'saksi_id' => $saksi_id,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 

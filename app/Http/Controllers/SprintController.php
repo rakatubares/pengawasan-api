@@ -16,13 +16,12 @@ class SprintController extends Controller
 	public function index()
 	{
 		$all_sprint = Sprint::all();
-		$sprint_list = SprintResource::collection($all_sprint);
-		return $sprint_list;
+		return SprintResource::collection($all_sprint);
 	}
 
 	/**
 	 * Display resource based on search query
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
@@ -34,8 +33,7 @@ class SprintController extends Controller
 			->orderBy('tanggal_sprint', 'DESC')
 			->take(5)
 			->get();
-		$search_list = SprintResource::collection($search_result);
-		return $search_list;
+		return SprintResource::collection($search_result);
 	}
 
 	/**
@@ -52,13 +50,11 @@ class SprintController extends Controller
 			'pejabat.id' => 'required|integer'
 		]);
 
-		$insert_result = Sprint::create([
+		return Sprint::create([
 			'nomor_sprint' => $request->nomor_sprint,
 			'tanggal_sprint' => $request->tanggal_sprint,
 			'pejabat_id' => $request->pejabat['id'],
 		]);
-
-		return $insert_result;
 	}
 
 	/**
@@ -69,7 +65,6 @@ class SprintController extends Controller
 	 */
 	public function show($id)
 	{
-		$sprint = new SprintResource(Sprint::find($id));
-		return $sprint;
+		return new SprintResource(Sprint::find($id));
 	}
 }

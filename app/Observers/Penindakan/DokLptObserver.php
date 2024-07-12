@@ -13,7 +13,7 @@ class DokLptObserver extends DokObserver
 	 * @param  \App\Models\penindakan\dokLpt  $dokLpt
 	 * @return void
 	 */
-	public function published($dokumen) 
+	public function published($dokumen)
 	{
 		$this->updatePenomoran($dokumen);
 		$dokumen->status_history()

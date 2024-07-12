@@ -15,6 +15,8 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
+use App\Http\Resources\Intelijen\DokStiResource;
+use App\Http\Resources\Intelijen\DokStiTableResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanTableResource;
 use App\Http\Resources\Penindakan\DokBukaSegelResource;
@@ -57,28 +59,28 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
 {
-	public function getModel($doc_type) 
+	public function getModel($docType)
 	{
-		return Relation::getMorphedModel($doc_type);
+		return Relation::getMorphedModel($docType);
 	}
 
-	public function getDocument($doc_type, $doc_id) 
+	public function getDocument($docType, $docId)
 	{
-		$model = $this->getModel($doc_type);
-		return $model::findOrFail($doc_id);
+		$model = $this->getModel($docType);
+		return $model::findOrFail($docId);
 	}
 
 	public function checkUnpublished($doc)
 	{
 		// Return TRUE if document is unpublished
-		$kode_status = $doc->kode_status;
-		$is_unpublished = (in_array($kode_status, $doc->unpublished_status)) ? true : false;
-		return $is_unpublished;
+		$kodeStatus = $doc->kode_status;
+		return (in_array($kodeStatus, $doc->unpublishedStatus)) ? true : false;
 	}
 
-	public function getResource($doc_type) {
+	public function getResource($docType) {
 		$resources = [
 			// Intelijen
+			'sti' => DokStiResource::class,
 			'lppi' => DokLppiResource::class,
 			'lkai' => DokLkaiResource::class,
 			'nhi' => DokNhiResource::class,
@@ -121,7 +123,7 @@ trait DocumentTrait
 		];
 
 		try {
-			$resource = $resources[$doc_type];
+			$resource = $resources[$docType];
 		} catch (\Throwable $th) {
 			$resource = null;
 		}
@@ -129,9 +131,10 @@ trait DocumentTrait
 		return $resource;
 	}
 
-	public function getTableResource($doc_type) {
+	public function getTableResource($docType) {
 		$resources = [
 			// Intelijen
+			'sti' => DokStiTableResource::class,
 			'lppi' => DokLppiTableResource::class,
 			'lkai' => DokLkaiTableResource::class,
 			'nhi' => DokNhiTableResource::class,
@@ -172,7 +175,7 @@ trait DocumentTrait
 		];
 
 		try {
-			$resource = $resources[$doc_type];
+			$resource = $resources[$docType];
 		} catch (\Throwable $th) {
 			$resource = DokTableResource::class;
 		}

@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDokLkaiTable extends Migration
 {
-	public function __construct()
-	{
-		$this->table_name = 'dok_lkai';
-		$this->kode_lpti = 'lpti';
-		$this->kode_npi = 'npi';
-		$this->kode_nhi = 'nhi';
-		$this->kode_ni = 'ni';
-	}
+	protected $tableName = 'dok_lkai';
+	protected $kodeLpti = 'lpti';
+	protected $kodeNpi = 'npi';
+	protected $kodeNhi = 'nhi';
+	protected $kodeNi = 'ni';
 
 	/**
 	 * Run the migrations.
@@ -22,7 +19,7 @@ class CreateDokLkaiTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create($this->table_name, function (Blueprint $table) {
+		Schema::create($this->tableName, function (Blueprint $table) {
 			$table->id();
 			$table->integer('no_dok')->nullable()->index();
 			$table->string('agenda_dok')->index();
@@ -30,18 +27,18 @@ class CreateDokLkaiTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
-			$table->string('nomor_'.$this->kode_lpti)->nullable()->index();
-			$table->date('tanggal_'.$this->kode_lpti)->nullable()->index();
-			$table->string('nomor_'.$this->kode_npi)->nullable()->index();
-			$table->date('tanggal_'.$this->kode_npi)->nullable()->index();
+			$table->string('nomor_'.$this->kodeLpti)->nullable()->index();
+			$table->date('tanggal_'.$this->kodeLpti)->nullable()->index();
+			$table->string('nomor_'.$this->kodeNpi)->nullable()->index();
+			$table->date('tanggal_'.$this->kodeNpi)->nullable()->index();
 			$table->text('informasi')->nullable();
 			$table->text('prosedur')->nullable();
 			$table->text('hasil')->nullable();
 			$table->text('kesimpulan')->nullable();
-			$table->boolean('flag_rekom_'.$this->kode_nhi)->index();
-			$table->boolean('flag_rekom_'.$this->kode_ni)->index();
+			$table->boolean('flag_rekom_'.$this->kodeNhi)->index();
+			$table->boolean('flag_rekom_'.$this->kodeNi)->index();
 			$table->text('rekomendasi_lain')->nullable();
-			if ($this->table_name == 'dok_lkai') {
+			if ($this->tableName == 'dok_lkai') {
 				$table->text('informasi_lain')->nullable();
 			}
 			$table->string('tujuan')->nullable();
@@ -54,7 +51,7 @@ class CreateDokLkaiTable extends Migration
 			$table->string('kode_status')->index();
 			$table->boolean('status_tindak_lanjut')->default(false)->index();
             $table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->string('created_by')->nullable()->index();
 			$table->string('updated_by')->nullable();
 			$table->string('deleted_by')->nullable();
@@ -71,6 +68,6 @@ class CreateDokLkaiTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists($this->table_name);
+		Schema::dropIfExists($this->tableName);
 	}
 }

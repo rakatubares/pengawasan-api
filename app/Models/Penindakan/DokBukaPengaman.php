@@ -9,9 +9,9 @@ use App\Models\Sprint;
 class DokBukaPengaman extends Dokumen
 {
 	protected $table = 'dok_buka_pengaman';
-	public $kode_dokumen = 'buka_pengaman';
-	public $tipe_dokumen = 'BA';
-	public $agenda_dokumen = '/Buka Pengaman/KPU.305/';
+	public $kodeDokumen = 'buka_pengaman';
+	public $tipeDokumen = 'BA';
+	public $agendaDokumen = '/Buka Pengaman/KPU.305/';
 
 	protected $fillable = [
 		'no_dok',

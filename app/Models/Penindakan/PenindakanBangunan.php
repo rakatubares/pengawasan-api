@@ -24,7 +24,7 @@ class PenindakanBangunan extends Model
 	/**
 	 * Parent penindakan
 	 */
-	public function penindakan() 
+	public function penindakan()
 	{
 		return $this->belongsTo(Penindakan::class, 'penindakan_id');
 	}

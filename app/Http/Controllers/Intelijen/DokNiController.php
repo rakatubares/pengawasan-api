@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 
 class DokNiController extends DokController
 {
-	protected $doc_type = 'ni';
+	protected $docType = 'ni';
 
 	public function __construct()
 	{
 		parent::__construct();
 		$doc = new $this->model;
-		$this->kode_lkai = $doc->kode_lkai;
-		$this->field_lkai_id = $this->kode_lkai . '_id';
+		$this->kodeLkai = $doc->kodeLkai;
+		$this->fieldLkaiId = $this->kodeLkai . '_id';
 	}
 
 	/*
@@ -23,7 +23,7 @@ class DokNiController extends DokController
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function validateCommonData(Request $request) 
+	protected function validateCommonData(Request $request)
 	{
 		$request->validate([
 			'sifat' => 'string',
@@ -33,7 +33,7 @@ class DokNiController extends DokController
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -46,34 +46,32 @@ class DokNiController extends DokController
 
 	/**
 	 * Prepare data from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
 	 */
 	protected function prepareData(Request $request)
 	{
-		$data_ni = [
+		return [
 			'sifat' => $request->sifat,
 			'klasifikasi' => $request->klasifikasi,
 			'tujuan' => $request->tujuan,
 			'uraian' => $request->uraian,
 		];
-
-		return $data_ni;
 	}
 
 	protected function storing(Request $request) {
 		$data = parent::storing($request);
 
-		$field_lkai_id = $this->field_lkai_id;
+		$fieldLkaiId = $this->fieldLkaiId;
 		// Get chain ID
-		if ($request->$field_lkai_id == null) {
+		if ($request->$fieldLkaiId == null) {
 			// Create new chain
 			$chain = $this->createChain();
 		} else {
 			// Get chain from existing LKAI
-			$lkai = $this->attachTo($this->kode_lkai, $request->$field_lkai_id);
+			$lkai = $this->attachTo($this->kodeLkai, $request->$fieldLkaiId);
 			$chain = $lkai->chain;
 		}
 		$data['chain_id'] = $chain->id;
@@ -88,21 +86,21 @@ class DokNiController extends DokController
 
 	protected function updating(Request $request) {
 		$data = parent::updating($request);
-		$kode_lkai = $this->kode_lkai;
-		$field_lkai_id = $this->field_lkai_id;
-		$existing_lkai = $this->doc->chain->$kode_lkai;
+		$kodeLkai = $this->kodeLkai;
+		$fieldLkaiId = $this->fieldLkaiId;
+		$existing_lkai = $this->doc->chain->$kodeLkai;
 		if ($existing_lkai == null) {
-			if ($request->$field_lkai_id != null) {
-				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
+			if ($request->$fieldLkaiId != null) {
+				$lkai = $this->attachTo($kodeLkai, $request->$fieldLkaiId);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		} else {
-			if ($request->$field_lkai_id == null) {
-				$this->detachFrom($kode_lkai, $existing_lkai->id);
+			if ($request->$fieldLkaiId == null) {
+				$this->detachFrom($kodeLkai, $existing_lkai->id);
 				$data['chain_id'] = null;
-			} else if ($request->$field_lkai_id != $existing_lkai->id) {
-				$this->detachFrom($kode_lkai, $existing_lkai->id);
-				$lkai = $this->attachTo($kode_lkai, $request->$field_lkai_id);
+			} elseif ($request->$fieldLkaiId != $existing_lkai->id) {
+				$this->detachFrom($kodeLkai, $existing_lkai->id);
+				$lkai = $this->attachTo($kodeLkai, $request->$fieldLkaiId);
 				$data['chain_id'] = $lkai->chain_id;
 			}
 		}

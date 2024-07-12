@@ -23,7 +23,7 @@ class EntitasBadanHukum extends Model
 	/**
 	 * Detail identitas
 	 */
-	public function identitas() 
+	public function identitas()
 	{
 		return $this->morphMany(EntitasIdentitas::class, 'identityable');
 	}

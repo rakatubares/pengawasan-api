@@ -7,11 +7,11 @@ use App\Models\Dokumen;
 class DokSbp extends Dokumen
 {
 	protected $table = 'dok_sbp';
-	public $kode_dokumen = 'sbp';
-	public $tipe_dokumen = 'SBP';
-	public $kode_nhi = 'nhi';
-	public $kode_lap = 'lap';
-	public $kode_lptp = 'lptp';
+	public $kodeDokumen = 'sbp';
+	public $tipeDokumen = 'SBP';
+	public $kodeNhi = 'nhi';
+	public $kodeLap = 'lap';
+	public $kodeLptp = 'lptp';
 
 	protected $fillable = [
 		'no_dok',
@@ -30,7 +30,7 @@ class DokSbp extends Dokumen
 		'tanggal_dokumen' => 'date',
 	];
 
-	public function tolak1() 
+	public function tolak1()
 	{
 		return $this->morphOne(DokTolakSbp1::class, 'parent');
 	}

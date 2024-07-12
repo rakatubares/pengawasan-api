@@ -8,8 +8,8 @@ use App\Models\Entitas\EntitasOrang;
 class DokLpf extends Dokumen
 {
 	protected $table = 'dok_lpf';
-	public $kode_dokumen = 'lpf';
-	public $tipe_dokumen = 'LPF';
+	public $kodeDokumen = 'lpf';
+	public $tipeDokumen = 'LPF';
 
 	protected $fillable = [
 		'no_dok',

@@ -21,7 +21,7 @@ class CreateEntitasIdentitasTable extends Migration
 			$table->string('pejabat_penerbit')->nullable();
 			$table->string('tempat_penerbitan')->nullable();
 			$table->timestamps();
-			$table->softDeletes($column = 'deleted_at', $precision = 0);
+			$table->softDeletes();
 			$table->index('deleted_at');
 		});
 	}

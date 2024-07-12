@@ -19,7 +19,8 @@ class RefUserCache extends Authenticatable
 		'pangkat',
 		'penempatan',
 		'pejabat',
-		'status'
+		'jabatan',
+		'status',
 	];
 
 	public $timestamps = true;

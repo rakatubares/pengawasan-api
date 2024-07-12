@@ -16,7 +16,6 @@ class RefValiditasInformasiController extends Controller
 	public function index()
 	{
 		$klasifikasi = RefValiditasInformasi::orderBy('klasifikasi')->get();
-		$list_klasifikasi = RefValiditasInformasiResource::collection($klasifikasi);
-		return $list_klasifikasi;
+		return RefValiditasInformasiResource::collection($klasifikasi);
 	}
 }

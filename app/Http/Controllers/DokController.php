@@ -18,18 +18,20 @@ class DokController extends Controller
 	use TembusanTrait;
 	use UserTrait;
 
-	protected $doc_type = null;
+	protected $docType = null;
 	protected $model = null;
 	protected $resource = null;
-	protected $table_resource = null;
+	protected $tableResource = null;
 	protected $date = null;
 	protected $year = null;
+	private $errTerbit = 'Dokumen sudah diterbitkan.';
+	private $errUnauthorized = 'Unauthorized';
 
 	public function __construct()
 	{
-		$this->model = $this->getModel($this->doc_type);
-		$this->resource = $this->getResource($this->doc_type);
-		$this->table_resource = $this->getTableResource($this->doc_type);
+		$this->model = $this->getModel($this->docType);
+		$this->resource = $this->getResource($this->docType);
+		$this->tableResource = $this->getTableResource($this->docType);
 	}
 
 	/*
@@ -45,17 +47,16 @@ class DokController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$permission = 'view-' . $this->doc_type;
+		$permission = 'view-' . $this->docType;
 		$permitted = $this->checkPermission($permission, $request->bearerToken());
 
 		if ($permitted) {
 			$all_docs = $this->model::orderBy('created_at', 'desc')
 				->orderBy('no_dok', 'desc')
 				->get();
-			$docs_list = $this->table_resource::collection($all_docs);
-			return $docs_list;
+			return $this->tableResource::collection($all_docs);
 		} else {
-			return response()->json(['error' => 'Unauthorized'], 401);
+			return response()->json(['error' => $this->errUnauthorized], 401);
 		}
 	}
 
@@ -67,13 +68,13 @@ class DokController extends Controller
 	 */
 	public function show(Request $request, $id)
 	{
-		$permission = 'view-' . $this->doc_type;
+		$permission = 'view-' . $this->docType;
 		$permitted = $this->checkPermission($permission, $request->bearerToken());
 		
 		if ($permitted) {
 			return new $this->resource($this->model::findOrFail($id));
 		} else {
-			return response()->json(['error' => 'Unauthorized'], 401);
+			return response()->json(['error' => $this->errUnauthorized], 401);
 		}
 	}
 
@@ -81,13 +82,13 @@ class DokController extends Controller
 	 * Display search result.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  string  $doc_type
+	 * @param  string  $docType
 	 * @return \Illuminate\Http\Response
 	 */
-	public function search(Request $request, $doc_type) 
+	public function search(Request $request, $docType)
 	{
-		if ($this->doc_type == null) {
-			$this->doc_type = $doc_type;
+		if ($this->docType == null) {
+			$this->docType = $docType;
 			$this->__construct();
 		}
 
@@ -96,7 +97,7 @@ class DokController extends Controller
 		$exc = $request->exc;
 		$search = '%' . $src . '%';
 
-		$search_result = $this->model::where(function ($query) use ($search, $flt) 
+		$search_result = $this->model::where(function ($query) use ($search, $flt)
 			{
 				$query->where('no_dok_lengkap', 'like', $search)
 					->when($flt != null, function ($query) use ($flt)
@@ -104,7 +105,7 @@ class DokController extends Controller
 						foreach ($flt as $column => $value) {
 							if (is_array($value)) {
 								$query->whereIn($column, $value);
-							} else if ($value == null) {
+							} elseif ($value == null) {
 								$query->where($column, $value);
 							} else {
 								$search_value = '%' . $value . '%';
@@ -122,20 +123,19 @@ class DokController extends Controller
 			->orderBy('id', 'desc')
 			->take(5)
 			->get();
-		$search_list = $this->table_resource::collection($search_result);
-		return $search_list;
+		return $this->tableResource::collection($search_result);
 	}
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request) {}
 
 	/**
 	 * Prepare data SBP from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @return Array
 	 */
@@ -155,7 +155,7 @@ class DokController extends Controller
 	 */
 	protected function store(Request $request)
 	{
-		$permission = 'create-' . $this->doc_type;
+		$permission = 'create-' . $this->docType;
 		$permitted = $this->checkPermission($permission, $request->bearerToken());
 
 		if ($permitted) {
@@ -174,21 +174,19 @@ class DokController extends Controller
 				DB::commit();
 
 				// Return data resource
-				$resource = $this->show($request, $this->doc->id);
-				return $resource;
+				return $this->show($request, $this->doc->id);
 			} catch (\Throwable $th) {
 				DB::rollBack();
 				throw $th;
 			}
 		} else {
-			return response()->json(['error' => 'Unauthorized'], 401);
+			return response()->json(['error' => $this->errUnauthorized], 401);
 		}
 	}
 
-	protected function storing(Request $request) { 
+	protected function storing(Request $request) {
 		$this->validateData($request);
-		$data = $this->prepareData($request);
-		return $data; 
+		return $this->prepareData($request);
 	}
 
 	protected function stored(Request $request) {
@@ -210,14 +208,14 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	protected function update(Request $request, $doc_id)
+	protected function update(Request $request, $docId)
 	{
 		// Check if document is not published yet
-		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$this->doc = $this->getDocument($this->docType, $docId);
 		$is_unpublished = $this->checkUnpublished($this->doc);
 
 		if ($is_unpublished) {
-			$permission = 'create-' . $this->doc_type;
+			$permission = 'create-' . $this->docType;
 			$user = $this->getUserInfo($request->bearerToken());
 			$permitted = $this->checkPermission($permission, $request->bearerToken());
 			$match_user = $user['nip'] == $this->doc->created_by;
@@ -238,25 +236,22 @@ class DokController extends Controller
 					DB::commit();
 		
 					// Return data
-					$resource = $this->show($request, $this->doc->id);
-					return $resource;
+					return $this->show($request, $this->doc->id);
 				} catch (\Throwable $th) {
 					DB::rollBack();
 					throw $th;
 				}
 			} else {
-				return response()->json(['error' => 'Unauthorized'], 401);
+				return response()->json(['error' => $this->errUnauthorized], 401);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan, tidak dapat mengupdate dokumen.'], 422);
-			return $result;
+			return response()->json(['error' => $this->errTerbit], 422);
 		}
 	}
 
-	protected function updating(Request $request) { 
+	protected function updating(Request $request) {
 		$this->validateData($request);
-		$data = $this->prepareData($request, 'update');
-		return $data; 
+		return $this->prepareData($request, 'update');
 	}
 
 	protected function updated(Request $request) {
@@ -277,13 +272,13 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function book(Request $request, $doc_id) 
+	public function book(Request $request, $docId)
 	{
-		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$this->doc = $this->getDocument($this->docType, $docId);
 		$is_draft = $this->doc->kode_status == 'draft';
 
 		if ($is_draft) {
-			$permission = 'create-' . $this->doc_type;
+			$permission = 'create-' . $this->docType;
 			$user = $this->getUserInfo($request->bearerToken());
 			$permitted = $this->checkPermission($permission, $request->bearerToken());
 			$match_user = $user['nip'] == $this->doc->created_by;
@@ -298,11 +293,10 @@ class DokController extends Controller
 					throw $th;
 				}
 			} else {
-				return response()->json(['error' => 'Unauthorized'], 401);
+				return response()->json(['error' => $this->errUnauthorized], 401);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
-			return $result;
+			return response()->json(['error' => $this->errTerbit], 422);
 		}
 	}
 
@@ -318,12 +312,12 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function publish(Request $request, $doc_id)
+	public function publish(Request $request, $docId)
 	{
-		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$this->doc = $this->getDocument($this->docType, $docId);
 		$is_unpublished = $this->checkUnpublished($this->doc);
 		if ($is_unpublished) {
-			$permission = 'create-' . $this->doc_type;
+			$permission = 'create-' . $this->docType;
 			$user = $this->getUserInfo($request->bearerToken());
 			$permitted = $this->checkPermission($permission, $request->bearerToken());
 			$match_user = $user['nip'] == $this->doc->created_by;
@@ -338,11 +332,10 @@ class DokController extends Controller
 					throw $th;
 				}
 			} else {
-				return response()->json(['error' => 'Unauthorized'], 401);
+				return response()->json(['error' => $this->errUnauthorized], 401);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
-			return $result;
+			return response()->json(['error' => $this->errTerbit], 422);
 		}
 	}
 
@@ -358,13 +351,13 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Request $request, $doc_id)
+	public function destroy(Request $request, $docId)
 	{
-		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$this->doc = $this->getDocument($this->docType, $docId);
 		$is_draft = $this->doc->kode_status == 'draft';
 
 		if ($is_draft) {
-			$permission = 'delete-' . $this->doc_type;
+			$permission = 'delete-' . $this->docType;
 			$user = $this->getUserInfo($request->bearerToken());
 			$permitted = $this->checkPermission($permission, $request->bearerToken());
 			$match_user = $user['nip'] == $this->doc->created_by;
@@ -372,18 +365,17 @@ class DokController extends Controller
 			if ($match_user && $permitted) {
 				DB::beginTransaction();
 				try {
-					$this->doc->delete();	
+					$this->doc->delete();
 					DB::commit();
 				} catch (\Throwable $th) {
 					DB::rollBack();
 					throw $th;
 				}
 			} else {
-				return response()->json(['error' => 'Unauthorized'], 401);
+				return response()->json(['error' => $this->errUnauthorized], 401);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen sudah diterbitkan.'], 422);
-			return $result;
+			return response()->json(['error' => $this->errTerbit], 422);
 		}
 	}
 
@@ -399,13 +391,13 @@ class DokController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function rollback(Request $request, $doc_id) {
+	public function rollback(Request $request, $docId) {
 		// Check if document is already published
-		$this->doc = $this->getDocument($this->doc_type, $doc_id);
+		$this->doc = $this->getDocument($this->docType, $docId);
 		$is_published = !$this->checkUnpublished($this->doc);
 
 		if ($is_published) {
-			$permission = 'rollback-' . $this->doc_type;
+			$permission = 'rollback-' . $this->docType;
 			$permitted = $this->checkPermission($permission, $request->bearerToken());
 
 			if ($permitted) {
@@ -418,11 +410,10 @@ class DokController extends Controller
 					throw $th;
 				}
 			} else {
-				return response()->json(['error' => 'Unauthorized'], 401);
+				return response()->json(['error' => $this->errUnauthorized], 401);
 			}
 		} else {
-			$result = response()->json(['error' => 'Dokumen belum diterbitkan.'], 422);
-			return $result;
+			return response()->json(['error' => 'Dokumen belum diterbitkan.'], 422);
 		}
 	}
 
@@ -432,14 +423,14 @@ class DokController extends Controller
 	 |--------------------------------------------------------------------------
 	 */
 
-	protected function attachTo($doc_type, $doc_id, $column_name=null) {
-		$related_doc = $this->getDocument($doc_type, $doc_id);
-		$related_doc->followedUp($column_name);
-		return $related_doc;
+	protected function attachTo($docType, $docId, $columnName=null) {
+		$relatedDoc = $this->getDocument($docType, $docId);
+		$relatedDoc->followedUp($columnName);
+		return $relatedDoc;
 	}
 
-	protected function detachFrom($doc_type, $doc_id, $column_name=null) {
-		$related_doc = $this->getDocument($doc_type, $doc_id);
-		$related_doc->unFollowedUp($column_name);
+	protected function detachFrom($docType, $docId, $columnName=null) {
+		$relatedDoc = $this->getDocument($docType, $docId);
+		$relatedDoc->unFollowedUp($columnName);
 	}
 }

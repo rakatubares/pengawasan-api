@@ -7,18 +7,16 @@ use Illuminate\Http\Request;
 
 class DokSplitController extends DokController
 {
-	protected $doc_type = 'split';
+	protected $docType = 'split';
 
-	protected function prepareData(Request $request) 
+	protected function prepareData(Request $request)
 	{
-		$data = [
+		return [
 			'dugaan_pelanggaran' => $request->dugaan_pelanggaran,
 		];
-
-		return $data;
 	}
 
-	protected function storing(Request $request) 
+	protected function storing(Request $request)
 	{
 		$data = parent::storing($request);
 
@@ -32,7 +30,7 @@ class DokSplitController extends DokController
 		return $data;
 	}
 
-	protected function stored(Request $request) 
+	protected function stored(Request $request)
 	{
 		if ($request->has('petugas')) {
 			// Pejabat
@@ -51,12 +49,11 @@ class DokSplitController extends DokController
 					array_push($nip_pelaksana, $pelaksana['nip']);
 				}
 			}
-			
 		}
 		if ($request->has('tembusan')) {$this->setTembusan($request->tembusan, $this->doc);}
 	}
 
-	protected function updating(Request $request) 
+	protected function updating(Request $request)
 	{
 		$data = parent::updating($request);
 
@@ -64,7 +61,7 @@ class DokSplitController extends DokController
 		$existing_source_id = $this->doc->chain->lpf->id;
 
 		// Change chain
-		if ($existing_source_id != $request->lpf['id']) 
+		if ($existing_source_id != $request->lpf['id'])
 		{
 			// Detach from previous LP
 			$this->detachFrom('lpf', $existing_source_id);
@@ -79,7 +76,7 @@ class DokSplitController extends DokController
 		return $data;
 	}
 
-	protected function updated(Request $request) 
+	protected function updated(Request $request)
 	{
 		if ($request->has('petugas')) {
 			// Pejabat
@@ -91,33 +88,38 @@ class DokSplitController extends DokController
 			$this->savePetugas($petugas, $this->doc);
 
 			// Pelaksana
+			$this->updatePelaksana($request);
 			
-			// Get existing pelaksana
-			$existing_pelaksana_nip = [];
-			foreach ($this->doc->detail_petugas as $petugas) {
-				if ($petugas['posisi'] == 'petugas') {
-					array_push($existing_pelaksana_nip, $petugas['nip']);
-				}
-			}
-
-			// Insert new pelaksana
-			$new_pelaksana_nip = [];
-			foreach ($request->petugas['pelaksana'] as $pelaksana) {
-				if (!in_array($pelaksana['nip'], $existing_pelaksana_nip)) {
-					$this->saveNonPejabat('petugas', $pelaksana, $this->doc);
-				}
-				array_push($new_pelaksana_nip, $pelaksana['nip']);
-			}
-			
-			// Delete not chosen pelaksana
-			foreach ($existing_pelaksana_nip as $nip) {
-				if (!in_array($nip, $new_pelaksana_nip)) {
-					$this->doc->detail_petugas()
-						->where(['posisi' => 'petugas', 'nip' => $nip])
-						->delete();
-				}
-			}
 		}
 		if ($request->has('tembusan')) {$this->setTembusan($request->tembusan, $this->doc);}
+	}
+
+	private function updatePelaksana($request)
+	{
+		// Get existing pelaksana
+		$existing_pelaksana_nip = [];
+		foreach ($this->doc->detail_petugas as $petugas) {
+			if ($petugas['posisi'] == 'petugas') {
+				array_push($existing_pelaksana_nip, $petugas['nip']);
+			}
+		}
+
+		// Insert new pelaksana
+		$new_pelaksana_nip = [];
+		foreach ($request->petugas['pelaksana'] as $pelaksana) {
+			if (!in_array($pelaksana['nip'], $existing_pelaksana_nip)) {
+				$this->saveNonPejabat('petugas', $pelaksana, $this->doc);
+			}
+			array_push($new_pelaksana_nip, $pelaksana['nip']);
+		}
+		
+		// Delete not chosen pelaksana
+		foreach ($existing_pelaksana_nip as $nip) {
+			if (!in_array($nip, $new_pelaksana_nip)) {
+				$this->doc->detail_petugas()
+					->where(['posisi' => 'petugas', 'nip' => $nip])
+					->delete();
+			}
+		}
 	}
 }

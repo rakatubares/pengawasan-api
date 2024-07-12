@@ -21,7 +21,7 @@ trait ObjekPenindakanSeederTrait
 			'jenis_sarkut' => 'Pesawat',
 			'nomor_sarkut' => $faker->regexify('[A-Z]{2}[0-9]{3}'),
 			'jumlah_kapasitas' => $faker->numberBetween(1, 100),
-			'satuan_kapasitas' => $faker->regexify('[A-Z]{3}'),
+			'satuan_kapasitas' => $faker->regexify('[A-Z]{2}'),
 			'pengemudi_id' => $faker->numberBetween(1, 100),
 			'bendera_sarkut' => $faker->countryCode(),
 			'registrasi_sarkut' => $faker->regexify('[A-Z]{5}'),
@@ -44,11 +44,11 @@ trait ObjekPenindakanSeederTrait
 			'jenis_kemasan_id' => $faker->numberBetween(1,$max_kemasan_id),
 			'nomor_kemasan' => $faker->boolean()
 				? $faker->regexify('[A-Z0-9]{6,10}') : null,
-			'jenis_dokumen' => $with_dokumen 
+			'jenis_dokumen' => $with_dokumen
 				? $faker->regexify('[A-Z]{3}') : null,
-			'nomor_dokumen' => $with_dokumen 
+			'nomor_dokumen' => $with_dokumen
 				? $faker->regexify('[0-9]{6}') : null,
-			'tanggal_dokumen' => $with_dokumen 
+			'tanggal_dokumen' => $with_dokumen
 				? $faker->dateTimeThisYear()->format('Y-m-d') : null,
 			'pemilik_id' => $faker->numberBetween(1, 100)
 		];
@@ -56,7 +56,7 @@ trait ObjekPenindakanSeederTrait
 
 		// Create barang
 		$item_count = $faker->numberBetween(1, 10);
-		for ($i=0; $i < $item_count; $i++) { 
+		for ($i=0; $i < $item_count; $i++) {
 			$with_berat = $faker->boolean();
 			$penindakan_barang->barang()
 				->create([
@@ -98,14 +98,14 @@ trait ObjekPenindakanSeederTrait
 			'pengemudi_id' => $with_sarkut ? $faker->numberBetween(1, 100) : null,
 			'bendera_sarkut' => $with_sarkut ? $faker->countryCode() : null,
 			'registrasi_sarkut' => $with_sarkut ? $faker->regexify('[A-Z]{5}') : null,
-			'jenis_dokumen' => $with_dokumen 
+			'jenis_dokumen' => $with_dokumen
 				? $faker->regexify('[A-Z]{3}') : null,
-			'nomor_dokumen' => $with_dokumen 
+			'nomor_dokumen' => $with_dokumen
 				? $faker->regexify('[0-9]{6}') : null,
-			'tanggal_dokumen' => $with_dokumen 
+			'tanggal_dokumen' => $with_dokumen
 				? $faker->dateTimeThisYear()->format('Y-m-d') : null,
-			'uraian_pemeriksaan' => $faker->sentence($nbWOrds = 20),
-			'hasil_pemeriksaan' => $faker->sentence($nbWOrds = 20),
+			'uraian_pemeriksaan' => $faker->sentence(20),
+			'hasil_pemeriksaan' => $faker->sentence(20),
 		];
 		$penindakan->badan()->create($data_penindakan_badan);
 	}

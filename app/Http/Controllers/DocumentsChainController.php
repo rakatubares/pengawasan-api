@@ -19,7 +19,6 @@ class DocumentsChainController extends Controller
 	public function show($doc_type, $doc_id)
 	{
 		$doc = $this->getDocument($doc_type, $doc_id);
-		$data = new DocumentsChainResource($doc->chain);
-		return $data;
+		return new DocumentsChainResource($doc->chain);
 	}
 }

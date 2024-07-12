@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class DokLptController extends DokController
 {
-    protected $doc_type = 'lpt';
+    protected $docType = 'lpt';
 
 	/**
 	 * Validate request
-	 * 
+	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 */
 	protected function validateData(Request $request)
@@ -23,21 +23,19 @@ class DokLptController extends DokController
 
 	/**
 	 * Prepare data LPHP from request to array
-	 * 
+	 *
 	 * @param Request $request
 	 * @param String $state
 	 * @return Array
 	 */
 	protected function prepareData(Request $request, $state='insert')
 	{
-		$data_lpt = [
+		return [
 			'sbp_id' => $request->sbp['id'],
 			'barang' => $request->barang,
 			'sarpras' => $request->sarpras,
 			'kronologi' => $request->kronologi,
 		];
-
-		return $data_lpt;
 	}
 
 	protected function storing(Request $request) {

@@ -36,13 +36,15 @@ class EntitasResource extends JsonResource
 			case 'entitas-badan-hukum':
 				$data_entitas = new EntitasBadanHukumResource($this->resource);
 				break;
+
+			default:
+				$data_entitas = null;
+				break;
 		}
 
-		$array = [
+		return [
 			'type' => $this->type,
 			'data' => $data_entitas,
 		];
-
-		return $array;
 	}
 }

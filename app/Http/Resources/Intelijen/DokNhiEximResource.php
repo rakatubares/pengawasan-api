@@ -15,7 +15,7 @@ class DokNhiEximResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
-		$array = [
+		return [
 			'tipe' => $this->tipe,
 			'jenis_dok' => $this->jenis_dok,
 			'nomor_dok' => $this->nomor_dok,
@@ -32,7 +32,5 @@ class DokNhiEximResource extends JsonResource
 			'entitas' => new EntitasResource($this->entitas, $this->entitas_type),
 			'data_lain' => $this->data_lain,
 		];
-
-		return $array;
 	}
 }

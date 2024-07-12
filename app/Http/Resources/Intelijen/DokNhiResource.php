@@ -29,21 +29,21 @@ class DokNhiResource extends JsonResource
 	}
 
 	protected function nhiArray() {
-		$array = [
+		return [
 			'id' => $this->id,
 			'no_dok' => $this->no_dok,
 			'agenda_dok' => $this->agenda_dok,
 			'thn_dok' => $this->thn_dok,
 			'no_dok_lengkap' => $this->no_dok_lengkap,
 			'tanggal_dokumen' => $this->tanggal_dokumen
-				? $this->tanggal_dokumen->format('d-m-Y') 
+				? $this->tanggal_dokumen->format('d-m-Y')
 				: null,
 			'sifat' => $this->sifat,
 			'klasifikasi' => $this->klasifikasi,
 			'tujuan' => $this->tujuan,
 			'tempat_indikasi' => $this->tempat_indikasi,
-			'tanggal_indikasi' => $this->tanggal_indikasi != null 
-				? $this->tanggal_indikasi->format('d-m-Y') 
+			'tanggal_indikasi' => $this->tanggal_indikasi != null
+				? $this->tanggal_indikasi->format('d-m-Y')
 				: null,
 			'waktu_indikasi' => $this->waktu_indikasi,
 			'zona_waktu' => $this->zona_waktu,
@@ -55,7 +55,5 @@ class DokNhiResource extends JsonResource
 			'kode_status' => $this->kode_status,
 			'created_by' => new RefUserResource($this->creator),
 		];
-
-		return $array;
 	}
 }

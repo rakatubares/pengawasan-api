@@ -23,7 +23,7 @@ class DokLppiInformasi extends Model
 		'kode_validitas',
 	];
 
-	public function infoable() 
+	public function infoable()
 	{
 		return $this->morphTo();
 	}
