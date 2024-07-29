@@ -14,18 +14,15 @@ class DokLphpTableResource extends DokTableResource
      */
     public function toArray($request)
     {
-		$kode_lptp = $this->kode_lptp;
+        $kode_lptp = $this->kode_lptp;
+        $lptp = $this->chain->$kode_lptp;
+        $no_lptp = $lptp ? $lptp->no_dok_lengkap : null;
+        $tgl_lptp = $lptp ? $lptp->tanggal_dokumen : null;
+        if ($tgl_lptp) { $tgl_lptp = $tgl_lptp->format('d-m-Y'); }
 
-		$array = $this->makeBasicArray();
-		$array['no_lptp'] = $this->chain->$kode_lptp
-			? $this->chain->$kode_lptp->no_dok_lengkap
-			: null;
-		$array['tanggal_lptp'] = $this->chain->$kode_lptp
-			? (
-				$this->chain->$kode_lptp->tanggal_dokumen
-				? $this->chain->$kode_lptp->tanggal_dokumen->format('d-m-Y')
-				: null
-			) : null;
-		return $array;
+        $array = $this->makeBasicArray();
+        $array['no_lptp'] = $no_lptp;
+        $array['tanggal_lptp'] = $tgl_lptp;
+        return $array;
     }
 }

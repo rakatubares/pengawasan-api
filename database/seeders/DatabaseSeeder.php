@@ -6,6 +6,7 @@ use Database\Seeders\Intelijen\DokLkaiNSeeder;
 use Database\Seeders\Intelijen\DokLkaiSeeder;
 use Database\Seeders\Intelijen\DokLppiNSeeder;
 use Database\Seeders\Intelijen\DokLppiSeeder;
+use Database\Seeders\Intelijen\DokLptiSeeder;
 use Database\Seeders\Intelijen\DokNhiNSeeder;
 use Database\Seeders\Intelijen\DokNhiSeeder;
 use Database\Seeders\Intelijen\DokNiNSeeder;
@@ -46,82 +47,73 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-	/**
-	 * Seed the application's database.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$this->call([
-			RefKodeDokumenSeeder::class,
-			RefStatusSeeder::class,
-			RefNegaraSeeder::class,
-			RefBandaraSeeder::class,
-			RefSatuanSeeder::class,
-			RefKemasanSeeder::class,
-			RefKategoriBarangSeeder::class,
-			RefKategoriPelanggaranSeeder::class,
-			RefSkemaPenindakanSeeder::class,
-			RefTipeKantorSeeder::class,
-			RefKantorBCSeeder::class,
-			RefLokasiSeeder::class,
-			RefKepercayaanSumberSeeder::class,
-			RefValiditasInformasiSeeder::class,
-			RefJabatanSeeder::class,
-			RefUserCacheSeeder::class,
-			EntitasOrangSeeder::class,
-			EntitasBadanHukumSeeder::class,
-			SprintSeeder::class,
-			
-			// Intelijen
-			DokStiSeeder::class,
-			DokLppiSeeder::class,
-			DokLkaiSeeder::class,
-			DokNhiSeeder::class,
-			DokNiSeeder::class,
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->call([
+            RefKodeDokumenSeeder::class,
+            RefStatusSeeder::class,
+            RefNegaraSeeder::class,
+            RefBandaraSeeder::class,
+            RefSatuanSeeder::class,
+            RefKemasanSeeder::class,
+            RefKategoriBarangSeeder::class,
+            RefKategoriPelanggaranSeeder::class,
+            RefSkemaPenindakanSeeder::class,
+            RefTipeKantorSeeder::class,
+            RefKantorBCSeeder::class,
+            RefLokasiSeeder::class,
+            RefKepercayaanSumberSeeder::class,
+            RefValiditasInformasiSeeder::class,
+            RefJabatanSeeder::class,
+            RefUserCacheSeeder::class,
+            EntitasOrangSeeder::class,
+            EntitasBadanHukumSeeder::class,
+            SprintSeeder::class,
+            
+            // Intelijen
+            DokStiSeeder::class,
+            DokLptiSeeder::class,
+            DokLppiSeeder::class,
+            DokLkaiSeeder::class,
+            DokNhiSeeder::class,
+            DokNiSeeder::class,
 
-			DokLppiNSeeder::class,
-			DokLkaiNSeeder::class,
-			DokNhiNSeeder::class,
-			DokNiNSeeder::class,
+            DokLppiNSeeder::class,
+            DokLkaiNSeeder::class,
+            DokNhiNSeeder::class,
+            DokNiNSeeder::class,
 
-			// Penindakan
-			DokLiSeeder::class,
-			DokLapSeeder::class,
-			DokSbpSeeder::class,
-			DokLptSeeder::class,
-			DokLphpSeeder::class,
-			DokLpSeeder::class,
+            // Penindakan
+            DokLiSeeder::class,
+            DokLapSeeder::class,
+            DokSbpSeeder::class,
+            DokLptSeeder::class,
+            DokLphpSeeder::class,
+            DokLpSeeder::class,
 
-			DokLapNSeeder::class,
-			DokSbpNSeeder::class,
-			DokLphpNSeeder::class,
-			DokLpNSeeder::class,
-			
-			DokBukaSegelSeeder::class,
-			DokPengamanSeeder::class,
-			DokBukaPengamanSeeder::class,
+            DokLapNSeeder::class,
+            DokSbpNSeeder::class,
+            DokLphpNSeeder::class,
+            DokLpNSeeder::class,
+            
+            DokBukaSegelSeeder::class,
+            DokPengamanSeeder::class,
+            DokBukaPengamanSeeder::class,
 
-			// Penyidikan
-			DokLppSeeder::class,
-			DokLpfSeeder::class,
-			DokSplitSeeder::class,
+            // Penyidikan
+            DokLppSeeder::class,
+            DokLpfSeeder::class,
+            DokSplitSeeder::class,
 
-			// DokRiksaSeeder::class,
-			// DokRiksaBadanSeeder::class,
-			// DokSegelSeeder::class,
-			// DokTitipSeeder::class,
-			// DokBastSeeder::class,
-			// DokContohSeeder::class,
-			// DokReeksporSeeder::class,
-			// DokLppiNSeeder::class,
-			// DokLkaiNSeeder::class,
-			// DokNhiNSeeder::class,
-			// DokLapNSeeder::class,
-			// DokSbpNSeeder::class,
-			// DokLphpNSeeder::class,
-			// DokLpNSeeder::class,
-		]);
-	}
+            // DokTitipSeeder::class,
+            // DokBastSeeder::class,
+            // DokContohSeeder::class,
+            // DokReeksporSeeder::class,
+        ]);
+    }
 }

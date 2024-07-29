@@ -9,6 +9,7 @@ use App\Http\Controllers\Intelijen\DokLkaiController;
 use App\Http\Controllers\Intelijen\DokLkaiNController;
 use App\Http\Controllers\Intelijen\DokLppiController;
 use App\Http\Controllers\Intelijen\DokLppiNController;
+use App\Http\Controllers\Intelijen\DokLptiController;
 use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
@@ -87,6 +88,7 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 	Route::docResources([
 		// Intelijen
 		'sti' => DokStiController::class,
+		'lpti' => DokLptiController::class,
 		'lppi' => DokLppiController::class,
 		'lkai' => DokLkaiController::class,
 		'nhi' => DokNhiController::class,

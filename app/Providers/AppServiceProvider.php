@@ -15,6 +15,7 @@ use App\Models\Intelijen\DokLkai;
 use App\Models\Intelijen\DokLkaiN;
 use App\Models\Intelijen\DokLppi;
 use App\Models\Intelijen\DokLppiN;
+use App\Models\Intelijen\DokLpti;
 use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiBkc;
 use App\Models\Intelijen\DokNhiExim;
@@ -56,6 +57,7 @@ use App\Models\Penyidikan\Penyidikan;
 use App\Models\Penyidikan\PenyidikanBhp;
 use App\Observers\Intelijen\DokLkaiObserver;
 use App\Observers\Intelijen\DokLppiObserver;
+use App\Observers\Intelijen\DokLptiObserver;
 use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
@@ -95,17 +97,17 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(SSO::class, function() {
-			$request = app(Request::class);
+            $request = app(Request::class);
 
-			return new SSO($request);
-		});
+            return new SSO($request);
+        });
 
-		// Custom route registration
-		// https://stackoverflow.com/questions/16661292/add-new-methods-to-a-resource-controller-in-laravel
-		$registrar = new ResourceRegistrar($this->app['router']);
-		$this->app->bind('Illuminate\Routing\ResourceRegistrar', function () use ($registrar) {
-			return $registrar;
-		});
+        // Custom route registration
+        // https://stackoverflow.com/questions/16661292/add-new-methods-to-a-resource-controller-in-laravel
+        $registrar = new ResourceRegistrar($this->app['router']);
+        $this->app->bind('Illuminate\Routing\ResourceRegistrar', function () use ($registrar) {
+            return $registrar;
+        });
     }
 
     /**
@@ -115,116 +117,118 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-		/**
-		 * Models
-		 */
+        /**
+         * Models
+         */
         Relation::enforceMorphMap([
-			'bangunan' => DetailBangunan::class,
-			'barang' => DetailBarang::class,
-			'bast' => DokBast::class,
-			'dokumen' => DetailDokumen::class,
-			'entitas-badan-hukum' => EntitasBadanHukum::class,
-			'entitas-orang' => EntitasOrang::class,
-			'pegawai' => RefUserCache::class,
+            'bangunan' => DetailBangunan::class,
+            'barang' => DetailBarang::class,
+            'bast' => DokBast::class,
+            'dokumen' => DetailDokumen::class,
+            'entitas-badan-hukum' => EntitasBadanHukum::class,
+            'entitas-orang' => EntitasOrang::class,
+            'pegawai' => RefUserCache::class,
 
-			// Intelijen
-			'sti' => DokSti::class,
-			'lppi' => DokLppi::class,
-			'lppin' => DokLppiN::class,
-			'lkai' => DokLkai::class,
-			'lkain' => DokLkaiN::class,
-			'nhi' => DokNhi::class,
-			'nhi-exim' => DokNhiExim::class,
-			'nhi-bkc' => DokNhiBkc::class,
-			'nhi-tertentu' => DokNhiTertentu::class,
-			'nhin' => DokNhiN::class,
-			'nhin-exim' => DokNhiNExim::class,
-			'nhin-sarkut' => DokNhiNSarkut::class,
-			'nhin-orang' => DokNhiNOrang::class,
-			'ni' => DokNi::class,
-			'nin' => DokNiN::class,
-			
-			// Penindakan
-			'li' => DokLi::class,
-			'lap' => DokLap::class,
-			'penindakan' => Penindakan::class,
-			'penindakan-barang' => PenindakanBarang::class,
-			'riksa_badan' => DokRiksaBadan::class,
-			'riksa' => DokRiksa::class,
-			'tegah' => DokTegah::class,
-			'segel' => DokSegel::class,
-			'buka_segel' => DokBukaSegel::class,
-			'sbp' => DokSbp::class,
-			'tolak1' => DokTolakSbp1::class,
-			'tolak2' => DokTolakSbp2::class,
-			'lptp' => DokLptp::class,
-			'lpt' => DokLpt::class,
-			'lphp' => DokLphp::class,
-			'lp' => DokLp::class,
+            // Intelijen
+            'sti' => DokSti::class,
+            'lpti' => DokLpti::class,
+            'lppi' => DokLppi::class,
+            'lppin' => DokLppiN::class,
+            'lkai' => DokLkai::class,
+            'lkain' => DokLkaiN::class,
+            'nhi' => DokNhi::class,
+            'nhi-exim' => DokNhiExim::class,
+            'nhi-bkc' => DokNhiBkc::class,
+            'nhi-tertentu' => DokNhiTertentu::class,
+            'nhin' => DokNhiN::class,
+            'nhin-exim' => DokNhiNExim::class,
+            'nhin-sarkut' => DokNhiNSarkut::class,
+            'nhin-orang' => DokNhiNOrang::class,
+            'ni' => DokNi::class,
+            'nin' => DokNiN::class,
+            
+            // Penindakan
+            'li' => DokLi::class,
+            'lap' => DokLap::class,
+            'penindakan' => Penindakan::class,
+            'penindakan-barang' => PenindakanBarang::class,
+            'riksa_badan' => DokRiksaBadan::class,
+            'riksa' => DokRiksa::class,
+            'tegah' => DokTegah::class,
+            'segel' => DokSegel::class,
+            'buka_segel' => DokBukaSegel::class,
+            'sbp' => DokSbp::class,
+            'tolak1' => DokTolakSbp1::class,
+            'tolak2' => DokTolakSbp2::class,
+            'lptp' => DokLptp::class,
+            'lpt' => DokLpt::class,
+            'lphp' => DokLphp::class,
+            'lp' => DokLp::class,
 
-			'lapn' => DokLapN::class,
-			'sbpn' => DokSbpN::class,
-			'lptpn' => DokLptpN::class,
-			'lphpn' => DokLphpN::class,
-			'lpn' => DokLpN::class,
+            'lapn' => DokLapN::class,
+            'sbpn' => DokSbpN::class,
+            'lptpn' => DokLptpN::class,
+            'lphpn' => DokLphpN::class,
+            'lpn' => DokLpN::class,
 
-			'pengaman' => DokPengaman::class,
-			'buka_pengaman' => DokBukaPengaman::class,
+            'pengaman' => DokPengaman::class,
+            'buka_pengaman' => DokBukaPengaman::class,
 
-			// Penyidikan
-			'penyidikan' => Penyidikan::class,
-			'penyidikan-bhp' => PenyidikanBhp::class,
-			'lpp' => DokLpp::class,
-			'lpf' => DokLpf::class,
-			'split' => DokSplit::class,
-		]);
+            // Penyidikan
+            'penyidikan' => Penyidikan::class,
+            'penyidikan-bhp' => PenyidikanBhp::class,
+            'lpp' => DokLpp::class,
+            'lpf' => DokLpf::class,
+            'split' => DokSplit::class,
+        ]);
 
-		/**
-		 * Observers
-		 */
-		DokTitip::observe(DokTitipObserver::class);
-		
-		// Intelijen
-		DokSti::observe(DokStiObserver::class);
-		DokLppi::observe(DokLppiObserver::class);
-		DokLkai::observe(DokLkaiObserver::class);
-		DokNhi::observe(DokNhiObserver::class);
-		DokNi::observe(DokNiObserver::class);
-		
-		DokLppiN::observe(DokLppiObserver::class);
-		DokLkaiN::observe(DokLkaiObserver::class);
-		DokNhiN::observe(DokNhiObserver::class);
-		DokNhiNExim::observe(DokNhiNEximObserver::class);
-		DokNiN::observe(DokNiObserver::class);
+        /**
+         * Observers
+         */
+        DokTitip::observe(DokTitipObserver::class);
+        
+        // Intelijen
+        DokSti::observe(DokStiObserver::class);
+		DokLpti::observe(DokLptiObserver::class);
+        DokLppi::observe(DokLppiObserver::class);
+        DokLkai::observe(DokLkaiObserver::class);
+        DokNhi::observe(DokNhiObserver::class);
+        DokNi::observe(DokNiObserver::class);
+        
+        DokLppiN::observe(DokLppiObserver::class);
+        DokLkaiN::observe(DokLkaiObserver::class);
+        DokNhiN::observe(DokNhiObserver::class);
+        DokNhiNExim::observe(DokNhiNEximObserver::class);
+        DokNiN::observe(DokNiObserver::class);
 
-		// Penindakan
-		DokLi::observe(DokLiObserver::class);
-		DokLap::observe(DokLapObserver::class);
-		DokRiksaBadan::observe(DokRiksaBadanObserver::class);
-		DokRiksa::observe(DokRiksaObserver::class);
-		DokTegah::observe(DokTegahObserver::class);
-		DokSegel::observe(DokSegelObserver::class);
-		DokBukaSegel::observe(DokBukaSegelObserver::class);
-		DokSbp::observe(DokSbpObserver::class);
-		DokTolakSbp1::observe(DokTolakSbp1Observer::class);
-		DokTolakSbp2::observe(DokTolakSbp2Observer::class);
-		DokLptp::observe(DokLptpObserver::class);
-		DokLpt::observe(DokLptObserver::class);
-		DokLphp::observe(DokLphpObserver::class);
-		DokLp::observe(DokLpObserver::class);
+        // Penindakan
+        DokLi::observe(DokLiObserver::class);
+        DokLap::observe(DokLapObserver::class);
+        DokRiksaBadan::observe(DokRiksaBadanObserver::class);
+        DokRiksa::observe(DokRiksaObserver::class);
+        DokTegah::observe(DokTegahObserver::class);
+        DokSegel::observe(DokSegelObserver::class);
+        DokBukaSegel::observe(DokBukaSegelObserver::class);
+        DokSbp::observe(DokSbpObserver::class);
+        DokTolakSbp1::observe(DokTolakSbp1Observer::class);
+        DokTolakSbp2::observe(DokTolakSbp2Observer::class);
+        DokLptp::observe(DokLptpObserver::class);
+        DokLpt::observe(DokLptObserver::class);
+        DokLphp::observe(DokLphpObserver::class);
+        DokLp::observe(DokLpObserver::class);
 
-		DokLapN::observe(DokLapObserver::class);
-		DokSbpN::observe(DokSbpObserver::class);
-		DokLptpN::observe(DokLptpObserver::class);
-		DokLphpN::observe(DokLphpObserver::class);
-		DokLpN::observe(DokLpObserver::class);
+        DokLapN::observe(DokLapObserver::class);
+        DokSbpN::observe(DokSbpObserver::class);
+        DokLptpN::observe(DokLptpObserver::class);
+        DokLphpN::observe(DokLphpObserver::class);
+        DokLpN::observe(DokLpObserver::class);
 
-		DokPengaman::observe(DokPengamanObserver::class);
-		DokBukaPengaman::observe(DokBukaPengamanObserver::class);
+        DokPengaman::observe(DokPengamanObserver::class);
+        DokBukaPengaman::observe(DokBukaPengamanObserver::class);
 
-		// Penyidikan
-		DokLpp::observe(DokLppObserver::class);
-		DokLpf::observe(DokLpfObserver::class);
-		DokSplit::observe(DokSplitObserver::class);
+        // Penyidikan
+        DokLpp::observe(DokLppObserver::class);
+        DokLpf::observe(DokLpfObserver::class);
+        DokSplit::observe(DokSplitObserver::class);
     }
 }

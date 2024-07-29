@@ -8,6 +8,8 @@ use App\Http\Resources\Intelijen\DokLkaiResource;
 use App\Http\Resources\Intelijen\DokLkaiTableResource;
 use App\Http\Resources\Intelijen\DokLppiResource;
 use App\Http\Resources\Intelijen\DokLppiTableResource;
+use App\Http\Resources\Intelijen\DokLptiResource;
+use App\Http\Resources\Intelijen\DokLptiTableResource;
 use App\Http\Resources\Intelijen\DokNhiNResource;
 use App\Http\Resources\Intelijen\DokNhiNTableResource;
 use App\Http\Resources\Intelijen\DokNhiResource;
@@ -81,6 +83,7 @@ trait DocumentTrait
 		$resources = [
 			// Intelijen
 			'sti' => DokStiResource::class,
+			'lpti' => DokLptiResource::class,
 			'lppi' => DokLppiResource::class,
 			'lkai' => DokLkaiResource::class,
 			'nhi' => DokNhiResource::class,
@@ -135,6 +138,7 @@ trait DocumentTrait
 		$resources = [
 			// Intelijen
 			'sti' => DokStiTableResource::class,
+			'lpti' => DokLptiTableResource::class,
 			'lppi' => DokLppiTableResource::class,
 			'lkai' => DokLkaiTableResource::class,
 			'nhi' => DokNhiTableResource::class,

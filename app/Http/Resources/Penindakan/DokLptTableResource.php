@@ -12,16 +12,14 @@ class DokLptTableResource extends DokPenindakanTableResource
      */
     public function toArray($request)
     {
+        $sbp = $this->chain->sbp;
+        $no_sbp = $sbp ? $sbp->no_dok_lengkap : null;
+        $tgl_sbp = $sbp ? $sbp->tanggal_dokumen : null;
+        if ($tgl_sbp) { $tgl_sbp = $tgl_sbp->format('d-m-Y'); }
+
         $array = parent::toArray($request);
-		$array['no_sbp'] = $this->chain->sbp
-			? $this->chain->sbp->no_dok_lengkap
-			: null;
-		$array['tanggal_sbp'] = $this->chain->sbp
-			? (
-				$this->chain->sbp->tanggal_dokumen
-				? $this->chain->sbp->tanggal_dokumen->format('d-m-Y')
-				: null
-			) : null;
-		return $array;
+        $array['no_sbp'] = $no_sbp;
+        $array['tanggal_sbp'] = $tgl_sbp;
+        return $array;
     }
 }

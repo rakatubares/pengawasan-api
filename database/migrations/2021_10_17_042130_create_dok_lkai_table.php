@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class CreateDokLkaiTable extends Migration
 {
 	protected $tableName = 'dok_lkai';
-	protected $kodeLpti = 'lpti';
 	protected $kodeNpi = 'npi';
 	protected $kodeNhi = 'nhi';
 	protected $kodeNi = 'ni';
@@ -27,8 +26,6 @@ class CreateDokLkaiTable extends Migration
 			$table->string('no_dok_lengkap')->index();
 			$table->date('tanggal_dokumen')->nullable()->index();
 			$table->integer('chain_id')->index();
-			$table->string('nomor_'.$this->kodeLpti)->nullable()->index();
-			$table->date('tanggal_'.$this->kodeLpti)->nullable()->index();
 			$table->string('nomor_'.$this->kodeNpi)->nullable()->index();
 			$table->date('tanggal_'.$this->kodeNpi)->nullable()->index();
 			$table->text('informasi')->nullable();

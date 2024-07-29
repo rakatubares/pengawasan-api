@@ -8,101 +8,101 @@ use Illuminate\Database\Seeder;
 
 class RefStatusSeeder extends Seeder
 {
-	/**
-	 * Run the database seeds.
-	 *
-	 * @return void
-	 */
-	public function run()
-	{
-		$now = Carbon::now('utc')->toDateTimeString();
-		$data = [
-			[
-				'kode_status' => 'draft',
-				'uraian_status' => 'Buat draft dokumen',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'edit-draft',
-				'uraian_status' => 'Edit draft',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'booking-nomor',
-				'uraian_status' => 'Booking penomoran',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'terbit',
-				'uraian_status' => 'Penerbitan',
-				'color' => 'success',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'tindak-lanjut',
-				'uraian_status' => 'Dokumen mendapat tindak lanjut',
-				'color' => 'success',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'rollback',
-				'uraian_status' => 'Rollback status dokumen terbit',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'perbaikan',
-				'uraian_status' => 'Perubahan data',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'aju-batal',
-				'uraian_status' => 'Pengajuan pembatalan',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'batal',
-				'uraian_status' => 'Persetujuan pembatalan',
-				'color' => 'danger',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'tolak-batal',
-				'uraian_status' => 'Penolakan pembatalan',
-				'color' => 'success',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'hapus-batal',
-				'uraian_status' => 'Hapus pengajuan pembatalan',
-				'color' => 'warning',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'kode_status' => 'dihapus',
-				'uraian_status' => 'Hapus draft',
-				'color' => 'danger',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-		];
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $now = Carbon::now('utc')->toDateTimeString();
+        $data = [
+            [
+                'kode_status' => 'draft',
+                'uraian_status' => 'Buat draft dokumen',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'edit-draft',
+                'uraian_status' => 'Edit draft',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'booking-nomor',
+                'uraian_status' => 'Booking penomoran',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'terbit',
+                'uraian_status' => 'Penerbitan',
+                'color' => 'success',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'tindak-lanjut',
+                'uraian_status' => 'Dokumen mendapat tindak lanjut',
+                'color' => 'success',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'rollback',
+                'uraian_status' => 'Rollback status dokumen terbit',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'perbaikan',
+                'uraian_status' => 'Perubahan data',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'aju-batal',
+                'uraian_status' => 'Pengajuan pembatalan',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'batal',
+                'uraian_status' => 'Persetujuan pembatalan',
+                'color' => 'danger',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'tolak-batal',
+                'uraian_status' => 'Penolakan pembatalan',
+                'color' => 'success',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'hapus-batal',
+                'uraian_status' => 'Hapus pengajuan pembatalan',
+                'color' => 'warning',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'kode_status' => 'dihapus',
+                'uraian_status' => 'Hapus draft',
+                'color' => 'danger',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+        ];
 
-		RefStatus::insert($data);
-	}
+        RefStatus::insert($data);
+    }
 }

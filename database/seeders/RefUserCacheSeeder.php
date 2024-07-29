@@ -16,113 +16,113 @@ class RefUserCacheSeeder extends Seeder
     public function run()
     {
         $now = Carbon::now('utc')->toDateTimeString();
-		$data = [
-			[
-				'user_id' => 1,
-				'username' => 'test',
-				'name' => 'TEST',
-				'nip' => '123456',
-				'pangkat' => 'I/c',
-				'penempatan' => 'bd.0503',
-				'pejabat' => 'T',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 2,
-				'username' => 'dummytoo',
-				'name' => 'User dummy',
-				'nip' => '665544',
-				'pangkat' => 'II/b',
-				'penempatan' => 'bd.0504',
-				'pejabat' => 'T',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 3,
-				'username' => 'kabidp2',
-				'name' => 'Pejabat P2',
-				'nip' => '555',
-				'pangkat' => 'IV/e',
-				'penempatan' => 'bd.05',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 4,
-				'username' => 'kasipatops1',
-				'name' => 'Pejabat Patops 1',
-				'nip' => '111',
-				'pangkat' => 'IV/a',
-				'penempatan' => 'bd.0503',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 5,
-				'username' => 'kasipatops2',
-				'name' => 'Pejabat Patops 2',
-				'nip' => '2222',
-				'pangkat' => 'IV/b',
-				'penempatan' => 'bd.0504',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 6,
-				'username' => 'kasiintel1',
-				'name' => 'Pejabat Intel 2',
-				'nip' => '147',
-				'pangkat' => 'IV/c',
-				'penempatan' => 'bd.0501',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 7,
-				'username' => 'kasiintel2',
-				'name' => 'Pejabat Intel 2',
-				'nip' => '258',
-				'pangkat' => 'IV/d',
-				'penempatan' => 'bd.0502',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-			[
-				'user_id' => 8,
-				'username' => 'kasisidik',
-				'name' => 'Pejabat Penyidikan',
-				'nip' => '156748',
-				'pangkat' => 'IV/c',
-				'penempatan' => 'bd.0505',
-				'pejabat' => 'Y',
-				'jabatan' => null,
-				'status' => 'enabled',
-				'created_at' => $now,
-				'updated_at' => $now
-			],
-		];
+        $data = [
+            [
+                'user_id' => 1,
+                'username' => 'test',
+                'name' => 'TEST',
+                'nip' => '123456',
+                'pangkat' => 'I/c',
+                'penempatan' => 'bd.0503',
+                'pejabat' => 'T',
+                'jabatan' => 'Pelaksana',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 2,
+                'username' => 'dummytoo',
+                'name' => 'User dummy',
+                'nip' => '665544',
+                'pangkat' => 'II/b',
+                'penempatan' => 'bd.0504',
+                'pejabat' => 'T',
+                'jabatan' => 'Pelaksana',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 3,
+                'username' => 'kabidp2',
+                'name' => 'Pejabat P2',
+                'nip' => '555',
+                'pangkat' => 'IV/e',
+                'penempatan' => 'bd.05',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Bidang Penindakan dan Penyidikan',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 4,
+                'username' => 'kasipatops1',
+                'name' => 'Pejabat Patops 1',
+                'nip' => '111',
+                'pangkat' => 'IV/a',
+                'penempatan' => 'bd.0503',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Seksi Patroli dan Operasi I',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 5,
+                'username' => 'kasipatops2',
+                'name' => 'Pejabat Patops 2',
+                'nip' => '2222',
+                'pangkat' => 'IV/b',
+                'penempatan' => 'bd.0504',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Seksi Patroli dan Operasi II',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 6,
+                'username' => 'kasiintel1',
+                'name' => 'Pejabat Intel 2',
+                'nip' => '147',
+                'pangkat' => 'IV/c',
+                'penempatan' => 'bd.0501',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Seksi Intelijen I',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 7,
+                'username' => 'kasiintel2',
+                'name' => 'Pejabat Intel 2',
+                'nip' => '258',
+                'pangkat' => 'IV/d',
+                'penempatan' => 'bd.0502',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Seksi Intelijen II',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'user_id' => 8,
+                'username' => 'kasisidik',
+                'name' => 'Pejabat Penyidikan',
+                'nip' => '156748',
+                'pangkat' => 'IV/c',
+                'penempatan' => 'bd.0505',
+                'pejabat' => 'Y',
+                'jabatan' => 'Kepala Seksi Penyidikan dan Barang Hasil Penindakan',
+                'status' => 'enabled',
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+        ];
 
-		RefUserCache::insert($data);
+        RefUserCache::insert($data);
     }
 }

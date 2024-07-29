@@ -16,18 +16,16 @@ class PenindakanSarkutResource extends JsonResource
      */
     public function toArray($request)
     {
-        $sarkut = [
-			'id' => $this->id,
-			'nama_sarkut' => $this->nama_sarkut,
-			'jenis_sarkut' => $this->jenis_sarkut,
-			'nomor_sarkut' => $this->nomor_sarkut,
-			'jumlah_kapasitas' => $this->jumlah_kapasitas,
-			'satuan_kapasitas' => $this->satuan_kapasitas,
-			'pengemudi' => new EntitasOrangResource($this->pengemudi),
-			'bendera' => new RefNegaraResource($this->bendera),
-			'registrasi_sarkut' => $this->registrasi_sarkut,
-		];
-
-		return $sarkut;
+        return [
+            'id' => $this->id,
+            'nama_sarkut' => $this->nama_sarkut,
+            'jenis_sarkut' => $this->jenis_sarkut,
+            'nomor_sarkut' => $this->nomor_sarkut,
+            'jumlah_kapasitas' => $this->jumlah_kapasitas,
+            'satuan_kapasitas' => $this->satuan_kapasitas,
+            'pengemudi' => new EntitasOrangResource($this->pengemudi),
+            'bendera' => new RefNegaraResource($this->bendera),
+            'registrasi_sarkut' => $this->registrasi_sarkut,
+        ];
     }
 }

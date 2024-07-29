@@ -14,8 +14,8 @@ class DokLiTableResource extends DokTableResource
      */
     public function toArray($request)
     {
-		$array = $this->makeBasicArray();
-		$array['sumber'] = $this->sumber;
-		return $array;
+        $array = $this->makeBasicArray();
+        $array['sumber'] = $this->sumber;
+        return $array;
     }
 }

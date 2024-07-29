@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Penindakan;
+namespace App\Http\Resources\Intelijen;
 
 use App\Http\Resources\DokTableResource;
 
-class DokLapTableResource extends DokTableResource
+class DokLptiTableResource extends DokTableResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,13 @@ class DokLapTableResource extends DokTableResource
     public function toArray($request)
     {
         $array = $this->makeBasicArray();
-        $array['nomor_sumber'] = $this->nomor_sumber;
-        $array['tanggal_sumber'] = $this->tanggal_sumber
-            ? $this->tanggal_sumber->format('d-m-Y')
-            : null;
-        return $array;
+		$array['no_sti'] = $this->chain->sti
+			? $this->chain->sti->no_dok_lengkap
+			: '-';
+		$array['tgl_sti'] = $this->chain->sti
+			? $this->chain->sti->tanggal_dokumen->format('d-m-Y')
+			: '';
+
+		return $array;
     }
 }
