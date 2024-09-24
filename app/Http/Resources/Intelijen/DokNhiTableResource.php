@@ -14,7 +14,13 @@ class DokNhiTableResource extends DokTableResource
 	 */
 	public function toArray($request)
 	{
+		$kegiatan = '-';
+		if (in_array($this->detail_type, ['nhi-exim', 'nhin-exim'])) {
+			$kegiatan = $this->detail['tipe'];
+		}
+
 		$array = $this->makeBasicArray();
+		$array['kegiatan'] = $kegiatan;
 		$array['no_lkai'] = $this->chain->lkai
 			? $this->chain->lkai->no_dok_lengkap
 			: '-';
