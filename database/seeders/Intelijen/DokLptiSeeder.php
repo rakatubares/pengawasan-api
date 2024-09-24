@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Intelijen;
 
+use App\Models\DocumentsChain;
 use Database\Seeders\DokSeeder;
 
 class DokLptiSeeder extends DokSeeder
@@ -15,26 +16,37 @@ class DokLptiSeeder extends DokSeeder
      */
     public function run()
     {
-        // Get available STI ids
-        $this->available_sti_id = $this->getAvailableDocIds('sti');
+        $agendas = [
+            1 => '/KPU.3051/',
+            2 => '/KPU.3052/',
+        ];
 
         for ($d=0; $d < 21; $d++) {
-            // New Number
-            $this->currentNumber = $this->getNewNumber();
+            // Randomize intel
+            $num = $this->faker->randomElement(array_keys($agendas));
+            $agenda = $agendas[$num];
 
-            // Chain from STI
-            $chain = $this->chooseSti();
+            // New Number
+            $this->currentNumber = $this->getNewNumber($agenda);
+
+            // Create document chain
+            $chain = DocumentsChain::create();
 
             // Create LPTI header data
             $creator = $this->choosePelaksana();
 
             $lpti = new $this->model;
             $lpti->no_dok = $this->currentNumber;
-            $lpti->agenda_dok = $this->agendaDokumen;
+            $lpti->agenda_dok = $agenda;
             $lpti->thn_dok = $this->year;
-            $lpti->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$this->agendaDokumen}{$this->year}";
+            $lpti->no_dok_lengkap = "{$this->tipeDokumen}-{$this->currentNumber}{$agenda}{$this->year}";
             $lpti->tanggal_dokumen = $this->faker->dateTimeThisYear()->format('Y-m-d');
             $lpti->chain_id = $chain->id;
+            $lpti->nomor_st = 'ST-' . $d+1 . '/KPU.305/' . $this->year;
+            $lpti->tanggal_st = $this->faker->dateTimeThisYear()->format('Y-m-d');
+            $lpti->wilayah = $this->faker->address();
+            $lpti->tanggal_mulai = $this->faker->dateTimeThisYear()->format('Y-m-d');
+            $lpti->tanggal_akhir = $this->faker->dateTimeThisYear()->format('Y-m-d');
             $lpti->tempat_pengumpulan = $this->faker->address();
             $lpti->sumber_informasi = $this->faker->sentence(5);
             $lpti->metode_pengumpulan = $this->faker->sentence(5);
@@ -59,6 +71,15 @@ class DokLptiSeeder extends DokSeeder
             $lpti->updated_by = $creator;
             $lpti->saveQuietly();
 
+            // Tugas
+            $tugasCount = rand(1,3);
+            for ($i=1; $i <= $tugasCount ; $i++) {
+                $lpti->tugas()->create([
+                    'tugas' => $this->faker->text(50)
+                ]);
+            }
+
+            // Pelaku
             $this->createEntity($lpti, 'pelaku');
 
             // Petugas
@@ -73,12 +94,4 @@ class DokLptiSeeder extends DokSeeder
 
         $this->createPenomoran();
     }
-
-    protected function chooseSti()
-    {
-        $sti = $this->chooseDocSource('sti', $this->available_sti_id);
-        $this->available_sti_id = array_diff($this->available_sti_id, [$sti->id]);
-        return $sti->chain;
-    }
-
 }

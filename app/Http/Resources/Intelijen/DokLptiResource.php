@@ -27,6 +27,18 @@ class DokLptiResource extends JsonResource
             'tanggal_dokumen' => $this->tanggal_dokumen
                 ? $this->tanggal_dokumen->format('d-m-Y')
                 : null,
+            'nomor_st' => $this->nomor_st,
+            'tanggal_st' => $this->tanggal_st
+                ? $this->tanggal_st->format('d-m-Y')
+                : null,
+            'tugas' => $this->listTugas(),
+            'wilayah' => $this->wilayah,
+            'tanggal_mulai' => $this->tanggal_mulai
+                ? $this->tanggal_mulai->format('d-m-Y')
+                : null,
+            'tanggal_akhir' => $this->tanggal_akhir
+                ? $this->tanggal_akhir->format('d-m-Y')
+                : null,
             'tempat_pengumpulan' => $this->tempat_pengumpulan,
             'sumber_informasi' => $this->sumber_informasi,
             'metode_pengumpulan' => $this->metode_pengumpulan,
@@ -53,9 +65,17 @@ class DokLptiResource extends JsonResource
             'rekomendasi' => $this->rekomendasi,
             'petugas' => ListPosisiPegawaiResource::associative($this->detail_petugas),
             'tembusan' => TembusanResource::collection($this->tembusan),
-            'sti' => new DokStiResource($this->chain->sti),
             'kode_status' => $this->kode_status,
             'created_by' => new RefUserResource($this->creator),
         ];
+    }
+
+    private function listTugas()
+    {
+        $tugas = [];
+        foreach ($this->tugas as $t) {
+            $tugas[] = $t->tugas;
+        }
+        return $tugas;
     }
 }

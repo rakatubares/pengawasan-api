@@ -26,7 +26,6 @@ use App\Models\Intelijen\DokNhiNSarkut;
 use App\Models\Intelijen\DokNhiTertentu;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
-use App\Models\Intelijen\DokSti;
 use App\Models\Penindakan\DokBukaPengaman;
 use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
@@ -61,7 +60,6 @@ use App\Observers\Intelijen\DokLptiObserver;
 use App\Observers\Intelijen\DokNhiNEximObserver;
 use App\Observers\Intelijen\DokNhiObserver;
 use App\Observers\Intelijen\DokNiObserver;
-use App\Observers\Intelijen\DokStiObserver;
 use App\Observers\Penindakan\DokBukaPengamanObserver;
 use App\Observers\Penindakan\DokBukaSegelObserver;
 use App\Observers\Penindakan\DokLapObserver;
@@ -130,7 +128,6 @@ class AppServiceProvider extends ServiceProvider
             'pegawai' => RefUserCache::class,
 
             // Intelijen
-            'sti' => DokSti::class,
             'lpti' => DokLpti::class,
             'lppi' => DokLppi::class,
             'lppin' => DokLppiN::class,
@@ -188,7 +185,6 @@ class AppServiceProvider extends ServiceProvider
         DokTitip::observe(DokTitipObserver::class);
         
         // Intelijen
-        DokSti::observe(DokStiObserver::class);
 		DokLpti::observe(DokLptiObserver::class);
         DokLppi::observe(DokLppiObserver::class);
         DokLkai::observe(DokLkaiObserver::class);

@@ -17,8 +17,6 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
-use App\Http\Resources\Intelijen\DokStiResource;
-use App\Http\Resources\Intelijen\DokStiTableResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanTableResource;
 use App\Http\Resources\Penindakan\DokBukaSegelResource;
@@ -82,7 +80,6 @@ trait DocumentTrait
 	public function getResource($docType) {
 		$resources = [
 			// Intelijen
-			'sti' => DokStiResource::class,
 			'lpti' => DokLptiResource::class,
 			'lppi' => DokLppiResource::class,
 			'lkai' => DokLkaiResource::class,
@@ -137,7 +134,6 @@ trait DocumentTrait
 	public function getTableResource($docType) {
 		$resources = [
 			// Intelijen
-			'sti' => DokStiTableResource::class,
 			'lpti' => DokLptiTableResource::class,
 			'lppi' => DokLppiTableResource::class,
 			'lkai' => DokLkaiTableResource::class,

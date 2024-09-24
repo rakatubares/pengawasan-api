@@ -29,9 +29,13 @@ class DokSeeder extends Seeder
         $this->agendaDokumen = $this->doc->agendaDokumen;
     }
 
-    protected function getNewNumber()
+    protected function getNewNumber($agenda=null)
     {
-        $maxNumber = $this->model::max('no_dok');
+        if ($agenda) {
+            $maxNumber = $this->model::where('agenda_dok', $agenda)->max('no_dok');
+        } else {
+            $maxNumber = $this->model::max('no_dok');
+        }
         return $maxNumber + 1;
     }
 
@@ -48,12 +52,16 @@ class DokSeeder extends Seeder
         ], ['tipe_dokumen','agenda','tahun'], ['nomor_terakhir']);
     }
 
-    protected function getAvailableDocIds($code)
+    protected function getAvailableDocIds($code, $agenda=null)
     {
         $model = Relation::getMorphedModel($code);
-        $listId = $model::select('id')->where('kode_status', 'terbit')
-            ->get()
-            ->toArray();
+        $listId = $model::select('id')->where('kode_status', 'terbit');
+
+		if ($agenda) {
+			$listId = $listId->where('agenda_dok', $agenda);
+		}
+
+		$listId = $listId->get()->toArray();
         
         return array_map(function($d) {return $d['id'];}, $listId);
     }

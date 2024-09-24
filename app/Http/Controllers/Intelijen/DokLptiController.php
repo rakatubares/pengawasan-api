@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Intelijen;
 
 use App\Http\Controllers\DokController;
+use App\Traits\ConverterTrait;
 use Illuminate\Http\Request;
 
 class DokLptiController extends DokController
 {
+    use ConverterTrait;
+
     protected $docType = 'lpti';
 
     /**
@@ -18,12 +21,18 @@ class DokLptiController extends DokController
      */
     protected function prepareData(Request $request, $state='insert')
     {
-        $tanggal_dok_pabean = $request->tanggal_dok_pabean != null
-            ? date('Y-m-d', strtotime($request->tanggal_dok_pabean)) : null;
-        $waktu_pelanggaran = $request->waktu_pelanggaran != null
-            ? date('Y-m-d', strtotime($request->waktu_pelanggaran)) : null;
+
+        $tanggal_mulai = $this->dateFromText($request->tanggal_mulai);
+        $tanggal_akhir = $this->dateFromText($request->tanggal_akhir);
+        $tanggal_dok_pabean = $this->dateFromText($request->tanggal_dok_pabean);
+        $waktu_pelanggaran = $this->dateFromText($request->waktu_pelanggaran);
 
         return [
+            'nomor_st' => $request->nomor_st,
+            'tanggal_st' => $request->tanggal_st,
+            'wilayah' => $request->wilayah,
+            'tanggal_mulai' => $tanggal_mulai,
+            'tanggal_akhir' => $tanggal_akhir,
             'tempat_pengumpulan' => $request->tempat_pengumpulan,
             'sumber_informasi' => $request->sumber_informasi,
             'metode_pengumpulan' => $request->metode_pengumpulan,
@@ -51,41 +60,60 @@ class DokLptiController extends DokController
     protected function storing(Request $request)
     {
         $data = parent::storing($request);
-
-        // Get chain ID
-        if ($request->sti['id'] == null) {
-            // Create new chain
-            $chain = $this->createChain();
-        } else {
-            // Get chain from existing STI
-            $sti = $this->attachTo('sti', $request->sti['id']);
-            $chain = $sti->chain;
-        }
+        $chain = $this->createChain();
         $data['chain_id'] = $chain->id;
 
         return $data;
     }
 
-	protected function updating(Request $request)
+    protected function stored(Request $request)
     {
-        $data = parent::updating($request);
-        $this->existing_sti = $this->doc->chain->sti;
-        if ($this->existing_sti == null) {
-            if ($request->sti['id'] != null) {
-                $sti = $this->attachTo('sti', $request->sti['id']);
-                $data['chain_id'] = $sti->chain_id;
-            }
-        } else {
-            if ($request->sti['id'] == null) {
-                $this->detachFrom('sti', $this->existing_sti->id);
-                $chain = $this->createChain();
-                $data['chain_id'] = $chain->id;
-            } elseif ($request->sti['id'] != $this->existing_sti->id) {
-                $this->detachFrom('sti', $this->existing_sti->id);
-                $sti = $this->attachTo('sti', $request->sti['id']);
-                $data['chain_id'] = $sti->chain_id;
+        $this->createTugas($request->tugas);
+        parent::stored($request);
+    }
+
+    protected function updated(Request $request)
+    {
+        $this->updateTugas($request->tugas);
+        parent::updated($request);
+    }
+
+    private function createTugas($newTugas)
+    {
+        foreach ($newTugas as $tugas) {
+            if ($tugas) {
+                $this->doc->tugas()->create([
+                    'tugas' => $tugas
+                ]);
             }
         }
-        return $data;
+    }
+
+    private function updateTugas($newTugas)
+    {
+        $oldTugas = $this->doc->tugas;
+        $newTugas = array_filter($newTugas);
+
+        // Update existing tasks or insert new tasks if the new ones more than old ones
+        foreach ($newTugas as $k => $tugas) {
+            if ($k < sizeof($oldTugas)) {
+                $tugasId = $oldTugas[$k]['id'];
+                $this->doc->tugas()->find($tugasId)->update([
+                    'tugas' => $tugas
+                ]);
+            } else {
+                $this->doc->tugas()->create([
+                    'tugas' => $tugas
+                ]);
+            }
+        }
+
+        // Delete exceeding tasks if the old ones more than the new ones
+        if (sizeof($newTugas) < sizeof($oldTugas)) {
+            for ($i=sizeof($newTugas); $i < sizeof($oldTugas); $i++) {
+                $tugasId = $oldTugas[$i]['id'];
+                $this->doc->tugas()->find($tugasId)->delete($tugas);
+            }
+        }
     }
 }

@@ -11,7 +11,6 @@ use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
 use App\Models\Intelijen\DokNiN;
-use App\Models\Intelijen\DokSti;
 use App\Models\Penindakan\DokBukaPengaman;
 use App\Models\Penindakan\DokBukaSegel;
 use App\Models\Penindakan\DokLap;
@@ -51,7 +50,7 @@ class DocumentsChain extends Model
     protected $table = 'documents_chain';
     protected $fillable = ['latest_document'];
     public $docTypes = [
-        'sti', 'lpti', 'lppi', 'lkai', 'nhi', 'ni',
+        'lpti', 'lppi', 'lkai', 'nhi', 'ni',
         'lppin', 'lkain', 'nhin', 'nin',
         'li', 'lap', 'lapn',
         'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
@@ -68,10 +67,6 @@ class DocumentsChain extends Model
     /**
      * Intelijen
      */
-    public function sti() {
-        return $this->hasOne(DokSti::class,'chain_id');
-    }
-
     public function lpti() {
         return $this->hasOne(DokLpti::class,'chain_id');
     }

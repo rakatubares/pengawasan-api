@@ -15,12 +15,8 @@ class DokLptiTableResource extends DokTableResource
     public function toArray($request)
     {
         $array = $this->makeBasicArray();
-		$array['no_sti'] = $this->chain->sti
-			? $this->chain->sti->no_dok_lengkap
-			: '-';
-		$array['tgl_sti'] = $this->chain->sti
-			? $this->chain->sti->tanggal_dokumen->format('d-m-Y')
-			: '';
+		$array['nomor_st'] = $this->nomor_st ? $this->nomor_st : '-';
+		$array['tanggal_st'] = $this->tanggal_st ? $this->tanggal_st->format('d-m-Y') : '';
 
 		return $array;
     }

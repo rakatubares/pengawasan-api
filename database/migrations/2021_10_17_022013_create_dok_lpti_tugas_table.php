@@ -4,9 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDokStiTugasTable extends Migration
+class CreateDokLptiTugasTable extends Migration
 {
-    protected $tableName = 'dok_sti_tugas';
+    protected $tableName = 'dok_lpti_tugas';
 
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class CreateDokStiTugasTable extends Migration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->id();
-            $table->integer('sti_id')->index();
+            $table->morphs('tugasable');
             $table->text('tugas');
             $table->timestamps();
 			$table->softDeletes();

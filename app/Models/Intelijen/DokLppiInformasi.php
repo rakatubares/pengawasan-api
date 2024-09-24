@@ -10,37 +10,37 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DokLppiInformasi extends Model
 {
-	use HasFactory;
-	use SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
-	protected $table = 'dok_lppi_informasi';
+    protected $table = 'dok_lppi_informasi';
 
-	protected $fillable = [
-		'infoable_type',
-		'infoable_id',
-		'informasi',
-		'kode_kepercayaan',
-		'kode_validitas',
-	];
+    protected $fillable = [
+        'infoable_type',
+        'infoable_id',
+        'informasi',
+        'kode_kepercayaan',
+        'kode_validitas',
+    ];
 
-	public function infoable()
-	{
-		return $this->morphTo();
-	}
+    public function infoable()
+    {
+        return $this->morphTo();
+    }
 
-	/**
-	 * Tingkat kepercayaan sumber
-	 */
-	public function kepercayaan()
-	{
-		return $this->belongsTo(RefKepercayaanSumber::class, 'kode_kepercayaan', 'klasifikasi');
-	}
+    /**
+     * Tingkat kepercayaan sumber
+     */
+    public function kepercayaan()
+    {
+        return $this->belongsTo(RefKepercayaanSumber::class, 'kode_kepercayaan', 'klasifikasi');
+    }
 
-	/**
-	 * Tingkat validitas informasi
-	 */
-	public function validitas()
-	{
-		return $this->belongsTo(RefValiditasInformasi::class, 'kode_validitas', 'klasifikasi');
-	}
+    /**
+     * Tingkat validitas informasi
+     */
+    public function validitas()
+    {
+        return $this->belongsTo(RefValiditasInformasi::class, 'kode_validitas', 'klasifikasi');
+    }
 }

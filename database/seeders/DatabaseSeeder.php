@@ -76,7 +76,6 @@ class DatabaseSeeder extends Seeder
             SprintSeeder::class,
             
             // Intelijen
-            DokStiSeeder::class,
             DokLptiSeeder::class,
             DokLppiSeeder::class,
             DokLkaiSeeder::class,

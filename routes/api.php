@@ -14,7 +14,6 @@ use App\Http\Controllers\Intelijen\DokNhiController;
 use App\Http\Controllers\Intelijen\DokNhiNController;
 use App\Http\Controllers\Intelijen\DokNiController;
 use App\Http\Controllers\Intelijen\DokNiNController;
-use App\Http\Controllers\Intelijen\DokStiController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBadanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBangunanController;
 use App\Http\Controllers\Penindakan\Detail\PenindakanBarangController;
@@ -87,7 +86,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
 	Route::docResources([
 		// Intelijen
-		'sti' => DokStiController::class,
 		'lpti' => DokLptiController::class,
 		'lppi' => DokLppiController::class,
 		'lkai' => DokLkaiController::class,

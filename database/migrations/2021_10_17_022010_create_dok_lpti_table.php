@@ -23,6 +23,11 @@ class CreateDokLptiTable extends Migration
             $table->string('no_dok_lengkap')->index();
             $table->date('tanggal_dokumen')->nullable()->index();
             $table->integer('chain_id')->index();
+			$table->string('nomor_st')->nullable()->index();
+			$table->date('tanggal_st')->nullable()->index();
+			$table->string('wilayah')->nullable();
+			$table->date('tanggal_mulai')->nullable();
+			$table->date('tanggal_akhir')->nullable();
             $table->string('tempat_pengumpulan')->nullable();
             $table->string('sumber_informasi')->nullable();
             $table->string('metode_pengumpulan')->nullable();
