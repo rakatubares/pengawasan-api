@@ -21,13 +21,27 @@ class DokLptiController extends DokController
      */
     protected function prepareData(Request $request, $state='insert')
     {
+        switch ($request->seksi) {
+            case 'Intelijen I':
+                $agenda = '/KPU.3051/';
+                break;
 
+            case 'Intelijen II':
+                $agenda = '/KPU.3052/';
+                break;
+            
+            default:
+                $agenda = '/KPU.305/';
+                break;
+        }
+        
         $tanggal_mulai = $this->dateFromText($request->tanggal_mulai);
         $tanggal_akhir = $this->dateFromText($request->tanggal_akhir);
         $tanggal_dok_pabean = $this->dateFromText($request->tanggal_dok_pabean);
         $waktu_pelanggaran = $this->dateFromText($request->waktu_pelanggaran);
 
         return [
+            'agenda_dok' => $agenda,
             'nomor_st' => $request->nomor_st,
             'tanggal_st' => $request->tanggal_st,
             'wilayah' => $request->wilayah,

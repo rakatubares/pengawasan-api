@@ -18,8 +18,22 @@ class DokLptiResource extends JsonResource
      */
     public function toArray($request)
     {
+        switch ($this->agenda_dok) {
+            case '/KPU.3051/':
+                $seksi = 'Intelijen I';
+                break;
+
+            case '/KPU.3052/':
+                $seksi = 'Intelijen II';
+                break;
+            
+            default:
+                $seksi = null;
+                break;
+        }
         return [
             'id' => $this->id,
+            'seksi' => $seksi,
             'no_dok' => $this->no_dok,
             'agenda_dok' => $this->agenda_dok,
             'thn_dok' => $this->thn_dok,
