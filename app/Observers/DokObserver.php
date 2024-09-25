@@ -13,9 +13,10 @@ class DokObserver
     use DocumentsChainTrait;
 
     protected function setDefaultDocumentNumber($dokumen) {
+        $nomorDokumen = $dokumen['no_dok'] ?? '      ';
         $agendaDokumen = $dokumen['agenda_dok'] ?? $dokumen->agendaDokumen;
 
-        $noDokLengkap = $dokumen->tipeDokumen . '-' . '      ' . $agendaDokumen . $dokumen->thn_dok;
+        $noDokLengkap = $dokumen->tipeDokumen . '-' . $nomorDokumen . $agendaDokumen . $dokumen->thn_dok;
         $dokumen['agenda_dok'] = $agendaDokumen;
         $dokumen['no_dok_lengkap'] = $noDokLengkap;
     }
