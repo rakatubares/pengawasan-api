@@ -92,6 +92,12 @@ class DokLptiSeeder extends DokSeeder
             $chain->update(['latest_document' => $lpti->kodeDokumen]);
         }
 
-        $this->createPenomoran();
+        // Penomoran intel 1
+        $number1 = $this->getNewNumber($agendas['1']);
+        $this->createPenomoran($this->tipeDokumen, $agendas['1'], $number1-1);
+
+        // Penomoran intel 2
+        $number2 = $this->getNewNumber($agendas['2']);
+        $this->createPenomoran($this->tipeDokumen, $agendas['2'], $number2-1);
     }
 }

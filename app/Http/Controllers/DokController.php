@@ -227,7 +227,7 @@ class DokController extends Controller
                     $data = $this->updating($request);
 
                     // Update data on database
-                    $this->doc->update($data);
+                    $this->doc->edit($data);
 
                     // Post-update operation
                     $this->updated($request);

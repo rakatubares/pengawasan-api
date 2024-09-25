@@ -195,7 +195,7 @@ class DokSbpSeeder extends DokSeeder
         $this->createTembusan($lptp);
 
         // Create penomoran
-        $this->createPenomoran($lptp->kodeDokumen, $lptp->agendaDokumen, $crnLptp);
+        $this->createPenomoran($lptp->tipeDokumen, $lptp->agendaDokumen, $crnLptp);
 
         return $lptp;
     }
@@ -282,7 +282,7 @@ class DokSbpSeeder extends DokSeeder
         $riksaBadan->saveQuietly();
 
         // Create penomoran
-        $this->createPenomoran($riksaBadan->kodeDokumen, $riksaBadan->agendaDokumen, $crnRiksaBadan);
+        $this->createPenomoran($riksaBadan->tipeDokumen, $riksaBadan->agendaDokumen, $crnRiksaBadan);
     }
 
     protected function createRiksa()
@@ -305,7 +305,7 @@ class DokSbpSeeder extends DokSeeder
         $riksa->saveQuietly();
 
         // Create penomoran
-        $this->createPenomoran($riksa->kodeDokumen, $riksa->agendaDokumen, $crnRiksa);
+        $this->createPenomoran($riksa->tipeDokumen, $riksa->agendaDokumen, $crnRiksa);
     }
 
     protected function createTegah()
@@ -328,7 +328,7 @@ class DokSbpSeeder extends DokSeeder
         $tegah->saveQuietly();
 
         // Create penomoran
-        $this->createPenomoran($tegah->kodeDokumen, $tegah->agendaDokumen, $crnTegah);
+        $this->createPenomoran($tegah->tipeDokumen, $tegah->agendaDokumen, $crnTegah);
     }
 
     protected function createSegel()
@@ -356,7 +356,7 @@ class DokSbpSeeder extends DokSeeder
         $segel->saveQuietly();
 
         // Create penomoran
-        $this->createPenomoran($segel->kodeDokumen, $segel->agendaDokumen, $crnSegel);
+        $this->createPenomoran($segel->tipeDokumen, $segel->agendaDokumen, $crnSegel);
     }
 
     protected function createPenolakan($sbp)
@@ -383,7 +383,7 @@ class DokSbpSeeder extends DokSeeder
             $tolak1->saveQuietly();
 
             // Create penomoran
-            $this->createPenomoran($tolak1->kodeDokumen, $tolak1->agendaDokumen, $crnTolak1);
+            $this->createPenomoran($tolak1->tipeDokumen, $tolak1->agendaDokumen, $crnTolak1);
 
             // Update flag tolak sbp
             $sbp->update(['status_tolak' => true]);
@@ -411,7 +411,7 @@ class DokSbpSeeder extends DokSeeder
                 $tolak2->saveQuietly();
 
                 // Create penomoran
-                $this->createPenomoran($tolak2->kodeDokumen, $tolak2->agendaDokumen, $crnTolak2);
+                $this->createPenomoran($tolak2->tipeDokumen, $tolak2->agendaDokumen, $crnTolak2);
 
                 // Update flag tolak ba tolak 1
                 $tolak1->update(['status_tolak' => true]);

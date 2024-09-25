@@ -79,13 +79,13 @@ class DokObserver
             ->create(['kode_status' => 'draft', 'nip_pegawai' => Auth::user()->nip]);
     }
 
-    public function updating($dokumen)
+    public function editing($dokumen)
     {
         $this->setDefaultDocumentNumber($dokumen);
         $dokumen['updated_by'] = Auth::user()->nip;
     }
 
-    public function updated($dokumen)
+    public function edited($dokumen)
     {
         $dokumen->status_history()
             ->create(['kode_status' => 'edit-draft', 'nip_pegawai' => Auth::user()->nip]);

@@ -18,7 +18,7 @@ class Dokumen extends Model
 
     public $agendaDokumen = '/KPU.305/';
 
-    protected $observables = ['booking', 'booked', 'publishing', 'published', 'amended'];
+    protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'amended'];
     public $unpublishedStatus = ['draft', 'booking-nomor', 'rollback'];
 
     /**
@@ -68,6 +68,18 @@ class Dokumen extends Model
     public function status_history()
     {
         return $this->morphMany(RiwayatStatus::class, 'historyable');
+    }
+
+    /**
+     * Use edit event to update status edit-draft only for document being edited
+     * and prevent update event from other chained documents
+     */
+    public function edit($data)
+    {
+        $this->fill($data);
+        $this->fireModelEvent('editing');
+        $this->update($data);
+        $this->fireModelEvent('edited');
     }
 
     public function book()
