@@ -74,7 +74,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-	return $request->user();
+    return $request->user();
 });
 
 /*
@@ -84,52 +84,53 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 
 Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
-	Route::docResources([
-		// Intelijen
-		'lpti' => DokLptiController::class,
-		'lppi' => DokLppiController::class,
-		'lkai' => DokLkaiController::class,
-		'nhi' => DokNhiController::class,
-		'ni' => DokNiController::class,
+    Route::docResources([
+        // Intelijen
+        'lpti' => DokLptiController::class,
+        'lppi' => DokLppiController::class,
+        'lkai' => DokLkaiController::class,
+        'nhi' => DokNhiController::class,
+        'ni' => DokNiController::class,
 
-		'lppin' => DokLppiNController::class,
-		'lkain' => DokLkaiNController::class,
-		'nhin' => DokNhiNController::class,
-		'nin' => DokNiNController::class,
+        'lppin' => DokLppiNController::class,
+        'lkain' => DokLkaiNController::class,
+        'nhin' => DokNhiNController::class,
+        'nin' => DokNiNController::class,
 
-		// Penindakan
-		'li' => DokLiController::class,
-		'lap' => DokLapController::class,
-		'riksa_badan' => DokRiksaBadanController::class,
-		'riksa' => DokRiksaController::class,
-		'tegah' => DokTegahController::class,
-		'segel' => DokSegelController::class,
-		'buka_segel' => DokBukaSegelController::class,
-		'sbp' => DokSbpController::class,
-		'tolak1' => DokTolakSbp1Controller::class,
-		'tolak2' => DokTolakSbp2Controller::class,
-		'lptp' => DokLptpController::class,
-		'lpt' => DokLptController::class,
-		'lphp' => DokLphpController::class,
-		'lp' => DokLpController::class,
+        // Penindakan
+        'li' => DokLiController::class,
+        'lap' => DokLapController::class,
+        'riksa_badan' => DokRiksaBadanController::class,
+        'riksa' => DokRiksaController::class,
+        'tegah' => DokTegahController::class,
+        'segel' => DokSegelController::class,
+        'buka_segel' => DokBukaSegelController::class,
+        'sbp' => DokSbpController::class,
+        'tolak1' => DokTolakSbp1Controller::class,
+        'tolak2' => DokTolakSbp2Controller::class,
+        'lptp' => DokLptpController::class,
+        'lpt' => DokLptController::class,
+        'lphp' => DokLphpController::class,
+        'lp' => DokLpController::class,
 
-		'lapn' => DokLapNController::class,
-		'sbpn' => DokSbpNController::class,
-		'lptpn' => DokLptpNController::class,
-		'lphpn' => DokLphpNController::class,
-		'lpn' => DokLpNController::class,
+        'lapn' => DokLapNController::class,
+        'sbpn' => DokSbpNController::class,
+        'lptpn' => DokLptpNController::class,
+        'lphpn' => DokLphpNController::class,
+        'lpn' => DokLpNController::class,
 
-		'pengaman' => DokPengamanController::class,
-		'buka_pengaman' => DokBukaPengamanController::class,
+        'pengaman' => DokPengamanController::class,
+        'buka_pengaman' => DokBukaPengamanController::class,
 
-		// Penyidikan
-		'lpp' => DokLppController::class,
-		'lpf' => DokLpfController::class,
-		'split' => DokSplitController::class,
-	]);
+        // Penyidikan
+        'lpp' => DokLppController::class,
+        'lpf' => DokLpfController::class,
+        'split' => DokSplitController::class,
+    ]);
 
-	Route::post('/{doc_type}/search', [DokController::class, 'search']);
-	Route::get('/{doc_type}/{doc_id}/chain', [DocumentsChainController::class, 'show']);
+    Route::post('/{doc_type}/index', [DokController::class, 'index']);
+    Route::post('/{doc_type}/search', [DokController::class, 'search']);
+    Route::get('/{doc_type}/{doc_id}/chain', [DocumentsChainController::class, 'show']);
 });
 
 /*
@@ -142,30 +143,30 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
  * API for detail barang
  */
 Route::prefix('/barang/{doc_type}/{doc_id}')->group(function () {
-	Route::apiResource('/item', BarangController::class);
+    Route::apiResource('/item', BarangController::class);
 });
 
 /**
  * API for detail penindakan
  */
 Route::prefix('/penindakan/{id}')->group(function () {
-	Route::get('/sarkut', [PenindakanSarkutController::class, 'show']);
-	Route::post('/sarkut', [PenindakanSarkutController::class, 'store']);
-	Route::put('/sarkut', [PenindakanSarkutController::class, 'update']);
+    Route::get('/sarkut', [PenindakanSarkutController::class, 'show']);
+    Route::post('/sarkut', [PenindakanSarkutController::class, 'store']);
+    Route::put('/sarkut', [PenindakanSarkutController::class, 'update']);
 
-	Route::get('/bangunan', [PenindakanBangunanController::class, 'show']);
-	Route::post('/bangunan', [PenindakanBangunanController::class, 'store']);
-	Route::put('/bangunan', [PenindakanBangunanController::class, 'update']);
+    Route::get('/bangunan', [PenindakanBangunanController::class, 'show']);
+    Route::post('/bangunan', [PenindakanBangunanController::class, 'store']);
+    Route::put('/bangunan', [PenindakanBangunanController::class, 'update']);
 
-	Route::get('/badan', [PenindakanBadanController::class, 'show']);
-	Route::post('/badan', [PenindakanBadanController::class, 'store']);
-	Route::put('/badan', [PenindakanBadanController::class, 'update']);
+    Route::get('/badan', [PenindakanBadanController::class, 'show']);
+    Route::post('/badan', [PenindakanBadanController::class, 'store']);
+    Route::put('/badan', [PenindakanBadanController::class, 'update']);
 
-	Route::get('/barang', [PenindakanBarangController::class, 'show']);
-	Route::post('/barang', [PenindakanBarangController::class, 'store']);
-	Route::put('/barang', [PenindakanBarangController::class, 'update']);
+    Route::get('/barang', [PenindakanBarangController::class, 'show']);
+    Route::post('/barang', [PenindakanBarangController::class, 'store']);
+    Route::put('/barang', [PenindakanBarangController::class, 'update']);
 
-	Route::post('/tindakan', [PenindakanController::class, 'tindakan']);
+    Route::post('/tindakan', [PenindakanController::class, 'tindakan']);
 });
 
 /**

@@ -56,13 +56,19 @@ class DokLpti extends Dokumen
         'waktu_pelanggaran' => 'date',
     ];
 
+    public $searchables = [
+        'ikhtisar_informasi',
+        'ikhtisar_analisis',
+        'modus_pelanggaran',
+    ];
+
     public function tugas()
     {
         return $this->morphMany(DokLptiTugas::class, 'tugasable');
     }
 
     public function pelaku()
-	{
+    {
         return $this->morphTo();
     }
 }

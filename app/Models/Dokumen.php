@@ -20,6 +20,7 @@ class Dokumen extends Model
 
     protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'amended'];
     public $unpublishedStatus = ['draft', 'booking-nomor', 'rollback'];
+    public $searchables = [];
 
     /**
      * Documents chain

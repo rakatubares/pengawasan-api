@@ -45,16 +45,33 @@ class DokController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $docType)
     {
+        if ($this->docType == null) {
+            $this->docType = $docType;
+            $this->__construct();
+        }
+
         $permission = 'view-' . $this->docType;
         $permitted = $this->checkPermission($permission, $request->bearerToken());
 
         if ($permitted) {
-            $all_docs = $this->model::orderBy('created_at', 'desc')
+            $doc = new $this->model;
+            $searchables = $doc->searchables;
+
+            $docs = $this->model::where(function ($query) use ($request, $searchables)
+                {
+                    if (count($searchables) > 0) {
+                        $search = '%' . $request->flt . '%';
+                        foreach ($searchables as $searchable) {
+                            $query->where($searchable, 'like', $search);
+                        }
+                    }
+                })
+                ->orderBy('created_at', 'desc')
                 ->orderBy('no_dok', 'desc')
                 ->get();
-            return $this->tableResource::collection($all_docs);
+            return $this->tableResource::collection($docs);
         } else {
             return response()->json(['error' => $this->errUnauthorized], 401);
         }
@@ -79,7 +96,7 @@ class DokController extends Controller
     }
 
     /**
-     * Display search result.
+     * Filter document by number.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $docType
