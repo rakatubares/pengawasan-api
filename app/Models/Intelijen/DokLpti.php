@@ -60,6 +60,9 @@ class DokLpti extends Dokumen
         'ikhtisar_informasi',
         'ikhtisar_analisis',
         'modus_pelanggaran',
+        'informasi_lain',
+        'kesimpulan',
+        'rekomendasi',
     ];
 
     public function tugas()

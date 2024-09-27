@@ -128,7 +128,6 @@ Route::group(['prefix' => 'doc', 'middleware' => ['auth.user']], function() {
         'split' => DokSplitController::class,
     ]);
 
-    Route::post('/{doc_type}/index', [DokController::class, 'index']);
     Route::post('/{doc_type}/search', [DokController::class, 'search']);
     Route::get('/{doc_type}/{doc_id}/chain', [DocumentsChainController::class, 'show']);
 });
@@ -150,21 +149,29 @@ Route::prefix('/barang/{doc_type}/{doc_id}')->group(function () {
  * API for detail penindakan
  */
 Route::prefix('/penindakan/{id}')->group(function () {
-    Route::get('/sarkut', [PenindakanSarkutController::class, 'show']);
-    Route::post('/sarkut', [PenindakanSarkutController::class, 'store']);
-    Route::put('/sarkut', [PenindakanSarkutController::class, 'update']);
+    Route::prefix('/sarkut')->group(function () {
+        Route::get('', [PenindakanSarkutController::class, 'show']);
+        Route::post('', [PenindakanSarkutController::class, 'store']);
+        Route::put('', [PenindakanSarkutController::class, 'update']);
+    });
 
-    Route::get('/bangunan', [PenindakanBangunanController::class, 'show']);
-    Route::post('/bangunan', [PenindakanBangunanController::class, 'store']);
-    Route::put('/bangunan', [PenindakanBangunanController::class, 'update']);
+    Route::prefix('/bangunan')->group(function () {
+        Route::get('', [PenindakanBangunanController::class, 'show']);
+        Route::post('', [PenindakanBangunanController::class, 'store']);
+        Route::put('', [PenindakanBangunanController::class, 'update']);
+    });
 
-    Route::get('/badan', [PenindakanBadanController::class, 'show']);
-    Route::post('/badan', [PenindakanBadanController::class, 'store']);
-    Route::put('/badan', [PenindakanBadanController::class, 'update']);
+    Route::prefix('/badan')->group(function () {
+        Route::get('', [PenindakanBadanController::class, 'show']);
+        Route::post('', [PenindakanBadanController::class, 'store']);
+        Route::put('', [PenindakanBadanController::class, 'update']);
+    });
 
-    Route::get('/barang', [PenindakanBarangController::class, 'show']);
-    Route::post('/barang', [PenindakanBarangController::class, 'store']);
-    Route::put('/barang', [PenindakanBarangController::class, 'update']);
+    Route::prefix('/barang')->group(function () {
+        Route::get('', [PenindakanBarangController::class, 'show']);
+        Route::post('', [PenindakanBarangController::class, 'store']);
+        Route::put('', [PenindakanBarangController::class, 'update']);
+    });
 
     Route::post('/tindakan', [PenindakanController::class, 'tindakan']);
 });
@@ -217,22 +224,19 @@ Route::post('kantor/search', [RefKantorBCController::class, 'search']);
 /**
  * API for Kemasan
  */
-Route::get('kemasan', [RefKemasanController::class, 'index']);
-Route::get('kemasan/{id}', [RefKemasanController::class, 'show']);
+Route::resource('kemasan', RefKemasanController::class, ['only' => ['index', 'show']]);
 Route::post('kemasan/search', [RefKemasanController::class, 'search']);
 
 /**
  * API for Satuan
  */
-Route::get('satuan', [RefSatuanController::class, 'index']);
-Route::get('satuan/{id}', [RefSatuanController::class, 'show']);
+Route::resource('satuan', RefSatuanController::class, ['only' => ['index', 'show']]);
 Route::post('satuan/search', [RefSatuanController::class, 'search']);
 
 /**
  * API for Kategori Barang
  */
-Route::get('kategori', [RefKategoriBarangController::class, 'index']);
-Route::get('kategori/{id}', [RefKategoriBarangController::class, 'show']);
+Route::resource('kategori', RefKategoriBarangController::class, ['only' => ['index', 'show']]);
 Route::post('kategori/search', [RefKategoriBarangController::class, 'search']);
 
 /**

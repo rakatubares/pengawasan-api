@@ -45,36 +45,52 @@ class DokController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $docType)
+    public function list(Request $request)
     {
-        if ($this->docType == null) {
-            $this->docType = $docType;
-            $this->__construct();
-        }
-
         $permission = 'view-' . $this->docType;
         $permitted = $this->checkPermission($permission, $request->bearerToken());
 
         if ($permitted) {
-            $doc = new $this->model;
-            $searchables = $doc->searchables;
-
-            $docs = $this->model::where(function ($query) use ($request, $searchables)
-                {
-                    if (count($searchables) > 0) {
-                        $search = '%' . $request->flt . '%';
-                        foreach ($searchables as $searchable) {
-                            $query->where($searchable, 'like', $search);
-                        }
-                    }
-                })
-                ->orderBy('created_at', 'desc')
-                ->orderBy('no_dok', 'desc')
-                ->get();
+            $docs = $this->queryIndexData($request);
             return $this->tableResource::collection($docs);
         } else {
             return response()->json(['error' => $this->errUnauthorized], 401);
         }
+    }
+
+    protected function queryIndexData(Request $request) {
+        $doc = new $this->model;
+        $searchables = $doc->searchables;
+        $filter = $request->flt;
+        $tableName = $doc->getTable();
+
+        $query = $this->model::select($tableName.'.*')
+            ->distinct()
+            ->where(function ($query) use ($filter, $searchables)
+                {
+                    if (
+                        ($filter != '') &&
+                        ($filter != null) &&
+                        (count($searchables) > 0)
+                    ) {
+                        $search = '%' . $filter . '%';
+                        foreach ($searchables as $searchable) {
+                            $query->orWhere($searchable, 'like', $search);
+                        }
+                    }
+                });
+
+        if (($filter != '') && ($filter != null)) {
+            $query = $this->additionalSearchQuery($query, $filter);
+        }
+
+        return $query->orderBy($tableName.'.created_at', 'desc')
+            ->orderBy('no_dok', 'desc')
+            ->get();
+    }
+
+    protected function additionalSearchQuery($query, $filter) {
+        return $query;
     }
 
     /**

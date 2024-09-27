@@ -12,6 +12,21 @@ class DokLptiController extends DokController
 
     protected $docType = 'lpti';
 
+    protected function additionalSearchQuery($query, $filter)
+    {
+        $search = '%' . $filter . '%';
+        $tableName = $query->getModel()->getTable();
+
+        // Search tugas
+        $query = $query->leftJoin('dok_lpti_tugas', function($join) use ($tableName) {
+            $join->on('tugasable_id', '=', $tableName.'.id');
+            $join->where('tugasable_type', '=', $this->docType);
+        });
+        $query = $query->orWhere('dok_lpti_tugas.tugas', 'like', $search);
+
+        return $query;
+    }
+
     /**
      * Prepare data from request to array
      *
