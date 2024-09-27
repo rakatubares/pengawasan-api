@@ -54,4 +54,13 @@ class DokLkai extends Dokumen
         'tanggal_terima_pejabat' => 'date',
         'tanggal_terima_atasan' => 'date',
     ];
+
+    public $searchables = [
+        'informasi',
+        'prosedur',
+        'hasil',
+        'kesimpulan',
+        'rekomendasi_lain',
+        'informasi_lain',
+    ];
 }

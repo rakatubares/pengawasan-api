@@ -45,6 +45,13 @@ class DokLppi extends Dokumen
         'tanggal_disposisi' => 'date',
     ];
 
+    public $searchables = [
+        'no_dok_info_internal',
+        'no_dok_info_eksternal',
+        'kesimpulan',
+        'catatan',
+    ];
+
     public function informasi()
     {
         return $this->morphMany(DokLppiInformasi::class, 'infoable');

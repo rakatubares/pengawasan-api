@@ -22,6 +22,75 @@ class DokNhiController extends DokController
         $this->fieldLkaiId = $this->kodeLkai . '_id';
     }
 
+    protected function additionalSearchQuery($query, $filter)
+    {
+        $search = '%' . $filter . '%';
+
+        $tableName = $query->getModel()->getTable();
+        $colDetailId = $tableName.'.detail_id';
+        $colDetailType = $tableName.'.detail_type';
+
+        ///// Search exim /////
+        $query = $query->leftJoin('dok_nhi_exim', function($join) use ($colDetailId, $colDetailType) {
+            $join->on($colDetailId, '=', 'dok_nhi_exim.id');
+            $join->where($colDetailType, '=', 'nhi-exim');
+        });
+        $query = $query->orWhere('dok_nhi_exim.nomor_dok', 'like', $search);
+        $query = $query->orWhere('dok_nhi_exim.nomor_awb', 'like', $search);
+
+        // Entitas exim orang
+        $query = $query->leftJoin('entitas_orang AS o1', function($entitas) {
+            $entitas->on('dok_nhi_exim.entitas_id', '=', 'o1.id');
+            $entitas->where('dok_nhi_exim.entitas_type', '=', 'entitas-orang');
+        });
+        $query = $query->orWhere('o1.nama', 'like', $search);
+
+        // Entitas exim badan hukum
+        $query = $query->leftJoin('entitas_badan_hukum AS b1', function($entitas) {
+            $entitas->on('dok_nhi_exim.entitas_id', '=', 'b1.id');
+            $entitas->where('dok_nhi_exim.entitas_type', '=', 'entitas-badan-hukum');
+        });
+        $query = $query->orWhere('b1.nama', 'like', $search);
+
+        ///// Search BKC /////
+        $query = $query->leftJoin('dok_nhi_bkc', function($join) use ($colDetailId, $colDetailType) {
+            $join->on($colDetailId, '=', 'dok_nhi_bkc.id');
+            $join->where($colDetailType, '=', 'nhi-bkc');
+        });
+        $query = $query->orWhere('dok_nhi_bkc.penyalur', 'like', $search);
+
+        ///// Search Tertentu /////
+        $query = $query->leftJoin('dok_nhi_tertentu', function($join) use ($colDetailId, $colDetailType) {
+            $join->on($colDetailId, '=', 'dok_nhi_tertentu.id');
+            $join->where($colDetailType, '=', 'nhi-tertentu');
+        });
+        $query = $query->orWhere('dok_nhi_tertentu.nomor_dok', 'like', $search);
+        $query = $query->orWhere('dok_nhi_tertentu.nomor_awb', 'like', $search);
+
+        // Entitas tertentu orang
+        $query = $query->leftJoin('entitas_orang AS o2', function($entitas) {
+            $entitas->on('dok_nhi_tertentu.entitas_id', '=', 'o2.id');
+            $entitas->where('dok_nhi_tertentu.entitas_type', '=', 'entitas-orang');
+        });
+        $query = $query->orWhere('o2.nama', 'like', $search);
+
+        // Entitas tertentu badan hukum
+        $query = $query->leftJoin('entitas_badan_hukum AS b2', function($entitas) {
+            $entitas->on('dok_nhi_tertentu.entitas_id', '=', 'b2.id');
+            $entitas->where('dok_nhi_tertentu.entitas_type', '=', 'entitas-badan-hukum');
+        });
+        $query = $query->orWhere('b2.nama', 'like', $search);
+
+        ///// Search Barang /////
+        $query = $query->leftJoin('barang', function($join) use ($tableName) {
+            $join->on('barang.goodsable_id', '=', $tableName.'.id');
+            $join->where('barang.goodsable_type', '=', $this->docType);
+        });
+        $query = $query->orWhere('uraian_barang', 'like', $search);
+
+        return $query;
+    }
+
     /*
      |--------------------------------------------------------------------------
      | Data modify functions

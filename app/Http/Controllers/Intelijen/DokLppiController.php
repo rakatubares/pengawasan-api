@@ -14,6 +14,21 @@ class DokLppiController extends DokController
 
     protected $docType = 'lppi';
 
+    protected function additionalSearchQuery($query, $filter)
+    {
+        $search = '%' . $filter . '%';
+        $tableName = $query->getModel()->getTable();
+
+        // Search informasi
+        $query = $query->leftJoin('dok_lppi_informasi', function($join) use ($tableName) {
+            $join->on('infoable_id', '=', $tableName.'.id');
+            $join->where('infoable_type', '=', $this->docType);
+        });
+        $query = $query->orWhere('dok_lppi_informasi.informasi', 'like', $search);
+
+        return $query;
+    }
+
     /*
      |--------------------------------------------------------------------------
      | Data modify functions
@@ -53,7 +68,7 @@ class DokLppiController extends DokController
      */
     protected function prepareData(Request $request)
     {
-		$media_info_internal = ($request->media_info_internal == 'LPTI' & $request->lpti_id == null) ? null : $request->media_info_internal;
+        $media_info_internal = ($request->media_info_internal == 'LPTI' & $request->lpti_id == null) ? null : $request->media_info_internal;
         $tgl_terima_info_internal = $this->dateFromText($request->tgl_terima_info_internal);
         $tgl_dok_info_internal = $this->dateFromText($request->tgl_dok_info_internal);
         $tgl_terima_info_eksternal = $this->dateFromText($request->tgl_terima_info_eksternal);
@@ -112,7 +127,7 @@ class DokLppiController extends DokController
         } else {
             if ($request->lpti_id == null) {
                 $this->detachFrom('lpti', $this->existing_lpti->id);
-				$chain = $this->createChain();
+                $chain = $this->createChain();
                 $data['chain_id'] = $chain->id;
             } elseif ($request->lpti_id != $this->existing_lpti->id) {
                 $this->detachFrom('lpti', $this->existing_lpti->id);

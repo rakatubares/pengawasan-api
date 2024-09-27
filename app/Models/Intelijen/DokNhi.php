@@ -9,59 +9,62 @@ use App\Models\References\RefKantorBC;
 
 class DokNhi extends Dokumen
 {
-	protected $table = 'dok_nhi';
-	public $kodeDokumen = 'nhi';
-	public $tipeDokumen = 'NHI';
-	public $kodeLkai = 'lkai';
+    protected $table = 'dok_nhi';
+    public $kodeDokumen = 'nhi';
+    public $tipeDokumen = 'NHI';
+    public $kodeLkai = 'lkai';
 
-	protected $fillable = [
-		'no_dok',
-		'agenda_dok',
-		'thn_dok',
-		'no_dok_lengkap',
-		'tanggal_dokumen',
-		'chain_id',
-		'sifat',
-		'klasifikasi',
-		'tujuan',
-		'tempat_indikasi',
-		'tanggal_indikasi',
-		'waktu_indikasi',
-		'zona_waktu',
-		'kode_kantor',
-		'detail_type',
-		'detail_id',
-		'indikasi',
-		'kode_status',
-		'status_tindak_lanjut',
-		'status_sbp',
-	];
+    protected $fillable = [
+        'no_dok',
+        'agenda_dok',
+        'thn_dok',
+        'no_dok_lengkap',
+        'tanggal_dokumen',
+        'chain_id',
+        'sifat',
+        'klasifikasi',
+        'tujuan',
+        'tempat_indikasi',
+        'tanggal_indikasi',
+        'waktu_indikasi',
+        'zona_waktu',
+        'kode_kantor',
+        'detail_type',
+        'detail_id',
+        'indikasi',
+        'kode_status',
+        'status_tindak_lanjut',
+        'status_sbp',
+    ];
 
-	protected $casts = [
-		'tanggal_dokumen' => 'date',
-		'tanggal_indikasi' => 'date',
-	];
+    protected $casts = [
+        'tanggal_dokumen' => 'date',
+        'tanggal_indikasi' => 'date',
+    ];
 
+    public $searchables = [
+        'indikasi',
+    ];
 
-	/**
-	 * Kantor
-	 */
-	public function kantor() {
-		return $this->hasOne(RefKantorBC::class, 'kode_kantor', 'kode_kantor');
-	}
+    /**
+     * Kantor
+     */
+    public function kantor() {
+        return $this->hasOne(RefKantorBC::class, 'kode_kantor', 'kode_kantor');
+    }
 
-	/**
-	 * Detail
-	 */
-	public function detail() {
-		return $this->morphTo();
-	}
+    /**
+     * Detail
+     */
+    public function detail() {
+        return $this->morphTo();
+    }
 
-	/**
-	 * Detail Barang
-	 */
-	public function barang()
-	{
-		return $this->morphMany(Barang::class, 'goodsable');
-	}
+    /**
+     * Detail Barang
+     */
+    public function barang()
+    {
+        return $this->morphMany(Barang::class, 'goodsable');
+    }
 }
