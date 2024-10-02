@@ -55,13 +55,13 @@ class DokLkaiController extends DokController
     protected function prepareCommonData(Request $request)
     {
         $data = [];
-        $data['informasi'] = $request->informasi;
-        $data['prosedur'] = $request->prosedur;
-        $data['hasil'] = $request->hasil;
-        $data['kesimpulan'] = $request->kesimpulan;
-        $data['rekomendasi_lain'] = $request->rekomendasi_lain;
+        $data['informasi'] = $this->cleanString($request->informasi);
+        $data['prosedur'] = $this->cleanString($request->prosedur);
+        $data['hasil'] = $this->cleanString($request->hasil);
+        $data['kesimpulan'] = $this->cleanString($request->kesimpulan);
+        $data['rekomendasi_lain'] = $this->cleanString($request->rekomendasi_lain);
         if ($this->docType == 'lkai') {
-            $data['informasi_lain'] = $request->informasi_lain;
+            $data['informasi_lain'] = $this->cleanString($request->informasi_lain);
         }
         $data['tujuan'] = $request->tujuan;
         $data['keputusan_pejabat'] = $request->keputusan_pejabat;
