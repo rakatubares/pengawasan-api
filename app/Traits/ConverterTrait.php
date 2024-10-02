@@ -18,7 +18,9 @@ trait ConverterTrait
 
     public function cleanString($string) {
         if ($string != null) {
-            $string = trim(preg_replace('/[^\S\r\n]+/', ' ', $string));
+			$string = trim(str_replace('', '-', $string)); // Replace weird dash
+			$string = trim(preg_replace('/[^\S\r\n]+/', ' ', $string));
+			$string = trim(preg_replace("/[\r\n]{2,}/", "\n", $string));
         }
         return $string;
     }
