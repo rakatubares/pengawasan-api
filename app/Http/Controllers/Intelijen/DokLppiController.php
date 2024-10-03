@@ -68,6 +68,7 @@ class DokLppiController extends DokController
      */
     protected function prepareData(Request $request)
     {
+        $tanggal_dokumen = $this->dateFromText($request->tanggal_dokumen);
         $media_info_internal = ($request->media_info_internal == 'LPTI' & $request->lpti_id == null) ? null : $request->media_info_internal;
         $tgl_terima_info_internal = $this->dateFromText($request->tgl_terima_info_internal);
         $tgl_dok_info_internal = $this->dateFromText($request->tgl_dok_info_internal);
@@ -76,6 +77,7 @@ class DokLppiController extends DokController
         $tanggal_disposisi = $this->dateFromText($request->tanggal_disposisi);
 
         $data = [];
+        $data['tanggal_dokumen'] = $tanggal_dokumen;
         $data['flag_info_internal'] = $request->flag_info_internal;
         $data['media_info_internal'] = $media_info_internal;
         $data['tgl_terima_info_internal'] = $tgl_terima_info_internal;

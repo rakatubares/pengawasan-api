@@ -54,7 +54,10 @@ class DokLkaiController extends DokController
 
     protected function prepareCommonData(Request $request)
     {
+        $tanggal_dokumen = $this->dateFromText($request->tanggal_dokumen);
+
         $data = [];
+        $data['tanggal_dokumen'] = $tanggal_dokumen;
         $data['informasi'] = $this->cleanString($request->informasi);
         $data['prosedur'] = $this->cleanString($request->prosedur);
         $data['hasil'] = $this->cleanString($request->hasil);

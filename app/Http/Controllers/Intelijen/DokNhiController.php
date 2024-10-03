@@ -131,11 +131,13 @@ class DokNhiController extends DokController
      */
     protected function prepareData(Request $request)
     {
+        $tanggal_dokumen = $this->dateFromText($request->tanggal_dokumen);
         $tanggal_indikasi = $this->dateFromText($request->tanggal_indikasi, 'Y-m-d');
         $waktu_indikasi = $this->dateFromText($request->waktu_indikasi, 'H:i:s');
         $request->tempat_indikasi = trim(strtoupper($request->tempat_indikasi));
 
         return [
+            'tanggal_dokumen' => $tanggal_dokumen,
             'sifat' => $request->sifat,
             'klasifikasi' => $request->klasifikasi,
             'tujuan' => $request->tujuan,
