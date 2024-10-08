@@ -31,10 +31,9 @@ class DokLptiController extends DokController
      * Prepare data from request to array
      *
      * @param Request $request
-     * @param String $state
      * @return Array
      */
-    protected function prepareData(Request $request, $state='insert')
+    protected function prepareData(Request $request)
     {
         switch ($request->seksi) {
             case 'Intelijen I':
@@ -50,6 +49,7 @@ class DokLptiController extends DokController
                 break;
         }
         
+        $tanggal_st = $this->dateFromText($request->tanggal_st);
         $tanggal_mulai = $this->dateFromText($request->tanggal_mulai);
         $tanggal_akhir = $this->dateFromText($request->tanggal_akhir);
         $tanggal_dok_pabean = $this->dateFromText($request->tanggal_dok_pabean);
@@ -58,7 +58,7 @@ class DokLptiController extends DokController
         return [
             'agenda_dok' => $agenda,
             'nomor_st' => $request->nomor_st,
-            'tanggal_st' => $request->tanggal_st,
+            'tanggal_st' => $tanggal_st,
             'wilayah' => $request->wilayah,
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_akhir' => $tanggal_akhir,

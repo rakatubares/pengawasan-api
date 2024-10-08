@@ -16,11 +16,26 @@ class DokLppiResource extends JsonResource
      */
     public function toArray($request)
     {
-		$lpti_id = null;
-		$chain = $this->chain;
-		if ($chain->lpti) {
-			$lpti_id = $chain->lpti->id;
-		}
+        $lpti_id = null;
+        $chain = $this->chain;
+
+        switch ($this->media_info_internal) {
+            case 'LPTI':
+                $tipe_lpti = 'lpti';
+                break;
+
+            case 'LPT-N':
+                $tipe_lpti = 'lptin';
+                break;
+            
+            default:
+                $tipe_lpti = null;
+                break;
+        }
+
+        if ($tipe_lpti != null) {
+            $lpti_id = $chain->$tipe_lpti->id;
+        }
 
         return [
             'id' => $this->id,
@@ -32,7 +47,7 @@ class DokLppiResource extends JsonResource
                 ? $this->tanggal_dokumen->format('d-m-Y')
                 : null,
             'flag_info_internal' => $this->flag_info_internal == 1 ? true : false,
-			'lpti_id' => $lpti_id,
+            'lpti_id' => $lpti_id,
             'media_info_internal' => $this->media_info_internal,
             'tgl_terima_info_internal' => $this->tgl_terima_info_internal
                 ? $this->tgl_terima_info_internal->format('d-m-Y')

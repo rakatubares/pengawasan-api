@@ -8,6 +8,7 @@ use App\Http\Resources\Intelijen\DokLkaiResource;
 use App\Http\Resources\Intelijen\DokLkaiTableResource;
 use App\Http\Resources\Intelijen\DokLppiResource;
 use App\Http\Resources\Intelijen\DokLppiTableResource;
+use App\Http\Resources\Intelijen\DokLptiNResource;
 use App\Http\Resources\Intelijen\DokLptiResource;
 use App\Http\Resources\Intelijen\DokLptiTableResource;
 use App\Http\Resources\Intelijen\DokNhiNResource;
@@ -17,6 +18,7 @@ use App\Http\Resources\Intelijen\DokNhiTableResource;
 use App\Http\Resources\Intelijen\DokNiNResource;
 use App\Http\Resources\Intelijen\DokNiNTableResource;
 use App\Http\Resources\Intelijen\DokNiResource;
+use App\Http\Resources\Intelijen\DokNiTableResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanResource;
 use App\Http\Resources\Penindakan\DokBukaPengamanTableResource;
 use App\Http\Resources\Penindakan\DokBukaSegelResource;
@@ -59,127 +61,129 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DocumentTrait
 {
-	public function getModel($docType)
-	{
-		return Relation::getMorphedModel($docType);
-	}
+    public function getModel($docType)
+    {
+        return Relation::getMorphedModel($docType);
+    }
 
-	public function getDocument($docType, $docId)
-	{
-		$model = $this->getModel($docType);
-		return $model::findOrFail($docId);
-	}
+    public function getDocument($docType, $docId)
+    {
+        $model = $this->getModel($docType);
+        return $model::findOrFail($docId);
+    }
 
-	public function checkUnpublished($doc)
-	{
-		// Return TRUE if document is unpublished
-		$kodeStatus = $doc->kode_status;
-		return (in_array($kodeStatus, $doc->unpublishedStatus)) ? true : false;
-	}
+    public function checkUnpublished($doc)
+    {
+        // Return TRUE if document is unpublished
+        $kodeStatus = $doc->kode_status;
+        return (in_array($kodeStatus, $doc->unpublishedStatus)) ? true : false;
+    }
 
-	public function getResource($docType) {
-		$resources = [
-			// Intelijen
-			'lpti' => DokLptiResource::class,
-			'lppi' => DokLppiResource::class,
-			'lkai' => DokLkaiResource::class,
-			'nhi' => DokNhiResource::class,
-			'ni' => DokNiResource::class,
+    public function getResource($docType) {
+        $resources = [
+            // Intelijen
+            'lpti' => DokLptiResource::class,
+            'lppi' => DokLppiResource::class,
+            'lkai' => DokLkaiResource::class,
+            'nhi' => DokNhiResource::class,
+            'ni' => DokNiResource::class,
 
-			'lppin' => DokLppiResource::class,
-			'lkain' => DokLkaiNResource::class,
-			'nhin' => DokNhiNResource::class,
-			'nin' => DokNiNResource::class,
+            'lptin' => DokLptiNResource::class,
+            'lppin' => DokLppiResource::class,
+            'lkain' => DokLkaiNResource::class,
+            'nhin' => DokNhiNResource::class,
+            'nin' => DokNiNResource::class,
 
-			// Penindakan
-			'li' => DokLiResource::class,
-			'lap' => DokLapResource::class,
-			'riksa_badan' => DokRiksaBadanResource::class,
-			'riksa' => DokRiksaResource::class,
-			'tegah' => DokTegahResource::class,
-			'segel' => DokSegelResource::class,
-			'buka_segel' => DokBukaSegelResource::class,
-			'sbp' => DokSbpResource::class,
-			'tolak1' => DokTolakSbp1Resource::class,
-			'tolak2' => DokTolakSbp2Resource::class,
-			'lpt' => DokLptResource::class,
-			'lptp' => DokLptpResource::class,
-			'lphp' => DokLphpResource::class,
-			'lp' => DokLpResource::class,
+            // Penindakan
+            'li' => DokLiResource::class,
+            'lap' => DokLapResource::class,
+            'riksa_badan' => DokRiksaBadanResource::class,
+            'riksa' => DokRiksaResource::class,
+            'tegah' => DokTegahResource::class,
+            'segel' => DokSegelResource::class,
+            'buka_segel' => DokBukaSegelResource::class,
+            'sbp' => DokSbpResource::class,
+            'tolak1' => DokTolakSbp1Resource::class,
+            'tolak2' => DokTolakSbp2Resource::class,
+            'lpt' => DokLptResource::class,
+            'lptp' => DokLptpResource::class,
+            'lphp' => DokLphpResource::class,
+            'lp' => DokLpResource::class,
 
-			'lapn' => DokLapResource::class,
-			'sbpn' => DokSbpResource::class,
-			'lptpn' => DokLptpResource::class,
-			'lphpn' => DokLphpResource::class,
-			'lpn' => DokLpNResource::class,
+            'lapn' => DokLapResource::class,
+            'sbpn' => DokSbpResource::class,
+            'lptpn' => DokLptpResource::class,
+            'lphpn' => DokLphpResource::class,
+            'lpn' => DokLpNResource::class,
 
-			'pengaman' => DokPengamanResource::class,
-			'buka_pengaman' => DokBukaPengamanResource::class,
+            'pengaman' => DokPengamanResource::class,
+            'buka_pengaman' => DokBukaPengamanResource::class,
 
-			// Penyidikan
-			'lpp' => DokLppResource::class,
-			'lpf' => DokLpfResource::class,
-			'split' => DokSplitResource::class,
-		];
+            // Penyidikan
+            'lpp' => DokLppResource::class,
+            'lpf' => DokLpfResource::class,
+            'split' => DokSplitResource::class,
+        ];
 
-		try {
-			$resource = $resources[$docType];
-		} catch (\Throwable $th) {
-			$resource = null;
-		}
+        try {
+            $resource = $resources[$docType];
+        } catch (\Throwable $th) {
+            $resource = null;
+        }
 
-		return $resource;
-	}
+        return $resource;
+    }
 
-	public function getTableResource($docType) {
-		$resources = [
-			// Intelijen
-			'lpti' => DokLptiTableResource::class,
-			'lppi' => DokLppiTableResource::class,
-			'lkai' => DokLkaiTableResource::class,
-			'nhi' => DokNhiTableResource::class,
-			'ni' => DokNhiTableResource::class,
+    public function getTableResource($docType) {
+        $resources = [
+            // Intelijen
+            'lpti' => DokLptiTableResource::class,
+            'lppi' => DokLppiTableResource::class,
+            'lkai' => DokLkaiTableResource::class,
+            'nhi' => DokNhiTableResource::class,
+            'ni' => DokNiTableResource::class,
 
-			'lppin' => DokLppiTableResource::class,
-			'lkain' => DokLkaiTableResource::class,
-			'nhin' => DokNhiNTableResource::class,
-			'nin' => DokNiNTableResource::class,
+            'lptin' => DokLptiTableResource::class,
+            'lppin' => DokLppiTableResource::class,
+            'lkain' => DokLkaiTableResource::class,
+            'nhin' => DokNhiNTableResource::class,
+            'nin' => DokNiNTableResource::class,
 
-			// Penindakan
-			'li' => DokLiTableResource::class,
-			'lap' => DokLapTableResource::class,
-			'riksa_badan' => DokRiksaBadanTableResource::class,
-			'riksa' => DokRiksaTableResource::class,
-			'tegah' => DokTegahTableResource::class,
-			'segel' => DokSegelTableResource::class,
-			'buka_segel' => DokBukaSegelTableResource::class,
-			'sbp' => DokSbpTableResource::class,
-			'tolak1' => DokTolakSbp1TableResource::class,
-			'tolak2' => DokTolakSbp2TableResource::class,
-			'lpt' => DokLptTableResource::class,
-			'lphp' => DokLphpTableResource::class,
-			'lp' => DokLpTableResource::class,
+            // Penindakan
+            'li' => DokLiTableResource::class,
+            'lap' => DokLapTableResource::class,
+            'riksa_badan' => DokRiksaBadanTableResource::class,
+            'riksa' => DokRiksaTableResource::class,
+            'tegah' => DokTegahTableResource::class,
+            'segel' => DokSegelTableResource::class,
+            'buka_segel' => DokBukaSegelTableResource::class,
+            'sbp' => DokSbpTableResource::class,
+            'tolak1' => DokTolakSbp1TableResource::class,
+            'tolak2' => DokTolakSbp2TableResource::class,
+            'lpt' => DokLptTableResource::class,
+            'lphp' => DokLphpTableResource::class,
+            'lp' => DokLpTableResource::class,
 
-			'lapn' => DokLapTableResource::class,
-			'sbpn' => DokSbpTableResource::class,
-			'lphpn' => DokLphpTableResource::class,
-			'lpn' => DokLpTableResource::class,
+            'lapn' => DokLapTableResource::class,
+            'sbpn' => DokSbpTableResource::class,
+            'lphpn' => DokLphpTableResource::class,
+            'lpn' => DokLpTableResource::class,
 
-			'pengaman' => DokPengamanTableResource::class,
-			'buka_pengaman' => DokBukaPengamanTableResource::class,
+            'pengaman' => DokPengamanTableResource::class,
+            'buka_pengaman' => DokBukaPengamanTableResource::class,
 
-			// Penyidikan
-			'lpp' => DokLppTableResource::class,
-			'lpf' => DokLpfTableResource::class,
-			'split' => DokSplitTableResource::class,
-		];
+            // Penyidikan
+            'lpp' => DokLppTableResource::class,
+            'lpf' => DokLpfTableResource::class,
+            'split' => DokSplitTableResource::class,
+        ];
 
-		try {
-			$resource = $resources[$docType];
-		} catch (\Throwable $th) {
-			$resource = DokTableResource::class;
-		}
+        try {
+            $resource = $resources[$docType];
+        } catch (\Throwable $th) {
+            $resource = DokTableResource::class;
+        }
 
-		return $resource;
-	}
+        return $resource;
+    }
 }

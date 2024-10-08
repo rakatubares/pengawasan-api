@@ -14,6 +14,13 @@ class DokLppiController extends DokController
 
     protected $docType = 'lppi';
 
+    public function __construct()
+    {
+        parent::__construct();
+        $doc = new $this->model;
+        $this->kodeLpti = $doc->kodeLpti;
+    }
+
     protected function additionalSearchQuery($query, $filter)
     {
         $search = '%' . $filter . '%';
@@ -69,7 +76,8 @@ class DokLppiController extends DokController
     protected function prepareData(Request $request)
     {
         $tanggal_dokumen = $this->dateFromText($request->tanggal_dokumen);
-        $media_info_internal = ($request->media_info_internal == 'LPTI' & $request->lpti_id == null) ? null : $request->media_info_internal;
+        $media_info_internal = (in_array($request->media_info_internal, ['LPTI', 'LPT-N']) & $request->lpti_id == null)
+            ? null : $request->media_info_internal;
         $tgl_terima_info_internal = $this->dateFromText($request->tgl_terima_info_internal);
         $tgl_dok_info_internal = $this->dateFromText($request->tgl_dok_info_internal);
         $tgl_terima_info_eksternal = $this->dateFromText($request->tgl_terima_info_eksternal);
@@ -103,8 +111,8 @@ class DokLppiController extends DokController
             // Create new chain
             $chain = $this->createChain();
         } else {
-            // Get chain from existing LPT-I
-            $lpti = $this->attachTo('lpti', $request->lpti_id);
+            // Get chain from existing LPT-I/LPT-N
+            $lpti = $this->attachTo($this->kodeLpti, $request->lpti_id);
             $chain = $lpti->chain;
         }
         $data['chain_id'] = $chain->id;
@@ -120,20 +128,21 @@ class DokLppiController extends DokController
     protected function updating(Request $request)
     {
         $data = parent::updating($request);
-        $this->existing_lpti = $this->doc->chain->lpti;
+        $kodeLpti = $this->kodeLpti;
+        $this->existing_lpti = $this->doc->chain->$kodeLpti;
         if ($this->existing_lpti == null) {
             if ($request->lpti_id != null) {
-                $lpti = $this->attachTo('lpti', $request->lpti_id);
+                $lpti = $this->attachTo($this->kodeLpti, $request->lpti_id);
                 $data['chain_id'] = $lpti->chain_id;
             }
         } else {
             if ($request->lpti_id == null) {
-                $this->detachFrom('lpti', $this->existing_lpti->id);
+                $this->detachFrom($this->kodeLpti, $this->existing_lpti->id);
                 $chain = $this->createChain();
                 $data['chain_id'] = $chain->id;
             } elseif ($request->lpti_id != $this->existing_lpti->id) {
-                $this->detachFrom('lpti', $this->existing_lpti->id);
-                $lpti = $this->attachTo('lpti', $request->lpti_id);
+                $this->detachFrom($this->kodeLpti, $this->existing_lpti->id);
+                $lpti = $this->attachTo($this->kodeLpti, $request->lpti_id);
                 $data['chain_id'] = $lpti->chain_id;
             }
         }

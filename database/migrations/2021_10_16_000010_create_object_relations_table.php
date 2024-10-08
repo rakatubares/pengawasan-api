@@ -15,17 +15,17 @@ class CreateObjectRelationsTable extends Migration
     {
         Schema::create('object_relations', function (Blueprint $table) {
             $table->id();
-			$table->morphs('object1');
-			$table->morphs('object2');
+            $table->morphs('object1');
+            $table->morphs('object2');
             $table->timestamps();
-			$table->softDeletes();
-			$table->index('object1_type');
-			$table->index('object1_id');
-			$table->index('object2_type');
-			$table->index('object2_id');
+            $table->softDeletes();
+            $table->index('object1_type');
+            $table->index('object1_id');
+            $table->index('object2_type');
+            $table->index('object2_id');
             $table->index('created_at');
-			$table->index('updated_at');
-			$table->index('deleted_at');
+            $table->index('updated_at');
+            $table->index('deleted_at');
         });
     }
 

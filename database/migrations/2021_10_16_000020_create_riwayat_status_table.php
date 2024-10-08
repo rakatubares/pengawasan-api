@@ -15,17 +15,17 @@ class CreateRiwayatStatusTable extends Migration
     {
         Schema::create('riwayat_status', function (Blueprint $table) {
             $table->id();
-			$table->string('historyable_type');
-			$table->integer('historyable_id');
-			$table->string('kode_status')->index();
-			$table->text('keterangan')->nullable();
-			$table->text('nip_pegawai')->nullable();
+            $table->string('historyable_type');
+            $table->integer('historyable_id');
+            $table->string('kode_status')->index();
+            $table->text('keterangan')->nullable();
+            $table->text('nip_pegawai')->nullable();
             $table->timestamps();
-			$table->softDeletes();
-			$table->index(['historyable_type', 'historyable_id']);
-			$table->index('created_at');
-			$table->index('updated_at');
-			$table->index('deleted_at');
+            $table->softDeletes();
+            $table->index(['historyable_type', 'historyable_id']);
+            $table->index('created_at');
+            $table->index('updated_at');
+            $table->index('deleted_at');
         });
     }
 

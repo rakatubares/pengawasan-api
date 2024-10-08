@@ -16,6 +16,7 @@ use App\Models\Intelijen\DokLkaiN;
 use App\Models\Intelijen\DokLppi;
 use App\Models\Intelijen\DokLppiN;
 use App\Models\Intelijen\DokLpti;
+use App\Models\Intelijen\DokLptiN;
 use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiBkc;
 use App\Models\Intelijen\DokNhiExim;
@@ -129,6 +130,7 @@ class AppServiceProvider extends ServiceProvider
 
             // Intelijen
             'lpti' => DokLpti::class,
+            'lptin' => DokLptiN::class,
             'lppi' => DokLppi::class,
             'lppin' => DokLppiN::class,
             'lkai' => DokLkai::class,
@@ -185,12 +187,13 @@ class AppServiceProvider extends ServiceProvider
         DokTitip::observe(DokTitipObserver::class);
         
         // Intelijen
-		DokLpti::observe(DokLptiObserver::class);
+        DokLpti::observe(DokLptiObserver::class);
         DokLppi::observe(DokLppiObserver::class);
         DokLkai::observe(DokLkaiObserver::class);
         DokNhi::observe(DokNhiObserver::class);
         DokNi::observe(DokNiObserver::class);
         
+        DokLptiN::observe(DokLptiObserver::class);
         DokLppiN::observe(DokLppiObserver::class);
         DokLkaiN::observe(DokLkaiObserver::class);
         DokNhiN::observe(DokNhiObserver::class);

@@ -10,7 +10,8 @@ use Database\Seeders\DokSeeder;
 class DokLppiSeeder extends DokSeeder
 {
     protected $docCode = 'lppi';
-	protected $agendaLpt = '/KPU.3051/';
+    protected $lptiCode = 'lpti';
+    protected $agendaLpt = '/KPU.3051/';
 
     /**
      * Run the database seeds.
@@ -26,7 +27,7 @@ class DokLppiSeeder extends DokSeeder
         $this->list_kode_validitas = array_map(function ($v){ return $v->klasifikasi; }, $ref_validitas);
 
         // Get available LPTI ids
-        $this->available_lpti_id = $this->getAvailableDocIds('lpti', $this->agendaLpt);
+        $this->available_lpti_id = $this->getAvailableDocIds($this->lptiCode, $this->agendaLpt);
 
         for ($d=1; $d < 51; $d++) {
             // Reset chain
@@ -127,7 +128,7 @@ class DokLppiSeeder extends DokSeeder
 
     protected function chooseLpti()
     {
-        $lpti = $this->chooseDocSource('lpti', $this->available_lpti_id);
+        $lpti = $this->chooseDocSource($this->lptiCode, $this->available_lpti_id);
         $this->available_lpti_id = array_diff($this->available_lpti_id, [$lpti->id]);
         return $lpti;
     }

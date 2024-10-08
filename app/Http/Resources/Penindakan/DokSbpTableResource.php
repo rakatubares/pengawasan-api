@@ -12,14 +12,14 @@ class DokSbpTableResource extends DokPenindakanTableResource
      */
     public function toArray($request)
     {
-        $kode_nhi = $this->kode_nhi;
+        $kodeNhi = $this->kodeNhi;
 
         $array = parent::toArray($request);
-        $array['nomor_nhi'] = $this->chain->$kode_nhi
-            ? $this->chain->$kode_nhi->no_dok_lengkap
+        $array['nomor_nhi'] = $this->chain->$kodeNhi
+            ? $this->chain->$kodeNhi->no_dok_lengkap
             : '-';
-        $array['tanggal_nhi'] = $this->chain->$kode_nhi
-            ? $this->chain->$kode_nhi->tanggal_dokumen->format('d-m-Y')
+        $array['tanggal_nhi'] = $this->chain->$kodeNhi
+            ? $this->chain->$kodeNhi->tanggal_dokumen->format('d-m-Y')
             : '';
         return $array;
     }

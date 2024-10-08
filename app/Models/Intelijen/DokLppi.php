@@ -9,6 +9,7 @@ class DokLppi extends Dokumen
     protected $table = 'dok_lppi';
     public $kodeDokumen = 'lppi';
     public $tipeDokumen = 'LPPI';
+    public $kodeLpti = 'lpti';
 
     protected $fillable = [
         'no_dok',

@@ -84,7 +84,7 @@ class DokLptiResource extends JsonResource
         ];
     }
 
-    private function listTugas()
+    protected function listTugas()
     {
         $tugas = [];
         foreach ($this->tugas as $t) {

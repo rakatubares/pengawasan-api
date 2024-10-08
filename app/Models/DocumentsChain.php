@@ -7,6 +7,7 @@ use App\Models\Intelijen\DokLkaiN;
 use App\Models\Intelijen\DokLppi;
 use App\Models\Intelijen\DokLppiN;
 use App\Models\Intelijen\DokLpti;
+use App\Models\Intelijen\DokLptiN;
 use App\Models\Intelijen\DokNhi;
 use App\Models\Intelijen\DokNhiN;
 use App\Models\Intelijen\DokNi;
@@ -51,7 +52,7 @@ class DocumentsChain extends Model
     protected $fillable = ['latest_document'];
     public $docTypes = [
         'lpti', 'lppi', 'lkai', 'nhi', 'ni',
-        'lppin', 'lkain', 'nhin', 'nin',
+        'lptin', 'lppin', 'lkain', 'nhin', 'nin',
         'li', 'lap', 'lapn',
         'riksa_badan', 'riksa', 'tegah', 'segel', 'buka_segel',
         'sbp', 'sbpn', 'tolak1', 'tolak2', 'lpt',
@@ -85,6 +86,10 @@ class DocumentsChain extends Model
 
     public function ni() {
         return $this->hasOne(DokNi::class, 'chain_id');
+    }
+
+    public function lptin() {
+        return $this->hasOne(DokLptiN::class,'chain_id');
     }
 
     public function lppin() {
