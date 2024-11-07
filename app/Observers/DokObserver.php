@@ -34,7 +34,7 @@ class DokObserver
                 ['agenda', '=', $agenda],
                 ['tahun', '=', $year],
             ])->first();
-    
+
             if ($latest_number != null) {
                 $number = $latest_number['nomor_terakhir'] + 1;
             } else {
@@ -45,7 +45,7 @@ class DokObserver
             $number = $dokumen->getOriginal('no_dok');
             $noDokLengkap = $dokumen->getOriginal('no_dok_lengkap');
         }
-        
+
         $dokumen['no_dok'] = $number;
         $dokumen['agenda_dok'] = $agenda;
         $dokumen['thn_dok'] = $year;
@@ -119,6 +119,13 @@ class DokObserver
             ->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
     }
 
+    public function statusPublished($dokumen)
+    {
+        $this->setLatestChainStatus($dokumen);
+        $dokumen->status_history()
+            ->create(['kode_status' => 'terbit', 'nip_pegawai' => Auth::user()->nip]);
+    }
+
     public function amended($dokumen)
     {
         $dokumen->status_history()
@@ -134,7 +141,7 @@ class DokObserver
     public function deleted($dokumen) {
         // Change status
         $dokumen->update(['kode_status' => 'dihapus']);
-        
+
         // Save history
         $dokumen->status_history()
             ->create(['kode_status' => 'dihapus', 'nip_pegawai' => Auth::user()->nip]);

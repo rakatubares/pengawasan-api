@@ -18,7 +18,7 @@ class Dokumen extends Model
 
     public $agendaDokumen = '/KPU.305/';
 
-    protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'amended'];
+    protected $observables = ['editing', 'edited', 'booking', 'booked', 'publishing', 'published', 'statusPublished', 'amended'];
     public $unpublishedStatus = ['draft', 'booking-nomor', 'rollback'];
     public $searchables = [];
 
@@ -95,8 +95,10 @@ class Dokumen extends Model
         $prePublishStatus = $this->kode_status;
         $this->fireModelEvent('publishing');
         $this->update(['kode_status' => 'terbit']);
-        if (in_array($prePublishStatus, ['draft', 'booking-nomor'])) {
+        if ($prePublishStatus == 'draft') {
             $this->fireModelEvent('published');
+        } elseif($prePublishStatus == 'booking-nomor') {
+            $this->fireModelEvent('statusPublished');
         } else {
             $this->fireModelEvent('amended');
         }
@@ -106,7 +108,7 @@ class Dokumen extends Model
     {
         // Rollback status
         $this->update(['kode_status' => 'rollback']);
-        
+
         // Add history
         $this->status_history()
             ->create([
@@ -121,7 +123,7 @@ class Dokumen extends Model
         $status = $status_name != null ? $status_name : 'status_tindak_lanjut';
         $this->update([$status => true]);
     }
-    
+
     public function unFollowedUp($status_name=null)
     {
         $status = $status_name != null ? $status_name : 'status_tindak_lanjut';
