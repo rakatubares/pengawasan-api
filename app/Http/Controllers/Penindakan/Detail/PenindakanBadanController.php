@@ -11,7 +11,7 @@ class PenindakanBadanController extends Controller
 {
 	private function validateData($request) {
 		$request->validate([
-			'entitas.id' => 'integer'
+			'entitas.id' => 'nullable|integer'
 		]);
 	}
 

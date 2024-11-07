@@ -16,7 +16,7 @@ class CreatePenindakanBadanTable extends Migration
         Schema::create('penindakan_badan', function (Blueprint $table) {
             $table->id();
 			$table->integer('penindakan_id')->index();
-			$table->integer('entitas_id')->index();
+			$table->integer('entitas_id')->nullable()->index();
 			$table->string('asal')->nullable();
 			$table->string('tujuan')->nullable();
 			$table->integer('pendamping_id')->nullable()->index();

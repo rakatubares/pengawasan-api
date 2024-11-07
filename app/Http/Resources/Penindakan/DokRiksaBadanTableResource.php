@@ -13,8 +13,13 @@ class DokRiksaBadanTableResource extends DokPenindakanTableResource
     public function toArray($request)
     {
         $array = parent::toArray($request);
-        $array['entitas'] = $this->chain->penindakan->badan ?
-            $this->chain->penindakan->badan->entitas->nama : null;
+		$nama_entitas = null;
+		if ($this->chain->penindakan->badan) {
+			if ($this->chain->penindakan->badan->entitas) {
+				$nama_entitas = $this->chain->penindakan->badan->entitas->nama;
+			}
+		}
+        $array['entitas'] = $nama_entitas;
         return $array;
     }
 }
