@@ -40,7 +40,7 @@ class DokNiController extends DokController
     {
         $this->validateCommonData($request);
         $request->validate([
-            'lkai_id' => 'integer',
+            'lkai_id' => 'nullable|integer',
         ]);
     }
 

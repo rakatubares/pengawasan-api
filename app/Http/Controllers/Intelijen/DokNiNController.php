@@ -17,7 +17,7 @@ class DokNiNController extends DokNiController
 	{
 		$this->validateCommonData($request);
 		$request->validate([
-			'lkain_id' => 'integer',
+			'lkain_id' => 'nullable|integer',
 		]);
 	}
 }
